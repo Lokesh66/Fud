@@ -9,7 +9,6 @@ using System.Text.RegularExpressions;
 
 public class APIManager : MonoBehaviour
 {
-
     #region Singleton
 
     private static APIManager instance = null;
@@ -22,7 +21,7 @@ public class APIManager : MonoBehaviour
     {
         get
         {
-            if(instance = null)
+            if(instance == null)
             {
                 instance = FindObjectOfType<APIManager>();
             }
@@ -32,7 +31,18 @@ public class APIManager : MonoBehaviour
 
     #endregion
 
-    IEnumerator PostRequest(string url, Dictionary<string, string> parameters, Action<string> callback)
+    public const string SECRET_KEY = "SSht6KyxvwKZnsmbbbQUCm2va";
+    public const string BASE_URL = "http://3.136.106.58:7000/";
+
+    public const string USER = BASE_URL + "v1/users/";
+    public const string USER_LOGIN = BASE_URL + "v1/login/";
+    public const string USER_OTP = BASE_URL + "v1/sendOtp";
+    public const string STORY = BASE_URL + "v1/story/";
+
+    public const string GET_CRATFS = BASE_URL + "v1/24_craftRoles/";
+    public const string GET_GENRES = BASE_URL + "v1/genres/";
+
+    IEnumerator PostRequest(string url, Dictionary<string, string> parameters, Action<bool, string> callback)
     {
         Dictionary<string, Dictionary<string, string>> attributes = new Dictionary<string, Dictionary<string, string>>();
 
@@ -52,18 +62,18 @@ public class APIManager : MonoBehaviour
 
             if (webRequest.isNetworkError || webRequest.isHttpError)
             {
-                callback?.Invoke(webRequest.error);
                 Debug.LogErrorFormat("<APIManager/({0})> Error ({1})", webRequest.error, url);
+                callback?.Invoke(false, webRequest.error);
             }
             else
             {
-                callback?.Invoke(webRequest.downloadHandler.text);
                 Debug.LogFormat("<APIManager/ ({0})> Response ({1})", webRequest.downloadHandler.text, url);
+                callback?.Invoke(true, webRequest.downloadHandler.text);
             }
         }
     }
 
-    private IEnumerator GetRequest(string url)
+    IEnumerator GetRequest(string url, Action<bool, string> callback)
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
@@ -73,18 +83,62 @@ public class APIManager : MonoBehaviour
 
             if (webRequest.isNetworkError || webRequest.isHttpError)
             {
-                Debug.LogErrorFormat("<APIManager/GettingFilterTypes> Error ({0})", webRequest.error);
+                Debug.LogErrorFormat("<APIManager/GetRequest> Error ({0})", webRequest.error);
+
+                callback?.Invoke(false, webRequest.error);
             }
             else
             {
-                Debug.LogFormat("<APIManager/GettingFilterTypes> Response ({0})", webRequest.downloadHandler.text);
-
+                Debug.LogFormat("<APIManager/GetRequest> Response ({0})", webRequest.downloadHandler.text);
                 string response = webRequest.downloadHandler.text;
-
-                //FilterBaseResponse filterResponse = JsonUtility.FromJson<FilterBaseResponse>(response);
+                callback?.Invoke(true, response);
             }
         }
     }
+
+    #region GET CraftRoles
+    public void GetCraftRoles()
+    {
+        StartCoroutine(GetRequest(GET_CRATFS, (bool status, string response) => {
+            if (status)
+            {
+                CraftsResponse data = JsonUtility.FromJson<CraftsResponse>(response);
+                DataManager.Instance.UpdateCrafts(data.data);
+            }
+        }));
+    }
+    #endregion
+
+    #region GET Genres
+    public void GetGenres()
+    {
+        /*        string path = Application.streamingAssetsPath + "/GenreResponse";
+                string response = File.ReadAllText(path);
+
+                GenreResponse data = JsonUtility.FromJson<GenreResponse>(response);
+                DataManager.Instance.UpdateGenres(data.data);*/
+
+        StartCoroutine(GetRequest(GET_GENRES, (bool status, string response) =>
+        {
+            if (status)
+            {
+                GenreResponse data = JsonUtility.FromJson<GenreResponse>(response);
+                DataManager.Instance.UpdateGenres(data.data);
+            }
+        }));
+    }
+    #endregion
+
+    #region OTP
+    public void SendOTP(string phoneNumber, Action<bool> action)
+    {
+        Dictionary<string, string> parameters = new Dictionary<string, string>();
+        parameters.Add("phone",phoneNumber);
+        StartCoroutine(PostRequest(USER_OTP, parameters, (bool status, string response) => {
+            action?.Invoke(status);
+        }));
+    }
+    #endregion
 
     #region Imagedownload
 
@@ -306,22 +360,3 @@ public class APIManager : MonoBehaviour
     #endregion
 
 }
-
-
-
-/*using (UnityWebRequest webRequest = UnityWebRequest.Get(APIConstants.GET_USERS_URL))
-           {
-               webRequest.SetRequestHeader("Authorization", "Bearer " + APIConstants.TOKEN);
-
-               yield return webRequest.SendWebRequest();
-
-               if (webRequest.isNetworkError || webRequest.isHttpError)
-               {
-                   Debug.LogErrorFormat("<APIManager/GettingUsers> Error ({0})", webRequest.error);
-               }
-               else
-               {
-                   Debug.LogFormat("<APIManager/GettingUsers> Response ({0})", webRequest.downloadHandler.text);
-               }
-           }
-*/
