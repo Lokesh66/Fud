@@ -88,7 +88,7 @@ public class UserLoginbject
 #endregion
 
 #region CRAFTS
-[SerializeField]
+[Serializable]
 
 public class CraftsResponse
 {
@@ -97,7 +97,7 @@ public class CraftsResponse
     public List<Craft> data = new List<Craft>();
 }
 
-[SerializeField]
+[Serializable]
 public class Craft
 {
     public int id;
@@ -110,14 +110,14 @@ public class Craft
 #endregion
 
 #region GENRES
-[SerializeField]
+[Serializable]
 public class GenreResponse 
 {
     public List<Genre> data = new List<Genre>();
     public string message;
     public int status;
 }
-[SerializeField]
+[Serializable]
 public class Genre
 {
     public int id;
