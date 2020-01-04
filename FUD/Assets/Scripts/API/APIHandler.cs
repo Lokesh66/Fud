@@ -7,40 +7,16 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
-public class APIManager : MonoBehaviour
+public partial class APIHandler : MonoBehaviour
 {
     #region Singleton
 
-    private static APIManager instance = null;
-    private APIManager()
+    public APIHandler()
     {
 
-    }
-
-    public static APIManager Instance
-    {
-        get
-        {
-            if(instance == null)
-            {
-                instance = FindObjectOfType<APIManager>();
-            }
-            return instance;
-        }
     }
 
     #endregion
-
-    public const string SECRET_KEY = "SSht6KyxvwKZnsmbbbQUCm2va";
-    public const string BASE_URL = "http://3.136.106.58:7000/";
-
-    public const string USER = BASE_URL + "v1/users/";
-    public const string USER_LOGIN = BASE_URL + "v1/login/";
-    public const string USER_OTP = BASE_URL + "v1/sendOtp";
-    public const string STORY = BASE_URL + "v1/story/";
-
-    public const string GET_CRATFS = BASE_URL + "v1/24_craftRoles/";
-    public const string GET_GENRES = BASE_URL + "v1/genres/";
 
     public enum EHeaderType
     { 
@@ -51,42 +27,7 @@ public class APIManager : MonoBehaviour
 
     public GameObject o854252G;
 
-    IEnumerator PostRequest(string url, Dictionary<string, string> parameters, Action<bool, string> callback)
-    {
-        Dictionary<string, Dictionary<string, string>> attributes = new Dictionary<string, Dictionary<string, string>>();
-
-        attributes.Add("attributes", parameters);
-
-        string jsonData = MiniJSON.Json.Serialize(attributes);
-
-        Debug.LogFormat("URL ({0}) Data ({1})", url, jsonData);
-
-        UnityWebRequest webRequest = UnityWebRequest.Post(url, jsonData);
-        
-        webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(jsonData));
-
-        Dictionary<string, string> headers = GetHeaders(EHeaderType.Generic, jsonData);
-
-        foreach (KeyValuePair<string, string> header in headers)
-        {
-            webRequest.SetRequestHeader(header.Key, header.Value);
-        }
-
-        yield return webRequest.SendWebRequest();
-
-        if (webRequest.isNetworkError || webRequest.isHttpError)
-        {
-            Debug.LogErrorFormat("<APIManager/({0})> Error ({1})", webRequest.error, url);
-            callback?.Invoke(false, webRequest.error);
-        }
-        else
-        {
-            Debug.LogFormat("<APIManager/ ({0})> Response ({1})", webRequest.downloadHandler.text, url);
-            callback?.Invoke(true, webRequest.downloadHandler.text);
-        }
-    }
-
-    IEnumerator GetRequest(string url, Action<bool, string> callback)
+    IEnumerator GetCrafts(string url, Action<bool, string> callback)
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
@@ -112,7 +53,7 @@ public class APIManager : MonoBehaviour
     #region GET CraftRoles
     public void GetCraftRoles()
     {
-        StartCoroutine(GetRequest(GET_CRATFS, (bool status, string response) => {
+        StartCoroutine(GetRequest(APIConstants.GET_CRATFS, (bool status, string response) => {
             if (status)
             {
                 CraftsResponse data = JsonUtility.FromJson<CraftsResponse>(response);
@@ -131,7 +72,7 @@ public class APIManager : MonoBehaviour
                 GenreResponse data = JsonUtility.FromJson<GenreResponse>(response);
                 DataManager.Instance.UpdateGenres(data.data);*/
 
-        StartCoroutine(GetRequest(GET_GENRES, (bool status, string response) =>
+        StartCoroutine(GetRequest(APIConstants.GET_GENRES, (bool status, string response) =>
         {
             if (status)
             {
@@ -143,14 +84,7 @@ public class APIManager : MonoBehaviour
     #endregion
 
     #region OTP
-    public void SendOTP(string phoneNumber, Action<bool> action)
-    {
-        Dictionary<string, string> parameters = new Dictionary<string, string>();
-        parameters.Add("phone",phoneNumber);
-        StartCoroutine(PostRequest(USER_OTP, parameters, (bool status, string response) => {
-            action?.Invoke(status);
-        }));
-    }
+    
     #endregion
 
     #region Imagedownload
@@ -451,4 +385,58 @@ public class APIManager : MonoBehaviour
 
     #endregion
 
+    IEnumerator GetRequest(string url, Action<bool, string> OnResponse)
+    {
+        UnityWebRequest webRequest = UnityWebRequest.Get(url);
+
+        yield return webRequest.SendWebRequest();
+
+        if (webRequest.isNetworkError || webRequest.isHttpError)
+        {
+            Debug.LogErrorFormat("<APIManager/GetRequest> Error ({0})", webRequest.error);
+
+            OnResponse?.Invoke(false, webRequest.error);
+        }
+        else
+        {
+            Debug.LogFormat("<APIManager/GetRequest> Response ({0})", webRequest.downloadHandler.text);
+            string response = webRequest.downloadHandler.text;
+            OnResponse?.Invoke(true, response);
+        }
+    }
+
+    IEnumerator PostRequest(string url, Dictionary<string, string> parameters, Action<bool, string> callback)
+    {
+        Dictionary<string, Dictionary<string, string>> attributes = new Dictionary<string, Dictionary<string, string>>();
+
+        attributes.Add("attributes", parameters);
+
+        string jsonData = MiniJSON.Json.Serialize(attributes);
+
+        Debug.LogFormat("URL ({0}) Data ({1})", url, jsonData);
+
+        UnityWebRequest webRequest = UnityWebRequest.Post(url, jsonData);
+
+        webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(jsonData));
+
+        Dictionary<string, string> headers = GetHeaders(EHeaderType.Generic, jsonData);
+
+        foreach (KeyValuePair<string, string> header in headers)
+        {
+            webRequest.SetRequestHeader(header.Key, header.Value);
+        }
+
+        yield return webRequest.SendWebRequest();
+
+        if (webRequest.isNetworkError || webRequest.isHttpError)
+        {
+            Debug.LogErrorFormat("<APIManager/({0})> Error ({1})", webRequest.error, url);
+            callback?.Invoke(false, webRequest.error);
+        }
+        else
+        {
+            Debug.LogFormat("<APIManager/ ({0})> Response ({1})", webRequest.downloadHandler.text, url);
+            callback?.Invoke(true, webRequest.downloadHandler.text);
+        }
+    }
 }
