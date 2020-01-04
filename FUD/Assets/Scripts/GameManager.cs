@@ -25,9 +25,27 @@ public class GameManager : MonoBehaviour
     #endregion
 
     // Start is called before the first frame update
-    void Start()
+
+    [HideInInspector]
+    public APIHandler apiHandler;
+
+    public SceneController sceneController;
+
+    void Awake()
     {
+        DontDestroyOnLoad(gameObject);
     }
 
+    private void Start()
+    {
+        Init();
+    }
+
+    void Init()
+    {
+        apiHandler = new APIHandler();
+
+        sceneController = new SceneController();
+    }
 
 }
