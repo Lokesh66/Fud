@@ -29,6 +29,13 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public APIHandler apiHandler;
 
+    public SceneController sceneController;
+
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     private void Start()
     {
         Init();
@@ -37,6 +44,8 @@ public class GameManager : MonoBehaviour
     void Init()
     {
         apiHandler = new APIHandler();
+
+        sceneController = new SceneController();
     }
 
 }
