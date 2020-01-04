@@ -7,8 +7,8 @@ public class SplashScreen : MonoBehaviour
     public GameObject launchScreen;
     private void Start()
     {
-        APIManager.Instance.GetCraftRoles();
-        APIManager.Instance.GetGenres();
+        GameManager.Instance.apiHandler.GetCraftRoles();
+        GameManager.Instance.apiHandler.GetGenres();
         Invoke("GoToLaunchScreen",2.0f);
     }
 

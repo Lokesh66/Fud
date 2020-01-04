@@ -14,7 +14,7 @@ public class CraftRoleItem : MonoBehaviour
     public void SetView(Craft craftInfo, System.Action<CraftRoleItem> action)
     {
         OnSelect = action;
-        APIManager.Instance.DownloadImage(craftInfo.image_url.ToString(), (Sprite img) =>{
+        GameManager.Instance.apiHandler.DownloadImage(craftInfo.image_url.ToString(), (Sprite img) =>{
             if(img != null)
             {
                 icon.sprite = img;
