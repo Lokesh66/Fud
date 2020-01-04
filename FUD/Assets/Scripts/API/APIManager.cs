@@ -42,6 +42,15 @@ public class APIManager : MonoBehaviour
     public const string GET_CRATFS = BASE_URL + "v1/24_craftRoles/";
     public const string GET_GENRES = BASE_URL + "v1/genres/";
 
+    public enum EHeaderType
+    { 
+        Login,
+        Generic,
+        Refresh
+    }
+
+    public GameObject o854252G;
+
     IEnumerator PostRequest(string url, Dictionary<string, string> parameters, Action<bool, string> callback)
     {
         Dictionary<string, Dictionary<string, string>> attributes = new Dictionary<string, Dictionary<string, string>>();
@@ -52,24 +61,28 @@ public class APIManager : MonoBehaviour
 
         Debug.LogFormat("URL ({0}) Data ({1})", url, jsonData);
 
-        using (UnityWebRequest webRequest = UnityWebRequest.Post(url, jsonData))
+        UnityWebRequest webRequest = UnityWebRequest.Post(url, jsonData);
+        
+        webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(jsonData));
+
+        Dictionary<string, string> headers = GetHeaders(EHeaderType.Generic, jsonData);
+
+        foreach (KeyValuePair<string, string> header in headers)
         {
-            webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(jsonData));
+            webRequest.SetRequestHeader(header.Key, header.Value);
+        }
 
-            webRequest.SetRequestHeader("Content-Type", "application/json");
+        yield return webRequest.SendWebRequest();
 
-            yield return webRequest.SendWebRequest();
-
-            if (webRequest.isNetworkError || webRequest.isHttpError)
-            {
-                Debug.LogErrorFormat("<APIManager/({0})> Error ({1})", webRequest.error, url);
-                callback?.Invoke(false, webRequest.error);
-            }
-            else
-            {
-                Debug.LogFormat("<APIManager/ ({0})> Response ({1})", webRequest.downloadHandler.text, url);
-                callback?.Invoke(true, webRequest.downloadHandler.text);
-            }
+        if (webRequest.isNetworkError || webRequest.isHttpError)
+        {
+            Debug.LogErrorFormat("<APIManager/({0})> Error ({1})", webRequest.error, url);
+            callback?.Invoke(false, webRequest.error);
+        }
+        else
+        {
+            Debug.LogFormat("<APIManager/ ({0})> Response ({1})", webRequest.downloadHandler.text, url);
+            callback?.Invoke(true, webRequest.downloadHandler.text);
         }
     }
 
@@ -355,6 +368,85 @@ public class APIManager : MonoBehaviour
 
 
         //*** Return
+    }
+
+    #endregion
+
+    #region Get Headers
+
+    public Dictionary<string, string> GetHeaders(EHeaderType headerType, string bodyParameters = "")
+    {
+        Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
+
+        keyValuePairs["Content-Type"] = "application/json";
+
+        switch (headerType)
+        {
+            case EHeaderType.Login:
+
+                keyValuePairs["signature"] = CalculateMD5Hash(o854252G.name + bodyParameters);
+
+                keyValuePairs["appversion"] = Application.version;
+
+#if UNITY_IOS
+      keyValuePairs["os_type"] = "iOS";
+#elif UNITY_ANDROID
+                keyValuePairs["os_type"] = "Android";
+#endif
+
+                break;
+
+            case EHeaderType.Generic:
+                keyValuePairs["signature"] = CalculateMD5Hash(o854252G.name + bodyParameters);
+
+                keyValuePairs["appversion"] = Application.version;
+
+                keyValuePairs["token"] = GetToken();
+
+#if UNITY_IOS
+      keyValuePairs["os_type"] = "iOS";
+#elif UNITY_ANDROID
+                keyValuePairs["os_type"] = "Android";
+#endif
+                break;
+
+            case EHeaderType.Refresh:
+                keyValuePairs["signature"] = CalculateMD5Hash(o854252G.name + bodyParameters);
+
+                keyValuePairs["appversion"] = Application.version;
+
+                keyValuePairs["token"] = GetToken();
+
+#if UNITY_IOS
+      keyValuePairs["os_type"] = "iOS";
+#elif UNITY_ANDROID
+                keyValuePairs["os_type"] = "Android";
+#endif
+                break;
+        }
+
+        keyValuePairs["appid"] = string.Empty;
+
+        return keyValuePairs;
+    }
+
+    public string GetToken()
+    {
+        return string.Empty;
+    }
+
+    public static string CalculateMD5Hash(string s)
+    {
+        // Form hash
+        System.Security.Cryptography.MD5 h = System.Security.Cryptography.MD5.Create();
+        byte[] data = h.ComputeHash(System.Text.Encoding.Default.GetBytes(s));
+        // Create string representation
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        for (int i = 0; i < data.Length; ++i)
+        {
+            sb.Append(data[i].ToString("x2"));
+        }
+        return sb.ToString();
     }
 
     #endregion
