@@ -14,9 +14,10 @@ public class LoginScreen : MonoBehaviour
     public void OnClickSendOTP()
     {
         GameManager.Instance.apiHandler.SendOTP(inputField.text, (bool status) => {
-            Debug.Log("@@@@@@@@@@@@@@@@");
-            roleSelection.SetView((CraftRoleItem item) => {
-                Debug.Log(item.nameText.text);
+            roleSelection.SetView((CraftRoleItem selectedItem) => {
+                roleSelection.gameObject.SetActive(false);
+                GameManager.Instance.sceneController.SwitchScene(ESceneType.HomeScene);
+
             });
         });
     }

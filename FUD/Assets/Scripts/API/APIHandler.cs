@@ -81,10 +81,6 @@ public partial class APIHandler
     }
     #endregion
 
-    #region OTP
-    
-    #endregion
-
     #region Imagedownload
 
     public void DownloadImage(string imageurl, Action<Sprite> CallBack)
@@ -417,12 +413,14 @@ public partial class APIHandler
 
         webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(jsonData));
 
-        Dictionary<string, string> headers = GetHeaders(EHeaderType.Generic, jsonData);
+        webRequest.SetRequestHeader("Content-Type", "application/json");
+
+        /*Dictionary<string, string> headers = GetHeaders(EHeaderType.Generic, jsonData);
 
         foreach (KeyValuePair<string, string> header in headers)
         {
             webRequest.SetRequestHeader(header.Key, header.Value);
-        }
+        }*/
 
         yield return webRequest.SendWebRequest();
 
