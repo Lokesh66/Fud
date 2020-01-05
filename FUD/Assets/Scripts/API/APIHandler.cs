@@ -379,7 +379,7 @@ public partial class APIHandler
     {
         if (File.Exists(APIConstants.TOKEN_PATH))
         {
-            return "Bearer "+ File.ReadAllText(APIConstants.TOKEN_PATH);// "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjIsImV4cGlyeSI6MTU3ODI2Mzc3Niwicm9sZSI6MX0.Kfclhtgqa_f3BEO9oUqbrsalOGdETOOeLmIy0QSTElRg5lnEB40wbKXMvW878KBcxsGqpFRhN29q1YJaU1tnkQ"; //+ File.ReadAllText(APIConstants.TOKEN_PATH);
+            return "Bearer " + File.ReadAllText(APIConstants.TOKEN_PATH);
         }
         return string.Empty;
     }
@@ -393,10 +393,12 @@ public partial class APIHandler
     IEnumerator GetRequest(string url, bool isAuth, Action<bool, string> OnResponse)
     {
         UnityWebRequest webRequest = UnityWebRequest.Get(url);
+
         if (isAuth)
         {
             webRequest.SetRequestHeader("Authorization", GetToken());
         }
+
         yield return webRequest.SendWebRequest();
 
         if (webRequest.isNetworkError || webRequest.isHttpError)
