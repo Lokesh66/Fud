@@ -14,9 +14,11 @@ public class APIConstants
 
     public const string USER_OTP = BASE_URL + "v1/sendOtp";
 
-    public const string STORY = BASE_URL + "v1/story/";
-
     public const string GET_CRATFS = BASE_URL + "v1/24_craftRoles/";
 
     public const string GET_GENRES = BASE_URL + "v1/genres/";
+
+    public const string CREATE_STORY = BASE_URL + "v1/story/";
+
+    public const string CREATE_PROJECT = BASE_URL + "v1/projects/";
 }
