@@ -5,9 +5,9 @@ public class DetailsScreen : MonoBehaviour
 {
     public TMP_InputField mobileNumberTextField;
 
-    System.Action<bool, string> OnButtonAction;
+    System.Action<bool, long> OnButtonAction;
 
-    public void SetView(System.Action<bool, string> action)
+    public void SetView(System.Action<bool, long> action)
     {
         gameObject.SetActive(true);
 
@@ -17,10 +17,10 @@ public class DetailsScreen : MonoBehaviour
 
     public void OnClick_SendOTP()
     {
-        GameManager.Instance.apiHandler.SendOTP(mobileNumberTextField.text, (bool status) => {
+        GameManager.Instance.apiHandler.SendOTP(long.Parse(mobileNumberTextField.text), (bool status) => {
             if (status)
             {
-                OnButtonAction?.Invoke(true, mobileNumberTextField.text);
+                OnButtonAction?.Invoke(true, long.Parse(mobileNumberTextField.text));
             }
             else
             {
@@ -31,6 +31,6 @@ public class DetailsScreen : MonoBehaviour
 
     public void OnClick_Back()
     {
-        OnButtonAction?.Invoke(false, null);
+        OnButtonAction?.Invoke(false, 0);
     }
 }

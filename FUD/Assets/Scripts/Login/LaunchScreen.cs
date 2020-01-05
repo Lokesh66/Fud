@@ -22,7 +22,7 @@ public class LaunchScreen : MonoBehaviour
         OnButtonPressed = null;
     }
 
-    public void OnClick_Login()
+    public void OnClickLogin()
     {
         OnButtonPressed?.Invoke(ELoginButtonType.Login);
         OnButtonPressed = null;

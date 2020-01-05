@@ -19,12 +19,12 @@ public partial class APIHandler
 
     public void CreateProject(Project project, Action<Project> action)
     {
-        Dictionary<string, string> parameters = new Dictionary<string, string>();
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
 
         parameters.Add("title", project.title);
-        parameters.Add("story_id", project.story_id.ToString());
-        parameters.Add("cost_estimation", project.cost_estimation.ToString());
-        parameters.Add("estimated_time", project.estimated_time.ToString());
+        parameters.Add("story_id", project.story_id);
+        parameters.Add("cost_estimation", project.cost_estimation);
+        parameters.Add("estimated_time", project.estimated_time);
 
         /*"title": "rakshak",
 		"story_id": 1,

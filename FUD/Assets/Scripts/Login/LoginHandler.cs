@@ -38,7 +38,7 @@ public class LoginHandler : MonoBehaviour
     public LoginScreen loginScreen;
 
     Craft selectedRole;
-    string contactNumber;
+    long contactNumber;
     User user;
     bool isNewUser = true;
 
@@ -97,13 +97,13 @@ public class LoginHandler : MonoBehaviour
         }
     }
 
-    void OnDetailsScreen_CallBack(bool status, string mobileNumber)
+    void OnDetailsScreen_CallBack(bool status, long mobileNumber)
     {
         detailsScreen.gameObject.SetActive(false);
 
         if (status)
         {
-            if (!string.IsNullOrEmpty(mobileNumber))
+            if (mobileNumber != 0)
             {
                 contactNumber = mobileNumber;
             }

@@ -6,9 +6,9 @@ using System;
 
 public partial class APIHandler
 {
-    public void SendOTP(string phoneNumber, Action<bool> action)
+    public void SendOTP(long phoneNumber, Action<bool> action)
     {
-        Dictionary<string, string> parameters = new Dictionary<string, string>();
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
 
         parameters.Add("phone", phoneNumber);
 
@@ -19,12 +19,12 @@ public partial class APIHandler
         }));
     }
 
-    public void Login(string phoneNumber, string code, Action<bool, User> action)
+    public void Login(long phoneNumber, string code, Action<bool, User> action)
     {
-        Dictionary<string, string> parameters = new Dictionary<string, string>();
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
 
         parameters.Add("phone", phoneNumber);
-        parameters.Add("login_code", code);
+        parameters.Add("login_code", "1234");// code);
 
         gameManager.StartCoroutine(PostRequest(APIConstants.USER_LOGIN, parameters, (bool status, string response) => {
             if (status)

@@ -5,10 +5,10 @@ public class LoginScreen : MonoBehaviour
 {
     public TMP_InputField otpInputField;
 
-    string number;
+    long number;
 
     System.Action<bool, User> LoginAction;
-    public void SetView(string number, System.Action<bool, User> action)
+    public void SetView(long number, System.Action<bool, User> action)
     {
         gameObject.SetActive(true);
         this.number = number;
