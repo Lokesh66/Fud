@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         Init();
+
         DontDestroyOnLoad(gameObject);
     }
 
@@ -44,7 +45,7 @@ public class GameManager : MonoBehaviour
 
     void Init()
     {
-        apiHandler = new APIHandler();
+        apiHandler = new APIHandler(this);
 
         sceneController = new SceneController();
     }

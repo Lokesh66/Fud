@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Text;
 using System;
 
-public partial class APIHandler : MonoBehaviour
+public partial class APIHandler
 {
     public void SendOTP(string phoneNumber, Action<bool> action)
     {

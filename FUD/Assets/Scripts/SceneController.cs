@@ -10,7 +10,7 @@ public enum ESceneType
     HomeScene
 }
 
-public class SceneController : MonoBehaviour
+public class SceneController
 {
     public ESceneType currentScene;
 
