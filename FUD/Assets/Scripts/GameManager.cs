@@ -29,16 +29,17 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public APIHandler apiHandler;
 
+    [HideInInspector]
     public SceneController sceneController;
 
     void Awake()
     {
+        Init();
         DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
     {
-        Init();
     }
 
     void Init()
