@@ -37,7 +37,7 @@ public class LoginHandler : MonoBehaviour
     public DetailsScreen detailsScreen;
     public LoginScreen loginScreen;
 
-    Craft selectedRole;
+    Craft selectedRole = new Craft();
     long contactNumber;
     User user;
     bool isNewUser = true;
@@ -61,7 +61,7 @@ public class LoginHandler : MonoBehaviour
                 detailsScreen.SetView(OnDetailsScreen_CallBack);
                 break;
             case ELoginFlow.Login:
-                loginScreen.SetView(contactNumber, OnLoginScreen_CallBack);
+                loginScreen.SetView(contactNumber, selectedRole.id, isNewUser, OnLoginScreen_CallBack);
                 break;
         }
     }

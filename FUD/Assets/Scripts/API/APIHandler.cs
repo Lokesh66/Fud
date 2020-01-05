@@ -358,11 +358,6 @@ public partial class APIHandler
         return keyValuePairs;
     }
 
-    public string GetToken()
-    {
-        return string.Empty;
-    }
-
     public static string CalculateMD5Hash(string s)
     {
         // Form hash
@@ -377,6 +372,18 @@ public partial class APIHandler
         return sb.ToString();
     }
 
+    #endregion
+
+    #region TOKEN
+    public string GetToken()
+    {
+        return File.ReadAllText(APIConstants.TOKEN_PATH);
+    }
+
+    public void SetToken(string token)
+    {
+        File.WriteAllText(APIConstants.TOKEN_PATH, token);
+    }
     #endregion
 
     IEnumerator GetRequest(string url, Action<bool, string> OnResponse)

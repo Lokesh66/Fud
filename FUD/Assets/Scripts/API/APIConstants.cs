@@ -8,7 +8,9 @@ public class APIConstants
 
     public const string BASE_URL = "http://3.136.106.58:7000/";
 
-    public const string USER = BASE_URL + "v1/users/";
+    public static string TOKEN_PATH = Application.persistentDataPath + "/Token";
+
+    public const string CREATE_USER = BASE_URL + "v1/users/";
 
     public const string USER_LOGIN = BASE_URL + "v1/login/";
 

@@ -19,6 +19,29 @@ public partial class APIHandler
         }));
     }
 
+    public void SignIn(long phoneNumber, string code, int roleId, Action<bool, User> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("name", "Guest");
+        parameters.Add("phone", phoneNumber);
+        parameters.Add("role_id", roleId);
+        parameters.Add("login_code", "1234");// code);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_USER, parameters, (bool status, string response) => {
+            if (status)
+            {
+                LoginResponse loginResponse = JsonUtility.FromJson<LoginResponse>(response);
+                action?.Invoke(true, loginResponse.data);
+            }
+            else
+            {
+                action?.Invoke(false, null);
+            }
+
+        }));
+    }
+
     public void Login(long phoneNumber, string code, Action<bool, User> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -30,6 +53,7 @@ public partial class APIHandler
             if (status)
             {
                 LoginResponse loginResponse = JsonUtility.FromJson<LoginResponse>(response);
+                gameManager.apiHandler.SetToken(loginResponse.data.token);
                 action?.Invoke(true, loginResponse.data);
             }
             else
