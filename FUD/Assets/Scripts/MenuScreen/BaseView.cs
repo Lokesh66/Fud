@@ -6,6 +6,8 @@ public class BaseView : MonoBehaviour
 {
     public Stack<GameObject> subScreens = new Stack<GameObject>();
 
+    public EScreenType screenType;
+
     public virtual void ShowScreen()
     {
         gameObject.SetActive(true);
@@ -50,4 +52,12 @@ public class BaseView : MonoBehaviour
         
         gameObject.SetActive(false);
     }
+}
+
+public enum EScreenType 
+{
+    Home,
+    MyStories,
+    Lounge,
+    Forum
 }

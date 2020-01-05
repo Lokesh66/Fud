@@ -8,10 +8,24 @@ public class ProjectController : MonoBehaviour
 
     public GameObject projectCell;
 
+    List<ProjectDataModel> projectModels;
 
     public void Load()
     {
-        for (int i = 0; i < 5; i++)
+        GameManager.Instance.apiHandler.GetProjects((status, projectsResponse) => {
+
+            if (status)
+            {
+                LoadView(projectsResponse.data);
+            }
+        });
+    }
+
+    void LoadView(List<ProjectDataModel> models)
+    {
+        projectModels = models;
+
+        for (int i = 0; i < models.Count; i++)
         {
             GameObject projectObject = Instantiate(projectCell, content);
 

@@ -19,4 +19,6 @@ public class APIConstants
     public const string GET_CRATFS = BASE_URL + "v1/24_craftRoles/";
 
     public const string GET_GENRES = BASE_URL + "v1/genres/";
+
+    public const string CREATE_PROJECT = BASE_URL + "v1/projects";
 }
