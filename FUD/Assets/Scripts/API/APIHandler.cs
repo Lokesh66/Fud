@@ -377,7 +377,11 @@ public partial class APIHandler
     #region TOKEN
     public string GetToken()
     {
-        return File.ReadAllText(APIConstants.TOKEN_PATH);
+        if (File.Exists(APIConstants.TOKEN_PATH))
+        {
+            return "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjIsImV4cGlyeSI6MTU3ODI2Mzc3Niwicm9sZSI6MX0.Kfclhtgqa_f3BEO9oUqbrsalOGdETOOeLmIy0QSTElRg5lnEB40wbKXMvW878KBcxsGqpFRhN29q1YJaU1tnkQ"; //+ File.ReadAllText(APIConstants.TOKEN_PATH);
+        }
+        return string.Empty;
     }
 
     public void SetToken(string token)
@@ -421,6 +425,10 @@ public partial class APIHandler
         webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(jsonData));
 
         webRequest.SetRequestHeader("Content-Type", "application/json");
+
+        Debug.Log("GetToken() = " + GetToken());
+
+        webRequest.SetRequestHeader("token", GetToken());
 
         /*Dictionary<string, string> headers = GetHeaders(EHeaderType.Generic, jsonData);
 
