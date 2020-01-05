@@ -3,8 +3,6 @@
 
 public class AuditionController : MonoBehaviour
 {
-    public RectTransform addAuditionTrans;
-
     public RectTransform content;
 
     public GameObject auditionCell;
@@ -18,7 +16,5 @@ public class AuditionController : MonoBehaviour
 
             auditionObject.GetComponent<AuditionCell>().SetView(i);
         }
-
-        addAuditionTrans.SetAsFirstSibling();
     }
 }

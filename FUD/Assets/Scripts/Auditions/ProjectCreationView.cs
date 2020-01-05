@@ -14,6 +14,12 @@ public class ProjectCreationView : MonoBehaviour
 
     public void OnSubmitProject()
     {
+        Debug.Log("apiHandler = " + GameManager.Instance.apiHandler);
+
+        Debug.Log("titleField = " + titleField.text);
+
+        Debug.Log("budgetField = " + budgetField.text);
+
         GameManager.Instance.apiHandler.UpdateProjectDetails(titleField.text, budgetField.text, 1000000.ToString(), (status, response) => {
 
             if (status)
@@ -24,7 +30,7 @@ public class ProjectCreationView : MonoBehaviour
             }
             else
             {
-                Debug.Log("Project Failed To Save");
+                Debug.LogError("Project Failed To Save");
             }
         });
     }

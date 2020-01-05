@@ -4,7 +4,6 @@ using System;
 
 public partial class APIHandler
 {
-
     public void GetProjects(Action<bool, AllProjectsResponse> action)
     {
         gameManager.StartCoroutine(GetRequest(APIConstants.CREATE_PROJECT, (status, response) => {
