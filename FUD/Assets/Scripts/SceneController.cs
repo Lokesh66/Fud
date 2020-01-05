@@ -1,20 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class SceneController : MonoBehaviour
+public enum ESceneType
 {
-    public enum ESceneType
-    { 
-        SplashScene,
-        LoginScene,
-        HomeScene
-    }
+    SplashScene,
+    LoginScene,
+    HomeScene
+}
 
+public class SceneController
+{
     public ESceneType currentScene;
 
     public ESceneType GetCurrentScene()
     {
         return currentScene;
+    }
+
+    public void SwitchScene(ESceneType eSceneType)
+    {
+        SceneManager.LoadScene(eSceneType.ToString());
     }
 }

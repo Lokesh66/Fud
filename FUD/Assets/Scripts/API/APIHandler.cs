@@ -7,16 +7,14 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
-public partial class APIHandler : MonoBehaviour
+public partial class APIHandler
 {
-    #region Singleton
+    GameManager gameManager;
 
-    public APIHandler()
+    public APIHandler(GameManager gameManager)
     {
-
+        this.gameManager = gameManager;
     }
-
-    #endregion
 
     public enum EHeaderType
     { 
@@ -53,7 +51,7 @@ public partial class APIHandler : MonoBehaviour
     #region GET CraftRoles
     public void GetCraftRoles()
     {
-        StartCoroutine(GetRequest(APIConstants.GET_CRATFS, (bool status, string response) => {
+        gameManager.StartCoroutine(GetRequest(APIConstants.GET_CRATFS, (bool status, string response) => {
             if (status)
             {
                 CraftsResponse data = JsonUtility.FromJson<CraftsResponse>(response);
@@ -72,7 +70,7 @@ public partial class APIHandler : MonoBehaviour
                 GenreResponse data = JsonUtility.FromJson<GenreResponse>(response);
                 DataManager.Instance.UpdateGenres(data.data);*/
 
-        StartCoroutine(GetRequest(APIConstants.GET_GENRES, (bool status, string response) =>
+        gameManager.StartCoroutine(GetRequest(APIConstants.GET_GENRES, (bool status, string response) =>
         {
             if (status)
             {
@@ -108,7 +106,7 @@ public partial class APIHandler : MonoBehaviour
         }
         else
         {
-            StartCoroutine(DownloadAndSave(imageurl, CallBack));
+            gameManager.StartCoroutine(DownloadAndSave(imageurl, CallBack));
         }
     }
 

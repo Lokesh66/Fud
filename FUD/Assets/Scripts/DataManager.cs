@@ -29,6 +29,11 @@ public class DataManager : MonoBehaviour
 
     public List<Genre> genres = new List<Genre>();
 
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     public void UpdateCrafts(List<Craft> data)
     {
         crafts = data;
@@ -40,7 +45,7 @@ public class DataManager : MonoBehaviour
 }
 
 #region UserData
-[SerializeField]
+[Serializable]
 public class UserData
 {
     public int id;
@@ -52,7 +57,7 @@ public class UserData
     public DateTime created_date_time;
 }
 
-[SerializeField]
+[Serializable]
 public class UserDataObject
 {
     public string message;
@@ -62,7 +67,7 @@ public class UserDataObject
 #endregion
 
 #region UserLogin
-[SerializeField]
+[Serializable]
 public class UserLoginData
 {
     public int id;
@@ -77,7 +82,7 @@ public class UserLoginData
     public DateTime updatedAt;
 }
 
-[SerializeField]
+[Serializable]
 public class UserLoginbject
 {
     public string message;
