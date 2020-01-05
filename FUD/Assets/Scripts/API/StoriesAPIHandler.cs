@@ -8,7 +8,7 @@ public partial class APIHandler
 {
     public void GetAllStories( Action<bool, List<Story>> action)
     {
-        Dictionary<string, string> parameters = new Dictionary<string, string>();
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
 
 /*        parameters.Add("phone", phoneNumber);*/
         gameManager.StartCoroutine( PostRequest(APIConstants.CREATE_STORY, parameters, (bool status, string response) => {

@@ -19,15 +19,15 @@ public partial class APIHandler
 
     public void UpdateProjectDetails(string title, string budget, string duration, Action<bool, string> action)
     {
-        Dictionary<string, string> parameters = new Dictionary<string, string>();
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
 
         parameters.Add("title", title);
 
-        parameters.Add("story_id", 1.ToString());
+        parameters.Add("story_id", 1);
 
-        parameters.Add("cost_estimation", budget);
+        parameters.Add("cost_estimation", long.Parse(budget));
 
-        parameters.Add("estimated_time", duration);
+        parameters.Add("estimated_time",  long.Parse(duration));
 
         gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_PROJECT, parameters, (status, response) => {
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoleSelection : MonoBehaviour
+public class RoleSelectionScreen : MonoBehaviour
 {
     public CraftRoleItem roleItemPrefab;
 
@@ -10,9 +10,10 @@ public class RoleSelection : MonoBehaviour
 
     List<CraftRoleItem> itemList;
 
-    System.Action<CraftRoleItem> OnItemSelected = null;
-    // Start is called before the first frame update
-    public void SetView(System.Action<CraftRoleItem> action)
+    System.Action<Craft> OnItemSelected = null;
+
+
+    public void SetView(System.Action<Craft> action)
     {
         gameObject.SetActive(true);
 
@@ -23,14 +24,20 @@ public class RoleSelection : MonoBehaviour
         for(int i = 0; i < craftsList.Count; i++)
         {
             CraftRoleItem item = Instantiate<CraftRoleItem>(roleItemPrefab, parentTransform);
-            item.SetView(craftsList[i],OnItemSelected);
+            item.SetView(craftsList[i], OnItemSelected);
             itemList.Add(item);
         }
     }
 
-    void OnItemClick(CraftRoleItem item)
+    void OnItemClick(Craft item)
     {
         OnItemSelected?.Invoke(item);
+        OnItemSelected = null;
+    }
+
+    public void OnClick_Back()
+    {
+        OnItemSelected?.Invoke(null);
         OnItemSelected = null;
     }
 

@@ -399,9 +399,9 @@ public partial class APIHandler
         }
     }
 
-    IEnumerator PostRequest(string url, Dictionary<string, string> parameters, Action<bool, string> callback)
+    IEnumerator PostRequest(string url, Dictionary<string, object> parameters, Action<bool, string> callback)
     {
-        Dictionary<string, Dictionary<string, string>> attributes = new Dictionary<string, Dictionary<string, string>>();
+        Dictionary<string, Dictionary<string, object>> attributes = new Dictionary<string, Dictionary<string, object>>();
 
         attributes.Add("attributes", parameters);
 
