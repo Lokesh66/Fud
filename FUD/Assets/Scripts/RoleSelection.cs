@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RoleSelection : MonoBehaviour
 {
-    public GameObject roleItemPrefab;
+    public CraftRoleItem roleItemPrefab;
 
     public Transform parentTransform;
 
@@ -14,22 +14,22 @@ public class RoleSelection : MonoBehaviour
     // Start is called before the first frame update
     public void SetView(System.Action<CraftRoleItem> action)
     {
-        this.gameObject.SetActive(true);
+        gameObject.SetActive(true);
 
         OnItemSelected = action;
+        itemList = new List<CraftRoleItem>();
+
         List<Craft> craftsList = DataManager.Instance.crafts;
         for(int i = 0; i < craftsList.Count; i++)
         {
-            GameObject item = Instantiate(roleItemPrefab, parentTransform) as GameObject;
-            CraftRoleItem craftRoleItem = item.GetComponent<CraftRoleItem>();
-            craftRoleItem.SetView(craftsList[i],OnItemSelected);
-            itemList.Add(craftRoleItem);
+            CraftRoleItem item = Instantiate<CraftRoleItem>(roleItemPrefab, parentTransform);
+            item.SetView(craftsList[i],OnItemSelected);
+            itemList.Add(item);
         }
     }
 
     void OnItemClick(CraftRoleItem item)
     {
-        this.gameObject.SetActive(false);
         OnItemSelected?.Invoke(item);
         OnItemSelected = null;
     }

@@ -6,17 +6,23 @@ using System;
 
 public partial class APIHandler
 {
-    public void GetAllStories(string phoneNumber, Action<bool> action)
+    public void GetAllStories( Action<bool, List<Story>> action)
     {
         Dictionary<string, string> parameters = new Dictionary<string, string>();
 
-        parameters.Add("phone", phoneNumber);
+/*        parameters.Add("phone", phoneNumber);*/
+        gameManager.StartCoroutine( PostRequest(APIConstants.CREATE_STORY, parameters, (bool status, string response) => {
+            if (status)
+            {
+                StoriesResponse stories = JsonUtility.FromJson<StoriesResponse>(response);
+                action?.Invoke(true, stories.data);
+            }
+            else
+            {
+                action?.Invoke(false, null);
+            }
 
-        PostRequest(APIConstants.CREATE_STORY, parameters, (bool status, string response) => {
-
-            action?.Invoke(status);
-
-        });
+        }));
     }
 }
 

@@ -13,10 +13,10 @@ public partial class APIHandler
 
         parameters.Add("phone", phoneNumber);
 
-        PostRequest(APIConstants.USER_OTP, parameters, (bool status, string response) => {
+     gameManager.StartCoroutine(PostRequest(APIConstants.USER_OTP, parameters, (bool status, string response) => {
             Debug.LogFormat("<LoginAPIHandler/SendOTP> Response ({0})", response);
             action?.Invoke(status);
 
-        });
+        }));
     }
 }
