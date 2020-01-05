@@ -51,7 +51,7 @@ public partial class APIHandler
     #region GET CraftRoles
     public void GetCraftRoles()
     {
-        gameManager.StartCoroutine(GetRequest(APIConstants.GET_CRATFS, (bool status, string response) => {
+        gameManager.StartCoroutine(GetRequest(APIConstants.GET_CRATFS, false, (bool status, string response) => {
             if (status)
             {
                 CraftsResponse data = JsonUtility.FromJson<CraftsResponse>(response);
@@ -70,7 +70,7 @@ public partial class APIHandler
                 GenreResponse data = JsonUtility.FromJson<GenreResponse>(response);
                 DataManager.Instance.UpdateGenres(data.data);*/
 
-        gameManager.StartCoroutine(GetRequest(APIConstants.GET_GENRES, (bool status, string response) =>
+        gameManager.StartCoroutine(GetRequest(APIConstants.GET_GENRES, false, (bool status, string response) =>
         {
             if (status)
             {
@@ -379,7 +379,7 @@ public partial class APIHandler
     {
         if (File.Exists(APIConstants.TOKEN_PATH))
         {
-            return "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjIsImV4cGlyeSI6MTU3ODI2Mzc3Niwicm9sZSI6MX0.Kfclhtgqa_f3BEO9oUqbrsalOGdETOOeLmIy0QSTElRg5lnEB40wbKXMvW878KBcxsGqpFRhN29q1YJaU1tnkQ"; //+ File.ReadAllText(APIConstants.TOKEN_PATH);
+            return "Bearer "+ File.ReadAllText(APIConstants.TOKEN_PATH);// "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjIsImV4cGlyeSI6MTU3ODI2Mzc3Niwicm9sZSI6MX0.Kfclhtgqa_f3BEO9oUqbrsalOGdETOOeLmIy0QSTElRg5lnEB40wbKXMvW878KBcxsGqpFRhN29q1YJaU1tnkQ"; //+ File.ReadAllText(APIConstants.TOKEN_PATH);
         }
         return string.Empty;
     }
@@ -390,10 +390,13 @@ public partial class APIHandler
     }
     #endregion
 
-    IEnumerator GetRequest(string url, Action<bool, string> OnResponse)
+    IEnumerator GetRequest(string url, bool isAuth, Action<bool, string> OnResponse)
     {
         UnityWebRequest webRequest = UnityWebRequest.Get(url);
-
+        if (isAuth)
+        {
+            webRequest.SetRequestHeader("Authorization", GetToken());
+        }
         yield return webRequest.SendWebRequest();
 
         if (webRequest.isNetworkError || webRequest.isHttpError)
@@ -428,7 +431,7 @@ public partial class APIHandler
 
         Debug.Log("GetToken() = " + GetToken());
 
-        webRequest.SetRequestHeader("token", GetToken());
+        webRequest.SetRequestHeader("Authorization", GetToken());
 
         /*Dictionary<string, string> headers = GetHeaders(EHeaderType.Generic, jsonData);
 
