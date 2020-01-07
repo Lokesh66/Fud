@@ -12,6 +12,8 @@ public class ProjectController : MonoBehaviour
 
     public void Load()
     {
+        gameObject.SetActive(true);
+
         GameManager.Instance.apiHandler.GetProjects((status, projectsResponse) => {
 
             if (status)
