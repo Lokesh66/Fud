@@ -34,4 +34,9 @@ public class ProjectController : MonoBehaviour
             projectObject.GetComponent<ProjectCell>().SetView();
         }
     }
+
+    public void OnBackButtonAction()
+    {
+        gameObject.SetActive(false);
+    }
 }
