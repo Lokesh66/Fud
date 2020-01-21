@@ -3,6 +3,8 @@ using UnityEngine.Networking;
 using UnityEngine;
 using System.Text;
 using System;
+using TMPro;
+
 
 public partial class APIHandler
 {
@@ -11,7 +13,7 @@ public partial class APIHandler
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
 /*        parameters.Add("phone", phoneNumber);*/
-        gameManager.StartCoroutine( PostRequest(APIConstants.CREATE_STORY, parameters, (bool status, string response) => {
+        gameManager.StartCoroutine(GetRequest(APIConstants.CREATE_STORY, true, (bool status, string response) => {
             if (status)
             {
                 StoriesResponse stories = JsonUtility.FromJson<StoriesResponse>(response);
@@ -23,6 +25,32 @@ public partial class APIHandler
             }
 
         }));
+    }
+
+    public void CreateStory(string title, string subTitle, string description,int genreId, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("title", title);
+
+        parameters.Add("story_line", subTitle);
+
+        parameters.Add("description", description);
+
+        parameters.Add("genre_id", genreId);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_STORY, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void UploadFile(string filePath, TextMeshProUGUI statusText, TextMeshProUGUI contentTypeText, Action<bool> OnResposne)
+    {
+        gameManager.StartCoroutine(Upload(filePath, statusText, contentTypeText, ((status) => {
+
+            OnResposne?.Invoke(status);
+        })));
     }
 }
 

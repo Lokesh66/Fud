@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.IO;
 
 public class GameManager : MonoBehaviour
 {
@@ -41,6 +42,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        StartGame();
     }
 
     void Init()
@@ -48,6 +50,17 @@ public class GameManager : MonoBehaviour
         apiHandler = new APIHandler(this);
 
         sceneController = new SceneController();
+    }
+
+    void StartGame()
+    {
+        if (File.Exists(APIConstants.TOKEN_PATH))
+        {
+            sceneController.SwitchScene(ESceneType.HomeScene);
+        }
+        else {
+            sceneController.SwitchScene(ESceneType.LoginScene);
+        }
     }
 
 }

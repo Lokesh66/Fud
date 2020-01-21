@@ -8,7 +8,11 @@ public class HomeView : BaseView
 
     public GameObject projectsPanel;
 
+    public StoryCreationView storyCreationView;
+
     public ProjectController projectController;
+
+    public MyStoriesView myStoriesView;
 
 
     #region Ovveride Methods
@@ -51,6 +55,20 @@ public class HomeView : BaseView
         projectController.Load();
 
         leftMenuPanel.SetActive(false);
+    }
+    public void OnCreateStoryAction()
+    {
+        Debug.Log("Persistent Path = " + APIConstants.PERSISTENT_PATH);
+        leftMenuPanel.SetActive(false);
+
+        storyCreationView.Load();
+    }
+
+    public void OnMyStoriesAction()
+    {
+        leftMenuPanel.SetActive(false);
+
+        myStoriesView.Load();
     }
 
     public void OnCloseLeftMenu()

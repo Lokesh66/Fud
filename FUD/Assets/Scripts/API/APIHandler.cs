@@ -6,6 +6,8 @@ using UnityEngine.Networking;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using TMPro;
+
 
 public partial class APIHandler
 {
@@ -453,6 +455,51 @@ public partial class APIHandler
         {
             Debug.LogFormat("<APIManager/ ({0})> Response ({1})", webRequest.downloadHandler.text, url);
             callback?.Invoke(true, webRequest.downloadHandler.text);
+        }
+    }
+
+    IEnumerator Upload(string filePath, TextMeshProUGUI statusText, TextMeshProUGUI contentTypeText, Action<bool> responseCallBack)
+    {
+        List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
+
+        formData.Add(new MultipartFormFileSection("file", filePath));
+
+       // UnityWebRequest www = UnityWebRequest.Post(APIConstants.MEDIA_URL, formData);
+
+        byte[] boundary = UnityWebRequest.GenerateBoundary();
+        byte[] formSections = UnityWebRequest.SerializeFormSections(formData, boundary);
+        // my termination string consisting of CRLF--{boundary}--
+        byte[] terminate = Encoding.UTF8.GetBytes(String.Concat("\r\n--", Encoding.UTF8.GetString(boundary), "--"));
+        // Make my complete body from the two byte arrays
+        byte[] body = new byte[formSections.Length + terminate.Length];
+        Buffer.BlockCopy(formSections, 0, body, 0, formSections.Length);
+        Buffer.BlockCopy(terminate, 0, body, formSections.Length, terminate.Length);
+        // Set the content type - NO QUOTES around the boundary
+        string contentType = String.Concat("multipart/form-data; boundary=", Encoding.UTF8.GetString(boundary));
+        // Make my request object and add the raw body. Set anything else you need here
+        UnityWebRequest wr = new UnityWebRequest();
+        wr = UnityWebRequest.Post(APIConstants.MEDIA_URL, formData);
+        UploadHandler uploader = new UploadHandlerRaw(body);
+        uploader.contentType = contentType;
+        wr.uploadHandler = uploader;
+
+        
+
+        contentTypeText.text = "Content Type " + contentType;
+
+        yield return wr.SendWebRequest();
+
+        if (wr.isNetworkError)
+        {
+            Debug.Log(wr.error);
+            responseCallBack?.Invoke(false);
+            statusText.text = "StATUS " + wr.error;
+        }
+        else
+        {
+            Debug.Log("Form upload complete!");
+            statusText.text = "sTatus Success = " + wr.downloadHandler.text;
+            responseCallBack?.Invoke(true);
         }
     }
 }

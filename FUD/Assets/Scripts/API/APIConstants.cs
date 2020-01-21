@@ -8,7 +8,13 @@ public class APIConstants
 
     public const string BASE_URL = "http://3.136.106.58:7000/";
 
-    public static string TOKEN_PATH = Application.persistentDataPath + "/Token";
+    public const string MEDIA_UPLOAD_BASE_URL = "http://3.136.106.58:7005/";
+
+    public static string PERSISTENT_PATH = Application.persistentDataPath + "/";
+
+    public static string TOKEN_PATH = PERSISTENT_PATH + "/Token";
+
+    public static string IMAGES_PATH = PERSISTENT_PATH + "Images";
 
     public const string CREATE_USER = BASE_URL + "v1/users/";
 
@@ -23,4 +29,6 @@ public class APIConstants
     public const string CREATE_STORY = BASE_URL + "v1/story/";
 
     public const string CREATE_PROJECT = BASE_URL + "v1/projects/";
+
+    public const string MEDIA_URL = MEDIA_UPLOAD_BASE_URL + "adam/v1/uploadFile/";
 }
