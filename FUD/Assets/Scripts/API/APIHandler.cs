@@ -464,7 +464,11 @@ public partial class APIHandler
 
         formData.Add(new MultipartFormFileSection("file", filePath));
 
-       // UnityWebRequest www = UnityWebRequest.Post(APIConstants.MEDIA_URL, formData);
+        formData.Add(new MultipartFormDataSection("project_id", 8.ToString()));
+
+        formData.Add(new MultipartFormDataSection("env_id", 1.ToString()));
+
+        // UnityWebRequest www = UnityWebRequest.Post(APIConstants.MEDIA_URL, formData);
 
         byte[] boundary = UnityWebRequest.GenerateBoundary();
         byte[] formSections = UnityWebRequest.SerializeFormSections(formData, boundary);
@@ -489,7 +493,7 @@ public partial class APIHandler
 
         yield return wr.SendWebRequest();
 
-        if (wr.isNetworkError)
+        if (wr.isNetworkError || wr.isHttpError)
         {
             Debug.Log(wr.error);
             responseCallBack?.Invoke(false);
