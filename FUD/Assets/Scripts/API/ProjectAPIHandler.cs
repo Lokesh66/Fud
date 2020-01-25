@@ -29,7 +29,7 @@ public partial class APIHandler
 
         parameters.Add("estimated_time",  long.Parse(duration));
 
-        gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_PROJECT, parameters, (status, response) => {
+        gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_PROJECT, true, parameters, (status, response) => {
 
             action(status, response);
         }));

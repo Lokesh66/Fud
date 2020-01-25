@@ -6,9 +6,9 @@ public class APIConstants
 {
     public const string SECRET_KEY = "SSht6KyxvwKZnsmbbbQUCm2va";
 
-    public const string BASE_URL = "http://3.136.106.58:7000/";
+    public const string BASE_URL = "http://18.217.51.190:7000/";
 
-    public const string MEDIA_UPLOAD_BASE_URL = "http://3.136.106.58:7005/";
+    public const string MEDIA_UPLOAD_BASE_URL = "http://18.217.51.190:7005/";
 
     public static string PERSISTENT_PATH = Application.persistentDataPath + "/";
 

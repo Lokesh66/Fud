@@ -12,7 +12,7 @@ public partial class APIHandler
 
         parameters.Add("phone", phoneNumber);
 
-        gameManager.StartCoroutine(PostRequest(APIConstants.USER_OTP, parameters, (bool status, string response) => {
+        gameManager.StartCoroutine(PostRequest(APIConstants.USER_OTP, false, parameters, (bool status, string response) => {
             Debug.LogFormat("<LoginAPIHandler/SendOTP> Response ({0})", response);
             action?.Invoke(status);
 
@@ -27,8 +27,10 @@ public partial class APIHandler
         parameters.Add("phone", phoneNumber);
         parameters.Add("role_id", roleId);
         parameters.Add("login_code", "1234");// code);
-
-        gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_USER, parameters, (bool status, string response) => {
+        Debug.Log("device_token : "+SystemInfo.deviceUniqueIdentifier);
+        parameters.Add("device_token", SystemInfo.deviceUniqueIdentifier);
+        parameters.Add("agree_terms_condition", 1);
+        gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_USER, false, parameters, (bool status, string response) => {
             if (status)
             {
                 LoginResponse loginResponse = JsonUtility.FromJson<LoginResponse>(response);
@@ -49,7 +51,7 @@ public partial class APIHandler
         parameters.Add("phone", phoneNumber);
         parameters.Add("login_code", "1234");// code);
 
-        gameManager.StartCoroutine(PostRequest(APIConstants.USER_LOGIN, parameters, (bool status, string response) => {
+        gameManager.StartCoroutine(PostRequest(APIConstants.USER_LOGIN, false, parameters, (bool status, string response) => {
             if (status)
             {
                 LoginResponse loginResponse = JsonUtility.FromJson<LoginResponse>(response);

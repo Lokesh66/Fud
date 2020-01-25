@@ -39,7 +39,7 @@ public partial class APIHandler
 
         parameters.Add("genre_id", genreId);
 
-        gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_STORY, parameters, (status, response) => {
+        gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_STORY, true, parameters, (status, response) => {
 
             action(status, response);
         }));

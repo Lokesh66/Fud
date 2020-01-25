@@ -417,7 +417,7 @@ public partial class APIHandler
         }
     }
 
-    IEnumerator PostRequest(string url, Dictionary<string, object> parameters, Action<bool, string> callback)
+    IEnumerator PostRequest(string url, bool isAuth, Dictionary<string, object> parameters, Action<bool, string> callback)
     {
         Dictionary<string, Dictionary<string, object>> attributes = new Dictionary<string, Dictionary<string, object>>();
 
@@ -433,9 +433,12 @@ public partial class APIHandler
 
         webRequest.SetRequestHeader("Content-Type", "application/json");
 
-        Debug.Log("GetToken() = " + GetToken());
+        if (isAuth)
+        {
+            Debug.Log("GetToken() = " + GetToken());
 
-        webRequest.SetRequestHeader("Authorization", GetToken());
+            webRequest.SetRequestHeader("Authorization", GetToken());
+        }
 
         /*Dictionary<string, string> headers = GetHeaders(EHeaderType.Generic, jsonData);
 
@@ -460,36 +463,46 @@ public partial class APIHandler
 
     IEnumerator Upload(string filePath, TextMeshProUGUI statusText, TextMeshProUGUI contentTypeText, Action<bool> responseCallBack)
     {
-        List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
+        /* List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
 
-        formData.Add(new MultipartFormFileSection("file", filePath));
+         formData.Add(new MultipartFormFileSection("file", filePath));
 
-        formData.Add(new MultipartFormDataSection("project_id", 8.ToString()));
+         formData.Add(new MultipartFormDataSection("project_id", "8"));
 
-        formData.Add(new MultipartFormDataSection("env_id", 1.ToString()));
+         formData.Add(new MultipartFormDataSection("env_id", "1"));
 
-        // UnityWebRequest www = UnityWebRequest.Post(APIConstants.MEDIA_URL, formData);
+         // UnityWebRequest www = UnityWebRequest.Post(APIConstants.MEDIA_URL, formData);
 
-        byte[] boundary = UnityWebRequest.GenerateBoundary();
-        byte[] formSections = UnityWebRequest.SerializeFormSections(formData, boundary);
-        // my termination string consisting of CRLF--{boundary}--
-        byte[] terminate = Encoding.UTF8.GetBytes(String.Concat("\r\n--", Encoding.UTF8.GetString(boundary), "--"));
-        // Make my complete body from the two byte arrays
-        byte[] body = new byte[formSections.Length + terminate.Length];
-        Buffer.BlockCopy(formSections, 0, body, 0, formSections.Length);
-        Buffer.BlockCopy(terminate, 0, body, formSections.Length, terminate.Length);
-        // Set the content type - NO QUOTES around the boundary
-        string contentType = String.Concat("multipart/form-data; boundary=", Encoding.UTF8.GetString(boundary));
-        // Make my request object and add the raw body. Set anything else you need here
-        UnityWebRequest wr = new UnityWebRequest();
-        wr = UnityWebRequest.Post(APIConstants.MEDIA_URL, formData);
-        UploadHandler uploader = new UploadHandlerRaw(body);
-        uploader.contentType = contentType;
-        wr.uploadHandler = uploader;
+         byte[] boundary = UnityWebRequest.GenerateBoundary();
+         byte[] formSections = UnityWebRequest.SerializeFormSections(formData, boundary);
+         // my termination string consisting of CRLF--{boundary}--
+         byte[] terminate = Encoding.UTF8.GetBytes(String.Concat("\r\n--", Encoding.UTF8.GetString(boundary), "--"));
+         // Make my complete body from the two byte arrays
+         byte[] body = new byte[formSections.Length + terminate.Length];
+         Buffer.BlockCopy(formSections, 0, body, 0, formSections.Length);
+         Buffer.BlockCopy(terminate, 0, body, formSections.Length, terminate.Length);
+         // Set the content type - NO QUOTES around the boundary
+         string contentType = String.Concat("multipart/form-data; boundary=", Encoding.UTF8.GetString(boundary));
+         // Make my request object and add the raw body. Set anything else you need here
+         UnityWebRequest wr = new UnityWebRequest();
+         wr = UnityWebRequest.Post(APIConstants.MEDIA_URL, formData);
+         UploadHandler uploader = new UploadHandlerRaw(body);
+         uploader.contentType = contentType;
+         wr.uploadHandler = uploader;
 
-        
 
-        contentTypeText.text = "Content Type " + contentType;
+
+         contentTypeText.text = "Content Type " + contentType;
+
+         yield return wr.SendWebRequest();*/
+
+        byte[] img = File.ReadAllBytes(filePath);
+
+        WWWForm form = new WWWForm();
+
+        form.AddBinaryData("file", img, filePath, "image/png");
+
+        UnityWebRequest wr = UnityWebRequest.Post(APIConstants.MEDIA_URL, form);
 
         yield return wr.SendWebRequest();
 
@@ -497,7 +510,7 @@ public partial class APIHandler
         {
             Debug.Log(wr.error);
             responseCallBack?.Invoke(false);
-            statusText.text = "StATUS " + wr.error;
+            statusText.text = "StATUS Failed " + wr.error;
         }
         else
         {
