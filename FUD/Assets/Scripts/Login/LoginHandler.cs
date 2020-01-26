@@ -58,7 +58,7 @@ public class LoginHandler : MonoBehaviour
                 roleSelectionScreen.SetView(OnRoleSelection_CallBack);
                 break;
             case ELoginFlow.Details:
-                detailsScreen.SetView(OnDetailsScreen_CallBack);
+                detailsScreen.SetView(isNewUser, OnDetailsScreen_CallBack);
                 break;
             case ELoginFlow.Login:
                 loginScreen.SetView(contactNumber, selectedRole.id, isNewUser, OnLoginScreen_CallBack);

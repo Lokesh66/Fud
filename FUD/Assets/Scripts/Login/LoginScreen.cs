@@ -1,10 +1,14 @@
 ﻿using UnityEngine;
+using DG.Tweening;
+using UnityEngine.UI;
 using TMPro;
 
 public class LoginScreen : MonoBehaviour
 {
+    public TextMeshProUGUI signInText;
+    public TextMeshProUGUI errorText;
     public TMP_InputField otpInputField;
-
+    public Toggle toggle;
     bool isSignIn = false;
     int roleId;
     long number;
@@ -18,12 +22,20 @@ public class LoginScreen : MonoBehaviour
         isSignIn = isNewUser;
         otpInputField.text = "";
         LoginAction = action;
+        toggle.gameObject.SetActive(isNewUser);
+        toggle.isOn = false;
+        signInText.text = isSignIn ? "SignIn" : "Login";
     }
 
     public void OnClick_Login()
     {
         if (isSignIn)
         {
+            if (isSignIn && !toggle.isOn)
+            {
+                ShowErrorText();
+                return;
+            }
             GameManager.Instance.apiHandler.SignIn(number, otpInputField.text, roleId, (bool status, User userData) => {
                 if (status)
                 {
@@ -72,5 +84,18 @@ public class LoginScreen : MonoBehaviour
     public void OnClick_Back()
     {
         LoginAction?.Invoke(false, null);
+    }
+
+    void ShowErrorText()
+    {
+        Sequence sequence = DOTween.Sequence();
+        sequence.SetDelay(2f);
+        sequence.SetEase(Ease.OutBounce);
+        sequence.Append(errorText.DOFade(0.0f, 1f)).OnStart(() => {
+            errorText.gameObject.SetActive(true);
+            errorText.color = Color.red;
+        }).OnComplete(() => {
+            errorText.gameObject.SetActive(false);
+        });
     }
 }
