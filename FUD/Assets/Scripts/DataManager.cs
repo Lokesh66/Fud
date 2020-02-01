@@ -29,6 +29,8 @@ public class DataManager : MonoBehaviour
 
     public List<Genre> genres = new List<Genre>();
 
+    public UserData userInfo;
+
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -42,6 +44,11 @@ public class DataManager : MonoBehaviour
     {
         genres = data;
     }
+
+    public void UpdateUserInfo(UserData userData)
+    {
+        userInfo = userData;
+    }
 }
 
 #region UserData
@@ -50,18 +57,29 @@ public class UserData
 {
     public int id;
     public string name;
+    public string token;
     public long phone;
     public int role_id;
+    public object plan_id;
+    public int age;
     public int login_code;
-    public DateTime updatedAt;
+    public int token_expiry;
+    public int agree_terms_condition;
+    public object email_id;
+    public object maa_membership_id;
+    public object privacy_policy;
+    public object current_location;
+    public object native_location;
+    public object reffered_by;
+    public string device_token;
+    public object dob;
     public DateTime created_date_time;
+    public DateTime updatedAt;
 }
 
 [Serializable]
-public class UserDataObject
+public class UserDataObject : BaseResponse
 {
-    public string message;
-    public int status;
     public UserData data;
 }
 #endregion

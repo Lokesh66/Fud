@@ -32,8 +32,6 @@ public class StoryDetailsController : MonoBehaviour
 
     public GameObject addTeamMemberCache;
 
-    public StoryCreationView creationView;
-
 
     public Color selectedColor;
 
@@ -185,8 +183,6 @@ public class StoryDetailsController : MonoBehaviour
     void CreateStoryVersion()
     {
         //GameObject storyVersionObject = Instantiate(storyCreationCache, creationPanelParent);
-
-        creationView.Load();
 
         //storiesController.CreateSubView(storyVersionObject);
 

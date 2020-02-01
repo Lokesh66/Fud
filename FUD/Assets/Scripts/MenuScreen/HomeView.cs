@@ -61,7 +61,7 @@ public class HomeView : BaseView
         Debug.Log("Persistent Path = " + APIConstants.PERSISTENT_PATH);
         leftMenuPanel.SetActive(false);
 
-        storyCreationView.Load();
+        //storyCreationView.Load();
     }
 
     public void OnMyStoriesAction()

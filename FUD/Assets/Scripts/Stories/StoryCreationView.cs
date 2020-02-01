@@ -29,11 +29,13 @@ public class StoryCreationView : MonoBehaviour
     public TextMeshProUGUI canSupportMultipleText;
 
 
+    MyStoriesController storiesController;
+
     List<Genre> genres;
 
-    public void Load()
+    public void Load(MyStoriesController storiesController)
     {
-        gameObject.SetActive(true);
+        this.storiesController = storiesController;
 
         canSupportMultipleText.text = "Can Support Text " + NativeGallery.CanSelectMultipleFilesFromGallery().ToString();
 
@@ -57,7 +59,7 @@ public class StoryCreationView : MonoBehaviour
 
     public void OnBackButtonAction()
     {
-        Reset();
+        storiesController.OnRemoveLastSubView();
     }
 
     public void OnUploadAction()
@@ -77,7 +79,7 @@ public class StoryCreationView : MonoBehaviour
 
             if (status)
             {
-                Reset();
+                storiesController.OnRemoveLastSubView();
                 Debug.Log("Story Uploaded Successfully");
             }
             else {
@@ -123,9 +125,13 @@ public class StoryCreationView : MonoBehaviour
         NativeGallery.Permission permission = NativeGallery.GetImagesFromGallery((path) =>
         {
             Debug.Log("Image path: " + path);
+
+            canSupportMultipleText.text = path.Length.ToString();
+
             if (path != null)
             {
                 // Create Texture from selected image
+
                 Texture2D texture = NativeGallery.LoadImageAtPath(path[0], maxSize,true, true, false, UploadFile);
                 if (texture == null)
                 {
@@ -168,7 +174,7 @@ public class StoryCreationView : MonoBehaviour
                 // it will only be freed after a scene change
                // Destroy(texture, 5f);
             }
-        }, "Select a PNG image", "image/png");
+        }, "Select a PNG image");
 
         Debug.Log("Permission result: " + permission);
     }

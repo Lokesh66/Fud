@@ -23,7 +23,7 @@ public partial class APIHandler
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        parameters.Add("name", "Guest");
+        parameters.Add("name", "Sugunakar");
         parameters.Add("phone", phoneNumber);
         parameters.Add("role_id", roleId);
         parameters.Add("login_code", "1234");// code);

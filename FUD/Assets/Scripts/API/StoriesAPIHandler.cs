@@ -117,7 +117,7 @@ public partial class APIHandler
 
         parameters.Add("value", keyword);
 
-        parameters.Add("searchKey", keyword);
+        parameters.Add("searchKey", "name");
 
         gameManager.StartCoroutine(PostRequest(APIConstants.SEARCH_TEAM_MEMBER, true, parameters, (status, response) => {
 

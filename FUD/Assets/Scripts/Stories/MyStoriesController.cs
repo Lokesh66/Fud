@@ -13,6 +13,8 @@ public class MyStoriesController : BaseView
     public StoryActivitiesView activitiesView;
 
 
+    public GameObject storyCreateCache;
+
     public GameObject detailsCache;
 
     public enum EMyStoriesTab
@@ -105,5 +107,25 @@ public class MyStoriesController : BaseView
     public void CreateSubView(GameObject createObject)
     {
         OnAddSubView(createObject);
+    }
+
+    public void OnAddButtonAction()
+    {
+        if (currentTab == EMyStoriesTab.Stories)
+        {
+            ShowCreateStoryScreen();
+        }
+        else { 
+            
+        }
+    }
+
+    void ShowCreateStoryScreen()
+    {
+        GameObject createObject = Instantiate(storyCreateCache, parentTrans);
+
+        OnAddSubView(createObject);
+
+        createObject.GetComponent<StoryCreationView>().Load(this);
     }
 }
