@@ -8,7 +8,7 @@ using TMPro;
 
 public partial class APIHandler
 {
-    public void GetAllStories( Action<bool, List<Story>> action)
+    public void GetAllStories( Action<bool, List<StoryModel>> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -45,6 +45,86 @@ public partial class APIHandler
         }));
     }
 
+    public void GetStoryDetails(int storyId, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("story_id", storyId);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.STORY_DETAILS, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void GetStoryVersionDetails(int id, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("id", id);
+
+        parameters.Add("fetch_media", 1);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.STORY_VERSION_DETAILS, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void UpdateCharacterDetails(int story_id,  string title, string description, string gender, int performerId, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("story_id", story_id);
+
+        parameters.Add("title", title);
+
+        parameters.Add("description", description);
+
+        parameters.Add("suitable_performer", performerId);
+
+        parameters.Add("gender", gender);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.SAVE_STORY_CHARACTER, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void UpdateStoryTeam(int story_id, string title, string description, string gender, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("story_id", story_id);
+
+        parameters.Add("title", title);
+
+        parameters.Add("description", description);
+
+        parameters.Add("suitable_performer", 44);
+
+        parameters.Add("gender", gender);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.SAVE_STORY_CHARACTER, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void SearchTeamMember(string keyword, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("value", keyword);
+
+        parameters.Add("searchKey", keyword);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.SEARCH_TEAM_MEMBER, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
     public void UploadFile(string filePath, TextMeshProUGUI statusText, TextMeshProUGUI contentTypeText, Action<bool> OnResposne)
     {
         gameManager.StartCoroutine(Upload(filePath, statusText, contentTypeText, ((status) => {
@@ -55,24 +135,26 @@ public partial class APIHandler
 }
 
 [Serializable]
-public class Story
+public class StoryModel
 {
     public int id;
-    public int story_id;
-    public int user_id;
     public string title;
-    public int cost_estimation;
-    public int estimated_time;
-    public DateTime created_date_time;
+    public string story_line;
+    public string description;
+    public int type_id;
+    public int genre_id;
+    public int is_featured;
+    public string status;
+    public object created_date_time;
+    public int user_id;
+    public object created_by;
     public DateTime updatedAt;
 }
 
 [Serializable]
-public class StoriesResponse
+public class StoriesResponse : BaseResponse
 {
-    public string message;
-    public List<Story> data;
-    public int status;
+    public List<StoryModel> data;
 }
 
 [Serializable]
@@ -106,4 +188,124 @@ public string terms_and_conditions;
 public string Information;
 public string url;
 public string producers;
+}
+
+
+[Serializable]
+public class StoryVersion
+{
+    public int id;
+    public int story_id;
+    public string description;
+    public object ratings;
+    public object price;
+    public int genre_id;
+    public object image_url;
+    public object background_url;
+    public object thumb_image_url;
+    public object produced_by;
+    public object developed_by;
+    public int status;
+    public object report;
+    public object warning;
+    public object privacy_policy;
+    public DateTime created_date_time;
+    public DateTime updated_date_time;
+}
+
+[Serializable]
+public class StoryDetailsModel
+{
+    public int id;
+    public string title;
+    public string story_line;
+    public string description;
+    public int type_id;
+    public int genre_id;
+    public int is_featured;
+    public string status;
+    public object created_date_time;
+    public int user_id;
+    public object created_by;
+    public DateTime updatedAt;
+    public List<StoryVersion> StoryVersions;
+    public List<StoryCharacterModel> StoryCharacters;
+    public List<StoryTeamModel> TeamMembers;
+    public StoryDetailsController.EScreenSubType currentTab = 0;
+
+    public DetailsScreenModel screenModel;
+
+    public void SetDetailsScreenModel()
+    {
+        screenModel = new DetailsScreenModel(description, 4.2f);
+    }
+}
+
+[Serializable]
+public class StoryCharacterModel
+{ 
+
+}
+
+[Serializable]
+public class StoryTeamModel
+{
+
+}
+
+[Serializable]
+public class DetailsScreenModel
+{
+    public string description;
+    public float rating;
+
+    public DetailsScreenModel(string description, float rating)
+    {
+        this.description = description;
+        this.rating = rating;
+    }
+}
+
+[Serializable]
+public class StoryDetailsResponseModel : BaseResponse
+{
+    public List<StoryDetailsModel> data;
+}
+
+[Serializable]
+public class Multimedia
+{
+    public int id;
+    public int story_version_id;
+    public int source_id;
+    public string source_type;
+    public string media_type;
+    public string content_url;
+    public string status;
+    public int content_id;
+    public int related_content_id;
+    public DateTime created_date_time;
+    public DateTime updated_date_time;
+}
+
+[Serializable]
+public class StoryVersionDetailModel : StoryVersion
+{
+    public List<Multimedia> Multimedia;
+}
+
+[Serializable]
+public class RootObject
+{
+    public string message;
+    public List<StoryVersionDetailModel> data;
+    public int status;
+}
+
+[Serializable]
+public class UserSearchModel
+{
+    public string name;
+
+    public int id;
 }

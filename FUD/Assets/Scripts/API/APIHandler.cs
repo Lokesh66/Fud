@@ -401,6 +401,8 @@ public partial class APIHandler
             webRequest.SetRequestHeader("Authorization", GetToken());
         }
 
+        Debug.Log("GetToken() = " + GetToken());
+
         yield return webRequest.SendWebRequest();
 
         if (webRequest.isNetworkError || webRequest.isHttpError)
@@ -544,20 +546,20 @@ public partial class APIHandler
 
         form.AddBinaryData("file", img, filePath, "image/png");
 
-        UnityWebRequest wr = UnityWebRequest.Post(APIConstants.MEDIA_URL, form);
+        UnityWebRequest request = UnityWebRequest.Post(APIConstants.MEDIA_URL, form);
 
-        yield return wr.SendWebRequest();
+        yield return request.SendWebRequest();
 
-        if (wr.isNetworkError || wr.isHttpError)
+        if (request.isNetworkError || request.isHttpError)
         {
-            Debug.Log(wr.error);
+            Debug.Log(request.error);
             responseCallBack?.Invoke(false);
-            statusText.text = "StATUS Failed " + wr.error;
+            statusText.text = "StATUS Failed " + request.error;
         }
         else
         {
             Debug.Log("Form upload complete!");
-            statusText.text = "sTatus Success = " + wr.downloadHandler.text;
+            statusText.text = "sTatus Success = " + request.downloadHandler.text;
             responseCallBack?.Invoke(true);
         }
     }

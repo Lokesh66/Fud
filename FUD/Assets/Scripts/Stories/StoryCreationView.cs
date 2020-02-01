@@ -58,8 +58,6 @@ public class StoryCreationView : MonoBehaviour
 
     public void OnUploadAction()
     {
-        Debug.Log("maxTextureSize = " + SystemInfo.maxTextureSize);
-
         PickImages(SystemInfo.maxTextureSize);
     }
 

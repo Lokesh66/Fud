@@ -12,7 +12,7 @@ public class LoungeView : BaseView
         base.OnAddSubView(addedObject);
     }
 
-    protected override void OnRemoveLastSubView()
+    public override void OnRemoveLastSubView()
     {
         base.OnRemoveLastSubView();
     }

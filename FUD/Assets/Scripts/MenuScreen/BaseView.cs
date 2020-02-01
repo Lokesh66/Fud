@@ -11,6 +11,8 @@ public class BaseView : MonoBehaviour
     public virtual void ShowScreen()
     {
         gameObject.SetActive(true);
+
+        EnableView();
     }
 
     protected virtual void EnableView()
@@ -20,22 +22,27 @@ public class BaseView : MonoBehaviour
 
     protected virtual void OnAddSubView(GameObject addedObject)
     {
-        subScreens.Peek()?.SetActive(false);
+        if (subScreens.Count > 0)
+        {
+            subScreens.Peek().SetActive(false);
+        }
 
         subScreens.Push(addedObject);
 
         addedObject.SetActive(true);
     }
 
-    protected virtual void OnRemoveLastSubView()
+    public virtual void OnRemoveLastSubView()
     {
         if (subScreens.Count > 0)
         {
-            subScreens.Pop();
+            GameObject currentObject = subScreens.Pop();
 
-            GameObject currentObject = subScreens.Count > 0 ? subScreens.Peek() : null;
+            Destroy(currentObject);
 
-            currentObject?.SetActive(true);
+            GameObject nextScreen = subScreens.Count > 0 ? subScreens.Peek() : null;
+
+            nextScreen?.SetActive(true);
         }
     }
 

@@ -3,37 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class MyStoriesView : BaseView
+public class MyStoriesView : MonoBehaviour
 {
     public RectTransform content;
 
     public GameObject storyCell;
 
+    public GameObject detailsPanel;
 
-    List<Story> storiesList;
 
-    protected override void EnableView()
-    {
-        base.EnableView();
+    List<StoryModel> storiesList;
 
-       // Load();
-    }
-
-    protected override void OnAddSubView(GameObject addedObject)
-    {
-        base.OnAddSubView(addedObject);
-    }
-
-    protected override void OnRemoveLastSubView()
-    {
-        base.OnRemoveLastSubView();
-    }
-
-    public override void OnExitScreen()
-    {
-        base.OnExitScreen();
-    }
-
+    MyStoriesController storiesController;
 
     public void Load()
     {
@@ -50,20 +31,49 @@ public class MyStoriesView : BaseView
         });
     }
 
+    public void EnableView(MyStoriesController storiesController)
+    {
+        this.storiesController = storiesController;
+
+        if (storiesList?.Count > 0)
+        {
+            gameObject.SetActive(true);
+        }
+        else
+        {
+            Load();
+        }
+    }
+
     void SetView()
     {
         for (int i = 0; i < storiesList.Count; i++)
         {
             GameObject storyObject = Instantiate(storyCell, content);
 
-            storyObject.GetComponent<StoryCell>().SetView(storiesList[i]);
+            storyObject.GetComponent<StoryCell>().SetView(storiesList[i], OnStoryTapAction);
         }
     }
 
-    public void OnBackButtonAction()
+    public void ClearData()
     {
         content.DestroyChildrens();
 
         gameObject.SetActive(false);
+
+        storiesList.Clear();
+    }
+
+    void OnStoryTapAction(object storyId)
+    {
+        GameManager.Instance.apiHandler.GetStoryDetails((int)storyId, (status, response) => {
+
+            Debug.Log("status = " + status);
+
+            if (status)
+            {
+                storiesController.OnStoryButtonAction(response);
+            }
+        });
     }
 }
