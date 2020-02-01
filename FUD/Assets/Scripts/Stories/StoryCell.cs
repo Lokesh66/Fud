@@ -1,16 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System;
+using TMPro;
 
 public class StoryCell : MonoBehaviour
 {
+    public TextMeshProUGUI titleText;
 
-    Story storyModel;
+    public TextMeshProUGUI description;
 
-    public void SetView(Story storyModel)
+    StoryModel storyModel;
+
+    Action<object> OnTapActon;
+
+    public void SetView(StoryModel storyModel, Action<object> tapAction = null)
     {
         this.storyModel = storyModel;
 
+        this.OnTapActon = tapAction;
 
+        titleText.text = storyModel.title;
+
+        description.text = storyModel.description;
+    }
+
+    public void OnButtonAction()
+    {
+        OnTapActon?.Invoke(storyModel.id);
     }
 }

@@ -30,5 +30,15 @@ public class APIConstants
 
     public const string CREATE_PROJECT = BASE_URL + "v1/projects/";
 
+    public const string STORY_DETAILS = BASE_URL + "v1/searchStory/";
+
+    public const string STORY_VERSION_DETAILS = BASE_URL + "v1/searchStoryVersion";
+
+    public const string SAVE_STORY_CHARACTER = BASE_URL + "/v1/storyCharacters/";
+
+    public const string UPDATE_STORY_TEAM = BASE_URL + "v1/teamMembers/";
+
+    public const string SEARCH_TEAM_MEMBER = BASE_URL + "v1/searchUsers/";
+
     public const string MEDIA_URL = MEDIA_UPLOAD_BASE_URL + "adam/v1/uploadFile/";
 }
