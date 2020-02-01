@@ -451,12 +451,54 @@ public partial class APIHandler
 
         if (webRequest.isNetworkError || webRequest.isHttpError)
         {
-            Debug.LogErrorFormat("<APIManager/({0})> Error ({1})", webRequest.error, url);
+            Debug.LogErrorFormat("<APIManager/ POST/ ({0})> Error ({1})", webRequest.error, url);
             callback?.Invoke(false, webRequest.error);
         }
         else
         {
-            Debug.LogFormat("<APIManager/ ({0})> Response ({1})", webRequest.downloadHandler.text, url);
+            Debug.LogFormat("<APIManager/ POST/ ({0})> Response ({1})", webRequest.downloadHandler.text, url);
+            callback?.Invoke(true, webRequest.downloadHandler.text);
+        }
+    }
+
+    IEnumerator PutRequest(string url, bool isAuth, Dictionary<string, object> parameters, Action<bool, string> callback)
+    {
+        Dictionary<string, Dictionary<string, object>> attributes = new Dictionary<string, Dictionary<string, object>>();
+
+        attributes.Add("attributes", parameters);
+
+        string jsonData = MiniJSON.Json.Serialize(attributes);
+
+        Debug.LogFormat("URL ({0}) Data ({1})", url, jsonData);
+
+        UnityWebRequest webRequest = UnityWebRequest.Put(url, jsonData);
+
+        webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(jsonData));
+
+        webRequest.SetRequestHeader("Content-Type", "application/json");
+
+        if (isAuth)
+        {
+            webRequest.SetRequestHeader("Authorization", GetToken());
+        }
+
+        /*Dictionary<string, string> headers = GetHeaders(EHeaderType.Generic, jsonData);
+
+        foreach (KeyValuePair<string, string> header in headers)
+        {
+            webRequest.SetRequestHeader(header.Key, header.Value);
+        }*/
+
+        yield return webRequest.SendWebRequest();
+
+        if (webRequest.isNetworkError || webRequest.isHttpError)
+        {
+            Debug.LogErrorFormat("<APIManager/ PUT/ ({0})> Error ({1})", webRequest.error, url);
+            callback?.Invoke(false, webRequest.error);
+        }
+        else
+        {
+            Debug.LogFormat("<APIManager/ PUT/ ({0})> Response ({1})", webRequest.downloadHandler.text, url);
             callback?.Invoke(true, webRequest.downloadHandler.text);
         }
     }
