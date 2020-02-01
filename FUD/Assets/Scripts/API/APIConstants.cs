@@ -41,4 +41,11 @@ public class APIConstants
     public const string SEARCH_TEAM_MEMBER = BASE_URL + "v1/searchUsers/";
 
     public const string MEDIA_URL = MEDIA_UPLOAD_BASE_URL + "adam/v1/uploadFile/";
+
+    public const string CREATE_AUDITION = BASE_URL + "v1/audition/";
+
+    public const string SEARCH_USER_AUDITION = BASE_URL + "v1/searchUserAudition/";
+
+    public const string USER_AUDITION = BASE_URL + "v1/userAudition/";
+
 }
