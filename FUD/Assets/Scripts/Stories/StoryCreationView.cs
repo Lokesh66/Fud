@@ -26,12 +26,16 @@ public class StoryCreationView : MonoBehaviour
 
     public TextMeshProUGUI statusText;
 
+    public TextMeshProUGUI canSupportMultipleText;
+
 
     List<Genre> genres;
 
     public void Load()
     {
         gameObject.SetActive(true);
+
+        canSupportMultipleText.text = "Can Support Text " + NativeGallery.CanSelectMultipleFilesFromGallery().ToString();
 
         PopulateDropdown();
     }
