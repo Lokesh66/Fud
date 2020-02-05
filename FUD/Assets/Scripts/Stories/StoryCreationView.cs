@@ -183,7 +183,7 @@ public class StoryCreationView : MonoBehaviour
     {
         this.filePath.text = "FilePath = "+ filePath;
 
-        GameManager.Instance.apiHandler.UploadFile(filePath, statusText, contentType, (status) => { 
+        GameManager.Instance.apiHandler.UploadFile(filePath, (status, response) => { 
             
         });
     }

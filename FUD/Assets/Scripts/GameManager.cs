@@ -33,6 +33,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public SceneController sceneController;
 
+    public DownLoadManager downLoadManager;
+
     void Awake()
     {
         Init();

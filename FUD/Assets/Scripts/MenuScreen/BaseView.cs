@@ -65,6 +65,7 @@ public enum EScreenType
 {
     Home,
     MyStories,
-    Lounge,
-    Forum
+    Portfolio,
+    Auditions,
+    Projects
 }

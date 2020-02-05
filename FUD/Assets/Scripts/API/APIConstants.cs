@@ -48,4 +48,6 @@ public class APIConstants
 
     public const string USER_AUDITION = BASE_URL + "v1/userAudition/";
 
+    public const string USER_PORTFOLIO = BASE_URL + "v1/userPortfolio/";
+
 }

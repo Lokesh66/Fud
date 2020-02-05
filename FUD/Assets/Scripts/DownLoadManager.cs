@@ -1,4 +1,4 @@
-﻿/*using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -7,11 +7,16 @@ using UnityEngine;
 
 public class DownLoadManager : MonoBehaviour
 {
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     #region Imagedownload
 
     public void DownloadImage(string imageurl, Action<Sprite> CallBack)
     {
-        if (imageurl.IsNullOrEmpty())
+        if (string.IsNullOrEmpty(imageurl))
         {
             CallBack(null);
             return;
@@ -34,12 +39,12 @@ public class DownLoadManager : MonoBehaviour
 
     IEnumerator DownloadAndSave(string imageurl, Action<Sprite> CallBack)
     {
-        if (imageurl.IsNOTNullOrEmpty())
+        if (!string.IsNullOrEmpty(imageurl))
         {
             WWW www = new WWW(imageurl);
             yield return www;
             string response = www.text;
-            if (response.IsNOTNullOrEmpty() && MiniJSON.Json.Deserialize(response) != null)
+            if (!string.IsNullOrEmpty(response) && MiniJSON.Json.Deserialize(response) != null)
             {
                 Dictionary<string, object> jsResponse = MiniJSON.Json.Deserialize(response) as Dictionary<string, object>;
                 object error = jsResponse["error"];
@@ -86,5 +91,6 @@ public class DownLoadManager : MonoBehaviour
         Sprite ProfilePic = Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(0.5f, 0.5f));
         CallBack(ProfilePic);
     }
+
+    #endregion
 }
-*/

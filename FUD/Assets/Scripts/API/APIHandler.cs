@@ -505,7 +505,7 @@ public partial class APIHandler
         }
     }
 
-    IEnumerator Upload(string filePath, TextMeshProUGUI statusText, TextMeshProUGUI contentTypeText, Action<bool> responseCallBack)
+    IEnumerator Upload(string filePath, Action<bool, string> responseCallBack)
     {
         /* List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
 
@@ -553,14 +553,14 @@ public partial class APIHandler
         if (request.isNetworkError || request.isHttpError)
         {
             Debug.Log(request.error);
-            responseCallBack?.Invoke(false);
-            statusText.text = "StATUS Failed " + request.error;
+            responseCallBack?.Invoke(false, null);
+            //statusText.text = "StATUS Failed " + request.error;
         }
         else
         {
             Debug.Log("Form upload complete!");
-            statusText.text = "sTatus Success = " + request.downloadHandler.text;
-            responseCallBack?.Invoke(true);
+            //statusText.text = "sTatus Success = " + request.downloadHandler.text;
+            responseCallBack?.Invoke(true, request.downloadHandler.text);
         }
     }
 }

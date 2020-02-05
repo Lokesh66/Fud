@@ -125,11 +125,11 @@ public partial class APIHandler
         }));
     }
 
-    public void UploadFile(string filePath, TextMeshProUGUI statusText, TextMeshProUGUI contentTypeText, Action<bool> OnResposne)
+    public void UploadFile(string filePath, Action<bool, string> OnResposne)
     {
-        gameManager.StartCoroutine(Upload(filePath, statusText, contentTypeText, ((status) => {
+        gameManager.StartCoroutine(Upload(filePath, ((status, response) => {
 
-            OnResposne?.Invoke(status);
+            OnResposne?.Invoke(status, response);
         })));
     }
 }
