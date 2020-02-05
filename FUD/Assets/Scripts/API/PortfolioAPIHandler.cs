@@ -8,11 +8,15 @@ public partial class APIHandler
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
+        List<PortMultimediaModels> portMultimedias = new List<PortMultimediaModels>();
+
+        portMultimedias.Add(multimediaModels);
+
         parameters.Add("title", title);
 
         parameters.Add("description", description);
 
-        parameters.Add("port_multi_media", multimediaModels);
+        parameters.Add("port_multi_media", portMultimedias);
 
         gameManager.StartCoroutine(PostRequest(APIConstants.USER_PORTFOLIO, true, parameters, (status, response) => {
 
