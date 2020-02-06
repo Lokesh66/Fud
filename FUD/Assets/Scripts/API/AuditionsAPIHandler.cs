@@ -29,16 +29,7 @@ public partial class APIHandler
        "description" : "are you young, talented and looking for a platform to showcase your amazing talents?",
        "age_from": 21,
        "age_to" : 25,
-       "type": "group"*/
-
-        parameters.Add("topic", "Act as Ali");
-        parameters.Add("rate_of_pay", 10000);
-        parameters.Add("end_date", "2020-03-23");
-        parameters.Add("title", "For all the young  fresh talent");
-        parameters.Add("description", "are you young, talented and looking for a platform to showcase your amazing talents?");
-        parameters.Add("age_from", 21);
-        parameters.Add("age_to", 25);
-        parameters.Add("type", "group");
+       "type": "group"*/        
 
         gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_AUDITION, true, parameters, (status, response) => {
 
@@ -57,10 +48,10 @@ public partial class APIHandler
         "status":"yes"*/
 
         parameters.Add("id", 1);
-        parameters.Add("user_id", "user_id");
-        parameters.Add("project_cast_id", "project_cast_id");
-        parameters.Add("topic", "topic");
-        parameters.Add("end_date", "end_date");
+        parameters.Add("user_id", 1);
+        parameters.Add("project_cast_id", 1);
+        parameters.Add("topic", "Act as Sunil");
+        parameters.Add("end_date", "2020-03-23");
         parameters.Add("rate_of_pay", 10000);
         parameters.Add("status", "yes");
 
