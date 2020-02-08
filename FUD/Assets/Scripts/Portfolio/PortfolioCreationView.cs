@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 using System.IO;
+using System.Collections.Generic;
 
 public class PortfolioCreationView : MonoBehaviour
 {
@@ -28,17 +29,17 @@ public class PortfolioCreationView : MonoBehaviour
 
         PortMultiMediaModel mediaModel = new PortMultiMediaModel();
 
-        mediaModel.content_id = 1;
+        List<Dictionary<string, object>> parameters = new List<Dictionary<string, object>>();
 
-        mediaModel.content_url = contentUrl;
+        parameters.Add(new Dictionary<string, object>());
 
-        mediaModel.media_type = "image";
+        parameters[0].Add("content_id", 1);
 
-        multimediaModels.port_multi_media.Add(mediaModel);
+        parameters[0].Add("content_url", "https://fud-user-1.s3.ap-south-1.amazonaws.com/15572033-40e9-47c2-8532-9a49d7206e6c.png");
 
-        GameManager.Instance.apiHandler.CreatePortfolio(titleField.text, descriptionField.text, multimediaModels, (status, response) => {
+        parameters[0].Add("media_type", "image");
 
-            Debug.Log("response = " + response);
+        GameManager.Instance.apiHandler.CreatePortfolio(titleField.text, descriptionField.text, parameters, (status, response) => {
 
             if (status)
             {
@@ -99,6 +100,8 @@ public class PortfolioCreationView : MonoBehaviour
     public void OnBackAction()
     {
         portfolioView.OnRemoveLastSubView();
+
+        Destroy(gameObject);
     }
 }
 

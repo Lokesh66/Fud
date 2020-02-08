@@ -13,9 +13,9 @@ public class PortfolioMediaCell : MonoBehaviour
 
         GameManager.Instance.downLoadManager.DownloadImage(albumModel.content_url, (sprite) => {
 
-            sprite.texture.width = (int)albumImage.rectTransform.rect.width;
+           /* sprite.texture.width = 300;
 
-            sprite.texture.height = (int)albumImage.rectTransform.rect.height;
+            sprite.texture.height = 400;*/
 
             albumImage.sprite = sprite;
         });

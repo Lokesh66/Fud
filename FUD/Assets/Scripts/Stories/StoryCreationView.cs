@@ -65,6 +65,8 @@ public class StoryCreationView : MonoBehaviour
     public void OnUploadAction()
     {
         PickImages(SystemInfo.maxTextureSize);
+
+        GetAudioFromGallery();
     }
 
     public void OnSubmitAction()
@@ -173,6 +175,65 @@ public class StoryCreationView : MonoBehaviour
                 // If a procedural texture is not destroyed manually, 
                 // it will only be freed after a scene change
                // Destroy(texture, 5f);
+            }
+        }, "Select a PNG image");
+
+        Debug.Log("Permission result: " + permission);
+    }
+
+    void GetAudioFromGallery()
+    {
+        NativeGallery.Permission permission = NativeGallery.GetAudioFromGallery((path) =>
+        {
+            if (path != null)
+            {
+                // Create Texture from selected image
+
+                canSupportMultipleText.text = path;
+
+                UploadFile(path);
+                /*
+                Texture2D texture = NativeGallery.LoadImageAtPath(path[0], maxSize, true, true, false, UploadFile);
+                if (texture == null)
+                {
+                    Debug.Log("Couldn't load texture from " + path);
+                    return;
+                }
+
+                //NativeGallery.GetImageProperties(path);
+
+                screenShotImage.sprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
+
+                screenShotImage.SetNativeSize();
+
+                byte[] textureBytes = texture.EncodeToPNG();
+
+                string filePath = APIConstants.IMAGES_PATH + "/GalleryPhotos";
+
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
+                File.WriteAllBytes(filePath, textureBytes);
+
+                // Assign texture to a temporary quad and destroy it after 5 seconds
+                /*GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                quad.transform.position = Camera.main.transform.position + Camera.main.transform.forward * 2.5f;
+                quad.transform.forward = Camera.main.transform.forward;
+                quad.transform.localScale = new Vector3(1f, texture.height / (float)texture.width, 1f);
+
+                Material material = quad.GetComponent<Renderer>().material;
+                if (!material.shader.isSupported) // happens when Standard shader is not included in the build
+                    material.shader = Shader.Find("Legacy Shaders/Diffuse");
+
+                material.mainTexture = texture;*/
+
+                // Destroy(quad, 5f);
+
+                // If a procedural texture is not destroyed manually, 
+                // it will only be freed after a scene change
+                // Destroy(texture, 5f);*/
             }
         }, "Select a PNG image");
 

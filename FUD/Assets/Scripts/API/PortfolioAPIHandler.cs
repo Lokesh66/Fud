@@ -4,19 +4,19 @@ using System;
 
 public partial class APIHandler
 {
-    public void CreatePortfolio(string title, string description, PortMultimediaModels multimediaModels, Action<bool, string> action)
+    public void CreatePortfolio(string title, string description, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        List<PortMultimediaModels> portMultimedias = new List<PortMultimediaModels>();
+        List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
 
-        portMultimedias.Add(multimediaModels);
+        string jsonData = JsonUtility.ToJson(portMultimedias);
 
         parameters.Add("title", title);
 
         parameters.Add("description", description);
 
-        parameters.Add("port_multi_media", portMultimedias);
+        parameters.Add("port_multi_media", multimediaModels);
 
         gameManager.StartCoroutine(PostRequest(APIConstants.USER_PORTFOLIO, true, parameters, (status, response) => {
 

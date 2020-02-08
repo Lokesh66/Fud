@@ -33,6 +33,9 @@ public class StoryDetailsController : MonoBehaviour
     public GameObject addTeamMemberCache;
 
 
+    public GameObject noDataObject;
+
+
     public Color selectedColor;
 
     public Color disabledColor;
@@ -91,6 +94,8 @@ public class StoryDetailsController : MonoBehaviour
         {
             buttonList[(int)currentType].color = disabledColor;
 
+            noDataObject.SetActive(false);
+
             currentType = screenSubType;
 
             titeText.text = currentDetailsModel.title;
@@ -101,7 +106,7 @@ public class StoryDetailsController : MonoBehaviour
         }
     }
 
-    void UpdateScreen()
+    public void UpdateScreen()
     {
         buttonList[(int)currentType].color = selectedColor;
 
@@ -152,20 +157,22 @@ public class StoryDetailsController : MonoBehaviour
     {
         currentObject = charactersView.gameObject;
 
-        charactersView.Load(currentDetailsModel.StoryCharacters);
+        charactersView.Load(currentDetailsModel.StoryCharacters, this);
     }
 
     void ShowTeamsScreen()
     {
         currentObject = teamsView.gameObject;
 
-        teamsView.Load(currentDetailsModel.TeamMembers);
+        teamsView.Load(currentDetailsModel.TeamMembers, this);
     }
 
     #endregion
 
     public void OnAddButtonAction()
     {
+        noDataObject.SetActive(false);
+
         switch (currentType)
         {
             case EScreenSubType.Versions:

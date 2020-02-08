@@ -11,6 +11,8 @@ public class MyStoriesView : MonoBehaviour
 
     public GameObject detailsPanel;
 
+    public NoDataView noDataView;
+
 
     List<StoryModel> storiesList = new List<StoryModel>();
 
@@ -35,24 +37,28 @@ public class MyStoriesView : MonoBehaviour
     {
         this.storiesController = storiesController;
 
-        if (storiesList?.Count > 0)
-        {
-            gameObject.SetActive(true);
-        }
-        else
-        {
-            Load();
-        }
+        ClearData();
+
+        Load();
+
+        gameObject.SetActive(true);
     }
 
     void SetView()
     {
-        for (int i = 0; i < storiesList.Count; i++)
-        {
-            GameObject storyObject = Instantiate(storyCell, content);
+        if (storiesList?.Count > 0) {
 
-            storyObject.GetComponent<StoryCell>().SetView(storiesList[i], OnStoryTapAction);
+            for (int i = 0; i < storiesList.Count; i++)
+            {
+                GameObject storyObject = Instantiate(storyCell, content);
+
+                storyObject.GetComponent<StoryCell>().SetView(storiesList[i], OnStoryTapAction);
+            }
         }
+        else {
+            noDataView.SetView(GetNoDataModel());
+        }
+        noDataView.gameObject.SetActive(storiesList?.Count == 0);
     }
 
     public void ClearData()
@@ -75,5 +81,19 @@ public class MyStoriesView : MonoBehaviour
                 storiesController.OnStoryButtonAction(response);
             }
         });
+    }
+
+    NoDataModel GetNoDataModel()
+    {
+        NoDataModel noDataModel = new NoDataModel();
+
+        noDataModel.subTitle = "No Stories Right Now";
+
+        noDataModel.buttonName = "Add Story";
+
+        noDataModel.buttonAction = storiesController.OnAddButtonAction;
+
+        return noDataModel;
+
     }
 }

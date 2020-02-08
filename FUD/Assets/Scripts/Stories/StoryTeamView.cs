@@ -8,15 +8,30 @@ public class StoryTeamView : MonoBehaviour
 
     public GameObject cellCache;
 
+    public NoDataView noDataView;
+
 
     List<StoryTeamModel> teamModels;
 
+    StoryDetailsController detailsController;
 
-    public void Load(List<StoryTeamModel> teamModels)
+
+    public void Load(List<StoryTeamModel> teamModels, StoryDetailsController storyDetails)
     {
         this.teamModels = teamModels;
 
-        SetView();
+        detailsController = storyDetails;
+
+        if (teamModels?.Count > 0)
+        {
+            SetView();
+        }
+        else
+        {
+            noDataView.SetView(GetNoDataModel());
+        }
+
+        noDataView.gameObject.SetActive(teamModels?.Count == 0);
     }
 
     void SetView()
@@ -27,5 +42,19 @@ public class StoryTeamView : MonoBehaviour
         {
             teamObject = Instantiate(cellCache, content);
         }
+    }
+
+    NoDataModel GetNoDataModel()
+    {
+        NoDataModel noDataModel = new NoDataModel();
+
+        noDataModel.subTitle = "No Teams Right Now";
+
+        noDataModel.buttonName = "Add Team";
+
+        noDataModel.buttonAction = detailsController.OnAddButtonAction;
+
+        return noDataModel;
+
     }
 }

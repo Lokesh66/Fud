@@ -9,15 +9,29 @@ public class StoryCharactersView : MonoBehaviour
 
     public GameObject cellCache;
 
+    public NoDataView noDataView;
+
 
     List<StoryCharacterModel> characterModels;
 
+    StoryDetailsController detailsController;
 
-    public void Load(List<StoryCharacterModel> characterModels)
+
+    public void Load(List<StoryCharacterModel> characterModels, StoryDetailsController storyDetails)
     {
         this.characterModels = characterModels;
 
-        SetView();
+        detailsController = storyDetails;
+
+        if (characterModels?.Count > 0)
+        {
+            SetView();
+        }
+        else {
+            noDataView.SetView(GetNoDataModel());
+        }
+
+        noDataView.gameObject.SetActive(characterModels?.Count == 0);
     }
 
     void SetView()
@@ -30,5 +44,17 @@ public class StoryCharactersView : MonoBehaviour
         }
     }
 
+    NoDataModel GetNoDataModel()
+    {
+        NoDataModel noDataModel = new NoDataModel();
 
+        noDataModel.subTitle = "No Characters Right Now";
+
+        noDataModel.buttonName = "Add Character";
+
+        noDataModel.buttonAction = detailsController.OnAddButtonAction;
+
+        return noDataModel;
+
+    }
 }
