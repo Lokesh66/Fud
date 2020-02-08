@@ -12,7 +12,7 @@ public class MyStoriesView : MonoBehaviour
     public GameObject detailsPanel;
 
 
-    List<StoryModel> storiesList;
+    List<StoryModel> storiesList = new List<StoryModel>();
 
     MyStoriesController storiesController;
 

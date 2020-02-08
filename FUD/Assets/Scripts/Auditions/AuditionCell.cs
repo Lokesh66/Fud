@@ -4,21 +4,17 @@ using UnityEngine;
 
 public class AuditionCell : MonoBehaviour
 {
+    Audition auditionData;
     int index = 0;
 
-    public void SetView(int index)
+    public void SetView(int index, Audition audition)
     {
+        auditionData = audition;
         this.index = index;
     }
 
-    public void OnButtonAction()
+    public void OnClickAction()
     {
-        if (index == 0)
-        {
-            //Create Audition
-        }
-        else { 
-            //Call API for AuditionType Selection list
-        }
+        Debug.Log("OnClickAction ");
     }
 }

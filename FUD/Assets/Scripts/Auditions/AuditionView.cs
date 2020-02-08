@@ -23,4 +23,9 @@ public class AuditionView : BaseView
     {
         base.OnExitScreen();
     }
+
+    public void OnAddButtonAction()
+    {
+
+    }
 }

@@ -8,25 +8,48 @@ public class AuditionController : MonoBehaviour
 
     public GameObject auditionCell;
 
+    public GameObject noDataObject;
 
-    public void Load()
+    public bool isJoined;
+
+    private void OnEnable()
     {
-        /*for (int i = 0; i < 5; i++)
+        GetAuditions();
+    }
+    public void Load(List<Audition> auditions)
+    {
+        if (auditions != null && auditions.Count > 0)
         {
-            GameObject auditionObject = Instantiate(auditionCell, content);
+            noDataObject.SetActive(false);
 
-            auditionObject.GetComponent<AuditionCell>().SetView(i);
-        }*/
+            for (int i = 0; i < auditions.Count; i++)
+            {
+                GameObject auditionObject = Instantiate(auditionCell, content);
+
+                auditionObject.GetComponent<AuditionCell>().SetView(i, auditions[i]);
+            }
+        }
+        else
+        {
+            noDataObject.SetActive(true);
+        }
     }
 
     #region ButtonActions
 
     public void GetAuditions()
     {
-        GameManager.Instance.apiHandler.GetAllAuditions((bool status, List<Audition> auditions) => {
+        Debug.Log("GetAuditions");
+        GameManager.Instance.apiHandler.SearchAuditions(isJoined, (status, auditions) => {
             if (status)
             {
                 Debug.Log("GetAuditions : " + auditions.Count);
+
+                Load(auditions);
+            }
+            else
+            {
+                noDataObject.SetActive(true);
             }
         });
     }

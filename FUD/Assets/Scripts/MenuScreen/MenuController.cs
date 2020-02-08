@@ -9,20 +9,22 @@ public class MenuController : MonoBehaviour
     [HideInInspector]
     public BaseView currentBaseView;
 
-
+    private int currentViewIndex = -1;
     void Start()
     {
-        OnButtonAction(baseViews[0]);
+        OnButtonAction(0);
     }
 
 
-    public void OnButtonAction(BaseView baseView)
+    public void OnButtonAction(int index)
     {
-        if (currentBaseView != baseView)
+        if (currentViewIndex != index)
         {
+            currentViewIndex = index;
+
             currentBaseView?.OnExitScreen();
 
-            currentBaseView = baseView;
+            currentBaseView = baseViews[currentViewIndex];
 
             currentBaseView.ShowScreen();
         }
