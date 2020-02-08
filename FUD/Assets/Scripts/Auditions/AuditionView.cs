@@ -26,6 +26,8 @@ public class AuditionView : BaseView
 
     public void OnAddButtonAction()
     {
-
+        CreateAuditionView.Instance.SetView(() => { 
+        
+        });
     }
 }

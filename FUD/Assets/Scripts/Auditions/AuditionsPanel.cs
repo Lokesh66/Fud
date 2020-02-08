@@ -2,9 +2,6 @@
 
 public class AuditionsPanel : MonoBehaviour
 {
-
-    public CreateAuditionView createAuditionView;
-
     private void OnEnable()
     {
         GetAuditions();
@@ -17,7 +14,7 @@ public class AuditionsPanel : MonoBehaviour
     }
     public void CreateAudition()
     {
-        createAuditionView.SetView(() => { 
+        CreateAuditionView.Instance.SetView(() => { 
         
         });
     }

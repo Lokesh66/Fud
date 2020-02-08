@@ -2,11 +2,35 @@
 using TMPro;
 using System.Collections.Generic;
 using DG.Tweening;
+using System;
 
 public class CreateAuditionView : MonoBehaviour
 {
-    
-    public TMP_Text typeText;
+    #region Singleton
+
+    private static CreateAuditionView instance = null;
+
+    private CreateAuditionView()
+    {
+
+    }
+
+    public static CreateAuditionView Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<CreateAuditionView>();
+            }
+            return instance;
+        }
+    }
+    #endregion
+
+    public Transform parentPanel;
+
+    public TMP_InputField typeText;
     public TMP_InputField topicText;
     public TMP_InputField ageText;
     public TMP_InputField endDateText;
@@ -17,12 +41,12 @@ public class CreateAuditionView : MonoBehaviour
     System.Action backAction;
     public void SetView(System.Action action)
     {
-        gameObject.SetActive(true);
+        parentPanel.gameObject.SetActive(true);
         backAction = action;
     }
     public void BackButtonAction()
     {
-        gameObject.SetActive(false);
+        parentPanel.gameObject.SetActive(false);
         backAction?.Invoke();
         backAction = null;
     }
@@ -59,11 +83,11 @@ public class CreateAuditionView : MonoBehaviour
         parameters.Add("topic", topicText.text);
         parameters.Add("rate_of_pay", 10000);
         parameters.Add("end_date", endDateText.text);// "2020-03-23");
-        parameters.Add("title", "");
+        parameters.Add("title", "For all the young  fresh talent");
         parameters.Add("description", descriptionText.text);
-        parameters.Add("age_from", ageText.text);
-        parameters.Add("age_to", ageText.text);
-        parameters.Add("type", typeText.text);// "group");
+        parameters.Add("age_from", Convert.ToInt16(ageText.text));
+        parameters.Add("age_to", Convert.ToInt16(ageText.text));
+        parameters.Add("type", typeText.text);// "group","individual");
 
         GameManager.Instance.apiHandler.CreateAudition(parameters, (status, response) => {
             Debug.Log("OnCreateAudition : "+response);

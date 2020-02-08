@@ -16,8 +16,11 @@ public class AuditionCell : MonoBehaviour
     {
         auditionData = audition;
         this.index = index;
-        /*titleText.text = "";
-        ageText.text = "";*/
+        if (auditionData != null)
+        {
+            titleText.text = auditionData.topic;
+            ageText.text = auditionData.age_to.ToString();
+        }
     }
 
     public void OnClickAction()

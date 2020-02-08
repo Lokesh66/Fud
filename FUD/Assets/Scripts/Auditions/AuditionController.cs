@@ -18,6 +18,10 @@ public class AuditionController : MonoBehaviour
     }
     public void Load(List<Audition> auditions)
     {
+        foreach (Transform child in content)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
         if (auditions != null && auditions.Count > 0)
         {
             noDataObject.SetActive(false);
@@ -39,6 +43,7 @@ public class AuditionController : MonoBehaviour
 
     public void GetAuditions()
     {
+        noDataObject.SetActive(false);
         Debug.Log("GetAuditions");
         GameManager.Instance.apiHandler.SearchAuditions(isJoined, (status, auditions) => {
             if (status)
