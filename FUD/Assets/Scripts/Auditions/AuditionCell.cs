@@ -1,9 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class AuditionCell : MonoBehaviour
 {
+    public Image icon;
+    public TMP_Text titleText;
+    public TMP_Text ageText;
+/*    public TMP_Text otherText;
+*/
     Audition auditionData;
     int index = 0;
 
@@ -11,6 +16,8 @@ public class AuditionCell : MonoBehaviour
     {
         auditionData = audition;
         this.index = index;
+        /*titleText.text = "";
+        ageText.text = "";*/
     }
 
     public void OnClickAction()
