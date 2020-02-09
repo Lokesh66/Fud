@@ -66,7 +66,7 @@ public class StoryCreationView : MonoBehaviour
     {
         PickImages(SystemInfo.maxTextureSize);
 
-        GetAudioFromGallery();
+        //GetAudioFromGallery();
     }
 
     public void OnSubmitAction()

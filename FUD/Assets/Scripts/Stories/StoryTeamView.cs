@@ -41,6 +41,8 @@ public class StoryTeamView : MonoBehaviour
         for (int i = 0; i < teamModels.Count; i++)
         {
             teamObject = Instantiate(cellCache, content);
+
+            teamObject.GetComponent<StoryTeamCell>().Load(teamModels[i]);
         }
     }
 
@@ -55,6 +57,16 @@ public class StoryTeamView : MonoBehaviour
         noDataModel.buttonAction = detailsController.OnAddButtonAction;
 
         return noDataModel;
+    }
 
+    public void Refresh(StoryTeamModel teamModel)
+    {
+        teamModels.Add(teamModel);
+
+        GameObject characterObject = Instantiate(cellCache, content);
+
+        characterObject.GetComponent<StoryTeamCell>().Load(teamModel);
+
+        noDataView.gameObject.SetActive(teamModels?.Count == 0);
     }
 }

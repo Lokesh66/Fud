@@ -179,12 +179,17 @@ public class StoryDetailsController : MonoBehaviour
                 CreateStoryVersion();
                 break;
             case EScreenSubType.Characters:
-                AddCharacter();
+                CreateCharacter();
                 break;
             case EScreenSubType.Team:
                 AddTeamMember();
                 break;
         }
+    }
+
+    public void OnUpdateStory()
+    { 
+        
     }
 
     void CreateStoryVersion()
@@ -198,14 +203,14 @@ public class StoryDetailsController : MonoBehaviour
         //story
     }
 
-    void AddCharacter()
+    void CreateCharacter()
     {
         GameObject addCharacterObject = Instantiate(addCharacterCache, creationPanelParent);
 
         //storiesController.CreateSubView(addCharacterObject);
         currentCreateScreen = addCharacterObject;
 
-        addCharacterObject.GetComponent<CreateCharacterView>().SetView(currentDetailsModel);
+        addCharacterObject.GetComponent<CreateCharacterView>().SetView(currentDetailsModel, UpdataCharacters);
     }
 
     void AddTeamMember()
@@ -216,5 +221,19 @@ public class StoryDetailsController : MonoBehaviour
         currentCreateScreen = addTeamObject;
 
         addTeamObject.GetComponent<UpdateTeamView>().SetView(currentDetailsModel);
+    }
+
+    public void UpdataCharacters(StoryCharacterModel characterModel)
+    {
+        currentDetailsModel.StoryCharacters.Add(characterModel);
+
+        charactersView.Refresh(characterModel);
+    }
+
+    public void UpdateTeams(StoryTeamModel teamModel)
+    {
+        currentDetailsModel.TeamMembers.Add(teamModel);
+
+        teamsView.Refresh(teamModel);
     }
 }

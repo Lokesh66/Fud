@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
+
 
 public class CreateCharacterView : MonoBehaviour
 {
@@ -26,9 +28,13 @@ public class CreateCharacterView : MonoBehaviour
     bool isSearchAPICalled = false;
 
 
-    public void SetView(StoryDetailsModel detailsModel)
+    Action<StoryCharacterModel> OnCreateCharacter;
+
+    public void SetView(StoryDetailsModel detailsModel, Action<StoryCharacterModel> action)
     {
         this.detailsModel = detailsModel;
+
+        OnCreateCharacter = action;
     }
 
     void PopulateDropdown(List<UserSearchModel> searchModels)
@@ -64,6 +70,12 @@ public class CreateCharacterView : MonoBehaviour
 
             if (status)
             {
+                UpdatedCharaterModel responseModel = JsonUtility.FromJson<UpdatedCharaterModel>(response);
+
+                StoryCharacterModel characterModel = responseModel.data;
+
+                OnCreateCharacter?.Invoke(characterModel);
+
                 Destroy(gameObject);
             }
         });

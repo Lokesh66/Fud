@@ -45,6 +45,22 @@ public partial class APIHandler
         }));
     }
 
+    public void UpdateStory(string storyId, string title, string subTitle, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("id", storyId);
+
+        parameters.Add("title", title);
+
+        parameters.Add("sub_title", subTitle);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_STORY, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
     public void GetStoryDetails(int storyId, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -243,14 +259,28 @@ public class StoryDetailsModel
 
 [Serializable]
 public class StoryCharacterModel
-{ 
-
+{
+    public int id;
+    public int story_id;
+    public string title;
+    public string description;
+    public string suitable_performer;
+    public string gender;
+    public DateTime created_date_time;
+    public DateTime updatedAt;
 }
 
 [Serializable]
 public class StoryTeamModel
 {
-
+    public int id;
+    public int story_id;
+    public int user_id;
+    public string members;
+    public int status;
+    public DateTime created_date_time;
+    public string title;
+    public DateTime updatedAt;
 }
 
 [Serializable]
@@ -308,4 +338,16 @@ public class UserSearchModel
     public string name;
 
     public int id;
+}
+
+[Serializable]
+public class UpdatedCharaterModel : BaseResponse
+{
+    public StoryCharacterModel data;
+}
+
+[Serializable]
+public class UpdatedTeamModel : BaseResponse
+{
+    public StoryTeamModel data;
 }
