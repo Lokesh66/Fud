@@ -107,7 +107,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateStoryTeam(int story_id, string title, string description, string gender, Action<bool, string> action)
+    public void UpdateStoryTeam(int story_id, string title, string members, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -115,11 +115,7 @@ public partial class APIHandler
 
         parameters.Add("title", title);
 
-        parameters.Add("description", description);
-
-        parameters.Add("suitable_performer", 44);
-
-        parameters.Add("gender", gender);
+        parameters.Add("members", members);
 
         gameManager.StartCoroutine(PostRequest(APIConstants.SAVE_STORY_CHARACTER, true, parameters, (status, response) => {
 
@@ -338,6 +334,12 @@ public class UserSearchModel
     public string name;
 
     public int id;
+}
+
+[Serializable]
+public class UserSearchResponse : BaseResponse
+{
+    public List<UserSearchModel> data;
 }
 
 [Serializable]

@@ -55,13 +55,18 @@ public class UpdateTeamView : MonoBehaviour
 
     public void OnButtonAction()
     {
-        /* GameManager.Instance.apiHandler.UpdateTeamDetails(detailsModel.id, detailsModel.title, detailsModel.description, genderLabel.text, (status, response) => {
+        string[] membersList = memberField.text.Split(',');
 
-             if (status)
-             {
-                 Reset();
-             }
-         });*/
+        string members = GetMemberIds(membersList);
+
+        GameManager.Instance.apiHandler.UpdateStoryTeam(detailsModel.id, detailsModel.title, members, (status, response) =>
+        {
+
+            if (status)
+            {
+                Destroy(gameObject);
+            }
+        });
     }
 
     void OnSelectMember(object _selectedModel)
@@ -77,10 +82,24 @@ public class UpdateTeamView : MonoBehaviour
         {
             if (status)
             {
-                PopulateDropdown(new List<UserSearchModel>());
+                UserSearchResponse searchResponse = JsonUtility.FromJson<UserSearchResponse>(response);
+
+                PopulateDropdown(searchResponse.data);
 
                 isSearchAPICalled = false;
             }
         });
+    }
+
+    string GetMemberIds(string[] members)
+    {
+        List<int> memberIds = new List<int>();
+
+        for (int i = 0; i < members.Length; i++)
+        { 
+        
+        }
+
+        return memberIds.ToString();
     }
 }

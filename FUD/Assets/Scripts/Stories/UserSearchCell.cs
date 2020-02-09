@@ -14,7 +14,7 @@ public class UserSearchCell : MonoBehaviour
     {
         this.OnButtonPressed = onButtonPressed;
 
-        userNameText.text = "Dummy";
+        userNameText.text = searchModel.name;
     }
 
     public void OnButtonAction()
