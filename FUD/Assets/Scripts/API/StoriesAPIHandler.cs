@@ -45,7 +45,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateStory(string storyId, string title, string subTitle, Action<bool, string> action)
+    public void UpdateStory(string storyId, string title, string subTitle, int genreId, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -53,7 +53,11 @@ public partial class APIHandler
 
         parameters.Add("title", title);
 
-        parameters.Add("sub_title", subTitle);
+        parameters.Add("story_line", subTitle);
+
+        parameters.Add("description", subTitle);
+
+        parameters.Add("genre_id", genreId);
 
         gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_STORY, true, parameters, (status, response) => {
 
@@ -132,6 +136,26 @@ public partial class APIHandler
         parameters.Add("searchKey", "name");
 
         gameManager.StartCoroutine(PostRequest(APIConstants.SEARCH_TEAM_MEMBER, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void UpdateStoryPost(int story_id, string versionId, string title, string comment, int postedTo, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("story_id", story_id);
+
+        parameters.Add("title", title);
+
+        //parameters.Add("versionId", versionId);
+
+        parameters.Add("posted_to", postedTo);
+
+        parameters.Add("comment", comment);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.STORY_POST, true, parameters, (status, response) => {
 
             action(status, response);
         }));

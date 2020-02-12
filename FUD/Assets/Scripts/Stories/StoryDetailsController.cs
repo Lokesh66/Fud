@@ -32,6 +32,8 @@ public class StoryDetailsController : MonoBehaviour
 
     public GameObject addTeamMemberCache;
 
+    public GameObject updateStoryCache;
+
 
     public GameObject noDataObject;
 
@@ -188,8 +190,12 @@ public class StoryDetailsController : MonoBehaviour
     }
 
     public void OnUpdateStory()
-    { 
-        
+    {
+        GameObject createObject = Instantiate(updateStoryCache, creationPanelParent);
+
+        currentCreateScreen = createObject;
+
+        createObject.GetComponent<StoryUpdateView>().Load(this);
     }
 
     void CreateStoryVersion()

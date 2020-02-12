@@ -10,15 +10,19 @@ public class UserSearchCell : MonoBehaviour
 
     Action<object> OnButtonPressed;
 
+    UserSearchModel searchModel;
+
     public void SetView(UserSearchModel searchModel, Action<object> onButtonPressed)
     {
         this.OnButtonPressed = onButtonPressed;
+
+        this.searchModel = searchModel;
 
         userNameText.text = searchModel.name;
     }
 
     public void OnButtonAction()
     {
-        OnButtonPressed?.Invoke(5);
+        OnButtonPressed?.Invoke(searchModel.id);
     }
 }

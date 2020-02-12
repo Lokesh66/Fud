@@ -30,6 +30,9 @@ public class PortfolioView : BaseView
     public Color disabledColor;
 
 
+    public GameObject createWorkExperianceCache;
+
+
     private GameObject currentObject;
 
     private ETabType currentTab;
@@ -120,6 +123,8 @@ public class PortfolioView : BaseView
     void ShowExperianceScreen()
     {
         currentObject = experianceView.gameObject;
+
+        experianceView.Load(this);
     }
 
     void ShowCreatePortfolioScreen()
@@ -131,5 +136,16 @@ public class PortfolioView : BaseView
         gameObject.SetActive(false);
 
         creationObject.GetComponent<PortfolioCreationView>().Init(this);
+    }
+
+    public void OnExperianceCreateAction()
+    {
+        GameObject creationObject = Instantiate(createWorkExperianceCache, parentTrans);
+
+        OnAddSubView(creationObject);
+
+        gameObject.SetActive(false);
+
+        creationObject.GetComponent<UpdateExperianceView>().Load(this);
     }
 }

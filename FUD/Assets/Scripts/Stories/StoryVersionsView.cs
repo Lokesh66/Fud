@@ -8,6 +8,7 @@ public class StoryVersionsView : MonoBehaviour
 
     public GameObject storyCell;
 
+    public StoryShareView shareView;
 
     List<StoryVersion> storyVersionList;
 
@@ -33,7 +34,7 @@ public class StoryVersionsView : MonoBehaviour
         {
             GameObject storyObject = Instantiate(storyCell, content);
 
-            storyObject.GetComponent<StoryVersionCell>().SetView(storyVersionList[i]);
+            storyObject.GetComponent<StoryVersionCell>().SetView(storyVersionList[i], this);
         }
     }
 
@@ -44,5 +45,10 @@ public class StoryVersionsView : MonoBehaviour
         gameObject.SetActive(false);
 
         storyVersionList.Clear();
+    }
+
+    public void OnCellButtonAction(StoryVersion storyVersion)
+    {
+        shareView.Load(storyVersion);
     }
 }

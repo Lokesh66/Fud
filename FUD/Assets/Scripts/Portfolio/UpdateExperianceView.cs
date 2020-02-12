@@ -1,30 +1,57 @@
 ﻿using UnityEngine;
 using TMPro;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 
-public class PortfolioCreationView : MonoBehaviour
+public class UpdateExperianceView : MonoBehaviour
 {
-    public TMP_InputField titleField;
-
     public TMP_InputField descriptionField;
-    
 
-    string contentUrl = string.Empty;
+    public TMP_Dropdown dropdown;
 
-    PortfolioView portfolioView = null;
-    public void Init(PortfolioView portfolioView)
+
+    private string contentUrl;
+
+    List<Craft> craftsList;
+
+    PortfolioView portfolioView;
+
+
+    public void Load(PortfolioView portfolioView)
     {
         this.portfolioView = portfolioView;
+
+        PopulateDropdown();
     }
 
-    public void OnUploadButtonAction()
+    void PopulateDropdown()
+    {
+        craftsList = DataManager.Instance.crafts;
+
+        List<string> options = new List<string>();
+
+        foreach (var option in craftsList)
+        {
+            options.Add(option.name);
+        }
+
+        dropdown.ClearOptions();
+        dropdown.AddOptions(options);
+    }
+
+    public void OnUploadAction()
     {
         PickImages(SystemInfo.maxTextureSize);
+
+        //GetAudioFromGallery();
     }
 
-    public void CreateButtonAction()
+    public void OnSubmitAction()
     {
+        string selectedGenreText = dropdown.options[dropdown.value].text;
+
+        Craft selectedGenre = craftsList.Find(genre => genre.name.Equals(selectedGenreText));
+
         PortMultimediaModels multimediaModels = new PortMultimediaModels();
 
         PortMultiMediaModel mediaModel = new PortMultiMediaModel();
@@ -39,7 +66,7 @@ public class PortfolioCreationView : MonoBehaviour
 
         parameters[0].Add("media_type", "image");
 
-        GameManager.Instance.apiHandler.CreatePortfolio(titleField.text, descriptionField.text, parameters, (status, response) => {
+        GameManager.Instance.apiHandler.UpdateWorkExperiance(descriptionField.text, selectedGenre.id, parameters, (status, response) => {
 
             if (status)
             {
@@ -67,10 +94,6 @@ public class PortfolioCreationView : MonoBehaviour
 
                 //NativeGallery.GetImageProperties(path);
 
-                //screenShotImage.sprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
-
-                //screenShotImage.SetNativeSize();
-
                 byte[] textureBytes = texture.EncodeToPNG();
 
                 string filePath = APIConstants.IMAGES_PATH + "/GalleryPhotos";
@@ -81,6 +104,7 @@ public class PortfolioCreationView : MonoBehaviour
                 }
 
                 File.WriteAllBytes(filePath, textureBytes);
+
             }
         }, "Select a PNG image");
 
@@ -100,18 +124,5 @@ public class PortfolioCreationView : MonoBehaviour
     public void OnBackAction()
     {
         portfolioView.OnRemoveLastSubView();
-
-        Destroy(gameObject);
     }
-}
-
-public class FileUploadModel
-{
-    public bool success;
-    public string s3_file_path;
-}
-
-public class FileUploadResponseModel : BaseResponse
-{
-    public FileUploadModel data;
 }

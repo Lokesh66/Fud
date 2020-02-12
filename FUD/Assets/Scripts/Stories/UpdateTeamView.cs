@@ -57,7 +57,9 @@ public class UpdateTeamView : MonoBehaviour
     {
         string[] membersList = memberField.text.Split(',');
 
-        string members = GetMemberIds(membersList);
+        List<string> member = new List<string>(membersList);
+
+        string members = GetMemberIds(member);
 
         GameManager.Instance.apiHandler.UpdateStoryTeam(detailsModel.id, detailsModel.title, members, (status, response) =>
         {
@@ -91,14 +93,15 @@ public class UpdateTeamView : MonoBehaviour
         });
     }
 
-    string GetMemberIds(string[] members)
+    string GetMemberIds(List<string> members)
     {
         List<int> memberIds = new List<int>();
 
-        for (int i = 0; i < members.Length; i++)
+       /* for (int i = 0; i < members.Length; i++)
         { 
-        
-        }
+            int memberId = members.Fin
+            memberIds.Add()
+        }*/
 
         return memberIds.ToString();
     }

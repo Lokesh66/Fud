@@ -32,7 +32,9 @@ public class APIConstants
 
     public const string STORY_DETAILS = BASE_URL + "v1/searchStory/";
 
-    public const string STORY_VERSION_DETAILS = BASE_URL + "v1/searchStoryVersion";
+    public const string STORY_VERSION_DETAILS = BASE_URL + "v1/searchStoryVersion/";
+
+    public const string STORY_POST = BASE_URL + "v1/posts/";
 
     public const string SAVE_STORY_CHARACTER = BASE_URL + "/v1/storyCharacters/";
 
@@ -49,5 +51,7 @@ public class APIConstants
     public const string USER_AUDITION = BASE_URL + "v1/userAudition/";
 
     public const string USER_PORTFOLIO = BASE_URL + "v1/userPortfolio/";
+
+    public const string UPDATE_EXPERIANCE = BASE_URL + "v1/workExperience/";
 
 }

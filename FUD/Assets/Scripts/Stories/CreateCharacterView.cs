@@ -94,7 +94,9 @@ public class CreateCharacterView : MonoBehaviour
         {
             if (status)
             {
-                PopulateDropdown(new List<UserSearchModel>());
+                UserSearchResponse searchResponse = JsonUtility.FromJson<UserSearchResponse>(response);
+
+                PopulateDropdown(searchResponse.data);
 
                 isSearchAPICalled = false;
             }
