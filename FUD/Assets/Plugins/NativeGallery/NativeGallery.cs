@@ -306,7 +306,7 @@ public static class NativeGallery
 		return GetMediaFromGallery( callback, MediaType.Video, mime, title );
 	}
 
-	private static Permission GetAudioFromGallery( MediaPickCallback callback, string title = "", string mime = "audio/*" )
+	public static Permission GetAudioFromGallery( MediaPickCallback callback, string title = "", string mime = "audio/*" )
 	{
 		return GetMediaFromGallery( callback, MediaType.Audio, mime, title );
 	}
@@ -321,7 +321,7 @@ public static class NativeGallery
 		return GetMultipleMediaFromGallery( callback, MediaType.Video, mime, title );
 	}
 
-	private static Permission GetAudiosFromGallery( MediaPickMultipleCallback callback, string title = "", string mime = "audio/*" )
+	public static Permission GetAudiosFromGallery( MediaPickMultipleCallback callback, string title = "", string mime = "audio/*" )
 	{
 		return GetMultipleMediaFromGallery( callback, MediaType.Audio, mime, title );
 	}
