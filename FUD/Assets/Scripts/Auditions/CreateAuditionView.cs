@@ -30,7 +30,7 @@ public class CreateAuditionView : MonoBehaviour
 
     public Transform parentPanel;
 
-    public TMP_InputField typeText;
+    public TMP_Dropdown typeDropdown;
     public TMP_InputField topicText;
     public TMP_InputField ageText;
     public TMP_InputField endDateText;
@@ -53,7 +53,7 @@ public class CreateAuditionView : MonoBehaviour
     public void CreateAuditionButtonAction()
     {
         //Call an API to add into audition list
-        if (string.IsNullOrEmpty(typeText.text))
+        if (string.IsNullOrEmpty(typeDropdown.captionText.text))
         {
             ShowErrorMessage("Audition type should not be empty");
             return;
@@ -87,7 +87,7 @@ public class CreateAuditionView : MonoBehaviour
         parameters.Add("description", descriptionText.text);
         parameters.Add("age_from", Convert.ToInt16(ageText.text));
         parameters.Add("age_to", Convert.ToInt16(ageText.text));
-        parameters.Add("type", typeText.text);// "group","individual");
+        parameters.Add("type", typeDropdown.captionText.text.ToLower());// "group","individual");
 
         GameManager.Instance.apiHandler.CreateAudition(parameters, (status, response) => {
             Debug.Log("OnCreateAudition : "+response);

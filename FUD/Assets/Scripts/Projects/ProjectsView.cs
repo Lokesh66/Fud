@@ -23,4 +23,11 @@ public class ProjectsView : BaseView
     {
         base.OnExitScreen();
     }
+
+    public void OnAddButtonAction()
+    {
+        ProjectCreationView.Instance.SetView(() => {
+
+        });
+    }
 }

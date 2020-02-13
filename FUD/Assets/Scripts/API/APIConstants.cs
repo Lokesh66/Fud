@@ -30,6 +30,8 @@ public class APIConstants
 
     public const string CREATE_PROJECT = BASE_URL + "v1/projects/";
 
+    public const string CREATE_PROJECT_CAST = BASE_URL + "v1/projectCast/";
+
     public const string STORY_DETAILS = BASE_URL + "v1/searchStory/";
 
     public const string STORY_VERSION_DETAILS = BASE_URL + "v1/searchStoryVersion/";

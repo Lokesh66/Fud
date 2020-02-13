@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 330625098523666556}
   - component: {fileID: 7254762062932772582}
-  - component: {fileID: -1558399123695813290}
   - component: {fileID: 818205395734881273}
+  - component: {fileID: 5303486247264780397}
   m_Layer: 5
-  m_Name: AuditionCell
+  m_Name: ProjectCell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -66,20 +66,6 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
---- !u!114 &-1558399123695813290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1169721676985622895}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4906e62827055bf4a83d1dc503572faa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  titleText: {fileID: 2695510302197836487}
-  description: {fileID: 1955875290482706004}
 --- !u!222 &818205395734881273
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -88,6 +74,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1169721676985622895}
   m_CullTransparentMesh: 0
+--- !u!114 &5303486247264780397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1169721676985622895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd455602db61f22449bbf2bce6c14d47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rectTransform: {fileID: 330625098523666556}
+  titleText: {fileID: 2695510302197836487}
+  descriptionText: {fileID: 7686110910388186570}
+  projectIcon: {fileID: 8706697458016233150}
 --- !u!1 &2635348372136623927
 GameObject:
   m_ObjectHideFlags: 0
@@ -226,7 +228,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -1558399123695813290}
+      - m_Target: {fileID: 5303486247264780397}
         m_MethodName: OnButtonAction
         m_Mode: 1
         m_Arguments:

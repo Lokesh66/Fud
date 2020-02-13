@@ -8,31 +8,61 @@ public class ProjectController : MonoBehaviour
 
     public GameObject projectCell;
 
+    public GameObject noDataObject;
+
     List<ProjectDataModel> projectModels;
 
-    public void Load()
+
+    private void OnEnable()
     {
-        gameObject.SetActive(true);
+        GetAllProjects();
+    }
+    public void GetAllProjects()
+    {
+        noDataObject.SetActive(false);
 
         GameManager.Instance.apiHandler.GetProjects((status, projectsResponse) => {
 
             if (status)
             {
-                LoadView(projectsResponse.data);
+                Load(projectsResponse.data);
+            }
+            else
+            {
+                noDataObject.SetActive(true);
             }
         });
     }
 
-    void LoadView(List<ProjectDataModel> models)
+    void Load(List<ProjectDataModel> models)
     {
-        projectModels = models;
-
-        for (int i = 0; i < models.Count; i++)
+        foreach (Transform child in content)
         {
-            GameObject projectObject = Instantiate(projectCell, content);
-
-            projectObject.GetComponent<ProjectCell>().SetView();
+            GameObject.Destroy(child.gameObject);
         }
+
+        projectModels = models;
+        if(models != null && models.Count > 0)
+        {
+            noDataObject.SetActive(false);
+            for (int i = 0; i < models.Count; i++)
+            {
+                GameObject projectObject = Instantiate(projectCell, content);
+
+                projectObject.GetComponent<ProjectCell>().SetView(models[i], OnProjectClickAction);
+            }
+        }
+        else
+        {
+            noDataObject.SetActive(true);
+
+        }
+        
+    }
+
+    void OnProjectClickAction(ProjectDataModel project)
+    {
+        ProjectsDetailedView.Instance.SetView(project, () => { });
     }
 
     public void OnBackButtonAction()

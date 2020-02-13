@@ -34,6 +34,32 @@ public partial class APIHandler
             action(status, response);
         }));
     }
+
+    public void CreateProjectCast(Dictionary<string, object> parameters, Action<bool, string> action)
+    {
+        parameters.Add("project_id", 1);
+
+        parameters.Add("story_character_id", 2);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_PROJECT_CAST, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void ModifyProjectCast(Dictionary<string, object> parameters, Action<bool, string> action)
+    {
+        parameters.Add("id", 1);
+
+        parameters.Add("project_id", 1);
+
+        parameters.Add("story_character_id", 2);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_PROJECT_CAST, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
 }
 
 [Serializable]
