@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class MenuController : MonoBehaviour
 {
     public List<BaseView> baseViews;
+    public List<Toggle> toggles;
 
     [HideInInspector]
     public BaseView currentBaseView;
@@ -12,19 +14,18 @@ public class MenuController : MonoBehaviour
     private int currentViewIndex = -1;
     void Start()
     {
+        //toggles[0].isOn = true;
         OnButtonAction(0);
     }
 
 
     public void OnButtonAction(int index)
     {
-        if (currentViewIndex != index)
+        if (toggles[index].isOn)
         {
-            currentViewIndex = index;
-
             currentBaseView?.OnExitScreen();
 
-            currentBaseView = baseViews[currentViewIndex];
+            currentBaseView = baseViews[index];
 
             currentBaseView.ShowScreen();
         }

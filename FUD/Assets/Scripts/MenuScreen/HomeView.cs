@@ -2,7 +2,7 @@
 
 public class HomeView : BaseView
 {
-    public GameObject leftMenuPanel;
+    public LeftMenu leftMenuPanel;
 
 
     #region Ovveride Methods
@@ -30,11 +30,11 @@ public class HomeView : BaseView
 
     public void OnMenuButtonAction()
     {
-        leftMenuPanel.SetActive(true);
+        leftMenuPanel.SetView(OnCloseLeftMenu);
     }
 
     public void OnCloseLeftMenu()
     {
-        leftMenuPanel.SetActive(false);
+
     }
 }
