@@ -38,12 +38,12 @@ public class StoryCharactersView : MonoBehaviour
     {
         GameObject characterObject = null;
 
-        for (int i = 0; i < characterModels.Count; i++)
+        /*for (int i = 0; i < characterModels.Count; i++)
         {
             characterObject = Instantiate(cellCache, content);
 
             characterObject.GetComponent<StoryCharacterCell>().Load(characterModels[i]);
-        }
+        }*/
     }
 
     NoDataModel GetNoDataModel()

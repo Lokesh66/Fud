@@ -4,6 +4,27 @@ using TMPro;
 
 public class StoryDetailsController : MonoBehaviour
 {
+    #region Singleton
+
+    private static StoryDetailsController instance = null;
+    private StoryDetailsController()
+    {
+
+    }
+
+    public static StoryDetailsController Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<StoryDetailsController>();
+            }
+            return instance;
+        }
+    }
+
+    #endregion
     public enum EScreenSubType
     {
         Details,
@@ -54,16 +75,43 @@ public class StoryDetailsController : MonoBehaviour
     Stack<string> detailResponses = new Stack<string>();
 
 
-    MyStoriesController storiesController;
+    /*MyStoriesController storiesController;*/
 
+    System.Action BackAction;
 
-    public void Load(StoryDetailsModel detailsModel, MyStoriesController storiesController)
+    public void Load(object storyId, System.Action onBackAction)
     {
-        currentDetailsModel = detailsModel;
+        Debug.Log("Load : "+storyId);
+        GameManager.Instance.apiHandler.GetStoryDetails((int)storyId, (status, response) =>
+        {
+            Debug.Log("status = " + status);
 
-        this.storiesController = storiesController;
+            if (status)
+            {
+                StoryDetailsResponseModel responseModel = JsonUtility.FromJson<StoryDetailsResponseModel>(response);
 
-        UpdateScreen();
+                if (responseModel.data.Count > 0)
+                {
+                    creationPanelParent.gameObject.SetActive(true);
+
+                    BackAction = onBackAction;
+
+                    currentDetailsModel = responseModel.data[0];
+
+                    UpdateScreen();
+                }
+                else
+                {
+                    onBackAction?.Invoke();
+                }
+            }
+            else
+            {
+                onBackAction?.Invoke();
+            }
+        });
+
+
     }
 
     public void EnableView(StoryDetailsModel detailsModel)
@@ -78,9 +126,13 @@ public class StoryDetailsController : MonoBehaviour
 
     public void OnBackButtonAction()
     {
+        creationPanelParent.gameObject.SetActive(false);
+
         Destroy(currentCreateScreen);
 
-        storiesController?.OnRemoveLastSubView();
+        BackAction?.Invoke();
+
+        BackAction = null;
     }
 
     public void OnTabAction(int tabIndex)

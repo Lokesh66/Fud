@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -72,15 +71,11 @@ public class MyStoriesView : MonoBehaviour
 
     void OnStoryTapAction(object storyId)
     {
-        GameManager.Instance.apiHandler.GetStoryDetails((int)storyId, (status, response) => {
+        StoryDetailsController.Instance.Load(storyId, OnStoryClosedAction);
+    }
+    void OnStoryClosedAction()
+    {
 
-            Debug.Log("status = " + status);
-
-            if (status)
-            {
-                storiesController.OnStoryButtonAction(response);
-            }
-        });
     }
 
     NoDataModel GetNoDataModel()

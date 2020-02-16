@@ -8,6 +8,29 @@ using TMPro;
 
 public class StoryCreationView : MonoBehaviour
 {
+    #region Singleton
+
+    private static StoryCreationView instance = null;
+    private StoryCreationView()
+    {
+
+    }
+
+    public static StoryCreationView Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<StoryCreationView>();
+            }
+            return instance;
+        }
+    }
+
+    #endregion
+    public Transform parentPanel;
+
     public RectTransform galleryPanel;
 
     public TMP_InputField storyTitleField;
@@ -33,9 +56,13 @@ public class StoryCreationView : MonoBehaviour
 
     List<Genre> genres;
 
-    public void Load(MyStoriesController storiesController)
+    System.Action OnClose;
+
+    public void Load(System.Action onClose)
     {
-        this.storiesController = storiesController;
+        parentPanel.gameObject.SetActive(true);
+
+        OnClose = onClose;
 
         canSupportMultipleText.text = "Can Support Text " + NativeGallery.CanSelectMultipleFilesFromGallery().ToString();
 
@@ -59,7 +86,9 @@ public class StoryCreationView : MonoBehaviour
 
     public void OnBackButtonAction()
     {
-        storiesController.OnRemoveLastSubView();
+        parentPanel.gameObject.SetActive(false);
+        OnClose?.Invoke();
+        OnClose = null;
     }
 
     public void OnUploadAction()
@@ -81,7 +110,7 @@ public class StoryCreationView : MonoBehaviour
 
             if (status)
             {
-                storiesController.OnRemoveLastSubView();
+                OnBackButtonAction();
                 Debug.Log("Story Uploaded Successfully");
             }
             else {

@@ -88,20 +88,6 @@ public class MyStoriesController : BaseView
         storiesView.ClearData();
     }
 
-    public void OnStoryButtonAction(string response)
-    {
-        StoryDetailsResponseModel responseModel = JsonUtility.FromJson<StoryDetailsResponseModel>(response);
-
-        GameObject detailsObject = Instantiate(detailsCache, parentTrans);
-
-        OnAddSubView(detailsObject);
-
-        if (responseModel.data.Count > 0)
-        {
-            detailsObject.GetComponent<StoryDetailsController>().Load(responseModel.data[0], this);
-        }
-    }
-
     public void CreateSubView(GameObject createObject)
     {
         OnAddSubView(createObject);
@@ -120,10 +106,15 @@ public class MyStoriesController : BaseView
 
     void ShowCreateStoryScreen()
     {
-        GameObject createObject = Instantiate(storyCreateCache, parentTrans);
+        /*GameObject createObject = Instantiate(storyCreateCache, parentTrans);
 
-        OnAddSubView(createObject);
+        OnAddSubView(createObject);*/
 
-        createObject.GetComponent<StoryCreationView>().Load(this);
+        StoryCreationView.Instance.Load(OnStoryCreationCloseAction);
+    }
+
+    void OnStoryCreationCloseAction()
+    {
+/*        OnRemoveLastSubView();*/
     }
 }
