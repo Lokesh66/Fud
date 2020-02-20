@@ -505,46 +505,24 @@ public partial class APIHandler
         }
     }
 
-    IEnumerator Upload(string filePath, Action<bool, string> responseCallBack)
+    IEnumerator Upload(string filePath, EMediaType mediaType, Action<bool, string> responseCallBack)
     {
-        /* List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
-
-         formData.Add(new MultipartFormFileSection("file", filePath));
-
-         formData.Add(new MultipartFormDataSection("project_id", "8"));
-
-         formData.Add(new MultipartFormDataSection("env_id", "1"));
-
-         // UnityWebRequest www = UnityWebRequest.Post(APIConstants.MEDIA_URL, formData);
-
-         byte[] boundary = UnityWebRequest.GenerateBoundary();
-         byte[] formSections = UnityWebRequest.SerializeFormSections(formData, boundary);
-         // my termination string consisting of CRLF--{boundary}--
-         byte[] terminate = Encoding.UTF8.GetBytes(String.Concat("\r\n--", Encoding.UTF8.GetString(boundary), "--"));
-         // Make my complete body from the two byte arrays
-         byte[] body = new byte[formSections.Length + terminate.Length];
-         Buffer.BlockCopy(formSections, 0, body, 0, formSections.Length);
-         Buffer.BlockCopy(terminate, 0, body, formSections.Length, terminate.Length);
-         // Set the content type - NO QUOTES around the boundary
-         string contentType = String.Concat("multipart/form-data; boundary=", Encoding.UTF8.GetString(boundary));
-         // Make my request object and add the raw body. Set anything else you need here
-         UnityWebRequest wr = new UnityWebRequest();
-         wr = UnityWebRequest.Post(APIConstants.MEDIA_URL, formData);
-         UploadHandler uploader = new UploadHandlerRaw(body);
-         uploader.contentType = contentType;
-         wr.uploadHandler = uploader;
-
-
-
-         contentTypeText.text = "Content Type " + contentType;
-
-         yield return wr.SendWebRequest();*/
-
         byte[] img = File.ReadAllBytes(filePath);
 
         WWWForm form = new WWWForm();
 
-        form.AddBinaryData("file", img, filePath, "image/png");
+        if (mediaType == EMediaType.Image)
+        {
+            form.AddBinaryData("file", img, filePath, "image/png");
+        }
+        else if (mediaType == EMediaType.Audio)
+        {
+            form.AddBinaryData("file", img, filePath, "audio/*");
+        }
+        else if (mediaType == EMediaType.Video)
+        {
+            form.AddBinaryData("file", img, filePath, "video/*");
+        }
 
         UnityWebRequest request = UnityWebRequest.Post(APIConstants.MEDIA_URL, form);
 

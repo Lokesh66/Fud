@@ -124,8 +124,6 @@ public class StoryUpdateView : MonoBehaviour
         {
             Debug.Log("Image path: " + path);
 
-            canSupportMultipleText.text = path.Length.ToString();
-
             if (path != null)
             {
                 // Create Texture from selected image
@@ -240,7 +238,7 @@ public class StoryUpdateView : MonoBehaviour
     {
         this.filePath.text = "FilePath = " + filePath;
 
-        GameManager.Instance.apiHandler.UploadFile(filePath, (status, response) => {
+        GameManager.Instance.apiHandler.UploadFile(filePath, EMediaType.Image, (status, response) => {
 
         });
     }

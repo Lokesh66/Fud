@@ -35,6 +35,8 @@ public class GameManager : MonoBehaviour
 
     public DownLoadManager downLoadManager;
 
+    public AlertViewController alertView;
+
     void Awake()
     {
         Init();

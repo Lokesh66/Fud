@@ -43,6 +43,6 @@ public class HomeCell : MonoBehaviour
     public void OnSelect()
     {
         OnClick?.Invoke(index);
-        OnClick = null;
+        //OnClick = null;
     }
 }

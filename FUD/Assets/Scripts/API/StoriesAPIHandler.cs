@@ -161,9 +161,9 @@ public partial class APIHandler
         }));
     }
 
-    public void UploadFile(string filePath, Action<bool, string> OnResposne)
+    public void UploadFile(string filePath, EMediaType mediaType, Action<bool, string> OnResposne)
     {
-        gameManager.StartCoroutine(Upload(filePath, ((status, response) => {
+        gameManager.StartCoroutine(Upload(filePath, mediaType, ((status, response) => {
 
             OnResposne?.Invoke(status, response);
         })));

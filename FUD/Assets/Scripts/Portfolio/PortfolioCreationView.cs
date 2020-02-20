@@ -89,7 +89,7 @@ public class PortfolioCreationView : MonoBehaviour
 
     void UploadFile(string filePath)
     {
-        GameManager.Instance.apiHandler.UploadFile(filePath, (status, response) => {
+        GameManager.Instance.apiHandler.UploadFile(filePath, EMediaType.Image, (status, response) => {
 
             FileUploadResponseModel responseModel = JsonUtility.FromJson<FileUploadResponseModel>(response);
 
