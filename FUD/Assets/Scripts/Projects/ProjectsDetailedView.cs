@@ -29,11 +29,28 @@ public class ProjectsDetailedView : MonoBehaviour
     public GameObject parentPanel;
 
     System.Action OnBackButtonClick;
-    public void SetView(ProjectDataModel projectData, System.Action backAction)
+
+    private Project project;
+    public void SetView(Project projectData, System.Action backAction)
     {
+        project = projectData;
         parentPanel.SetActive(true);
-        OnBackButtonClick = backAction;
-        
+        OnBackButtonClick = backAction;        
+    }
+
+    private void Load()
+    {
+    }
+    void Reload()
+    {
+        GameManager.Instance.apiHandler.GetProjectDetails(project.id, (status, project) =>
+        {
+            if (status)
+            {
+                this.project = project;
+                Load();
+            }
+        });
     }
 
     public void BackButtonAction()

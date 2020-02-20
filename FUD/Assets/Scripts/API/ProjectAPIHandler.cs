@@ -4,15 +4,40 @@ using System;
 
 public partial class APIHandler
 {
-    public void GetProjects(Action<bool, AllProjectsResponse> action)
+    public void GetProjects(Action<bool, ProjectsResponse> action)
     {
         gameManager.StartCoroutine(GetRequest(APIConstants.CREATE_PROJECT, true, (status, response) => {
 
             if (status)
             {
-                AllProjectsResponse projectsResponse = JsonUtility.FromJson<AllProjectsResponse>(response);
+                ProjectsResponse projectsResponse = JsonUtility.FromJson<ProjectsResponse>(response);
 
                 action(status, projectsResponse);
+            }
+        }));
+    }
+
+    public void GetProjectDetails(int id, Action<bool, Project> action)
+    {
+        string url = APIConstants.GET_PROJECT_DETAILS + id;
+
+        gameManager.StartCoroutine(GetRequest(url, true, (status, response) =>
+        {
+            if (status)
+            {
+                ProjectsResponse projectsResponse = JsonUtility.FromJson<ProjectsResponse>(response);
+                if (projectsResponse.data != null && projectsResponse.data.Count > 0)
+                {
+                    action(status, projectsResponse.data[0]);
+                }
+                else
+                {
+                    action(status, null);
+                }
+            }
+            else
+            {
+                action(status, null);
             }
         }));
     }
@@ -70,26 +95,38 @@ public class BaseResponse
 }
 
 [Serializable]
-public class ProjectDataModel
+public class ProjectCast
 {
     public int id;
-    public int story_id;
+    public int project_id;
+    public int story_character_id;
+    public object selected_member;
     public int user_id;
-    public string title;
-    public int cost_estimation;
-    public int estimated_time;
+    public int status;
+    public int cast_status;
     public DateTime created_date_time;
     public DateTime updatedAt;
 }
 
 [Serializable]
-public class ProjectResponse : BaseResponse
+public class Project
 {
-    public ProjectDataModel data;
+    public int id;
+    public int story_id;
+    public int story_version_id;
+    public int user_id;
+    public string title;
+    public int cost_estimation;
+    public int estimated_time;
+    public List<StoryVersion> StoryVersions;
+    public List<ProjectCast> Project_cast;
+    public List<Audition> Audition;
+    public DateTime created_date_time;
+    public DateTime updatedAt;
 }
 
 [Serializable]
-public class AllProjectsResponse : BaseResponse
+public class ProjectsResponse : BaseResponse
 {
-    public List<ProjectDataModel> data;
+    public List<Project> data;
 }

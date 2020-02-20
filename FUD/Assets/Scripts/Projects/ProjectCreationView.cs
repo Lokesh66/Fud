@@ -37,17 +37,21 @@ public class ProjectCreationView : MonoBehaviour
 
     public TMP_Text errorText;
 
-    System.Action backAction;
-    public void SetView(System.Action action)
+    System.Action<bool> backAction;
+
+    bool isDataUpdated = false;
+
+    public void SetView(System.Action<bool> action)
     {
         parentPanel.gameObject.SetActive(true);
         backAction = action;
+        isDataUpdated = false;
     }
 
     public void BackButtonAction()
     {
         parentPanel.gameObject.SetActive(false);
-        backAction?.Invoke();
+        backAction?.Invoke(isDataUpdated);
         backAction = null;
     }
 
@@ -64,7 +68,7 @@ public class ProjectCreationView : MonoBehaviour
             if (status)
             {
                 Debug.Log("Project Created Successfully");
-
+                isDataUpdated = true;
                 BackButtonAction();
             }
             else

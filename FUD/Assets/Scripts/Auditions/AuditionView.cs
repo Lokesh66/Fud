@@ -26,8 +26,11 @@ public class AuditionView : BaseView
 
     public void OnAddButtonAction()
     {
-        CreateAuditionView.Instance.SetView(() => { 
-        
+        CreateAuditionView.Instance.SetView(1, (isNewDataUpdated) => {
+            if (isNewDataUpdated)
+            {
+
+            }
         });
     }
 }

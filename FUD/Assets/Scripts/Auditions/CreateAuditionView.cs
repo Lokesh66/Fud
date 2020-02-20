@@ -38,16 +38,22 @@ public class CreateAuditionView : MonoBehaviour
 
     public TMP_Text errorText;
 
-    System.Action backAction;
-    public void SetView(System.Action action)
+    bool isNewAuditionCreated;
+
+    int projectId;
+
+    System.Action<bool> backAction;
+    public void SetView(int projectId, System.Action<bool> action)
     {
+        this.projectId = projectId;
         parentPanel.gameObject.SetActive(true);
         backAction = action;
+        isNewAuditionCreated = false;
     }
     public void BackButtonAction()
     {
         parentPanel.gameObject.SetActive(false);
-        backAction?.Invoke();
+        backAction?.Invoke(isNewAuditionCreated);
         backAction = null;
     }
     public void CreateAuditionButtonAction()
@@ -79,7 +85,7 @@ public class CreateAuditionView : MonoBehaviour
             return;
         }
         Dictionary<string, object> parameters = new Dictionary<string, object>();
-
+        parameters.Add("project_id", projectId);
         parameters.Add("topic", topicText.text);
         parameters.Add("rate_of_pay", 10000);
         parameters.Add("end_date", endDateText.text);// "2020-03-23");
@@ -93,6 +99,7 @@ public class CreateAuditionView : MonoBehaviour
             Debug.Log("OnCreateAudition : "+response);
             if (status)
             {
+                isNewAuditionCreated = true;
                 BackButtonAction();
             }
             else

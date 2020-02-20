@@ -7,15 +7,16 @@ public class ProjectCell : MonoBehaviour
     public RectTransform rectTransform;
 
     public TextMeshProUGUI titleText;
-
+    public TextMeshProUGUI genreText;
+    public TextMeshProUGUI durationText;
     public TextMeshProUGUI descriptionText;
 
     public Image projectIcon;
 
-    private ProjectDataModel projectModel;
+    private Project projectModel;
 
-    System.Action<ProjectDataModel> OnClickAction;
-    public void SetView(ProjectDataModel model, System.Action<ProjectDataModel> OnProjectSelected)
+    System.Action<Project> OnClickAction;
+    public void SetView(Project model, System.Action<Project> OnProjectSelected)
     {
         projectModel = model;
         OnClickAction = OnProjectSelected;

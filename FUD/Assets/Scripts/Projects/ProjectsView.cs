@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ProjectsView : BaseView
 {
@@ -22,12 +20,5 @@ public class ProjectsView : BaseView
     public override void OnExitScreen()
     {
         base.OnExitScreen();
-    }
-
-    public void OnAddButtonAction()
-    {
-        ProjectCreationView.Instance.SetView(() => {
-
-        });
     }
 }
