@@ -12,6 +12,8 @@ public class StoryShareView : MonoBehaviour
 
     public TMP_InputField searchField;
 
+    public TMP_InputField commentField;
+
 
     StoryVersion currentVersion;
 
@@ -71,7 +73,7 @@ public class StoryShareView : MonoBehaviour
         {
             cellObject = Instantiate(searchCell, searchContent);
 
-            cellObject.GetComponent<UserSearchCell>().SetView(searchModels[i], OnSelectMember);
+            cellObject.GetComponent<ShareSearchCell>().SetView(searchModels[i], OnSelectMember);
         }
     }
 
@@ -79,7 +81,9 @@ public class StoryShareView : MonoBehaviour
     {
         int userId = (int)id;
 
-        GameManager.Instance.apiHandler.UpdateStoryPost(currentVersion.story_id, currentVersion.id.ToString(), "Story Title", "Comment", userId, (status, response) => {
+        string storyTitle = StoryDetailsController.Instance.GetStoryTitle();
+
+        GameManager.Instance.apiHandler.UpdateStoryPost(currentVersion.story_id, currentVersion.id, storyTitle, commentField.text, userId, (status, response) => {
 
             if (status)
             {
@@ -91,6 +95,13 @@ public class StoryShareView : MonoBehaviour
 
     public void OnBackAction()
     {
+        Reset();
+
         gameObject.SetActive(false);
+    }
+
+    void Reset()
+    {
+        searchField.text = commentField.text = string.Empty;
     }
 }

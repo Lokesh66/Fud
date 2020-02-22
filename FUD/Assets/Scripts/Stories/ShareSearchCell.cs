@@ -3,7 +3,7 @@ using System;
 using TMPro;
 
 
-public class UserSearchCell : MonoBehaviour
+public class ShareSearchCell : MonoBehaviour
 {
     public TextMeshProUGUI userNameText;
 
@@ -23,6 +23,6 @@ public class UserSearchCell : MonoBehaviour
 
     public void OnButtonAction()
     {
-        OnButtonPressed?.Invoke(searchModel);
+        OnButtonPressed?.Invoke(searchModel.id);
     }
 }

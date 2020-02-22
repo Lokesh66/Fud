@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 
 public class UpdateTeamView : MonoBehaviour
 {
@@ -17,9 +18,13 @@ public class UpdateTeamView : MonoBehaviour
 
     UserSearchModel selectedModel;
 
+    List<UserSearchModel> addedModels = new List<UserSearchModel>();
+
     bool isSearchAPICalled = false;
 
     string keyword = string.Empty;
+
+    string inputData = string.Empty;
 
 
     public void SetView(StoryDetailsModel detailsModel)
@@ -43,11 +48,23 @@ public class UpdateTeamView : MonoBehaviour
 
     public void OnValueChange()
     {
-        if (memberField.text.Length > 2 && !isSearchAPICalled)
+        string addedMember = string.Empty;
+
+        if (addedModels.Count > 0)
+        {
+            addedMember = memberField.text.Split(',').Last();
+        }
+        else {
+            addedMember = memberField.text;
+        }
+
+        Debug.Log("addedMember = " + addedMember);
+
+        if (addedMember.Length > 2 && !isSearchAPICalled)
         {
             isSearchAPICalled = true;
 
-            keyword = memberField.text;
+            keyword = addedMember;
 
             GetSearchedUsers();
         }
@@ -63,7 +80,6 @@ public class UpdateTeamView : MonoBehaviour
 
         GameManager.Instance.apiHandler.UpdateStoryTeam(detailsModel.id, detailsModel.title, members, (status, response) =>
         {
-
             if (status)
             {
                 Destroy(gameObject);
@@ -73,9 +89,24 @@ public class UpdateTeamView : MonoBehaviour
 
     void OnSelectMember(object _selectedModel)
     {
+        Debug.Log("OnSelectMember Called");
+
         this.selectedModel = _selectedModel as UserSearchModel;
 
-        memberField.text += "," + selectedModel.name;
+        if (!inputData.Contains(selectedModel.name))
+        {
+            addedModels.Add(selectedModel);
+
+            memberField.text = string.Empty;
+
+            memberField.text += inputData + selectedModel.name + ",";
+
+            inputData = memberField.text;
+
+            keyword = string.Empty;
+
+            searchContent.DestroyChildrens();
+        }
     }
 
     void GetSearchedUsers()
@@ -95,14 +126,18 @@ public class UpdateTeamView : MonoBehaviour
 
     string GetMemberIds(List<string> members)
     {
-        List<int> memberIds = new List<int>();
+        string memberIds = string.Empty;
 
-       /* for (int i = 0; i < members.Length; i++)
-        { 
-            int memberId = members.Fin
-            memberIds.Add()
-        }*/
+        for (int i = 0; i < members.Count; i++)
+        {
+            UserSearchModel addModel = addedModels.Find(searchModel => searchModel.name.Equals(members[i]));
 
-        return memberIds.ToString();
+            if (addModel != null)
+            {
+                memberIds += addModel.id + ",";
+            }
+        }
+
+        return memberIds;
     }
 }

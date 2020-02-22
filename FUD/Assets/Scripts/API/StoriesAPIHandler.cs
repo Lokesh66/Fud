@@ -121,7 +121,7 @@ public partial class APIHandler
 
         parameters.Add("members", members);
 
-        gameManager.StartCoroutine(PostRequest(APIConstants.SAVE_STORY_CHARACTER, true, parameters, (status, response) => {
+        gameManager.StartCoroutine(PostRequest(APIConstants.UPDATE_STORY_TEAM, true, parameters, (status, response) => {
 
             action(status, response);
         }));
@@ -141,7 +141,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateStoryPost(int story_id, string versionId, string title, string comment, int postedTo, Action<bool, string> action)
+    public void UpdateStoryPost(int story_id, int versionId, string title, string comment, int postedTo, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -149,13 +149,39 @@ public partial class APIHandler
 
         parameters.Add("title", title);
 
-        //parameters.Add("versionId", versionId);
+        parameters.Add("story_version_id", versionId);
 
         parameters.Add("posted_to", postedTo);
 
         parameters.Add("comment", comment);
 
         gameManager.StartCoroutine(PostRequest(APIConstants.STORY_POST, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void UpdateStoryPostStatus(int postId, int postStatus, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("post_id", postId);
+
+        parameters.Add("status", postStatus);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.STORY_POST, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void GetStoryPosts(Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("status", 0);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.GET_STORY_POSTS, true, parameters, (status, response) => {
 
             action(status, response);
         }));
@@ -376,4 +402,29 @@ public class UpdatedCharaterModel : BaseResponse
 public class UpdatedTeamModel : BaseResponse
 {
     public StoryTeamModel data;
+}
+
+
+[Serializable]
+public class StoryActivityModel
+{
+    public int id;
+    public string title;
+    public int posted_to;
+    public int story_id;
+    public int source_id;
+    public string source_type;
+    public int user_id;
+    public string comment;
+    public DateTime created_date_time;
+    public DateTime updatedAt;
+
+    public StoryModel Stories;
+}
+
+
+[Serializable]
+public class StoryActivityResponseModel : BaseResponse
+{
+    public List<StoryActivityModel> data;
 }

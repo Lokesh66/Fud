@@ -183,6 +183,11 @@ public class StoryDetailsController : MonoBehaviour
         }
     }
 
+    public string GetStoryTitle()
+    {
+        return currentDetailsModel.title;
+    }
+
     void DestroyCreationScreen()
     {
         Destroy(currentCreateScreen);

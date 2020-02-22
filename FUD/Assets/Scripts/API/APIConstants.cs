@@ -56,4 +56,6 @@ public class APIConstants
 
     public const string UPDATE_EXPERIANCE = BASE_URL + "v1/workExperience/";
 
+    public const string GET_STORY_POSTS = BASE_URL + "v1/searchPosts";
+
 }
