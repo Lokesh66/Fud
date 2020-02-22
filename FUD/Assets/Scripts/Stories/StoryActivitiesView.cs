@@ -8,6 +8,8 @@ public class StoryActivitiesView : MonoBehaviour
 
     public GameObject activityCell;
 
+    public GameObject noDataObject;
+
     List<StoryActivityModel> activityModels;
 
     public void EnableView()
@@ -23,9 +25,14 @@ public class StoryActivitiesView : MonoBehaviour
 
             StoryActivityResponseModel responseModel = JsonUtility.FromJson<StoryActivityResponseModel>(response);
 
-            activityModels = responseModel.data;
+            if (status)
+            {
+                activityModels = responseModel.data;
 
-            SetView();
+                noDataObject.SetActive(activityModels.Count == 0);
+
+                SetView();
+            }
         });
     }
 
