@@ -5,56 +5,33 @@ public class ProjectAuditionsPanel : MonoBehaviour
 {
     public Transform parentContent;
     public GameObject auditionCell;
-    public NoDataView noData;
+    public NoDataView noData;    
 
-    private void OnEnable()
+    public void SetData(List<Audition> auditions)
     {
-        GetAuditions();
-    }
-    void GetAuditions()
-    {
-        noData.gameObject.SetActive(false);
-
-        GameManager.Instance.apiHandler.GetAllAuditions((status, auditionsList) => {
-            Debug.Log("GetAuditions : "+status);
-            if (status)
-            {
-                foreach (Transform child in parentContent)
-                {
-                    GameObject.Destroy(child.gameObject);
-                }
-
-                if (auditionsList!=null && auditionsList.Count > 0)
-                {
-                    Load(auditionsList);
-                }
-                else
-                {
-                    EnableNodata();
-                }
-            }
-            else
-            {
-                EnableNodata();
-            }
-        });
-    }
-
-    private void Load(List<Audition> auditions)
-    {
-        for (int i = 0; i < auditions.Count; i++)
+        if(auditions != null && auditions.Count > 0)
         {
-            GameObject auditionObject = Instantiate(auditionCell, parentContent);
+            noData.gameObject.SetActive(false);
 
-            auditionObject.GetComponent<ProjectAuditionCell>().SetView(i, auditions[i]);
+            for (int i = 0; i < auditions.Count; i++)
+            {
+                GameObject auditionObject = Instantiate(auditionCell, parentContent);
+
+                auditionObject.GetComponent<ProjectAuditionCell>().SetView(i, auditions[i]);
+            }
         }
+        else
+        {
+            EnableNodata();
+        }
+
     }
     public void CreateAudition()
     {
         CreateAuditionView.Instance.SetView(1, (isNewDataUpdated) => {
             if (isNewDataUpdated)
             {
-                GetAuditions();
+                
             }
         });
     }

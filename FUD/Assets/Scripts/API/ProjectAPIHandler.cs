@@ -60,6 +60,18 @@ public partial class APIHandler
         }));
     }
 
+    public void GetProjectCharacters(int projectId, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("project_id", projectId);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.GET_PROJECT_CHARACTERS, true, parameters, (status, response) =>
+        {
+            action(status, response);
+        }));
+    }
+
     public void CreateProjectCast(Dictionary<string, object> parameters, Action<bool, string> action)
     {
         parameters.Add("project_id", 1);

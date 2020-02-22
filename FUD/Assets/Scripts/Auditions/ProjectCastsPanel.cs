@@ -7,56 +7,27 @@ public class ProjectCastsPanel : MonoBehaviour
     public GameObject castCell;
     public NoDataView noData;
 
-    private void OnEnable()
+    public void SetData(int projectId, List<ProjectCast> casts)
     {
-        GetAuditions();
-    }
-    void GetAuditions()
-    {
-        noData.gameObject.SetActive(false);
-
-        GameManager.Instance.apiHandler.GetAllAuditions((status, auditionsList) => {
-            Debug.Log("GetAuditions : "+status);
-            if (status)
-            {
-                foreach (Transform child in parentContent)
-                {
-                    GameObject.Destroy(child.gameObject);
-                }
-
-                if (auditionsList!=null && auditionsList.Count > 0)
-                {
-                    Load(auditionsList);
-                }
-                else
-                {
-                    EnableNodata();
-                }
-            }
-            else
-            {
-                EnableNodata();
-            }
-        });
-    }
-
-    private void Load(List<Audition> auditions)
-    {
-        for (int i = 0; i < auditions.Count; i++)
+        for (int i = 0; i < casts.Count; i++)
         {
             GameObject auditionObject = Instantiate(castCell, parentContent);
 
-            auditionObject.GetComponent<ProjectAuditionCell>().SetView(i, auditions[i]);
+            auditionObject.GetComponent<ProjectCastCell>().SetView(i, casts[i]);
         }
+
+        GameManager.Instance.apiHandler.GetProjectCharacters(projectId, (status, response) => {
+
+        });
     }
-    public void CreateAudition()
+    public void CreateCast()
     {
-        CreateAuditionView.Instance.SetView(1, (isNewDataUpdated) => {
+        /*CreateCastView.Instance.SetView(1, (isNewDataUpdated) => {
             if (isNewDataUpdated)
             {
                 GetAuditions();
             }
-        });
+        });*/
     }
 
     void EnableNodata()
@@ -69,7 +40,7 @@ public class ProjectCastsPanel : MonoBehaviour
         NoDataModel model = new NoDataModel();
         model.buttonName = "Create Cast";
         model.subTitle = "No Cast Right now";
-        model.buttonAction = CreateAudition;
+        model.buttonAction = CreateCast;
         return model;
     }
 }

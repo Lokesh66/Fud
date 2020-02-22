@@ -543,7 +543,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8807745543651384783
 RectTransform:
   m_ObjectHideFlags: 0
@@ -753,7 +753,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
@@ -2035,7 +2035,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!1 &7801692855376519921
 GameObject:
   m_ObjectHideFlags: 0
@@ -2110,6 +2110,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7801692855542840268}
   - component: {fileID: 7801692855542840266}
+  - component: {fileID: 240130829}
   m_Layer: 5
   m_Name: StoriesPanel
   m_TagString: Untagged
@@ -2146,6 +2147,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7801692855542840271}
   m_CullTransparentMesh: 0
+--- !u!114 &240130829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7801692855542840271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c02d558e15317784f983658afd8f4ca3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  storyLineText: {fileID: 7801692856781014086}
+  descriptionText: {fileID: 784741148147422202}
+  genreText: {fileID: 8785881081095121708}
+  typeText: {fileID: 3604583211251872184}
+  versionsText: {fileID: 6863114827695272886}
+  moreStoriesPanel: {fileID: 8534253210077105940}
+  moreStoriesText: {fileID: 8044667548892008989}
+  parentContent: {fileID: 2232095762921254787}
+  storyCell: {fileID: 1169721676985622895, guid: f5ff5654a09bf774fbe092fc347ba66d,
+    type: 3}
 --- !u!1 &7801692855601955838
 GameObject:
   m_ObjectHideFlags: 0
@@ -2163,7 +2186,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7801692855601955839
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2360,6 +2383,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentPanel: {fileID: 7801692856080268923}
+  storiesPanel: {fileID: 240130829}
+  castsPanel: {fileID: 9200187473524780407}
+  auditionsPanel: {fileID: 7801692856040355880}
 --- !u!1 &7801692855839046680
 GameObject:
   m_ObjectHideFlags: 0
@@ -2532,7 +2558,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7801692856012212843
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3423,7 +3449,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!1 &7801692856426629130
 GameObject:
   m_ObjectHideFlags: 0
@@ -4460,7 +4486,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8837972407882775383
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4825,12 +4851,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7dadbe9a48c70bc4e997681ada22fc57, type: 3}
---- !u!224 &2366225821990722004 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 9003080657758114759, guid: 7dadbe9a48c70bc4e997681ada22fc57,
-    type: 3}
-  m_PrefabInstance: {fileID: 6640518004851460627}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2452709195319731308 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9092237639697575551, guid: 7dadbe9a48c70bc4e997681ada22fc57,
@@ -4843,3 +4863,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9296a59d591e77a48a66604d8d647c39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &2366225821990722004 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 9003080657758114759, guid: 7dadbe9a48c70bc4e997681ada22fc57,
+    type: 3}
+  m_PrefabInstance: {fileID: 6640518004851460627}
+  m_PrefabAsset: {fileID: 0}

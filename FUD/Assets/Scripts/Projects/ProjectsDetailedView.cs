@@ -28,6 +28,10 @@ public class ProjectsDetailedView : MonoBehaviour
 
     public GameObject parentPanel;
 
+    public ProjectStoriesPanel storiesPanel;
+    public ProjectCastsPanel castsPanel;
+    public ProjectAuditionsPanel auditionsPanel;
+
     System.Action OnBackButtonClick;
 
     private Project project;
@@ -35,11 +39,15 @@ public class ProjectsDetailedView : MonoBehaviour
     {
         project = projectData;
         parentPanel.SetActive(true);
-        OnBackButtonClick = backAction;        
+        OnBackButtonClick = backAction;
+        storiesPanel.SetData(projectData.StoryVersions[0]);
+        castsPanel.SetData(projectData.id, projectData.Project_cast);
+        auditionsPanel.SetData(projectData.Audition);
     }
 
     private void Load()
     {
+
     }
     void Reload()
     {

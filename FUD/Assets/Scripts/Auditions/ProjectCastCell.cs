@@ -9,17 +9,17 @@ public class ProjectCastCell : MonoBehaviour
     public TMP_Text ageText;
     public TMP_Text descriptionText;
 
-    Audition auditionData;
+    ProjectCast castData;
     int index = 0;
 
-    public void SetView(int index, Audition audition)
+    public void SetView(int index, ProjectCast cast)
     {
-        auditionData = audition;
+        castData = cast;
         this.index = index;
-        if (auditionData != null)
+        if (castData != null)
         {
-            titleText.text = auditionData.topic;
-            ageText.text = auditionData.age_to.ToString();
+            titleText.text = "";// castData.;
+            ageText.text = "";// castData.age_to.ToString();
         }
     }
 
