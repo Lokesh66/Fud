@@ -130,6 +130,7 @@ public class Audition
     public int id;
     public object project_cast_id;
     public string topic;
+    public int project_id;
     public int user_id;
     public int rate_of_pay;
     public string status;

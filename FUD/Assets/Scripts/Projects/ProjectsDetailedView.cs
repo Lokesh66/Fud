@@ -28,12 +28,37 @@ public class ProjectsDetailedView : MonoBehaviour
 
     public GameObject parentPanel;
 
+    public ProjectStoriesPanel storiesPanel;
+    public ProjectCastsPanel castsPanel;
+    public ProjectAuditionsPanel auditionsPanel;
+
     System.Action OnBackButtonClick;
-    public void SetView(ProjectDataModel projectData, System.Action backAction)
+
+    private Project project;
+    public void SetView(Project projectData, System.Action backAction)
     {
+        project = projectData;
         parentPanel.SetActive(true);
         OnBackButtonClick = backAction;
-        
+        storiesPanel.SetData(projectData.StoryVersions[0]);
+        castsPanel.SetData(projectData.id, projectData.Project_cast);
+        auditionsPanel.SetData(projectData.Audition);
+    }
+
+    private void Load()
+    {
+
+    }
+    void Reload()
+    {
+        GameManager.Instance.apiHandler.GetProjectDetails(project.id, (status, project) =>
+        {
+            if (status)
+            {
+                this.project = project;
+                Load();
+            }
+        });
     }
 
     public void BackButtonAction()

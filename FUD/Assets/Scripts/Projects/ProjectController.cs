@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ProjectController : MonoBehaviour
@@ -8,10 +7,9 @@ public class ProjectController : MonoBehaviour
 
     public GameObject projectCell;
 
-    public GameObject noDataObject;
+    public NoDataView noDataView;
 
-    List<ProjectDataModel> projectModels;
-
+    List<Project> projectModels;
 
     private void OnEnable()
     {
@@ -19,7 +17,7 @@ public class ProjectController : MonoBehaviour
     }
     public void GetAllProjects()
     {
-        noDataObject.SetActive(false);
+        noDataView.gameObject.SetActive(false);
 
         GameManager.Instance.apiHandler.GetProjects((status, projectsResponse) => {
 
@@ -29,12 +27,13 @@ public class ProjectController : MonoBehaviour
             }
             else
             {
-                noDataObject.SetActive(true);
+                noDataView.gameObject.SetActive(true);
+                noDataView.SetView(GetNoDataModel());
             }
         });
     }
 
-    void Load(List<ProjectDataModel> models)
+    void Load(List<Project> models)
     {
         foreach (Transform child in content)
         {
@@ -44,7 +43,7 @@ public class ProjectController : MonoBehaviour
         projectModels = models;
         if(models != null && models.Count > 0)
         {
-            noDataObject.SetActive(false);
+            noDataView.gameObject.SetActive(false);
             for (int i = 0; i < models.Count; i++)
             {
                 GameObject projectObject = Instantiate(projectCell, content);
@@ -54,19 +53,48 @@ public class ProjectController : MonoBehaviour
         }
         else
         {
-            noDataObject.SetActive(true);
-
+            noDataView.gameObject.SetActive(true);
+            noDataView.SetView(GetNoDataModel());
         }
         
     }
 
-    void OnProjectClickAction(ProjectDataModel project)
+    void OnProjectClickAction(Project project)
     {
-        ProjectsDetailedView.Instance.SetView(project, () => { });
+        GameManager.Instance.apiHandler.GetProjectDetails(project.id, (status, projectDetail) => {
+            if (status)
+            {
+                ProjectsDetailedView.Instance.SetView(projectDetail, () => {
+                });
+            }
+        });
+    }
+
+    public void OnAddButtonAction()
+    {
+        ProjectCreationView.Instance.SetView((isProjectAdded) => {
+            if (isProjectAdded)
+            {
+                GetAllProjects();
+            }
+        });
     }
 
     public void OnBackButtonAction()
     {
         gameObject.SetActive(false);
+    }
+
+    NoDataModel GetNoDataModel()
+    {
+        NoDataModel noDataModel = new NoDataModel();
+
+        noDataModel.subTitle = "No Active Projects Right Now";
+
+        noDataModel.buttonName = "Create Project";
+
+        noDataModel.buttonAction = OnAddButtonAction;
+
+        return noDataModel;
     }
 }
