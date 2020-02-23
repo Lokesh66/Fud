@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.IO;
+using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
@@ -37,6 +38,10 @@ public class GameManager : MonoBehaviour
 
     public AlertViewController alertView;
 
+    public RectTransform loaderTrans;
+
+    Tweener loaderTween;
+
     void Awake()
     {
         Init();
@@ -65,6 +70,20 @@ public class GameManager : MonoBehaviour
         else {
             sceneController.SwitchScene(ESceneType.LoginScene);
         }
+    }
+
+    public void StartLoading()
+    {
+        loaderTrans.gameObject.SetActive(true);
+
+        loaderTween = loaderTrans.DOLocalRotate(new Vector3(0, 0, 360), 0.8f).SetLoops(-1);
+    }
+
+    public void StopLoading()
+    {
+        loaderTween?.Kill();
+
+        loaderTrans.gameObject.SetActive(false);
     }
 
 }

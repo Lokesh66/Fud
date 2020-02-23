@@ -24,7 +24,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateWorkExperiance(string description, int roleId, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
+    public void UpdateWorkExperiance(CreateExperianceModel experianceModel, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -32,11 +32,17 @@ public partial class APIHandler
 
         string jsonData = JsonUtility.ToJson(portMultimedias);
 
-        parameters.Add("description", description);
+        parameters.Add("description", experianceModel.description);
 
-        parameters.Add("role_id", roleId);
+        parameters.Add("start_date", experianceModel.startDate);
 
-        parameters.Add("work_exp_media", multimediaModels);
+        parameters.Add("end_date", experianceModel.endDate);
+
+        parameters.Add("industry_id", experianceModel.industryId);
+
+        parameters.Add("role_id", experianceModel.roleId);
+
+        parameters.Add("work_exp_media", experianceModel.multimediaModels);
 
         gameManager.StartCoroutine(PostRequest(APIConstants.UPDATE_EXPERIANCE, true, parameters, (status, response) => {
 
@@ -52,6 +58,23 @@ public partial class APIHandler
             {
                 PortfolioResponseModel responseModel = JsonUtility.FromJson<PortfolioResponseModel>(response);
                 action?.Invoke(true, responseModel.data[0].PortfolioMedia);
+            }
+            else
+            {
+                action?.Invoke(false, null);
+            }
+
+        }));
+    }
+
+    public void GetIndustries(Action<bool, List<IndustryModel>> action)
+    {
+        gameManager.StartCoroutine(GetRequest(APIConstants.GET_INDUSTRIES, true, (bool status, string response) => {
+
+            if (status)
+            {
+                IndustriesResponse responseModel = JsonUtility.FromJson<IndustriesResponse>(response);
+                action?.Invoke(true, responseModel.data);
             }
             else
             {
@@ -155,6 +178,34 @@ public class WorkExperianceModel
 public class WorkExperianceResponseModel : BaseResponse
 {
     public List<WorkExperianceModel> data;
+}
+
+[Serializable]
+public class CreateExperianceModel
+{
+    public string description;
+    public int industryId;
+    public int roleId;
+    public DateTime startDate;
+    public DateTime endDate;
+    public List<Dictionary<string, object>> multimediaModels;
+}
+
+[Serializable]
+public class IndustryModel
+{
+    public int id;
+    public string name;
+    public string type;
+    public DateTime created_date_time;
+    public DateTime update_date_time;
+    public int status;
+}
+
+[Serializable]
+public class IndustriesResponse : BaseResponse
+{
+    public List<IndustryModel> data;
 }
 
 

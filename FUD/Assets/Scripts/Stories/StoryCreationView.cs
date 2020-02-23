@@ -56,6 +56,8 @@ public class StoryCreationView : MonoBehaviour
 
     List<Genre> genres;
 
+    List<string> imageUrls;
+
     System.Action OnClose;
 
     public void Load(System.Action onClose)
@@ -93,9 +95,7 @@ public class StoryCreationView : MonoBehaviour
 
     public void OnUploadAction()
     {
-        PickImages(SystemInfo.maxTextureSize);
-
-        //GetAudioFromGallery();
+        ShowGalleryPanel();
     }
 
     public void OnSubmitAction()
@@ -110,6 +110,8 @@ public class StoryCreationView : MonoBehaviour
 
             if (status)
             {
+                Reset();
+
                 OnBackButtonAction();
                 Debug.Log("Story Uploaded Successfully");
             }
@@ -124,11 +126,6 @@ public class StoryCreationView : MonoBehaviour
         GetScreenShot();
     }
 
-    public void OnPhotosGalleryAction()
-    {
-        PickImages(SystemInfo.maxTextureSize);
-    }
-
     public void OnVideosAction()
     {
         GetGalleryVideos();
@@ -137,7 +134,27 @@ public class StoryCreationView : MonoBehaviour
     public void OnCancelAction()
     { 
         
-    }     
+    }
+
+    public void OnMediaButtonAction(int mediaType)
+    {
+        EMediaType selectedType = (EMediaType)mediaType;
+
+        SlideGalleryView(false);
+
+        switch (selectedType)
+        {
+            case EMediaType.Image:
+                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                break;
+            case EMediaType.Audio:
+                GalleryManager.Instance.GetAudiosFromGallery();
+                break;
+            case EMediaType.Video:
+                GalleryManager.Instance.GetVideosFromGallery();
+                break;
+        }
+    }
 
     void Reset()
     {
@@ -151,134 +168,26 @@ public class StoryCreationView : MonoBehaviour
         descriptionField.text = string.Empty;
     }
 
-    private void PickImages(int maxSize)
+    void OnImagesUploaded(bool status, List<string> imageUrls)
     {
-        NativeGallery.Permission permission = NativeGallery.GetImagesFromGallery((path) =>
+        if (status)
         {
-            Debug.Log("Image path: " + path);
-
-            canSupportMultipleText.text = path.Length.ToString();
-
-            if (path != null)
-            {
-                // Create Texture from selected image
-
-                Texture2D texture = NativeGallery.LoadImageAtPath(path[0], maxSize,true, true, false, UploadFile);
-                if (texture == null)
-                {
-                    Debug.Log("Couldn't load texture from " + path);
-                    return;
-                }
-
-                //NativeGallery.GetImageProperties(path);
-
-                screenShotImage.sprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
-
-                screenShotImage.SetNativeSize();
-
-                byte[] textureBytes = texture.EncodeToPNG();
-
-                string filePath = APIConstants.IMAGES_PATH + "/GalleryPhotos";
-
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-
-                File.WriteAllBytes(filePath, textureBytes);
-
-                // Assign texture to a temporary quad and destroy it after 5 seconds
-                /*GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                quad.transform.position = Camera.main.transform.position + Camera.main.transform.forward * 2.5f;
-                quad.transform.forward = Camera.main.transform.forward;
-                quad.transform.localScale = new Vector3(1f, texture.height / (float)texture.width, 1f);
-
-                Material material = quad.GetComponent<Renderer>().material;
-                if (!material.shader.isSupported) // happens when Standard shader is not included in the build
-                    material.shader = Shader.Find("Legacy Shaders/Diffuse");
-
-                material.mainTexture = texture;*/
-
-               // Destroy(quad, 5f);
-
-                // If a procedural texture is not destroyed manually, 
-                // it will only be freed after a scene change
-               // Destroy(texture, 5f);
-            }
-        }, "Select a PNG image");
-
-        Debug.Log("Permission result: " + permission);
-    }
-
-    void GetAudioFromGallery()
-    {
-        NativeGallery.Permission permission = NativeGallery.GetAudioFromGallery((path) =>
-        {
-            if (path != null)
-            {
-                // Create Texture from selected image
-
-                canSupportMultipleText.text = path;
-
-                UploadFile(path);
-                /*
-                Texture2D texture = NativeGallery.LoadImageAtPath(path[0], maxSize, true, true, false, UploadFile);
-                if (texture == null)
-                {
-                    Debug.Log("Couldn't load texture from " + path);
-                    return;
-                }
-
-                //NativeGallery.GetImageProperties(path);
-
-                screenShotImage.sprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
-
-                screenShotImage.SetNativeSize();
-
-                byte[] textureBytes = texture.EncodeToPNG();
-
-                string filePath = APIConstants.IMAGES_PATH + "/GalleryPhotos";
-
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-
-                File.WriteAllBytes(filePath, textureBytes);
-
-                // Assign texture to a temporary quad and destroy it after 5 seconds
-                /*GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                quad.transform.position = Camera.main.transform.position + Camera.main.transform.forward * 2.5f;
-                quad.transform.forward = Camera.main.transform.forward;
-                quad.transform.localScale = new Vector3(1f, texture.height / (float)texture.width, 1f);
-
-                Material material = quad.GetComponent<Renderer>().material;
-                if (!material.shader.isSupported) // happens when Standard shader is not included in the build
-                    material.shader = Shader.Find("Legacy Shaders/Diffuse");
-
-                material.mainTexture = texture;*/
-
-                // Destroy(quad, 5f);
-
-                // If a procedural texture is not destroyed manually, 
-                // it will only be freed after a scene change
-                // Destroy(texture, 5f);*/
-            }
-        }, "Select a PNG image");
-
-        Debug.Log("Permission result: " + permission);
-    }
-
-    void UploadFile(string filePath)
-    {
-        GameManager.Instance.apiHandler.UploadFile(filePath, EMediaType.Image, (status, response) => { 
-            
-        });
+            this.imageUrls = imageUrls;
+        }
     }
 
     void ShowGalleryPanel()
-    { 
-    
+    {
+        SlideGalleryView(true);
+    }
+
+    void SlideGalleryView(bool canShow)
+    {
+        float panelPosition = galleryPanel.anchoredPosition.y;
+
+        float targetPostion = panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
+
+        galleryPanel.DOAnchorPosY(targetPostion, 0.4f);
     }
 
     void GetScreenShot()

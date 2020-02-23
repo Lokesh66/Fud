@@ -62,4 +62,6 @@ public class APIConstants
 
     public const string GET_STORY_POSTS = BASE_URL + "v1/searchPosts";
 
+    public const string GET_INDUSTRIES = BASE_URL + "v1/masterData?type=industry";
+
 }

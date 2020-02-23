@@ -42,7 +42,11 @@ public class PortfolioView : BaseView
     {
         base.EnableView();
 
-        UpdateScreen();
+        ShowMedia();
+
+        ShowExperianceScreen();
+
+        //UpdateScreen();
     }
 
     protected override void OnAddSubView(GameObject addedObject)
@@ -56,7 +60,7 @@ public class PortfolioView : BaseView
 
         gameObject.SetActive(true);
 
-        UpdateScreen();
+        //UpdateScreen();
     }
 
     public override void OnExitScreen()

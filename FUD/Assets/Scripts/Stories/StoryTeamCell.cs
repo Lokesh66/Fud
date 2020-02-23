@@ -24,4 +24,9 @@ public class StoryTeamCell : MonoBehaviour
 
         membersText.text = teamModel.members;
     }
+
+    public void OnButtonAction()
+    { 
+    
+    }
 }
