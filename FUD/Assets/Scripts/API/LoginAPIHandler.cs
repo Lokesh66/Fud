@@ -44,12 +44,12 @@ public partial class APIHandler
         }));
     }
 
-    public void Login(long phoneNumber, string code, Action<bool, User> action)
+    public void Login(long phoneNumber, long code, Action<bool, User> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
         parameters.Add("phone", phoneNumber);
-        parameters.Add("login_code", "1234");// code);
+        parameters.Add("login_code", code);
 
         gameManager.StartCoroutine(PostRequest(APIConstants.USER_LOGIN, false, parameters, (bool status, string response) => {
             if (status)

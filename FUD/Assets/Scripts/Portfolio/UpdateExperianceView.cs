@@ -95,6 +95,8 @@ public class UpdateExperianceView : MonoBehaviour
 
         experianceModel.roleId = selectedGenre.id;
 
+        experianceModel.description = descriptionField.text;
+
         experianceModel.industryId = selectedIndustry.id ;
 
         experianceModel.startDate = System.DateTime.Now;

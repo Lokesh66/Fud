@@ -44,7 +44,7 @@ public class APIConstants
 
     public const string STORY_POST = BASE_URL + "v1/posts/";
 
-    public const string SAVE_STORY_CHARACTER = BASE_URL + "/v1/storyCharacters/";
+    public const string SAVE_STORY_CHARACTER = BASE_URL + "v1/storyCharacters/";
 
     public const string UPDATE_STORY_TEAM = BASE_URL + "v1/teamMembers/";
 

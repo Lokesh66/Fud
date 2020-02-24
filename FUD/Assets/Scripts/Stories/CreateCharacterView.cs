@@ -18,6 +18,8 @@ public class CreateCharacterView : MonoBehaviour
 
     public GameObject searchCell;
 
+    public GameObject scrollObject;
+
 
     StoryDetailsModel detailsModel;
 
@@ -43,24 +45,32 @@ public class CreateCharacterView : MonoBehaviour
 
         GameObject cellObject = null;
 
-        for (int i = 0; i < searchModels.Count; i++)
+        if (searchModels.Count > 0)
         {
-            cellObject = Instantiate(searchCell, searchContent);
+            scrollObject.SetActive(true);
 
-            cellObject.GetComponent<UserSearchCell>().SetView(searchModels[i], OnSelectMember);
+            for (int i = 0; i < searchModels.Count; i++)
+            {
+                cellObject = Instantiate(searchCell, searchContent);
+
+                cellObject.GetComponent<UserSearchCell>().SetView(searchModels[i], OnSelectMember);
+            }
         }
     }
 
     public void OnValueChange()
     {
-        if (suitableField.text.Length > 2 && !isSearchAPICalled)
+        if (selectedModel == null)
         {
-            //Call Search API
-            isSearchAPICalled = true;
+            if (suitableField.text.Length > 2 && !isSearchAPICalled)
+            {
+                //Call Search API
+                isSearchAPICalled = true;
 
-            keyword = suitableField.text;
+                keyword = suitableField.text;
 
-            GetSearchedUsers();
+                GetSearchedUsers();
+            }
         }
     }
 
@@ -86,6 +96,10 @@ public class CreateCharacterView : MonoBehaviour
         this.selectedModel = _selectedModel as UserSearchModel;
 
         suitableField.text = selectedModel.name;
+
+        searchContent.DestroyChildrens();
+
+        scrollObject.SetActive(false);
     }
 
     void GetSearchedUsers()
