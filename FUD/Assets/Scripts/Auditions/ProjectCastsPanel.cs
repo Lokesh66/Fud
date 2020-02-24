@@ -22,12 +22,12 @@ public class ProjectCastsPanel : MonoBehaviour
     }
     public void CreateCast()
     {
-        /*CreateCastView.Instance.SetView(1, (isNewDataUpdated) => {
+        CreateCastView.Instance.SetView(1, (isNewDataUpdated) =>
+        {
             if (isNewDataUpdated)
             {
-                GetAuditions();
             }
-        });*/
+        });
     }
 
     void EnableNodata()

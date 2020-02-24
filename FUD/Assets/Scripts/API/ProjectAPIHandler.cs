@@ -42,20 +42,30 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateProjectDetails(string title, string budget, string duration, Action<bool, string> action)
+    public void CreateProject(Dictionary<string, object> parameters, Action<bool, string> action)
     {
-        Dictionary<string, object> parameters = new Dictionary<string, object>();
+        /*Dictionary<string, object> parameters = new Dictionary<string, object>();
 
         parameters.Add("title", title);
 
         parameters.Add("story_id", 1);
 
+        parameters.Add("story_version_id", 1);
+
         parameters.Add("cost_estimation", long.Parse(budget));
 
-        parameters.Add("estimated_time",  long.Parse(duration));
+        parameters.Add("estimated_time",  long.Parse(duration));*/
 
         gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_PROJECT, true, parameters, (status, response) => {
 
+            action(status, response);
+        }));
+    }
+
+    public void GetProjectStories(Action<bool, string> action)
+    {
+        gameManager.StartCoroutine(GetRequest(APIConstants.GET_STORIES_FOR_CREATE_PROJECT, true, (status, response) =>
+        {
             action(status, response);
         }));
     }
@@ -74,25 +84,7 @@ public partial class APIHandler
 
     public void CreateProjectCast(Dictionary<string, object> parameters, Action<bool, string> action)
     {
-        parameters.Add("project_id", 1);
-
-        parameters.Add("story_character_id", 2);
-
         gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_PROJECT_CAST, true, parameters, (status, response) => {
-
-            action(status, response);
-        }));
-    }
-
-    public void ModifyProjectCast(Dictionary<string, object> parameters, Action<bool, string> action)
-    {
-        parameters.Add("id", 1);
-
-        parameters.Add("project_id", 1);
-
-        parameters.Add("story_character_id", 2);
-
-        gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_PROJECT_CAST, true, parameters, (status, response) => {
 
             action(status, response);
         }));

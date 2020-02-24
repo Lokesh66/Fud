@@ -72,10 +72,22 @@ public class ProjectController : MonoBehaviour
 
     public void OnAddButtonAction()
     {
-        ProjectCreationView.Instance.SetView((isProjectAdded) => {
-            if (isProjectAdded)
+        GameManager.Instance.apiHandler.GetProjectStories((status, response) => {
+            if (status)
             {
-                GetAllProjects();
+                Debug.Log("OnAddButtonAction : "+response);
+
+                ProjectStoriesResponse stories = JsonUtility.FromJson<ProjectStoriesResponse>(response);
+/*                if (stories.data != null && stories.data.Count > 0)
+*/                {
+                    ProjectCreationView.Instance.SetView(stories.data, (isProjectAdded) =>
+                    {
+                        if (isProjectAdded)
+                        {
+                            GetAllProjects();
+                        }
+                    });
+                }
             }
         });
     }

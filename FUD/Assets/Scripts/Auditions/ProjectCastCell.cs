@@ -18,8 +18,8 @@ public class ProjectCastCell : MonoBehaviour
         this.index = index;
         if (castData != null)
         {
-            titleText.text = "";// castData.;
-            ageText.text = "";// castData.age_to.ToString();
+            titleText.text = castData.id.ToString();
+            ageText.text = "Project "+castData.project_id;
         }
     }
 

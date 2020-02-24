@@ -428,3 +428,48 @@ public class StoryActivityResponseModel : BaseResponse
 {
     public List<StoryActivityModel> data;
 }
+
+public class StoryVersions
+{
+    public int id;
+    public int story_id;
+    public string description;
+    public object ratings;
+    public object price;
+    public int genre_id;
+    public object image_url;
+    public object background_url;
+    public object thumb_image_url;
+    public object produced_by;
+    public object developed_by;
+    public int status;
+    public object report;
+    public object warning;
+    public object privacy_policy;
+    public object project_id;
+    public DateTime created_date_time;
+    public DateTime updated_date_time;
+}
+
+public class ProjectStory
+{
+    public int id;
+    public string title;
+    public int posted_to;
+    public int story_id;
+    public int? story_version_id;
+    public int source_id;
+    public string source_type;
+    public int user_id;
+    public string comment;
+    public int? sender_status;
+    public int? reciever_status;
+    public DateTime created_date_time;
+    public DateTime updatedAt;
+    public StoryVersions StoryVersions;
+}
+
+public class ProjectStoriesResponse : BaseResponse
+{
+    public List<ProjectStory> data;
+}

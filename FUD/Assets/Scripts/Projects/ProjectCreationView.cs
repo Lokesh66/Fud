@@ -1,7 +1,7 @@
-﻿using UnityEngine.UI;
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using DG.Tweening;
+using System.Collections.Generic;
 
 public class ProjectCreationView : MonoBehaviour
 {
@@ -33,7 +33,11 @@ public class ProjectCreationView : MonoBehaviour
 
     public TMP_InputField budgetField;
 
-    public TextMeshProUGUI durationField;
+    public TMP_InputField descriptionField;
+    
+    public TMP_Dropdown storySelectionDropdown;
+
+    public TMP_Dropdown durationDropDown;
 
     public TMP_Text errorText;
 
@@ -41,8 +45,19 @@ public class ProjectCreationView : MonoBehaviour
 
     bool isDataUpdated = false;
 
-    public void SetView(System.Action<bool> action)
+    List<ProjectStory> stories = new List<ProjectStory>();
+
+    public void SetView(List<ProjectStory> stories, System.Action<bool> action)
     {
+        this.stories = stories;
+
+        storySelectionDropdown.options.Clear();
+
+        foreach (ProjectStory story in stories)
+        {
+            storySelectionDropdown.options.Add(new TMP_Dropdown.OptionData() { text = story.title });
+        }
+
         parentPanel.gameObject.SetActive(true);
         backAction = action;
         isDataUpdated = false;
@@ -57,13 +72,37 @@ public class ProjectCreationView : MonoBehaviour
 
     public void OnSubmitProject()
     {
-        Debug.Log("apiHandler = " + GameManager.Instance.apiHandler);
+        if (string.IsNullOrEmpty(titleField.text))
+        {
+            ShowErrorMessage("Name your project, should not be empty");
+            return;
+        }
+        if (string.IsNullOrEmpty(storySelectionDropdown.captionText.text))
+        {
+            ShowErrorMessage("Select Stroy for your story");
+            return;
+        }
+        if (string.IsNullOrEmpty(budgetField.text))
+        {
+            ShowErrorMessage("Select budjet for your story");
+            return;
+        }
 
-        Debug.Log("titleField = " + titleField.text);
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        Debug.Log("budgetField = " + budgetField.text);
+        parameters.Add("title", titleField.text);
 
-        GameManager.Instance.apiHandler.UpdateProjectDetails(titleField.text, budgetField.text, 1000000.ToString(), (status, response) => {
+        ProjectStory model = stories.Find(item => item.title.Equals(storySelectionDropdown.captionText.text));
+
+        parameters.Add("story_id", model.id);
+
+        parameters.Add("story_version_id", model.StoryVersions.id);
+
+        parameters.Add("cost_estimation", 10000);// long.Parse(budgetField.text));
+
+        parameters.Add("estimated_time", 1609818627);// long.Parse(durationDropDown.captionText.text));
+
+        GameManager.Instance.apiHandler.CreateProject(parameters, (status, response) => {
 
             if (status)
             {

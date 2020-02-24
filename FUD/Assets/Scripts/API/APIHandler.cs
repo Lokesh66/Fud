@@ -413,7 +413,7 @@ public partial class APIHandler
         }
         else
         {
-            Debug.LogFormat("<APIManager/GetRequest> Response ({0})", webRequest.downloadHandler.text);
+            Debug.LogFormat("<APIManager/GetRequest> Response ({0} ------ {1})",url, webRequest.downloadHandler.text);
             string response = webRequest.downloadHandler.text;
             OnResponse?.Invoke(true, response);
         }

@@ -27,6 +27,7 @@ public class ProjectsDetailedView : MonoBehaviour
     #endregion
 
     public GameObject parentPanel;
+    public GameObject createButton;
 
     public ProjectStoriesPanel storiesPanel;
     public ProjectCastsPanel castsPanel;
@@ -66,5 +67,10 @@ public class ProjectsDetailedView : MonoBehaviour
         parentPanel.SetActive(false);
         OnBackButtonClick?.Invoke();
         OnBackButtonClick = null;
+    }
+
+    public void AddNewButtonAction()
+    {
+
     }
 }
