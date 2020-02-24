@@ -429,6 +429,7 @@ public class StoryActivityResponseModel : BaseResponse
     public List<StoryActivityModel> data;
 }
 
+[Serializable]
 public class StoryVersions
 {
     public int id;
@@ -437,19 +438,21 @@ public class StoryVersions
     public object ratings;
     public object price;
     public int genre_id;
-    public object image_url;
-    public object background_url;
-    public object thumb_image_url;
-    public object produced_by;
-    public object developed_by;
+    public string image_url;
+    public string background_url;
+    public string thumb_image_url;
+    public string produced_by;
+    public string developed_by;
     public int status;
-    public object report;
-    public object warning;
-    public object privacy_policy;
-    public object project_id;
+    public string report;
+    public string warning;
+    public string privacy_policy;
+    public int project_id;
     public DateTime created_date_time;
     public DateTime updated_date_time;
 }
+
+[Serializable]
 
 public class ProjectStory
 {
@@ -457,18 +460,19 @@ public class ProjectStory
     public string title;
     public int posted_to;
     public int story_id;
-    public int? story_version_id;
+    public int story_version_id;
     public int source_id;
     public string source_type;
     public int user_id;
     public string comment;
-    public int? sender_status;
-    public int? reciever_status;
+    public int sender_status;
+    public int reciever_status;
     public DateTime created_date_time;
     public DateTime updatedAt;
     public StoryVersions StoryVersions;
 }
 
+[Serializable]
 public class ProjectStoriesResponse : BaseResponse
 {
     public List<ProjectStory> data;

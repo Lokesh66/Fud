@@ -47,6 +47,11 @@ public class CreateCastView : MonoBehaviour
         parentPanel.gameObject.SetActive(true);
         backAction = action;
         isNewCastCreated = false;
+
+        GameManager.Instance.apiHandler.GetProjectCharacters(projectId, (status, response) => {
+            Debug.Log("GetProjectCharacters : " + response);
+            storyCharacterDropdown.options.Clear();
+        });
     }
     public void BackButtonAction()
     {
@@ -54,7 +59,7 @@ public class CreateCastView : MonoBehaviour
         backAction?.Invoke(isNewCastCreated);
         backAction = null;
     }
-    public void CreateAuditionButtonAction()
+    public void CreateCastButtonAction()
     {
         //Call an API to add into audition list
         if (string.IsNullOrEmpty(storyCharacterDropdown.captionText.text))
@@ -91,7 +96,7 @@ public class CreateCastView : MonoBehaviour
 
             }
         });
-    }
+    }   
 
     void ShowErrorMessage(string message)
     {
