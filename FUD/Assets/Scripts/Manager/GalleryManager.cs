@@ -82,6 +82,8 @@ public class GalleryManager : MonoBehaviour
         {
             if (audiosPaths != null && audiosPaths.Length > 0)
             {
+                selectedImagesCount = audiosPaths.Length;
+
                 for (int i = 0; i < audiosPaths.Length; i++)
                 {
                     AlertModel alertModel = new AlertModel();
@@ -104,6 +106,8 @@ public class GalleryManager : MonoBehaviour
         {
             if (videoPaths != null && videoPaths.Length > 0)
             {
+                selectedImagesCount = videoPaths.Length;
+
                 for (int i = 0; i < videoPaths.Length; i++)
                 {
                     AlertModel alertModel = new AlertModel();
@@ -143,6 +147,8 @@ public class GalleryManager : MonoBehaviour
                 alertModel.okayButtonAction = AlertDismissAction;
 
                 GameManager.Instance.alertView.ShowAlert(alertModel);
+
+                imageUrls.Clear();
             }
 
         });
