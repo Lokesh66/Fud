@@ -55,7 +55,7 @@ public class LoginScreen : MonoBehaviour
 
     void Login()
     {
-        GameManager.Instance.apiHandler.Login(number, otpInputField.text, (bool status, User userData) => {
+        GameManager.Instance.apiHandler.Login(number, long.Parse(otpInputField.text), (bool status, User userData) => {
             if (status)
             {
                 LoginAction?.Invoke(true, userData);
