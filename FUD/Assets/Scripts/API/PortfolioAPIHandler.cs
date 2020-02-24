@@ -186,8 +186,8 @@ public class CreateExperianceModel
     public string description;
     public int industryId;
     public int roleId;
-    public DateTime startDate;
-    public DateTime endDate;
+    public string startDate;
+    public string endDate;
     public List<Dictionary<string, object>> multimediaModels;
 }
 

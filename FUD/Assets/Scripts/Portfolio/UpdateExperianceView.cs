@@ -99,9 +99,9 @@ public class UpdateExperianceView : MonoBehaviour
 
         experianceModel.industryId = selectedIndustry.id ;
 
-        experianceModel.startDate = System.DateTime.Now;
+        experianceModel.startDate = string.Format("{0:yyyy/MM/dd} {1:hh:mm:ss}", System.DateTime.Now, System.DateTime.Now);
 
-        experianceModel.endDate = System.DateTime.Now;
+        experianceModel.endDate = string.Format("{0:yyyy/MM/dd} {1:hh:mm:ss}", System.DateTime.Now, System.DateTime.Now);
 
         PortMultimediaModels multimediaModels = new PortMultimediaModels();
 
