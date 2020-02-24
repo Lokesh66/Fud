@@ -82,7 +82,7 @@ public class GalleryManager : MonoBehaviour
         {
             if (audiosPaths != null && audiosPaths.Length > 0)
             {
-                for (int i = 0; i < selectedImagesCount; i++)
+                for (int i = 0; i < audiosPaths.Length; i++)
                 {
                     AlertModel alertModel = new AlertModel();
 
@@ -104,7 +104,7 @@ public class GalleryManager : MonoBehaviour
         {
             if (videoPaths != null && videoPaths.Length > 0)
             {
-                for (int i = 0; i < selectedImagesCount; i++)
+                for (int i = 0; i < videoPaths.Length; i++)
                 {
                     AlertModel alertModel = new AlertModel();
 
