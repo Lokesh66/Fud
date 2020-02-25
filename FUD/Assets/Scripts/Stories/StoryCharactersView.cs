@@ -23,6 +23,8 @@ public class StoryCharactersView : MonoBehaviour
 
         detailsController = storyDetails;
 
+        gameObject.SetActive(true);
+
         if (characterModels?.Count > 0)
         {
             SetView();
@@ -38,12 +40,12 @@ public class StoryCharactersView : MonoBehaviour
     {
         GameObject characterObject = null;
 
-        /*for (int i = 0; i < characterModels.Count; i++)
+        for (int i = 0; i < characterModels.Count; i++)
         {
             characterObject = Instantiate(cellCache, content);
 
             characterObject.GetComponent<StoryCharacterCell>().Load(characterModels[i]);
-        }*/
+        }
     }
 
     NoDataModel GetNoDataModel()
@@ -68,6 +70,8 @@ public class StoryCharactersView : MonoBehaviour
     public void Refresh(StoryCharacterModel characterModel)
     {
         characterModels.Add(characterModel);
+
+        gameObject.SetActive(true);
 
         GameObject characterObject = Instantiate(cellCache, content);
 

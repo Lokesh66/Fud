@@ -20,6 +20,8 @@ public class StoryTeamView : MonoBehaviour
     {
         this.teamModels = teamModels;
 
+        gameObject.SetActive(true);
+
         detailsController = storyDetails;
 
         if (teamModels?.Count > 0)
@@ -61,6 +63,8 @@ public class StoryTeamView : MonoBehaviour
 
     public void Refresh(StoryTeamModel teamModel)
     {
+        gameObject.SetActive(true);
+
         teamModels.Add(teamModel);
 
         GameObject characterObject = Instantiate(cellCache, content);
