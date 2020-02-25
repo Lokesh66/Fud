@@ -5,14 +5,31 @@ public class ProjectAuditionsPanel : MonoBehaviour
 {
     public Transform parentContent;
     public GameObject auditionCell;
+    public GameObject addNewButton;
     public NoDataView noData;
 
     int projectId;
 
+    private void OnEnable()
+    {
+        addNewButton.SetActive(true);
+    }
+
+    private void OnDisable()
+    {
+        addNewButton.SetActive(false);
+    }
+
     public void SetData(int projectId, List<Audition> auditions)
     {
         this.projectId = projectId;
-        if(auditions != null && auditions.Count > 0)
+
+        foreach (Transform t in parentContent)
+        {
+            GameObject.Destroy(t.gameObject);
+        }
+
+        if (auditions != null && auditions.Count > 0)
         {
             noData.gameObject.SetActive(false);
 

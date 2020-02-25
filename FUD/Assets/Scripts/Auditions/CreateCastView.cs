@@ -49,19 +49,21 @@ public class CreateCastView : MonoBehaviour
     string keyword = string.Empty;
 
     bool isSearchAPICalled = false;
+    List<ProjectCharacter> characters = new List<ProjectCharacter>();
 
     System.Action<bool> backAction;
-    public void SetView(int projectId, System.Action<bool> action)
+    public void SetView(int projectId, List<ProjectCharacter> characters, System.Action<bool> action)
     {
         this.projectId = projectId;
-        parentPanel.gameObject.SetActive(true);
         backAction = action;
         isNewCastCreated = false;
-
-        GameManager.Instance.apiHandler.GetProjectCharacters(projectId, (status, response) => {
-            Debug.Log("GetProjectCharacters : " + response);
-            storyCharacterDropdown.options.Clear();
-        });
+        this.characters = characters;
+        storyCharacterDropdown.options.Clear();
+        foreach (ProjectCharacter character in characters)
+        {
+            storyCharacterDropdown.options.Add(new TMP_Dropdown.OptionData() { text = character.title });
+        }
+        parentPanel.gameObject.SetActive(true);
     }
     public void BackButtonAction()
     {
@@ -90,7 +92,9 @@ public class CreateCastView : MonoBehaviour
         Dictionary<string, object> parameters = new Dictionary<string, object>();
                
         parameters.Add("project_id", projectId);
-        parameters.Add("story_character_id", storyCharacterDropdown.captionText.text);
+        ProjectCharacter character = characters.Find(item => item.title.Equals(storyCharacterDropdown.captionText.text));
+
+        parameters.Add("story_character_id", character.id);
         parameters.Add("selected_member", selectedModel.id);
         parameters.Add("description", descriptionText.text);
 

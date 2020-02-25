@@ -21,7 +21,14 @@ public class NoDataView : MonoBehaviour
 
         createButton.onClick.RemoveAllListeners();
 
-        createButton.onClick.AddListener(delegate { noDataModel.buttonAction?.Invoke(); });
+        if (noDataModel.buttonAction == null)
+        {
+            createButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            createButton.onClick.AddListener(delegate { noDataModel.buttonAction?.Invoke(); });
+        }
     }
 }
 

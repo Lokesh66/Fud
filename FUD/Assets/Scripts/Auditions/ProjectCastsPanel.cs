@@ -5,13 +5,32 @@ public class ProjectCastsPanel : MonoBehaviour
 {
     public Transform parentContent;
     public GameObject castCell;
+    public GameObject addNewButton;
     public NoDataView noData;
 
     int projectId;
+    List<ProjectCast> casts = new List<ProjectCast>();
+    List<ProjectCharacter> characters = new List<ProjectCharacter>();
 
+    private void OnEnable()
+    {
+        addNewButton.gameObject.SetActive(characters.Count > casts.Count);
+    }
+    private void OnDisable()
+    {
+        addNewButton.gameObject.SetActive(false);
+    }
     public void SetData(int projectId, List<ProjectCast> casts)
     {
         this.projectId = projectId;
+
+        this.casts = casts;
+
+        foreach(Transform t in parentContent)
+        {
+           GameObject.Destroy(t.gameObject);
+        }
+
         if (casts != null && casts.Count > 0)
         {
             noData.gameObject.SetActive(false);
@@ -27,16 +46,35 @@ public class ProjectCastsPanel : MonoBehaviour
         {
             EnableNodata();
         }
+
+        GameManager.Instance.apiHandler.GetProjectCharacters(projectId, (status, response) => {
+            if (status)
+            {
+                ProjectCharactersResponse projectCharactersResponse = JsonUtility.FromJson<ProjectCharactersResponse>(response);
+                characters = projectCharactersResponse.data;
+
+                addNewButton.gameObject.SetActive(characters.Count > casts.Count);
+
+                if(casts == null || casts.Count == 0)
+                {
+                    EnableNodata();
+                }
+            }
+        });
+
     }
     public void CreateCast()
     {
-        CreateCastView.Instance.SetView(projectId, (isNewDataUpdated) =>
+        if (characters.Count > 0)
         {
-            if (isNewDataUpdated)
+            CreateCastView.Instance.SetView(projectId, characters, (isNewDataUpdated) =>
             {
-                ProjectsDetailedView.Instance.Reload();
-            }
-        });
+                if (isNewDataUpdated)
+                {
+                    ProjectsDetailedView.Instance.Reload();
+                }
+            });
+        }
     }
 
     void EnableNodata()
@@ -49,7 +87,8 @@ public class ProjectCastsPanel : MonoBehaviour
         NoDataModel model = new NoDataModel();
         model.buttonName = "Create Cast";
         model.subTitle = "No Cast Right now";
-        model.buttonAction = CreateCast;
+        if(characters.Count > casts.Count)
+            model.buttonAction = CreateCast;
         return model;
     }
 }

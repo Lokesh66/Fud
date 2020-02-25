@@ -94,11 +94,11 @@ public class ProjectCreationView : MonoBehaviour
 
         ProjectStory model = stories.Find(item => item.title.Equals(storySelectionDropdown.captionText.text));
 
-        parameters.Add("story_id", model.id);
+        parameters.Add("story_id", model.story_id);
 
         parameters.Add("story_version_id", model.StoryVersions.id);
 
-        parameters.Add("cost_estimation", 10000);// long.Parse(budgetField.text));
+        parameters.Add("cost_estimation", long.Parse(budgetField.text));
 
         parameters.Add("estimated_time", 1609818627);// long.Parse(durationDropDown.captionText.text));
 

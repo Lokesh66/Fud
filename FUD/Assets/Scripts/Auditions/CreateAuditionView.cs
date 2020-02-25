@@ -32,7 +32,10 @@ public class CreateAuditionView : MonoBehaviour
 
     public TMP_Dropdown typeDropdown;
     public TMP_InputField topicText;
-    public TMP_InputField ageText;
+    public TMP_InputField titleText;
+    public TMP_InputField payAmountText;
+    public TMP_InputField ageFromText;
+    public TMP_InputField ageToText;
     public TMP_InputField endDateText;
     public TMP_InputField descriptionText;
 
@@ -69,7 +72,22 @@ public class CreateAuditionView : MonoBehaviour
             ShowErrorMessage("Audition topic should not be empty");
             return;
         }
-        if (string.IsNullOrEmpty(ageText.text))
+        if (string.IsNullOrEmpty(titleText.text))
+        {
+            ShowErrorMessage("Audition title should not be empty");
+            return;
+        }
+        if (string.IsNullOrEmpty(payAmountText.text))
+        {
+            ShowErrorMessage("Audition payment should not be empty");
+            return;
+        }
+        if (string.IsNullOrEmpty(ageFromText.text))
+        {
+            ShowErrorMessage("Audition age should not be empty");
+            return;
+        }
+        if (string.IsNullOrEmpty(ageToText.text))
         {
             ShowErrorMessage("Audition age should not be empty");
             return;
@@ -87,14 +105,13 @@ public class CreateAuditionView : MonoBehaviour
         Dictionary<string, object> parameters = new Dictionary<string, object>();
         parameters.Add("project_id", projectId);
         parameters.Add("topic", topicText.text);
-        parameters.Add("rate_of_pay", 10000);
+        parameters.Add("rate_of_pay", long.Parse(payAmountText.text));
         parameters.Add("end_date", endDateText.text);// "2020-03-23");
-        parameters.Add("title", "For all the young  fresh talent");
+        parameters.Add("title", titleText.text);
         parameters.Add("description", descriptionText.text);
-        parameters.Add("age_from", Convert.ToInt16(ageText.text));
-        parameters.Add("age_to", Convert.ToInt16(ageText.text));
+        parameters.Add("age_from", Convert.ToInt16(ageFromText.text));
+        parameters.Add("age_to", Convert.ToInt16(ageToText.text));
         parameters.Add("type", typeDropdown.captionText.text.ToLower());// "group","individual");
-
         GameManager.Instance.apiHandler.CreateAudition(parameters, (status, response) => {
             Debug.Log("OnCreateAudition : "+response);
             if (status)
