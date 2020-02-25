@@ -66,4 +66,6 @@ public class APIConstants
 
     public const string GET_INDUSTRIES = BASE_URL + "v1/masterData?type=industry";
 
+    public const string UPDATE_USER_PROFILE = BASE_URL + "v1/userInfo";
+
 }

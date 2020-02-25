@@ -152,4 +152,9 @@ public class PortfolioView : BaseView
 
         creationObject.GetComponent<UpdateExperianceView>().Load(this);
     }
+
+    public void OnEditButtonAction()
+    { 
+        
+    }
 }

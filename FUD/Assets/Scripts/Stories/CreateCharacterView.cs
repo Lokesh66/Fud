@@ -76,7 +76,7 @@ public class CreateCharacterView : MonoBehaviour
 
     public void OnButtonAction()
     {
-        GameManager.Instance.apiHandler.UpdateCharacterDetails(detailsModel.id, detailsModel.title, detailsModel.description, genderLabel.text, selectedModel.id, (status, response) => {
+        GameManager.Instance.apiHandler.UpdateCharacterDetails(detailsModel.id, castField.text, descriptionField.text, genderLabel.text, selectedModel.id, (status, response) => {
 
             if (status)
             {

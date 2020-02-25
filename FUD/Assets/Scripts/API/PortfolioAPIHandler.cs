@@ -101,6 +101,43 @@ public partial class APIHandler
 
         }));
     }
+
+    public void UpdateProfileInfo( Action<bool, List<WorkExperianceModel>> action)
+    {
+
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        /*List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
+
+        string jsonData = JsonUtility.ToJson(portMultimedias);
+
+        parameters.Add("description", experianceModel.description);
+
+        parameters.Add("start_date", experianceModel.startDate);
+
+        parameters.Add("end_date", experianceModel.endDate);
+
+        parameters.Add("industry_id", experianceModel.industryId);
+
+        parameters.Add("role_id", experianceModel.roleId);
+
+        parameters.Add("work_exp_media", experianceModel.multimediaModels);*/
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_USER_PROFILE, true, parameters, (bool status, string response) => {
+
+            if (status)
+            {
+                WorkExperianceResponseModel responseModel = JsonUtility.FromJson<WorkExperianceResponseModel>(response);
+
+                action?.Invoke(true, responseModel.data);
+            }
+            else
+            {
+                action?.Invoke(false, null);
+            }
+
+        }));
+    }
 }
 
 [Serializable]
@@ -206,6 +243,16 @@ public class IndustryModel
 public class IndustriesResponse : BaseResponse
 {
     public List<IndustryModel> data;
+}
+
+[Serializable]
+public class ProfileInfoModel
+{
+    public string name;
+    public string age;
+    public string mail;
+    public string number;
+    public string actor;
 }
 
 
