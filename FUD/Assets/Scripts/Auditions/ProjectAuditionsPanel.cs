@@ -5,10 +5,13 @@ public class ProjectAuditionsPanel : MonoBehaviour
 {
     public Transform parentContent;
     public GameObject auditionCell;
-    public NoDataView noData;    
+    public NoDataView noData;
 
-    public void SetData(List<Audition> auditions)
+    int projectId;
+
+    public void SetData(int projectId, List<Audition> auditions)
     {
+        this.projectId = projectId;
         if(auditions != null && auditions.Count > 0)
         {
             noData.gameObject.SetActive(false);
@@ -28,10 +31,10 @@ public class ProjectAuditionsPanel : MonoBehaviour
     }
     public void CreateAudition()
     {
-        CreateAuditionView.Instance.SetView(1, (isNewDataUpdated) => {
+        CreateAuditionView.Instance.SetView(projectId, (isNewDataUpdated) => {
             if (isNewDataUpdated)
             {
-                
+                ProjectsDetailedView.Instance.Reload();
             }
         });
     }

@@ -34,6 +34,7 @@ public class ProjectCastsPanel : MonoBehaviour
         {
             if (isNewDataUpdated)
             {
+                ProjectsDetailedView.Instance.Reload();
             }
         });
     }

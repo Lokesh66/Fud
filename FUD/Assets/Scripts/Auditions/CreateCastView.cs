@@ -31,7 +31,7 @@ public class CreateCastView : MonoBehaviour
     public Transform parentPanel;
 
     public TMP_Dropdown storyCharacterDropdown;
-    public TMP_Dropdown storyMemberDropdown;
+    public TMP_InputField storyMemberField;
     public TMP_InputField descriptionText;
 
     public TMP_Text errorText;
@@ -39,6 +39,16 @@ public class CreateCastView : MonoBehaviour
     bool isNewCastCreated;
 
     int projectId;
+
+    public RectTransform searchContent;
+    public GameObject scrollObject;
+    public GameObject searchCell;
+
+    UserSearchModel selectedModel = null;
+
+    string keyword = string.Empty;
+
+    bool isSearchAPICalled = false;
 
     System.Action<bool> backAction;
     public void SetView(int projectId, System.Action<bool> action)
@@ -67,7 +77,7 @@ public class CreateCastView : MonoBehaviour
             ShowErrorMessage("Select character for casting");
             return;
         }
-        if (string.IsNullOrEmpty(storyMemberDropdown.captionText.text))
+        if (selectedModel == null)
         {
             ShowErrorMessage("Select member for casting");
             return;
@@ -81,7 +91,7 @@ public class CreateCastView : MonoBehaviour
                
         parameters.Add("project_id", projectId);
         parameters.Add("story_character_id", storyCharacterDropdown.captionText.text);
-        parameters.Add("selected_member", storyMemberDropdown.captionText.text);
+        parameters.Add("selected_member", selectedModel.id);
         parameters.Add("description", descriptionText.text);
 
         GameManager.Instance.apiHandler.CreateProjectCast(parameters, (status, response) => {
@@ -112,5 +122,66 @@ public class CreateCastView : MonoBehaviour
             errorText.text = string.Empty;
             errorText.color = Color.red;
         });
+    }
+
+    void GetSearchedUsers()
+    {
+        GameManager.Instance.apiHandler.SearchTeamMember(keyword, (status, response) =>
+        {
+            if (status)
+            {
+                UserSearchResponse searchResponse = JsonUtility.FromJson<UserSearchResponse>(response);
+
+                PopulateDropdown(searchResponse.data);
+
+                isSearchAPICalled = false;
+            }
+        });
+    }
+
+    void OnSelectMember(object _selectedModel)
+    {
+        this.selectedModel = _selectedModel as UserSearchModel;
+
+        storyMemberField.text = selectedModel.name;
+
+        searchContent.DestroyChildrens();
+
+        scrollObject.SetActive(false);
+    }
+
+    public void OnValueChange()
+    {
+        if (selectedModel == null)
+        {
+            if (storyMemberField.text.Length > 2 && !isSearchAPICalled)
+            {
+                //Call Search API
+                isSearchAPICalled = true;
+
+                keyword = storyMemberField.text;
+
+                GetSearchedUsers();
+            }
+        }
+    }
+
+    void PopulateDropdown(List<UserSearchModel> searchModels)
+    {
+        searchContent.DestroyChildrens();
+
+        GameObject cellObject = null;
+
+        if (searchModels.Count > 0)
+        {
+            scrollObject.SetActive(true);
+
+            for (int i = 0; i < searchModels.Count; i++)
+            {
+                cellObject = Instantiate(searchCell, searchContent);
+
+                cellObject.GetComponent<UserSearchCell>().SetView(searchModels[i], OnSelectMember);
+            }
+        }
     }
 }
