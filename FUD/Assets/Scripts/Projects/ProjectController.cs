@@ -78,8 +78,8 @@ public class ProjectController : MonoBehaviour
                 Debug.Log("OnAddButtonAction : "+response);
 
                 ProjectStoriesResponse stories = JsonUtility.FromJson<ProjectStoriesResponse>(response);
-/*                if (stories.data != null && stories.data.Count > 0)
-*/                {
+                if (stories.data != null && stories.data.Count > 0)
+                {
                     ProjectCreationView.Instance.SetView(stories.data, (isProjectAdded) =>
                     {
                         if (isProjectAdded)

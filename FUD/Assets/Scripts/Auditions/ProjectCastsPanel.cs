@@ -7,25 +7,34 @@ public class ProjectCastsPanel : MonoBehaviour
     public GameObject castCell;
     public NoDataView noData;
 
+    int projectId;
+
     public void SetData(int projectId, List<ProjectCast> casts)
     {
-        for (int i = 0; i < casts.Count; i++)
+        this.projectId = projectId;
+        if (casts != null && casts.Count > 0)
         {
-            GameObject auditionObject = Instantiate(castCell, parentContent);
+            noData.gameObject.SetActive(false);
 
-            auditionObject.GetComponent<ProjectCastCell>().SetView(i, casts[i]);
+            for (int i = 0; i < casts.Count; i++)
+            {
+                GameObject auditionObject = Instantiate(castCell, parentContent);
+
+                auditionObject.GetComponent<ProjectCastCell>().SetView(i, casts[i]);
+            }
         }
-
-        GameManager.Instance.apiHandler.GetProjectCharacters(projectId, (status, response) => {
-
-        });
+        else
+        {
+            EnableNodata();
+        }
     }
     public void CreateCast()
     {
-        CreateCastView.Instance.SetView(1, (isNewDataUpdated) =>
+        CreateCastView.Instance.SetView(projectId, (isNewDataUpdated) =>
         {
             if (isNewDataUpdated)
             {
+                ProjectsDetailedView.Instance.Reload();
             }
         });
     }

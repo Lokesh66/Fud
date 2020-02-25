@@ -41,16 +41,16 @@ public class ProjectsDetailedView : MonoBehaviour
         project = projectData;
         parentPanel.SetActive(true);
         OnBackButtonClick = backAction;
-        storiesPanel.SetData(projectData.StoryVersions[0]);
-        castsPanel.SetData(projectData.id, projectData.Project_cast);
-        auditionsPanel.SetData(projectData.Audition);
+        Load();
     }
 
     private void Load()
     {
-
+        storiesPanel.SetData(project.StoryVersions[0]);
+        castsPanel.SetData(project.id, project.Project_cast);
+        auditionsPanel.SetData(project.id, project.Audition);
     }
-    void Reload()
+    public void Reload()
     {
         GameManager.Instance.apiHandler.GetProjectDetails(project.id, (status, project) =>
         {
