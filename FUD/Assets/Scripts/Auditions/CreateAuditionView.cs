@@ -36,14 +36,16 @@ public class CreateAuditionView : MonoBehaviour
     public TMP_InputField payAmountText;
     public TMP_InputField ageFromText;
     public TMP_InputField ageToText;
-    public TMP_InputField endDateText;
     public TMP_InputField descriptionText;
+    public TMP_Text endDateText;
 
     public TMP_Text errorText;
 
     bool isNewAuditionCreated;
 
     int projectId;
+
+    string defaultDateText = "Select Date";
 
     System.Action<bool> backAction;
     public void SetView(int projectId, System.Action<bool> action)
@@ -52,6 +54,21 @@ public class CreateAuditionView : MonoBehaviour
         parentPanel.gameObject.SetActive(true);
         backAction = action;
         isNewAuditionCreated = false;
+    }
+
+    public void OnDateSelectAction()
+    {
+        DatePicker.Instance.GetDate(System.DateTime.Now, (dateString) =>
+        {
+            if (string.IsNullOrEmpty(dateString))
+            {
+                endDateText.text = defaultDateText;
+            }
+            else
+            {
+                endDateText.text = dateString;
+            }
+        });
     }
     public void BackButtonAction()
     {
@@ -92,7 +109,7 @@ public class CreateAuditionView : MonoBehaviour
             ShowErrorMessage("Audition age should not be empty");
             return;
         }
-        if (string.IsNullOrEmpty(endDateText.text))
+        if (string.IsNullOrEmpty(endDateText.text) || endDateText.text.Equals(defaultDateText))
         {
             ShowErrorMessage("Audition date should not be empty");
             return;
