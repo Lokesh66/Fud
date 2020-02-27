@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.IO;
-using DG.Tweening;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -38,10 +38,6 @@ public class GameManager : MonoBehaviour
 
     public AlertViewController alertView;
 
-    public RectTransform loaderTrans;
-
-    Tweener loaderTween;
-
     void Awake()
     {
         Init();
@@ -72,18 +68,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void StartLoading()
+    public void SwitchToLogin()
     {
-        loaderTrans.gameObject.SetActive(true);
-
-        loaderTween = loaderTrans.DOLocalRotate(new Vector3(0, 0, 360), 0.8f).SetLoops(-1);
+        sceneController.SwitchScene(ESceneType.LoginScene);
     }
 
-    public void StopLoading()
+    public double GetCurrentEpochTime()
     {
-        loaderTween?.Kill();
-
-        loaderTrans.gameObject.SetActive(false);
+        double epoch = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
+        return epoch;
     }
 
+    public string epoch2string(int epoch)
+    {
+        return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(epoch).ToShortDateString();
+    }
 }
