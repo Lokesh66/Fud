@@ -20,7 +20,7 @@ public class PortfolioCreationView : MonoBehaviour
 
     public void OnUploadButtonAction()
     {
-        PickImages(SystemInfo.maxTextureSize);
+        GalleryManager.Instance.PickImages(OnImagesUploaded);
     }
 
     public void CreateButtonAction()
@@ -48,53 +48,9 @@ public class PortfolioCreationView : MonoBehaviour
         });
     }
 
-    private void PickImages(int maxSize)
+    void OnImagesUploaded(bool status, List<string> imageURLs)
     {
-        NativeGallery.Permission permission = NativeGallery.GetImagesFromGallery((path) =>
-        {
-            Debug.Log("Image path: " + path);
-
-            if (path != null)
-            {
-                // Create Texture from selected image
-
-                Texture2D texture = NativeGallery.LoadImageAtPath(path[0], maxSize, true, true, false, UploadFile);
-                if (texture == null)
-                {
-                    Debug.Log("Couldn't load texture from " + path);
-                    return;
-                }
-
-                //NativeGallery.GetImageProperties(path);
-
-                //screenShotImage.sprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
-
-                //screenShotImage.SetNativeSize();
-
-                byte[] textureBytes = texture.EncodeToPNG();
-
-                string filePath = APIConstants.IMAGES_PATH + "/GalleryPhotos";
-
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-
-                File.WriteAllBytes(filePath, textureBytes);
-            }
-        }, "Select a PNG image");
-
-        Debug.Log("Permission result: " + permission);
-    }
-
-    void UploadFile(string filePath)
-    {
-        GameManager.Instance.apiHandler.UploadFile(filePath, EMediaType.Image, (status, response) => {
-
-            FileUploadResponseModel responseModel = JsonUtility.FromJson<FileUploadResponseModel>(response);
-
-            contentUrl = responseModel.data.s3_file_path;
-        });
+        contentUrl = imageURLs[0];
     }
 
     public void OnBackAction()

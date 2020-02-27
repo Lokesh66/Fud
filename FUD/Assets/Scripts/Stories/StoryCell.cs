@@ -49,6 +49,6 @@ public class StoryCell : MonoBehaviour
 
         GameObject createObject = Instantiate(updateStoryCache, parent);
 
-        createObject.GetComponent<StoryUpdateView>().Load();
+        createObject.GetComponent<StoryUpdateView>().Load(storyModel);
     }
 }

@@ -181,11 +181,17 @@ public class GalleryManager : MonoBehaviour
 
         if (!string.IsNullOrEmpty(filePath))
         {
-            if(!Directory.Exists(filePath))
+            string directoryName = Path.GetDirectoryName(filePath);
+
+            /*if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(directoryName);
+            }
+
             for (int i = 0; i < imageURls.Count; i++)
             { 
                 
-            }
+            }*/
         }
     }
 

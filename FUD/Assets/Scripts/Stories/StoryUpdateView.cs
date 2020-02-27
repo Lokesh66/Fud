@@ -30,9 +30,27 @@ public class StoryUpdateView : MonoBehaviour
 
     List<Genre> genres;
 
-    public void Load()
+    List<string> imageUrls;
+
+    StoryModel storyModel;
+
+
+    public void Load(StoryModel storyModel)
     {
+        this.storyModel = storyModel;
+
+        SetView();
+
         canSupportMultipleText.text = "Can Support Text " + NativeGallery.CanSelectMultipleFilesFromGallery().ToString();
+    }
+
+    void SetView()
+    {
+        storyTitleField.text = storyModel.title;
+
+        subTitleField.text = storyModel.story_line;
+
+        descriptionField.text = storyModel.description;
 
         PopulateDropdown();
     }
@@ -40,6 +58,10 @@ public class StoryUpdateView : MonoBehaviour
     void PopulateDropdown()
     {
         genres = DataManager.Instance.genres;
+
+        Genre requiredGenre = genres.Find(genre => genre.id == storyModel.genre_id);
+
+        Genre selectedGenre = genres.Find(genre => genre.name.Equals(requiredGenre.name));
 
         List<string> options = new List<string>();
 
@@ -49,14 +71,20 @@ public class StoryUpdateView : MonoBehaviour
         }
 
         dropdown.ClearOptions();
+
         dropdown.AddOptions(options);
+
+        dropdown.value = dropdown.options.FindIndex(option => options.Equals(selectedGenre.name));
     }
 
     public void OnUploadAction()
     {
-        PickImages(SystemInfo.maxTextureSize);
+        ShowGalleryPanel();
+    }
 
-        //GetAudioFromGallery();
+    public void OnBackButtonAction()
+    {
+        Destroy(gameObject);
     }
 
     public void OnSubmitAction()
@@ -86,19 +114,51 @@ public class StoryUpdateView : MonoBehaviour
         GetScreenShot();
     }
 
-    public void OnPhotosGalleryAction()
+    void ShowGalleryPanel()
     {
-        PickImages(SystemInfo.maxTextureSize);
+        SlideGalleryView(true);
     }
 
-    public void OnVideosAction()
+    void SlideGalleryView(bool canShow)
     {
-        GetGalleryVideos();
+        float panelPosition = galleryPanel.anchoredPosition.y;
+
+        float targetPostion = panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
+
+        galleryPanel.DOAnchorPosY(targetPostion, 0.4f);
+    }
+
+    public void OnMediaButtonAction(int mediaType)
+    {
+        EMediaType selectedType = (EMediaType)mediaType;
+
+        SlideGalleryView(false);
+
+        switch (selectedType)
+        {
+            case EMediaType.Image:
+                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                break;
+            case EMediaType.Audio:
+                GalleryManager.Instance.GetAudiosFromGallery();
+                break;
+            case EMediaType.Video:
+                GalleryManager.Instance.GetVideosFromGallery();
+                break;
+        }
+    }
+
+    void OnImagesUploaded(bool status, List<string> imageUrls)
+    {
+        if (status)
+        {
+            this.imageUrls = imageUrls;
+        }
     }
 
     public void OnCancelAction()
     {
-
+        SlideGalleryView(false);
     }
 
     void Reset()
@@ -111,136 +171,6 @@ public class StoryUpdateView : MonoBehaviour
         subTitleField.text = string.Empty;
 
         descriptionField.text = string.Empty;
-    }
-
-    private void PickImages(int maxSize)
-    {
-        NativeGallery.Permission permission = NativeGallery.GetImagesFromGallery((path) =>
-        {
-            Debug.Log("Image path: " + path);
-
-            if (path != null)
-            {
-                // Create Texture from selected image
-
-                Texture2D texture = NativeGallery.LoadImageAtPath(path[0], maxSize, true, true, false, UploadFile);
-                if (texture == null)
-                {
-                    Debug.Log("Couldn't load texture from " + path);
-                    return;
-                }
-
-                //NativeGallery.GetImageProperties(path);
-
-                screenShotImage.sprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
-
-                screenShotImage.SetNativeSize();
-
-                byte[] textureBytes = texture.EncodeToPNG();
-
-                string filePath = APIConstants.IMAGES_PATH + "/GalleryPhotos";
-
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-
-                File.WriteAllBytes(filePath, textureBytes);
-
-                // Assign texture to a temporary quad and destroy it after 5 seconds
-                /*GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                quad.transform.position = Camera.main.transform.position + Camera.main.transform.forward * 2.5f;
-                quad.transform.forward = Camera.main.transform.forward;
-                quad.transform.localScale = new Vector3(1f, texture.height / (float)texture.width, 1f);
-
-                Material material = quad.GetComponent<Renderer>().material;
-                if (!material.shader.isSupported) // happens when Standard shader is not included in the build
-                    material.shader = Shader.Find("Legacy Shaders/Diffuse");
-
-                material.mainTexture = texture;*/
-
-                // Destroy(quad, 5f);
-
-                // If a procedural texture is not destroyed manually, 
-                // it will only be freed after a scene change
-                // Destroy(texture, 5f);
-            }
-        }, "Select a PNG image");
-
-        Debug.Log("Permission result: " + permission);
-    }
-
-    void GetAudioFromGallery()
-    {
-        NativeGallery.Permission permission = NativeGallery.GetAudioFromGallery((path) =>
-        {
-            if (path != null)
-            {
-                // Create Texture from selected image
-
-                canSupportMultipleText.text = path;
-
-                UploadFile(path);
-                /*
-                Texture2D texture = NativeGallery.LoadImageAtPath(path[0], maxSize, true, true, false, UploadFile);
-                if (texture == null)
-                {
-                    Debug.Log("Couldn't load texture from " + path);
-                    return;
-                }
-
-                //NativeGallery.GetImageProperties(path);
-
-                screenShotImage.sprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
-
-                screenShotImage.SetNativeSize();
-
-                byte[] textureBytes = texture.EncodeToPNG();
-
-                string filePath = APIConstants.IMAGES_PATH + "/GalleryPhotos";
-
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-
-                File.WriteAllBytes(filePath, textureBytes);
-
-                // Assign texture to a temporary quad and destroy it after 5 seconds
-                /*GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                quad.transform.position = Camera.main.transform.position + Camera.main.transform.forward * 2.5f;
-                quad.transform.forward = Camera.main.transform.forward;
-                quad.transform.localScale = new Vector3(1f, texture.height / (float)texture.width, 1f);
-
-                Material material = quad.GetComponent<Renderer>().material;
-                if (!material.shader.isSupported) // happens when Standard shader is not included in the build
-                    material.shader = Shader.Find("Legacy Shaders/Diffuse");
-
-                material.mainTexture = texture;*/
-
-                // Destroy(quad, 5f);
-
-                // If a procedural texture is not destroyed manually, 
-                // it will only be freed after a scene change
-                // Destroy(texture, 5f);*/
-            }
-        }, "Select a PNG image");
-
-        Debug.Log("Permission result: " + permission);
-    }
-
-    void UploadFile(string filePath)
-    {
-        this.filePath.text = "FilePath = " + filePath;
-
-        GameManager.Instance.apiHandler.UploadFile(filePath, EMediaType.Image, (status, response) => {
-
-        });
-    }
-
-    void ShowGalleryPanel()
-    {
-
     }
 
     void GetScreenShot()
