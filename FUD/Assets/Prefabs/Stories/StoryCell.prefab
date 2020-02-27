@@ -30,7 +30,7 @@ RectTransform:
   m_Children:
   - {fileID: 9029802010496914211}
   m_Father: {fileID: 330625098523666556}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
@@ -90,8 +90,8 @@ RectTransform:
   - {fileID: 2667812514028929237}
   - {fileID: 2207423227096494399}
   - {fileID: 7164300819062929514}
-  - {fileID: 5837403046446537469}
   - {fileID: 5811139023601749058}
+  - {fileID: 5837403046446537469}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -142,6 +142,7 @@ MonoBehaviour:
   description: {fileID: 1955875290482706004}
   updateStoryCache: {fileID: 7947380890573207486, guid: 96a28f3e056f738458b2358bd1829670,
     type: 3}
+  swipeHelper: {fileID: 4969431606148587575}
 --- !u!222 &818205395734881273
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -169,7 +170,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5811139023601749058
 RectTransform:
   m_ObjectHideFlags: 0
@@ -182,7 +183,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 330625098523666556}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -245,7 +246,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []

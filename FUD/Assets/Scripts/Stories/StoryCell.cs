@@ -3,7 +3,7 @@ using UnityEngine;
 using DG.Tweening;
 using System;
 using TMPro;
-
+using UnityEngine.UI;
 
 public class StoryCell : MonoBehaviour
 {
@@ -15,9 +15,13 @@ public class StoryCell : MonoBehaviour
 
     public GameObject updateStoryCache;
 
+    public SwipeButtonsHelper swipeHelper;
+
     StoryModel storyModel;
 
     Action<object> OnTapActon;
+
+    ScrollRect scrollRect;
 
     Vector2 startPoint;
 
@@ -26,6 +30,8 @@ public class StoryCell : MonoBehaviour
         this.storyModel = storyModel;
 
         this.OnTapActon = tapAction;
+
+        swipeHelper.cellButtonAction = OnButtonAction;
 
         titleText.text = storyModel.title;
 
