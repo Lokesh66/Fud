@@ -16,7 +16,7 @@ public partial class APIHandler
 
         parameters.Add("description", description);
 
-        parameters.Add("port_multi_media", multimediaModels);
+        //parameters.Add("port_multi_media", multimediaModels);
 
         gameManager.StartCoroutine(PostRequest(APIConstants.USER_PORTFOLIO, true, parameters, (status, response) => {
 
@@ -57,7 +57,11 @@ public partial class APIHandler
             if (status)
             {
                 PortfolioResponseModel responseModel = JsonUtility.FromJson<PortfolioResponseModel>(response);
-                action?.Invoke(true, responseModel.data[0].PortfolioMedia);
+
+                if (responseModel.data.Count > 0)
+                {
+                    action?.Invoke(true, responseModel.data[0].PortfolioMedia);
+                }
             }
             else
             {

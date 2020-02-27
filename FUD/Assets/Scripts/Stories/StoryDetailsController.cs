@@ -90,7 +90,7 @@ public class StoryDetailsController : MonoBehaviour
             {
                 StoryDetailsResponseModel responseModel = JsonUtility.FromJson<StoryDetailsResponseModel>(response);
 
-                if (responseModel.data.Count > 0)
+                if (responseModel.data != null && responseModel.data.Count > 0)
                 {
                     creationPanelParent.gameObject.SetActive(true);
 
@@ -264,6 +264,8 @@ public class StoryDetailsController : MonoBehaviour
 
     void CreateCharacter()
     {
+        currentObject?.SetActive(false);
+
         GameObject addCharacterObject = Instantiate(addCharacterCache, creationPanelParent);
 
         //storiesController.CreateSubView(addCharacterObject);
@@ -274,12 +276,14 @@ public class StoryDetailsController : MonoBehaviour
 
     void AddTeamMember()
     {
+        currentObject?.SetActive(false);
+
         GameObject addTeamObject = Instantiate(addTeamMemberCache, creationPanelParent);
 
         //storiesController.CreateSubView(addTeamObject);
         currentCreateScreen = addTeamObject;
 
-        addTeamObject.GetComponent<UpdateTeamView>().SetView(currentDetailsModel);
+        addTeamObject.GetComponent<UpdateTeamView>().SetView(currentDetailsModel, UpdateTeams);
     }
 
     public void UpdataCharacters(StoryCharacterModel characterModel)

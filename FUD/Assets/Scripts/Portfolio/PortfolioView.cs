@@ -87,8 +87,10 @@ public class PortfolioView : BaseView
         UpdateScreen();
     }
 
-    public void OnCreateAction()
+    void OnCreateAction()
     {
+        createPanel.SetActive(false);
+
         ShowCreatePortfolioScreen();
     }
 
@@ -149,9 +151,9 @@ public class PortfolioView : BaseView
     {
         GameObject creationObject = Instantiate(createWorkExperianceCache, parentTrans);
 
-        OnAddSubView(creationObject);
+        //OnAddSubView(creationObject);
 
-        gameObject.SetActive(false);
+        createPanel.SetActive(false);
 
         creationObject.GetComponent<UpdateExperianceView>().Load(this);
     }
@@ -165,11 +167,11 @@ public class PortfolioView : BaseView
     {
         createPanel.SetActive(true);
 
-        infoView.gameObject.SetActive(true);
+        //infoView.gameObject.SetActive(true);
     }
 
     public void OnDismissCreation()
     {
-        gameObject.SetActive(true);
+        createPanel.SetActive(false);
     }
 }

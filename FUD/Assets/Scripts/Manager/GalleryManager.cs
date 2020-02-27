@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class GalleryManager : MonoBehaviour
@@ -86,13 +87,13 @@ public class GalleryManager : MonoBehaviour
 
                 for (int i = 0; i < audiosPaths.Length; i++)
                 {
-                    AlertModel alertModel = new AlertModel();
+                    /*AlertModel alertModel = new AlertModel();
 
                     alertModel.message = audiosPaths[i];
 
                     alertModel.okayButtonAction = AlertDismissAction;
 
-                    CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                    CanvasManager.Instance.alertView.ShowAlert(alertModel);*/
 
                     UploadFile(audiosPaths[i], EMediaType.Audio);
                 }
@@ -110,13 +111,13 @@ public class GalleryManager : MonoBehaviour
 
                 for (int i = 0; i < videoPaths.Length; i++)
                 {
-                    AlertModel alertModel = new AlertModel();
+                    /*AlertModel alertModel = new AlertModel();
 
                     alertModel.message = videoPaths[i];
 
                     alertModel.okayButtonAction = AlertDismissAction;
 
-                    CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                    CanvasManager.Instance.alertView.ShowAlert(alertModel);*/
 
                     UploadFile(videoPaths[i], EMediaType.Video);
                 }
@@ -136,6 +137,8 @@ public class GalleryManager : MonoBehaviour
 
             if (imageUrls.Count == selectedImagesCount)
             {
+                UpdateLocalData(imageUrls, mediaType);
+
                 OnImagesUploaded?.Invoke(true, imageUrls);
 
                 selectedImagesCount = 0;
@@ -157,6 +160,33 @@ public class GalleryManager : MonoBehaviour
     void AlertDismissAction()
     {
         CanvasManager.Instance.alertView.gameObject.SetActive(false);
+    }
+
+    void UpdateLocalData(List<string> imageURls, EMediaType mediaType)
+    {
+        string filePath = string.Empty;
+
+        switch (mediaType)
+        {
+            case EMediaType.Image:
+                filePath = Path.Combine(Application.persistentDataPath, "GalleryImages");
+                break;
+            case EMediaType.Audio:
+                filePath = Path.Combine(Application.persistentDataPath, "GalleryAudios");
+                break;
+            case EMediaType.Video:
+                filePath = Path.Combine(Application.persistentDataPath, "GalleryVideos");
+                break;
+        }
+
+        if (!string.IsNullOrEmpty(filePath))
+        {
+            if(!Directory.Exists(filePath))
+            for (int i = 0; i < imageURls.Count; i++)
+            { 
+                
+            }
+        }
     }
 
     #endregion

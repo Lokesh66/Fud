@@ -2,6 +2,7 @@
 using UnityEngine;
 using TMPro;
 using System.Linq;
+using System;
 
 public class UpdateTeamView : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class UpdateTeamView : MonoBehaviour
 
     List<UserSearchModel> addedModels = new List<UserSearchModel>();
 
+    Action<StoryTeamModel> OnAddedTeam; 
+
     bool isSearchAPICalled = false;
 
     string keyword = string.Empty;
@@ -27,9 +30,12 @@ public class UpdateTeamView : MonoBehaviour
     string inputData = string.Empty;
 
 
-    public void SetView(StoryDetailsModel detailsModel)
+
+    public void SetView(StoryDetailsModel detailsModel, Action<StoryTeamModel> OnAddedTeam)
     {
         this.detailsModel = detailsModel;
+
+        this.OnAddedTeam = OnAddedTeam;
     }
 
     void PopulateDropdown(List<UserSearchModel> searchModels)
@@ -82,6 +88,12 @@ public class UpdateTeamView : MonoBehaviour
         {
             if (status)
             {
+                UpdatedTeamModel responseModel = JsonUtility.FromJson<UpdatedTeamModel>(response);
+
+                StoryTeamModel teamModel = responseModel.data;
+
+                OnAddedTeam?.Invoke(teamModel);
+
                 Destroy(gameObject);
             }
         });
