@@ -10,10 +10,6 @@ public class AlertViewController : MonoBehaviour
 
     public Button okayClick;
 
-    private void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
 
     public void ShowAlert(AlertModel alertModel)
     {

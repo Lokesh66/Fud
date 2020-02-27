@@ -92,7 +92,7 @@ public class GalleryManager : MonoBehaviour
 
                     alertModel.okayButtonAction = AlertDismissAction;
 
-                    GameManager.Instance.alertView.ShowAlert(alertModel);
+                    CanvasManager.Instance.alertView.ShowAlert(alertModel);
 
                     UploadFile(audiosPaths[i], EMediaType.Audio);
                 }
@@ -116,7 +116,7 @@ public class GalleryManager : MonoBehaviour
 
                     alertModel.okayButtonAction = AlertDismissAction;
 
-                    GameManager.Instance.alertView.ShowAlert(alertModel);
+                    CanvasManager.Instance.alertView.ShowAlert(alertModel);
 
                     UploadFile(videoPaths[i], EMediaType.Video);
                 }
@@ -146,7 +146,7 @@ public class GalleryManager : MonoBehaviour
 
                 alertModel.okayButtonAction = AlertDismissAction;
 
-                GameManager.Instance.alertView.ShowAlert(alertModel);
+                CanvasManager.Instance.alertView.ShowAlert(alertModel);
 
                 imageUrls.Clear();
             }
@@ -156,7 +156,7 @@ public class GalleryManager : MonoBehaviour
 
     void AlertDismissAction()
     {
-        GameManager.Instance.alertView.gameObject.SetActive(false);
+        CanvasManager.Instance.alertView.gameObject.SetActive(false);
     }
 
     #endregion
