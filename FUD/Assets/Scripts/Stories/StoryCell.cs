@@ -5,7 +5,7 @@ using System;
 using TMPro;
 
 
-public class StoryCell : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class StoryCell : MonoBehaviour
 {
     public RectTransform editStoryTrans;
 
@@ -44,35 +44,5 @@ public class StoryCell : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         GameObject createObject = Instantiate(updateStoryCache, parent);
 
         createObject.GetComponent<StoryUpdateView>().Load();
-    }
-
-
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        startPoint = eventData.position;
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        Debug.Log("startPoint.x = " + startPoint.x);
-
-        Debug.Log("eventData.x = " + eventData.position.x);
-
-        if (startPoint.x - eventData.position.x > 0)
-        {
-            //float targetValue = editStoryTrans.anchoredPosition.x - editStoryTrans.anchoredPosition.x;
-
-            editStoryTrans.DOAnchorPosX(0.0f, 0.4f);
-        }
-        else {
-            //float targetValue = editStoryTrans.anchoredPosition.x + editStoryTrans.anchoredPosition.x;
-
-            editStoryTrans.DOAnchorPosX(editStoryTrans.sizeDelta.x, 0.4f);
-        }
     }
 }
