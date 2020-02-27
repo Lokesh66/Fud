@@ -394,6 +394,7 @@ public partial class APIHandler
 
     IEnumerator GetRequest(string url, bool isAuth, Action<bool, string> OnResponse)
     {
+        Loader.Instance.StartLoading();
         UnityWebRequest webRequest = UnityWebRequest.Get(url);
 
         if (isAuth)
@@ -405,7 +406,13 @@ public partial class APIHandler
 
         yield return webRequest.SendWebRequest();
 
-        if (webRequest.isNetworkError || webRequest.isHttpError)
+        Loader.Instance.StopLoading();
+        
+        if (webRequest.responseCode.Equals(401))
+        {
+            GameManager.Instance.SwitchToLogin();       
+        }
+        else if (webRequest.isNetworkError || webRequest.isHttpError)
         {
             Debug.LogErrorFormat("<APIManager/GetRequest> Error ({0})", webRequest.error);
 
@@ -421,6 +428,8 @@ public partial class APIHandler
 
     IEnumerator PostRequest(string url, bool isAuth, Dictionary<string, object> parameters, Action<bool, string> callback)
     {
+        Loader.Instance.StartLoading();
+
         Dictionary<string, Dictionary<string, object>> attributes = new Dictionary<string, Dictionary<string, object>>();
 
         attributes.Add("attributes", parameters);
@@ -451,7 +460,13 @@ public partial class APIHandler
 
         yield return webRequest.SendWebRequest();
 
-        if (webRequest.isNetworkError || webRequest.isHttpError)
+        Loader.Instance.StopLoading();
+
+        if (webRequest.responseCode.Equals(401))
+        {
+            GameManager.Instance.SwitchToLogin();
+        }
+        else if (webRequest.isNetworkError || webRequest.isHttpError)
         {
             Debug.LogErrorFormat("<APIManager/ POST/ ({0})> Error ({1})", webRequest.error, url);
             callback?.Invoke(false, webRequest.error);
@@ -465,6 +480,7 @@ public partial class APIHandler
 
     IEnumerator PutRequest(string url, bool isAuth, Dictionary<string, object> parameters, Action<bool, string> callback)
     {
+        Loader.Instance.StartLoading();
         Dictionary<string, Dictionary<string, object>> attributes = new Dictionary<string, Dictionary<string, object>>();
 
         attributes.Add("attributes", parameters);
@@ -493,7 +509,13 @@ public partial class APIHandler
 
         yield return webRequest.SendWebRequest();
 
-        if (webRequest.isNetworkError || webRequest.isHttpError)
+        Loader.Instance.StopLoading();
+
+        if (webRequest.responseCode.Equals(401))
+        {
+            GameManager.Instance.SwitchToLogin();
+        }
+        else if (webRequest.isNetworkError || webRequest.isHttpError)
         {
             Debug.LogErrorFormat("<APIManager/ PUT/ ({0})> Error ({1})", webRequest.error, url);
             callback?.Invoke(false, webRequest.error);
