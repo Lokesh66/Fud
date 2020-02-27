@@ -102,26 +102,27 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateProfileInfo( Action<bool, List<WorkExperianceModel>> action)
+    public void UpdateProfileInfo(ProfileInfoModel infoModel, Action<bool, List<WorkExperianceModel>> action)
     {
 
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        /*List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
+        List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
 
         string jsonData = JsonUtility.ToJson(portMultimedias);
 
-        parameters.Add("description", experianceModel.description);
+        parameters.Add("phone", infoModel.number);
 
-        parameters.Add("start_date", experianceModel.startDate);
+        parameters.Add("role_id", infoModel.actor);
 
-        parameters.Add("end_date", experianceModel.endDate);
+        parameters.Add("agree_terms_condition", 1);
 
-        parameters.Add("industry_id", experianceModel.industryId);
+        parameters.Add("email_id", infoModel.mail);
 
-        parameters.Add("role_id", experianceModel.roleId);
+        parameters.Add("name", infoModel.name);
 
-        parameters.Add("work_exp_media", experianceModel.multimediaModels);*/
+        parameters.Add("dob", string.Format("{0:yyyy/MM/dd} {1:hh:mm:ss}", System.DateTime.Now, System.DateTime.Now));
+
 
         gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_USER_PROFILE, true, parameters, (bool status, string response) => {
 

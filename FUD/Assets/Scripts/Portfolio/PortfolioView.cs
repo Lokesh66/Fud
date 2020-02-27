@@ -15,13 +15,15 @@ public class PortfolioView : BaseView
 
     public TextMeshProUGUI[] buttonList;
 
-    public PortfolioBasicInfoView basicInfoView;
-
     public PortfolioMediaView mediaView;
 
     public PortfolioExperianceView experianceView;
 
+    public ProfileInfoView infoView;
+
     public GameObject createPortfolioCache;
+
+    public GameObject createPanel;
 
     public RectTransform parentTrans;
 
@@ -112,9 +114,9 @@ public class PortfolioView : BaseView
 
     void ShowBasicInfo()
     {
-        currentObject = basicInfoView.gameObject;
+       /* currentObject = basicInfoView.gameObject;
 
-        basicInfoView.SetView();
+        basicInfoView.SetView();*/
     }
 
     void ShowMedia()
@@ -130,6 +132,7 @@ public class PortfolioView : BaseView
 
         experianceView.Load(this);
     }
+ 
 
     void ShowCreatePortfolioScreen()
     {
@@ -154,7 +157,19 @@ public class PortfolioView : BaseView
     }
 
     public void OnEditButtonAction()
-    { 
-        
+    {
+        infoView.Load();     
+    }
+
+    public void OnCreateButtonAction()
+    {
+        createPanel.SetActive(true);
+
+        infoView.gameObject.SetActive(true);
+    }
+
+    public void OnDismissCreation()
+    {
+        gameObject.SetActive(true);
     }
 }

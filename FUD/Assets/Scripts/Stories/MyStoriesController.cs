@@ -98,8 +98,6 @@ public class MyStoriesController : BaseView
         storiesView.gameObject.SetActive(false);
 
         ShowActivitiesScreen();
-
-
     }
 
     #endregion
@@ -138,6 +136,7 @@ public class MyStoriesController : BaseView
 
     void OnStoryCreationCloseAction()
     {
-/*        OnRemoveLastSubView();*/
+        /*        OnRemoveLastSubView();*/
+        OnMyStoriesTabAction();      
     }
 }

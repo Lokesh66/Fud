@@ -13,8 +13,12 @@ public class StoryActivityCell : MonoBehaviour
 
     public TextMeshProUGUI commentText;
 
+    public GameObject acceptObject;
+
 
     StoryActivityModel activityModel;
+
+    int currentUserId;
 
 
     public void Load(StoryActivityModel activityModel)
@@ -22,6 +26,13 @@ public class StoryActivityCell : MonoBehaviour
         this.activityModel = activityModel;
 
         titleText.text = activityModel.title;
+
+        currentUserId = DataManager.Instance.userInfo.id;
+        Debug.Log("currentUserId = " + currentUserId);
+
+        Debug.Log("user_id = " + activityModel.user_id);
+
+        acceptObject.SetActive(44 != activityModel.user_id);
     }
 
     public void OnAcceptButtonAction()

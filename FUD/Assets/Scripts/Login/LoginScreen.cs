@@ -13,8 +13,8 @@ public class LoginScreen : MonoBehaviour
     int roleId;
     long number;
 
-    System.Action<bool, User> LoginAction;
-    public void SetView(long number,int roleId ,bool isNewUser, System.Action<bool, User> action)
+    System.Action<bool, UserData> LoginAction;
+    public void SetView(long number,int roleId ,bool isNewUser, System.Action<bool, UserData> action)
     {
         gameObject.SetActive(true);
         this.number = number;
@@ -55,7 +55,7 @@ public class LoginScreen : MonoBehaviour
 
     void Login()
     {
-        GameManager.Instance.apiHandler.Login(number, long.Parse(otpInputField.text), (bool status, User userData) => {
+        GameManager.Instance.apiHandler.Login(number, long.Parse(otpInputField.text), (bool status, UserData userData) => {
             if (status)
             {
                 LoginAction?.Invoke(true, userData);

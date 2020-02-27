@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 using UnityEngine;
 using System.Text;
 using System;
+using System.IO;
 
 public partial class APIHandler
 {
@@ -44,7 +45,7 @@ public partial class APIHandler
         }));
     }
 
-    public void Login(long phoneNumber, long code, Action<bool, User> action)
+    public void Login(long phoneNumber, long code, Action<bool, UserData> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -54,7 +55,20 @@ public partial class APIHandler
         gameManager.StartCoroutine(PostRequest(APIConstants.USER_LOGIN, false, parameters, (bool status, string response) => {
             if (status)
             {
-                LoginResponse loginResponse = JsonUtility.FromJson<LoginResponse>(response);
+                string userFilePath = APIConstants.PERSISTENT_PATH + "UserInfo";
+
+                string fileName = Path.GetDirectoryName(userFilePath);
+
+                if (!Directory.Exists(userFilePath))
+                {
+                    Directory.CreateDirectory(userFilePath);
+                }
+
+                userFilePath += "/Userinfo";
+
+                File.WriteAllText(userFilePath, response);
+
+                UserDataObject loginResponse = JsonUtility.FromJson<UserDataObject>(response);
                 gameManager.apiHandler.SetToken(loginResponse.data.token);
                 action?.Invoke(true, loginResponse.data);
             }

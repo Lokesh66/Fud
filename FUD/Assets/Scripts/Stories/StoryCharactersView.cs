@@ -40,6 +40,8 @@ public class StoryCharactersView : MonoBehaviour
     {
         GameObject characterObject = null;
 
+        content.DestroyChildrens();
+
         for (int i = 0; i < characterModels.Count; i++)
         {
             characterObject = Instantiate(cellCache, content);

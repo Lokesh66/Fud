@@ -45,6 +45,8 @@ public class MyStoriesView : MonoBehaviour
 
     void SetView()
     {
+        content.DestroyChildrens();
+
         if (storiesList?.Count > 0) {
 
             for (int i = 0; i < storiesList.Count; i++)

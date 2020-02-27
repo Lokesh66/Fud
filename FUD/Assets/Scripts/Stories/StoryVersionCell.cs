@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
+using UnityEngine.EventSystems;
+using DG.Tweening;
 
 public class StoryVersionCell : MonoBehaviour
 {
@@ -17,6 +19,8 @@ public class StoryVersionCell : MonoBehaviour
     public GameObject sharePanel;
 
     StoryVersionsView versionsView;
+
+    Vector2 startPoint;
 
     public void SetView(StoryVersion versionModel, StoryVersionsView versionsView)
     {
@@ -41,5 +45,10 @@ public class StoryVersionCell : MonoBehaviour
     public void OnShareButtonAction()
     {
         versionsView.OnCellButtonAction(versionModel);
+    }
+
+    public void OnDeleteButtonAction()
+    { 
+    
     }
 }

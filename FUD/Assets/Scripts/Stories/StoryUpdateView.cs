@@ -28,15 +28,10 @@ public class StoryUpdateView : MonoBehaviour
 
     public TextMeshProUGUI canSupportMultipleText;
 
-
-    StoryDetailsController storiesController;
-
     List<Genre> genres;
 
-    public void Load(StoryDetailsController storiesController)
+    public void Load()
     {
-        this.storiesController = storiesController;
-
         canSupportMultipleText.text = "Can Support Text " + NativeGallery.CanSelectMultipleFilesFromGallery().ToString();
 
         PopulateDropdown();

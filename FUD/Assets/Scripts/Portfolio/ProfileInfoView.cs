@@ -5,19 +5,46 @@ using TMPro;
 
 public class ProfileInfoView : MonoBehaviour
 {
-    public TextMeshProUGUI nameField;
+    public TMP_InputField nameField;
 
     public TMP_Dropdown ageDropDown;
 
-    public TextMeshProUGUI mailField;
+    public TMP_InputField mailField;
 
-    public TextMeshProUGUI numberField;
+    public TMP_InputField numberField;
 
-    public TextMeshProUGUI actorField;
+    public TMP_InputField actorField;
 
+
+    public void Load()
+    {
+        gameObject.SetActive(true);
+
+        SetView();
+    }
+
+    void SetView()
+    { 
+    
+    }
 
     public void OnSaveButtonAction()
-    { 
-        
+    {
+        ProfileInfoModel infoModel = new ProfileInfoModel();
+
+        infoModel.name = nameField.text;
+
+        infoModel.mail = mailField.text;
+
+        infoModel.number = numberField.text;
+
+        //infoModel.actor 
+
+        //GameManager.Instance.apiHandler.UpdateProfileInfo(infoModel);
+    }
+
+    public void OnBackButtonAction()
+    {
+        gameObject.SetActive(false);
     }
 }

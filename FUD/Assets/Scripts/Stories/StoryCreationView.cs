@@ -159,7 +159,7 @@ public class StoryCreationView : MonoBehaviour
     void Reset()
     {
         //storyTitleField.text = string.Empty;
-        gameObject.SetActive(false);
+        parentPanel.gameObject.SetActive(false);
 
         storyTitleField.text = string.Empty;
 

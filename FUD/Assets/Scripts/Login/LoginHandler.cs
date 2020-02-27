@@ -39,7 +39,7 @@ public class LoginHandler : MonoBehaviour
 
     Craft selectedRole = new Craft();
     long contactNumber;
-    User user;
+    UserData user;
     bool isNewUser = true;
 
     private void Start()
@@ -122,7 +122,7 @@ public class LoginHandler : MonoBehaviour
         }
     }
 
-    void OnLoginScreen_CallBack(bool status, User user)
+    void OnLoginScreen_CallBack(bool status, UserData user)
     {
         loginScreen.gameObject.SetActive(false);
 
@@ -131,6 +131,8 @@ public class LoginHandler : MonoBehaviour
             if(user != null)
             {
                 this.user = user;
+
+                DataManager.Instance.UpdateUserInfo(user);
             }
             GameManager.Instance.sceneController.SwitchScene(ESceneType.HomeScene);
         }

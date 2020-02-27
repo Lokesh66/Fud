@@ -40,6 +40,8 @@ public class StoryTeamView : MonoBehaviour
     {
         GameObject teamObject = null;
 
+        content.DestroyChildrens();
+
         for (int i = 0; i < teamModels.Count; i++)
         {
             teamObject = Instantiate(cellCache, content);
