@@ -34,9 +34,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public SceneController sceneController;
 
-    public DownLoadManager downLoadManager;
-
-    public AlertViewController alertView;
+    public DownLoadManager downLoadManager;    
 
     void Awake()
     {
