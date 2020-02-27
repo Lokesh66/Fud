@@ -55,16 +55,43 @@ public class DatePicker : MonoBehaviour
     public void OnSelectAction(DateTime date, Transform cell)
     {        
         selectedDate = date;
-
         if(selectedDate.Month != _dateTime.Month)
         {
-            _dateTime = _dateTime.AddMonths(selectedDate.Month > _dateTime.Month ? 1 : -1);
-            CreateCalendar();
+            if (selectedDate.Year != _dateTime.Year)
+            {
+                if (selectedDate.Month == 12 && _dateTime.Month == 1)
+                {
+                    LeftButtonAction();
+                }
+                else if (selectedDate.Month == 1 && _dateTime.Month == 12)
+                {
+                    RightButtonAction();
+                }
+            }
+            else
+            {
+                if (selectedDate.Month > _dateTime.Month)
+                    RightButtonAction();
+                else
+                    LeftButtonAction();
+            }
         }
         else
         {
+            UpdateFramePosition(cell);
+        }
+    }
+
+    void UpdateFramePosition(Transform cell = null)
+    {
+        if (cell != null)
+        {
             frame.gameObject.SetActive(true);
             frame.transform.position = cell.position;
+        }
+        else
+        {
+            frame.gameObject.SetActive(false);
         }
     }
 
@@ -111,7 +138,7 @@ public class DatePicker : MonoBehaviour
 
     void CreateCalendar()
     {
-        frame.gameObject.SetActive(false);
+        UpdateFramePosition();
 
         DateTime firstDay = _dateTime.AddDays(-(_dateTime.Day - 1));
         int index = GetDays(firstDay.DayOfWeek);
@@ -127,7 +154,7 @@ public class DatePicker : MonoBehaviour
 
             if (selectedDate.Year == thatDay.Year && selectedDate.Month == thatDay.Month && selectedDate.Day == thatDay.Day)
             {
-                OnSelectAction(thatDay, dateCells[i].transform);
+                UpdateFramePosition(dateCells[i].transform);
             }
         }
 
