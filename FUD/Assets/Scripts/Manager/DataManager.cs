@@ -65,14 +65,14 @@ public class UserData
     public int login_code;
     public int token_expiry;
     public int agree_terms_condition;
-    public object email_id;
-    public object maa_membership_id;
+    public string email_id;
+    public string maa_membership_id;
     public object privacy_policy;
-    public object current_location;
-    public object native_location;
+    public string current_location;
+    public string native_location;
     public object reffered_by;
     public string device_token;
-    public object dob;
+    public string dob;
     public DateTime created_date_time;
     public DateTime updatedAt;
 }

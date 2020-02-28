@@ -108,25 +108,25 @@ public partial class APIHandler
 
     public void UpdateProfileInfo(ProfileInfoModel infoModel, Action<bool, List<WorkExperianceModel>> action)
     {
-
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
         List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
 
         string jsonData = JsonUtility.ToJson(portMultimedias);
 
-        parameters.Add("phone", infoModel.number);
+        //parameters.Add("phone", infoModel.number);
 
-        parameters.Add("role_id", infoModel.actor);
+        //parameters.Add("role_id", infoModel.actor);
 
         parameters.Add("agree_terms_condition", 1);
 
         parameters.Add("email_id", infoModel.mail);
 
         parameters.Add("name", infoModel.name);
-
-        parameters.Add("dob", string.Format("{0:yyyy/MM/dd} {1:hh:mm:ss}", System.DateTime.Now, System.DateTime.Now));
-
+        parameters.Add("dob", infoModel.dob);
+        parameters.Add("maa_membership_id", infoModel.memberId);
+        parameters.Add("current_location", infoModel.currentLocation);
+        parameters.Add("native_location", infoModel.nativeLocation);
 
         gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_USER_PROFILE, true, parameters, (bool status, string response) => {
 
@@ -254,10 +254,11 @@ public class IndustriesResponse : BaseResponse
 public class ProfileInfoModel
 {
     public string name;
-    public string age;
+    public string dob;
     public string mail;
-    public string number;
-    public string actor;
+    public string memberId;
+    public string currentLocation;
+    public string nativeLocation;
 }
 
 

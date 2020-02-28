@@ -16,6 +16,17 @@ public class MyProfilePanel : MonoBehaviour
 
     public void SetView()
     {
+        UserData data = DataManager.Instance.userInfo;
+        if (data != null)
+        {
+            nameText.text = data.name;
+            ageText.text = data.dob;
+            emailText.text = data.email_id;
+            contactText.text = data.phone.ToString();
+            roleText.text = data.role_id.ToString();
+            primarySkillsText.text = "";
+            secondarySkillsText.text = "";
+        }
         gameObject.SetActive(true);
     }
     public void OnBackButtonAction()

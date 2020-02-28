@@ -29,7 +29,7 @@ public class DatePicker : MonoBehaviour
 
     #region variables
     public GameObject parentPanel;
-
+    public GameObject leftButton;
     public TMP_Text dateText;
     public GameObject frame;
     
@@ -38,6 +38,7 @@ public class DatePicker : MonoBehaviour
     #endregion
 
     private DateTime selectedDate;
+    private DateTime startDate;
 
     System.Action<string> OnSelectDate;
 
@@ -46,14 +47,20 @@ public class DatePicker : MonoBehaviour
         DontDestroyOnLoad(this);
     }
 
-    public void GetDate(DateTime startDate, System.Action<string> action)
+    public void GetDate(DateTime _startDate, System.Action<string> action)
     {
         OnSelectDate = action;
+        startDate = _startDate;
         parentPanel.SetActive(true);
+        _dateTime = DateTime.Now;
+        selectedDate = _dateTime;
+        CreateCalendar();
     }
 
     public void OnSelectAction(DateTime date, Transform cell)
-    {        
+    {
+        if (!IsValidDate(date))
+            return;
         selectedDate = date;
         if(selectedDate.Month != _dateTime.Month)
         {
@@ -82,6 +89,22 @@ public class DatePicker : MonoBehaviour
         }
     }
 
+    bool IsValidDate(DateTime selectedDate)
+    {
+        if (selectedDate.Year > startDate.Year)
+        {
+            return true;
+        }
+        else if (selectedDate.Year == startDate.Year && selectedDate.Month > startDate.Month)
+        {
+            return true;
+        }
+        else if (selectedDate.Month == startDate.Month && selectedDate.Date >= startDate.Date)
+        {
+            return true;
+        }
+        return false; ;
+    }
     void UpdateFramePosition(Transform cell = null)
     {
         if (cell != null)
@@ -127,19 +150,10 @@ public class DatePicker : MonoBehaviour
 
     private DateTime _dateTime;
 
-    void OnEnable()
-    {
-        _dateTime = DateTime.Now;
-
-        selectedDate = _dateTime;
-
-        CreateCalendar();
-    }
-
+    
     void CreateCalendar()
     {
         UpdateFramePosition();
-
         DateTime firstDay = _dateTime.AddDays(-(_dateTime.Day - 1));
         int index = GetDays(firstDay.DayOfWeek);
 
@@ -148,7 +162,7 @@ public class DatePicker : MonoBehaviour
         {
             DateTime thatDay = firstDay.AddDays(i - index >= 0 ? date : i-index);
 
-            dateCells[i].SetData(thatDay, firstDay, OnSelectAction);
+            dateCells[i].SetData(thatDay, firstDay, IsValidDate(thatDay), OnSelectAction);
             
             if (i- index >= 0) { date++; }
 
@@ -157,6 +171,8 @@ public class DatePicker : MonoBehaviour
                 UpdateFramePosition(dateCells[i].transform);
             }
         }
+        
+        leftButton.SetActive(IsValidDate(firstDay.AddDays(-1)));
 
         dateText.text = _dateTime.ToString("MMMM")+" "+_dateTime.Year.ToString();
     }
