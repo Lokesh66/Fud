@@ -1,36 +1,11 @@
-﻿using System.Collections.Generic;
-using UnityEngine.UI;
-using UnityEngine;
-using DG.Tweening;
-using System.IO;
+﻿using DG.Tweening;
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
 
-
-public class StoryCreationView : MonoBehaviour
+public class UpdateStoryVersionView : MonoBehaviour
 {
-    #region Singleton
-
-    private static StoryCreationView instance = null;
-    private StoryCreationView()
-    {
-
-    }
-
-    public static StoryCreationView Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = FindObjectOfType<StoryCreationView>();
-            }
-            return instance;
-        }
-    }
-
-    #endregion
-    public Transform parentPanel;
-
     public RectTransform galleryPanel;
 
     public TMP_InputField storyTitleField;
@@ -41,8 +16,6 @@ public class StoryCreationView : MonoBehaviour
 
     public TMP_InputField descriptionField;
 
-    public Image screenShotImage;
-
     public TextMeshProUGUI contentType;
 
     public TextMeshProUGUI filePath;
@@ -51,24 +24,29 @@ public class StoryCreationView : MonoBehaviour
 
     public TextMeshProUGUI canSupportMultipleText;
 
-
-    MyStoriesController storiesController;
-
     List<Genre> genres;
 
     List<string> imageUrls;
 
-    System.Action OnClose;
+    StoryVersion storyVersion;
 
-    private bool isShowingGalleryPanel = false;
 
-    public void Load(System.Action onClose)
+    public void Load(StoryVersion storyVersion)
     {
-        parentPanel.gameObject.SetActive(true);
+        this.storyVersion = storyVersion;
 
-        OnClose = onClose;
+        SetView();
 
         canSupportMultipleText.text = "Can Support Text " + NativeGallery.CanSelectMultipleFilesFromGallery().ToString();
+    }
+
+    void SetView()
+    {
+       /* storyTitleField.text = storyVersion.t;
+
+        subTitleField.text = storyVersion.story_line;*/
+
+        descriptionField.text = storyVersion.description;
 
         PopulateDropdown();
     }
@@ -76,6 +54,10 @@ public class StoryCreationView : MonoBehaviour
     void PopulateDropdown()
     {
         genres = DataManager.Instance.genres;
+
+        Genre requiredGenre = genres.Find(genre => genre.id == storyVersion.genre_id);
+
+        Genre selectedGenre = genres.Find(genre => genre.name.Equals(requiredGenre.name));
 
         List<string> options = new List<string>();
 
@@ -85,25 +67,20 @@ public class StoryCreationView : MonoBehaviour
         }
 
         dropdown.ClearOptions();
+
         dropdown.AddOptions(options);
-    }
 
-    public void OnBackButtonAction()
-    {
-        if (isShowingGalleryPanel)
-        {
-            SlideGalleryView(false);
-        }
-
-        parentPanel.gameObject.SetActive(false);
-
-        OnClose?.Invoke();
-        OnClose = null;
+        dropdown.value = dropdown.options.FindIndex(option => options.Equals(selectedGenre.name));
     }
 
     public void OnUploadAction()
     {
         ShowGalleryPanel();
+    }
+
+    public void OnBackButtonAction()
+    {
+        Destroy(gameObject);
     }
 
     public void OnSubmitAction()
@@ -114,16 +91,15 @@ public class StoryCreationView : MonoBehaviour
 
         Debug.Log("Genre Id = " + selectedGenre.id);
 
-        GameManager.Instance.apiHandler.CreateStory(storyTitleField.text, subTitleField.text, descriptionField.text, selectedGenre.id, (status, response) => {
+        GameManager.Instance.apiHandler.UpdateStory(storyTitleField.text, subTitleField.text, descriptionField.text, selectedGenre.id, (status, response) => {
 
             if (status)
             {
-                Reset();
-
-                OnBackButtonAction();
+                Destroy(gameObject);
                 Debug.Log("Story Uploaded Successfully");
             }
-            else {
+            else
+            {
                 Debug.LogError("Story Updation Failed");
             }
         });
@@ -134,14 +110,18 @@ public class StoryCreationView : MonoBehaviour
         GetScreenShot();
     }
 
-    public void OnVideosAction()
+    void ShowGalleryPanel()
     {
-        GetGalleryVideos();
+        SlideGalleryView(true);
     }
 
-    public void OnCancelAction()
-    { 
-        
+    void SlideGalleryView(bool canShow)
+    {
+        float panelPosition = galleryPanel.anchoredPosition.y;
+
+        float targetPostion = panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
+
+        galleryPanel.DOAnchorPosY(targetPostion, 0.4f);
     }
 
     public void OnMediaButtonAction(int mediaType)
@@ -164,18 +144,6 @@ public class StoryCreationView : MonoBehaviour
         }
     }
 
-    void Reset()
-    {
-        //storyTitleField.text = string.Empty;
-        parentPanel.gameObject.SetActive(false);
-
-        storyTitleField.text = string.Empty;
-
-        subTitleField.text = string.Empty;
-
-        descriptionField.text = string.Empty;
-    }
-
     void OnImagesUploaded(bool status, List<string> imageUrls)
     {
         if (status)
@@ -184,29 +152,30 @@ public class StoryCreationView : MonoBehaviour
         }
     }
 
-    void ShowGalleryPanel()
+    public void OnCancelAction()
     {
-        SlideGalleryView(true);
+        SlideGalleryView(false);
     }
 
-    void SlideGalleryView(bool canShow)
+    void Reset()
     {
-        isShowingGalleryPanel = canShow;
-        
-        float panelPosition = galleryPanel.anchoredPosition.y;
+        //storyTitleField.text = string.Empty;
+        gameObject.SetActive(false);
 
-        float targetPostion = panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
+        storyTitleField.text = string.Empty;
 
-        galleryPanel.DOAnchorPosY(targetPostion, 0.4f);
+        subTitleField.text = string.Empty;
+
+        descriptionField.text = string.Empty;
     }
 
     void GetScreenShot()
-    { 
-    
+    {
+
     }
 
     void GetGalleryVideos()
-    { 
-    
+    {
+
     }
 }

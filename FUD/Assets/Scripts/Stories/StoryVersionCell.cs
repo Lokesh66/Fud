@@ -13,6 +13,9 @@ public class StoryVersionCell : MonoBehaviour
 
     public GameObject shareCell;
 
+    public GameObject updateStoryVersionCache;
+
+
     StoryVersion versionModel;
 
 
@@ -50,5 +53,14 @@ public class StoryVersionCell : MonoBehaviour
     public void OnDeleteButtonAction()
     { 
     
+    }
+
+    public void OnUpdateButtonAction()
+    {
+        Transform parent = StoryDetailsController.Instance.transform;
+
+        GameObject createObject = Instantiate(updateStoryVersionCache, parent);
+
+        createObject.GetComponent<UpdateStoryVersionView>().Load(versionModel);
     }
 }
