@@ -557,7 +557,7 @@ public partial class APIHandler
         if (request.isNetworkError || request.isHttpError)
         {
             Debug.Log(request.error);
-            responseCallBack?.Invoke(false, null);
+            responseCallBack?.Invoke(false, request.error);
             //statusText.text = "StATUS Failed " + request.error;
         }
         else

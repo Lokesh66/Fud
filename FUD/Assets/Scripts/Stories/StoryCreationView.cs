@@ -184,6 +184,13 @@ public class StoryCreationView : MonoBehaviour
         {
             this.imageUrls = imageUrls;
         }
+        else {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = status.ToString() + imageUrls[0];
+
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+        }
     }
 
     void ShowGalleryPanel()

@@ -56,18 +56,23 @@ public class GalleryManager : MonoBehaviour
                     NativeGallery.LoadImageAtPath(imagesPath[i], SystemInfo.maxTextureSize, true, true, false, null);
                 }
 
-                //NativeGallery.GetImageProperties(path);
-                /*
-                                byte[] textureBytes = texture.EncodeToPNG();
+                if (imagesPath != null && imagesPath.Length > 0)
+                {
+                    selectedImagesCount = imagesPath.Length;
 
-                                string filePath = APIConstants.IMAGES_PATH + "/GalleryPhotos";
+                    for (int i = 0; i < imagesPath.Length; i++)
+                    {
+                        /*AlertModel alertModel = new AlertModel();
 
-                                if (File.Exists(filePath))
-                                {
-                                    File.Delete(filePath);
-                                }
+                        alertModel.message = audiosPaths[i];
 
-                                File.WriteAllBytes(filePath, textureBytes);*/
+                        alertModel.okayButtonAction = AlertDismissAction;
+
+                        CanvasManager.Instance.alertView.ShowAlert(alertModel);*/
+
+                        UploadFile(imagesPath[i], EMediaType.Image);
+                    }
+                }
             }
             else {
                 OnImagesUploaded?.Invoke(false, null);
@@ -131,28 +136,48 @@ public class GalleryManager : MonoBehaviour
     {
         GameManager.Instance.apiHandler.UploadFile(filePath, mediaType, (status, response) => {
 
-            FileUploadResponseModel responseModel = JsonUtility.FromJson<FileUploadResponseModel>(response);
-
-            imageUrls.Add(responseModel.data.s3_file_path);
-
-            if (imageUrls.Count == selectedImagesCount)
+            if (status)
             {
-                UpdateLocalData(imageUrls, mediaType);
+                FileUploadResponseModel responseModel = JsonUtility.FromJson<FileUploadResponseModel>(response);
 
-                OnImagesUploaded?.Invoke(true, imageUrls);
+                imageUrls.Add(responseModel.data.s3_file_path);
 
-                selectedImagesCount = 0;
+                //OnImagesUploaded?.Invoke(true, imageUrls);
 
-                AlertModel alertModel = new AlertModel();
+                if (imageUrls.Count == selectedImagesCount)
+                {
+                    UpdateLocalData(imageUrls, mediaType);
 
-                alertModel.message = responseModel.message;
+                    OnImagesUploaded?.Invoke(true, imageUrls);
 
-                alertModel.okayButtonAction = AlertDismissAction;
+                    selectedImagesCount = 0;
 
-                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                    AlertModel alertModel = new AlertModel();
 
-                imageUrls.Clear();
+                    alertModel.message = responseModel.message;
+
+                    alertModel.okayButtonAction = AlertDismissAction;
+
+                    CanvasManager.Instance.alertView.ShowAlert(alertModel);
+
+                    imageUrls.Clear();
+                }
+                else {
+                    List<string> responses = new List<string>();
+
+                    responses.Add("imageUrls.Count, selectedImagesCount are not equal");
+
+                    OnImagesUploaded?.Invoke(false, responses);
+                }
             }
+            else
+            {
+                List<string> responses = new List<string>();
+
+                responses.Add(response);
+
+                OnImagesUploaded?.Invoke(false, responses);
+            }           
 
         });
     }
@@ -181,7 +206,7 @@ public class GalleryManager : MonoBehaviour
 
         if (!string.IsNullOrEmpty(filePath))
         {
-            string directoryName = Path.GetDirectoryName(filePath);
+            //string directoryName = Path.GetDirectoryName(filePath);
 
             /*if (!Directory.Exists(filePath))
             {

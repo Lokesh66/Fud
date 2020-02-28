@@ -600,7 +600,7 @@ public static class NativeGallery
 		string loadPath = imagePath;
 #endif
 
-		callAPI?.Invoke(loadPath);
+		//callAPI?.Invoke(loadPath, 0);
 
 		String extension = Path.GetExtension( imagePath ).ToLowerInvariant();
 		TextureFormat format = ( extension == ".jpg" || extension == ".jpeg" ) ? TextureFormat.RGB24 : TextureFormat.RGBA32;
