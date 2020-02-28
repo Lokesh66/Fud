@@ -13,7 +13,7 @@ public class ProfileInfoView : MonoBehaviour
 
     public TMP_InputField numberField;
 
-    public TMP_InputField actorField;
+    public TMP_Dropdown roleField;
 
 
     public void Load()

@@ -42,6 +42,10 @@ public class StoryUpdateView : MonoBehaviour
         SetView();
 
         canSupportMultipleText.text = "Can Support Text " + NativeGallery.CanSelectMultipleFilesFromGallery().ToString();
+
+        statusText.text = galleryPanel.anchoredPosition.y.ToString();
+
+        filePath.text = galleryPanel.rect.height.ToString(); ;
     }
 
     void SetView()
