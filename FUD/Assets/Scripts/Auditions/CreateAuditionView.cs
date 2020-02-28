@@ -78,47 +78,62 @@ public class CreateAuditionView : MonoBehaviour
     }
     public void CreateAuditionButtonAction()
     {
+        string errorMessage = string.Empty;
+
         //Call an API to add into audition list
         if (string.IsNullOrEmpty(typeDropdown.captionText.text))
         {
-            ShowErrorMessage("Audition type should not be empty");
-            return;
+            errorMessage = "Audition type should not be empty";
+            //ShowErrorMessage("Audition type should not be empty");
         }
-        if (string.IsNullOrEmpty(topicText.text))
+        else if (string.IsNullOrEmpty(topicText.text))
         {
-            ShowErrorMessage("Audition topic should not be empty");
-            return;
+            errorMessage = "Audition topic should not be empty";
+            //ShowErrorMessage("Audition topic should not be empty");
         }
-        if (string.IsNullOrEmpty(titleText.text))
+        else if (string.IsNullOrEmpty(titleText.text))
         {
-            ShowErrorMessage("Audition title should not be empty");
-            return;
+            errorMessage = "Audition title should not be empty";
+            //ShowErrorMessage("Audition title should not be empty");
         }
-        if (string.IsNullOrEmpty(payAmountText.text))
+        else if (string.IsNullOrEmpty(payAmountText.text))
         {
-            ShowErrorMessage("Audition payment should not be empty");
-            return;
+            errorMessage = "Audition payment should not be empty";
+            //ShowErrorMessage("Audition payment should not be empty");
         }
-        if (string.IsNullOrEmpty(ageFromText.text))
+        else if (string.IsNullOrEmpty(ageFromText.text))
         {
-            ShowErrorMessage("Audition age should not be empty");
-            return;
+            errorMessage = "Audition from age should not be empty";
+            //ShowErrorMessage("Audition age should not be empty");
         }
-        if (string.IsNullOrEmpty(ageToText.text))
+        else if (string.IsNullOrEmpty(ageToText.text))
         {
-            ShowErrorMessage("Audition age should not be empty");
-            return;
+            errorMessage = "Audition to age should not be empty";         
+            //ShowErrorMessage("Audition age should not be empty");
         }
-        if (string.IsNullOrEmpty(endDateText.text) || endDateText.text.Equals(defaultDateText))
+        else if (int.Parse(ageToText.text) < int.Parse(ageFromText.text))
         {
-            ShowErrorMessage("Audition date should not be empty");
-            return;
+            errorMessage = "Audition to age should be greater than from age";
+            //ShowErrorMessage("Audition age should not be empty");
         }
-        if (string.IsNullOrEmpty(descriptionText.text))
+        else if (string.IsNullOrEmpty(endDateText.text) || endDateText.text.Equals(defaultDateText))
         {
-            ShowErrorMessage("Audition description should not be empty");
+            errorMessage = "Audition date should not be empty";          
+            //ShowErrorMessage("Audition date should not be empty");
+        }
+        else if (string.IsNullOrEmpty(descriptionText.text))
+        {
+            errorMessage = "Audition description should not be empty";
+            //ShowErrorMessage("Audition description should not be empty");
+        }
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            AlertModel alertModel = new AlertModel();
+            alertModel.message = errorMessage;
+            CanvasManager.Instance.alertView.ShowAlert(alertModel); 
             return;
         }
+
         Dictionary<string, object> parameters = new Dictionary<string, object>();
         parameters.Add("project_id", projectId);
         parameters.Add("topic", topicText.text);
@@ -134,11 +149,16 @@ public class CreateAuditionView : MonoBehaviour
             if (status)
             {
                 isNewAuditionCreated = true;
-                BackButtonAction();
+                AlertModel alertModel = new AlertModel();
+                alertModel.message = "Audition Created Successfully";
+                alertModel.okayButtonAction = BackButtonAction;
+                CanvasManager.Instance.alertView.ShowAlert(alertModel);
             }
             else
             {
-
+                AlertModel alertModel = new AlertModel();
+                alertModel.message = "Creating Audition Failed";
+                CanvasManager.Instance.alertView.ShowAlert(alertModel);
             }
         });
     }

@@ -74,21 +74,30 @@ public class CreateCastView : MonoBehaviour
     public void CreateCastButtonAction()
     {
         //Call an API to add into audition list
+        string errorMessage = string.Empty;
         if (string.IsNullOrEmpty(storyCharacterDropdown.captionText.text))
         {
-            ShowErrorMessage("Select character for casting");
-            return;
+            errorMessage = "Select character for casting";            
+            //ShowErrorMessage("Select character for casting");
         }
-        if (selectedModel == null)
+        else if (selectedModel == null)
         {
-            ShowErrorMessage("Select member for casting");
-            return;
+            errorMessage = "Select member for casting";
+            //ShowErrorMessage("Select member for casting");
         }
-        if (string.IsNullOrEmpty(descriptionText.text))
+        else if (string.IsNullOrEmpty(descriptionText.text))
         {
-            ShowErrorMessage("Cast description should not be empty");
+            errorMessage = "Cast description should not be empty";
+            //ShowErrorMessage("Cast description should not be empty");
+        }
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            AlertModel alertModel = new AlertModel();
+            alertModel.message = errorMessage;
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
             return;
         }
+
         Dictionary<string, object> parameters = new Dictionary<string, object>();
                
         parameters.Add("project_id", projectId);
@@ -103,11 +112,17 @@ public class CreateCastView : MonoBehaviour
             if (status)
             {
                 isNewCastCreated = true;
-                BackButtonAction();
+
+                AlertModel alertModel = new AlertModel();
+                alertModel.message = "Cast Added Successfully";
+                alertModel.okayButtonAction = BackButtonAction;
+                CanvasManager.Instance.alertView.ShowAlert(alertModel);
             }
             else
             {
-
+                AlertModel alertModel = new AlertModel();
+                alertModel.message = "Cast Creation Failed";
+                CanvasManager.Instance.alertView.ShowAlert(alertModel);
             }
         });
     }   

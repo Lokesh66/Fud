@@ -72,19 +72,27 @@ public class ProjectCreationView : MonoBehaviour
 
     public void OnSubmitProject()
     {
+        string errorMessage = string.Empty;
         if (string.IsNullOrEmpty(titleField.text))
         {
-            ShowErrorMessage("Name your project, should not be empty");
-            return;
+            errorMessage = "Name your project, should not be empty";
+            //ShowErrorMessage("Name your project, should not be empty");
         }
-        if (string.IsNullOrEmpty(storySelectionDropdown.captionText.text))
+        else if (string.IsNullOrEmpty(storySelectionDropdown.captionText.text))
         {
-            ShowErrorMessage("Select Stroy for your story");
-            return;
+            errorMessage = "Select Stroy for your story";
+            //ShowErrorMessage("Select Stroy for your story");
         }
-        if (string.IsNullOrEmpty(budgetField.text))
+        else if (string.IsNullOrEmpty(budgetField.text))
         {
-            ShowErrorMessage("Select budjet for your story");
+            errorMessage = "Select budjet for your story";
+            //ShowErrorMessage("Select budjet for your story");
+        }
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            AlertModel alertModel = new AlertModel();
+            alertModel.message = errorMessage;
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
             return;
         }
 
@@ -108,11 +116,18 @@ public class ProjectCreationView : MonoBehaviour
             {
                 Debug.Log("Project Created Successfully");
                 isDataUpdated = true;
-                BackButtonAction();
+
+                AlertModel alertModel = new AlertModel();
+                alertModel.message = "Project Created Successfully";
+                alertModel.okayButtonAction = BackButtonAction;
+                CanvasManager.Instance.alertView.ShowAlert(alertModel);
             }
             else
             {
                 Debug.LogError("Project Failed To Save");
+                AlertModel alertModel = new AlertModel();
+                alertModel.message = "Project Creation Failed";
+                CanvasManager.Instance.alertView.ShowAlert(alertModel);
             }
         });
     }
