@@ -68,8 +68,6 @@ public class StoryCreationView : MonoBehaviour
 
         OnClose = onClose;
 
-        canSupportMultipleText.text = "Can Support Text " + NativeGallery.CanSelectMultipleFilesFromGallery().ToString();
-
         statusText.text = galleryPanel.anchoredPosition.y.ToString();
 
         filePath.text = galleryPanel.rect.height.ToString(); ;
@@ -200,6 +198,10 @@ public class StoryCreationView : MonoBehaviour
         float panelPosition = galleryPanel.anchoredPosition.y;
 
         float targetPostion = panelPosition += canShow ? 500 : -500;
+
+        statusText.text = galleryPanel.anchoredPosition.y.ToString();
+
+        canSupportMultipleText.text = "targetPostion = " + targetPostion;
 
         galleryPanel.DOAnchorPosY(targetPostion, 0.4f);
     }
