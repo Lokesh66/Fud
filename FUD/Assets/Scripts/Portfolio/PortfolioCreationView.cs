@@ -25,10 +25,6 @@ public class PortfolioCreationView : MonoBehaviour
 
     public void CreateButtonAction()
     {
-        PortMultimediaModels multimediaModels = new PortMultimediaModels();
-
-        PortMultiMediaModel mediaModel = new PortMultiMediaModel();
-
         List<Dictionary<string, object>> parameters = new List<Dictionary<string, object>>();
 
         parameters.Add(new Dictionary<string, object>());

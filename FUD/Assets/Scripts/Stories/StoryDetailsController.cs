@@ -47,7 +47,7 @@ public class StoryDetailsController : MonoBehaviour
 
     public TextMeshProUGUI[] buttonList;
 
-    public GameObject storyCreationCache;
+    public GameObject storyVersionObject;
 
     public GameObject addCharacterCache;
 
@@ -188,6 +188,11 @@ public class StoryDetailsController : MonoBehaviour
         return currentDetailsModel.title;
     }
 
+    public int GetStoryId()
+    {
+        return currentDetailsModel.id;
+    }
+
     void DestroyCreationScreen()
     {
         Destroy(currentCreateScreen);
@@ -253,13 +258,11 @@ public class StoryDetailsController : MonoBehaviour
 
     void CreateStoryVersion()
     {
-        //GameObject storyVersionObject = Instantiate(storyCreationCache, creationPanelParent);
+        currentObject?.SetActive(false);
 
-        //storiesController.CreateSubView(storyVersionObject);
+        currentCreateScreen = storyVersionObject;
 
-        //currentCreateScreen = storyVersionObject;
-
-        //story
+        storyVersionObject.GetComponent<CreateStoryVersion>().Load(versionsView);
     }
 
     void CreateCharacter()

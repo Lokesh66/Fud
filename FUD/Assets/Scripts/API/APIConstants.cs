@@ -42,6 +42,8 @@ public class APIConstants
 
     public const string STORY_VERSION_DETAILS = BASE_URL + "v1/searchStoryVersion/";
 
+    public const string CREATE_STORY_VERSION = BASE_URL + "v1/storyVersions/";
+
     public const string STORY_POST = BASE_URL + "v1/posts/";
 
     public const string SAVE_STORY_CHARACTER = BASE_URL + "v1/storyCharacters/";

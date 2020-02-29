@@ -1,10 +1,10 @@
-﻿using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using DG.Tweening;
 
-public class UpdateStoryVersionView : MonoBehaviour
+[DisallowMultipleComponent]
+public class CreateStoryVersion : MonoBehaviour
 {
     public TMP_Dropdown roledropDown;
 
@@ -13,26 +13,20 @@ public class UpdateStoryVersionView : MonoBehaviour
     public RectTransform galleryPanel;
 
 
+    StoryVersionsView versionsView;
+
     List<Genre> genres;
 
     List<string> imageUrls;
 
-    StoryVersion storyVersion;
 
     bool isShowingGalleryPanel = false;
 
-    public void Load(StoryVersion storyVersion)
+    public void Load(StoryVersionsView versionsView)
     {
         gameObject.SetActive(true);
 
-        this.storyVersion = storyVersion;
-
-        SetView();
-    }
-
-    void SetView()
-    {
-        descriptionField.text = storyVersion.description;
+        this.versionsView = versionsView;
 
         PopulateDropdown();
     }
@@ -40,10 +34,6 @@ public class UpdateStoryVersionView : MonoBehaviour
     void PopulateDropdown()
     {
         genres = DataManager.Instance.genres;
-
-        Genre requiredGenre = genres.Find(genre => genre.id == storyVersion.genre_id);
-
-        Genre selectedGenre = genres.Find(genre => genre.name.Equals(requiredGenre.name));
 
         List<string> options = new List<string>();
 
@@ -53,10 +43,7 @@ public class UpdateStoryVersionView : MonoBehaviour
         }
 
         roledropDown.ClearOptions();
-
         roledropDown.AddOptions(options);
-
-        roledropDown.value = roledropDown.options.FindIndex(option => options.Equals(selectedGenre.name));
     }
 
     public void OnMediaButtonAction(int mediaType)
@@ -81,14 +68,14 @@ public class UpdateStoryVersionView : MonoBehaviour
 
     public void OnBackButtonAction()
     {
+        versionsView.gameObject.SetActive(true);
+
         Reset();
     }
 
     public void OnSubmitAction()
     {
         List<Dictionary<string, object>> parameters = new List<Dictionary<string, object>>();
-
-        bool canUpdateMedia = false;
 
         if (imageUrls != null && imageUrls.Count > 0)
         {
@@ -99,8 +86,6 @@ public class UpdateStoryVersionView : MonoBehaviour
             parameters[0].Add("content_url", imageUrls[0]);
 
             parameters[0].Add("media_type", "image");
-
-            canUpdateMedia = true;
         }
 
         string selectedGenreText = roledropDown.options[roledropDown.value].text;
@@ -111,11 +96,15 @@ public class UpdateStoryVersionView : MonoBehaviour
 
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
-        GameManager.Instance.apiHandler.UpdateStoryVersion(storyId, storyVersion.id, descriptionField.text, selectedGenre.id, canUpdateMedia, parameters, (status, response) => {
+        GameManager.Instance.apiHandler.CreateStoryVersion(storyId, descriptionField.text, selectedGenre.id, parameters, (status, response) => {
 
             if (status)
             {
+                CreatedStoryVersionResponse responseModel = JsonUtility.FromJson<CreatedStoryVersionResponse>(response);
+
                 Reset();
+
+                versionsView.AddStoryVersion(responseModel.data);
 
                 OnBackButtonAction();
                 Debug.Log("Story Uploaded Successfully");
@@ -171,4 +160,5 @@ public class UpdateStoryVersionView : MonoBehaviour
 
         galleryPanel.DOAnchorPosY(targetPostion, 0.4f);
     }
+
 }

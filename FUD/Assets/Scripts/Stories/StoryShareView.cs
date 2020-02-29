@@ -87,6 +87,8 @@ public class StoryShareView : MonoBehaviour
 
             if (status)
             {
+                Reset();
+
                 OnBackAction();
             }
 
@@ -103,5 +105,7 @@ public class StoryShareView : MonoBehaviour
     void Reset()
     {
         searchField.text = commentField.text = string.Empty;
+
+        searchContent.DestroyChildrens();
     }
 }

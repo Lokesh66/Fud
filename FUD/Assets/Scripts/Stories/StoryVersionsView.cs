@@ -10,7 +10,11 @@ public class StoryVersionsView : MonoBehaviour
 
     public StoryShareView shareView;
 
-    List<StoryVersion> storyVersionList;
+    public VersionDetailsView versionDetailsView;
+
+    public VersionMultimediaView multimediaView;
+
+    List<StoryVersion> storyVersionList = new List<StoryVersion>();
 
 
     public void EnableView(List<StoryVersion> versionsList)
@@ -47,8 +51,38 @@ public class StoryVersionsView : MonoBehaviour
         storyVersionList.Clear();
     }
 
+    public void OnMediaButtonAction(StoryVersion storyVersion)
+    {
+        multimediaView.Load(storyVersion);
+    }
+
     public void OnCellButtonAction(StoryVersion storyVersion)
     {
+        versionDetailsView.Load(storyVersion, this);
+    }
+
+    public void OnShareButtonAction(StoryVersion storyVersion)
+    {
         shareView.Load(storyVersion);
+    }
+
+    public void OnRemoveVersion(StoryVersion storyVersion)
+    {
+        int versionIndex = storyVersionList.IndexOf(storyVersion);
+
+        Destroy(content.GetChild(versionIndex).gameObject);
+
+        storyVersionList.Remove(storyVersion);
+    }
+
+    public void AddStoryVersion(StoryVersion storyVersion)
+    {
+        gameObject.SetActive(true);
+
+        storyVersionList.Add(storyVersion);
+
+        GameObject storyObject = Instantiate(storyCell, content);
+
+        storyObject.GetComponent<StoryVersionCell>().SetView(storyVersion, this);
     }
 }

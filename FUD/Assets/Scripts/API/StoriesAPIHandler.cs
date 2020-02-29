@@ -77,6 +77,55 @@ public partial class APIHandler
         }));
     }
 
+    public void CreateStoryVersion(int storyId, string description, int roleId, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
+    {
+
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("story_id", storyId);
+
+        parameters.Add("description", description);
+
+        parameters.Add("genre_id", roleId);
+
+        //parameters.Add("port_multi_media", multimediaModels);
+
+        List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
+
+        string jsonData = JsonUtility.ToJson(portMultimedias);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_STORY_VERSION, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void UpdateStoryVersion(int storyId, int versionId, string description, int roleId, bool canUpdateMedia, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("story_id", storyId);
+
+        parameters.Add("only_media", 0);
+
+        parameters.Add("id", versionId);
+
+        parameters.Add("description", description);
+
+        parameters.Add("genre_id", roleId);
+
+        //parameters.Add("port_multi_media", multimediaModels);
+
+        List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
+
+        string jsonData = JsonUtility.ToJson(portMultimedias);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_STORY_VERSION, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
     public void GetStoryVersionDetails(int id, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -88,6 +137,24 @@ public partial class APIHandler
         gameManager.StartCoroutine(PostRequest(APIConstants.STORY_VERSION_DETAILS, true, parameters, (status, response) => {
 
             action(status, response);
+        }));
+    }
+
+    public void RemoveStoryVersion(int id, int storyId, int status, Action<bool> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("story_id", storyId);
+
+        parameters.Add("only_media", 0);
+
+        parameters.Add("id", id);
+
+        parameters.Add("status", status);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_STORY_VERSION, true, parameters, (apiStatus, response) => {
+
+            action(apiStatus);
         }));
     }
 
@@ -349,7 +416,7 @@ public class StoryDetailsResponseModel : BaseResponse
 }
 
 [Serializable]
-public class Multimedia
+public class MultimediaModel
 {
     public int id;
     public int story_version_id;
@@ -367,15 +434,13 @@ public class Multimedia
 [Serializable]
 public class StoryVersionDetailModel : StoryVersion
 {
-    public List<Multimedia> Multimedia;
+    public List<MultimediaModel> Multimedia;
 }
 
 [Serializable]
-public class RootObject
+public class MultiMediaResponse : BaseResponse
 {
-    public string message;
     public List<StoryVersionDetailModel> data;
-    public int status;
 }
 
 [Serializable]
@@ -476,4 +541,17 @@ public class ProjectStory
 public class ProjectStoriesResponse : BaseResponse
 {
     public List<ProjectStory> data;
+}
+
+
+[Serializable]
+public class CreatedStoryVerionModel : StoryVersion
+{
+   
+}
+
+[Serializable]
+public class CreatedStoryVersionResponse : BaseResponse
+{
+    public CreatedStoryVerionModel data;
 }
