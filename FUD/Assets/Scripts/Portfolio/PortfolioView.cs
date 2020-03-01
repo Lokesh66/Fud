@@ -155,7 +155,7 @@ public class PortfolioView : BaseView
 
         createPanel.SetActive(false);
 
-        creationObject.GetComponent<UpdateExperianceView>().Load(this);
+        creationObject.GetComponent<CreateExperienceView>().Load(this);
     }
 
     public void OnEditButtonAction()

@@ -13,6 +13,8 @@ public class PortfolioCreationView : MonoBehaviour
     string contentUrl = string.Empty;
 
     PortfolioView portfolioView = null;
+
+
     public void Init(PortfolioView portfolioView)
     {
         this.portfolioView = portfolioView;

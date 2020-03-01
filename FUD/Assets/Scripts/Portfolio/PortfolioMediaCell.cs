@@ -1,24 +1,39 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
+using UnityEngine;
+using System;
 
 public class PortfolioMediaCell : MonoBehaviour
 {
     public Image albumImage;
 
 
-    PortfolioAlbumModel albumModel;
-    public void SetView(PortfolioAlbumModel albumModel)
+    PortfolioModel albumModel;
+
+    Action<PortfolioModel> OnButtonAction;
+
+    public void SetView(PortfolioModel model,  Action<PortfolioModel> OnButtonAction)
     {
-        this.albumModel = albumModel;
+        this.albumModel = model;
 
-        GameManager.Instance.downLoadManager.DownloadImage(albumModel.content_url, (sprite) => {
+        this.OnButtonAction = OnButtonAction;
 
-            albumImage.sprite = sprite;
-        });
+        if (model.PortfolioMedia.Count > 0)
+        {
+            GameManager.Instance.downLoadManager.DownloadImage(model.PortfolioMedia[0].content_url, (sprite) =>
+            {
+
+                albumImage.sprite = sprite;
+            });
+        }
     }
 
     public void OnShareAction()
     { 
     
+    }
+
+    public void OnTapAction()
+    {
+        OnButtonAction?.Invoke(albumModel);
     }
 }

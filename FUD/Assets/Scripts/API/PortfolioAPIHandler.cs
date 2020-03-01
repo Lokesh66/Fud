@@ -24,6 +24,44 @@ public partial class APIHandler
         }));
     }
 
+    public void UpdatePortfolio(string title, string description,  int id, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
+
+        string jsonData = JsonUtility.ToJson(portMultimedias);
+
+        parameters.Add("title", title);
+
+        parameters.Add("id", id);
+
+        parameters.Add("description", description);
+
+        //parameters.Add("port_multi_media", multimediaModels);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.USER_PORTFOLIO, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void RemovePortfolio(int id, int status, Action<bool> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        //parameters.Add("port_album_id", albumId);
+
+        parameters.Add("id", id);
+
+        parameters.Add("status", status);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.USER_PORTFOLIO, true, parameters, (apiStatus, response) => {
+
+            action(apiStatus);
+        }));
+    }
+
     public void UpdateWorkExperiance(CreateExperianceModel experianceModel, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -50,7 +88,23 @@ public partial class APIHandler
         }));
     }
 
-    public void GetAllAlbums(Action<bool, List<PortfolioAlbumModel>> action)
+    public void RemovePortfolioExperiance(int id, int status, Action<bool> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        //parameters.Add("port_album_id", albumId);
+
+        parameters.Add("id", id);
+
+        parameters.Add("status", status);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_EXPERIANCE, true, parameters, (apiStatus, response) => {
+
+            action(apiStatus);
+        }));
+    }
+
+    public void GetAllAlbums(Action<bool, List<PortfolioModel>> action)
     {
         gameManager.StartCoroutine(GetRequest(APIConstants.USER_PORTFOLIO, true, (bool status, string response) => {
 
@@ -60,7 +114,7 @@ public partial class APIHandler
 
                 if (responseModel.data.Count > 0)
                 {
-                    action?.Invoke(true, responseModel.data[0].PortfolioMedia);
+                    action?.Invoke(true, responseModel.data);
                 }
             }
             else

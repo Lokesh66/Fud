@@ -8,6 +8,8 @@ public class PortfolioExperianceView : MonoBehaviour
 
     public GameObject cellCache;
 
+    public PortfolioExperienceDetails experienceDetails;
+
 
     private PortfolioView portfolioView;
 
@@ -22,6 +24,8 @@ public class PortfolioExperianceView : MonoBehaviour
 
     void SetExperianceModels()
     {
+        content.DestroyChildrens();
+
         GameManager.Instance.apiHandler.GetAllExperiances((status, modelsList) => {
 
             if (status)
@@ -39,7 +43,21 @@ public class PortfolioExperianceView : MonoBehaviour
         {
             GameObject cellObject = Instantiate(cellCache, content);
 
-            cellObject.GetComponent<ExperianceCell>().SetView(experianceModels[i], portfolioView);
+            cellObject.GetComponent<ExperianceCell>().SetView(experianceModels[i], OnCellButtonAction);
         }
+    }
+
+    void OnCellButtonAction(WorkExperianceModel experianceModel)
+    {
+        experienceDetails.Load(experianceModel, this);
+    }
+
+    public void RemovePortfolioExperience(WorkExperianceModel experienceModel)
+    {
+        int modelIndex = experianceModels.IndexOf(experienceModel);
+
+        Destroy(content.GetChild(modelIndex).gameObject);
+
+        experianceModels.Remove(experienceModel);
     }
 }

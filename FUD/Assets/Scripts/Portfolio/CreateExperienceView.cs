@@ -2,8 +2,9 @@
 using TMPro;
 using System.IO;
 using System.Collections.Generic;
+using System;
 
-public class UpdateExperianceView : MonoBehaviour
+public class CreateExperienceView : MonoBehaviour
 {
     public TMP_Dropdown industryDropDown;
 
@@ -71,14 +72,9 @@ public class UpdateExperianceView : MonoBehaviour
         industryDropDown.AddOptions(options);
     }
 
-    public void Init(PortfolioView portfolioView)
-    {
-        this.portfolioView = portfolioView;
-    }
-
     public void OnUploadButtonAction()
     {
-        PickImages(SystemInfo.maxTextureSize);
+        GalleryManager.Instance.PickImages(OnImagesUploaded);
     }
 
     public void CreateButtonAction()
@@ -113,7 +109,7 @@ public class UpdateExperianceView : MonoBehaviour
 
         parameters[0].Add("content_id", 1);
 
-        parameters[0].Add("content_url", "https://fud-user-1.s3.ap-south-1.amazonaws.com/15572033-40e9-47c2-8532-9a49d7206e6c.png");
+        parameters[0].Add("content_url", "https://fud-user-1.s3.ap-south-1.amazonaws.com/04041934-32fa-4bcd-8946-692775222291.JPG");
 
         parameters[0].Add("media_type", "image");
 
@@ -128,53 +124,9 @@ public class UpdateExperianceView : MonoBehaviour
         });
     }
 
-    private void PickImages(int maxSize)
+    void OnImagesUploaded(bool status, List<string> imageURLs)
     {
-        NativeGallery.Permission permission = NativeGallery.GetImagesFromGallery((path) =>
-        {
-            Debug.Log("Image path: " + path);
-
-            if (path != null)
-            {
-                // Create Texture from selected image
-
-                Texture2D texture = NativeGallery.LoadImageAtPath(path[0], maxSize, true, true, false, UploadFile);
-                if (texture == null)
-                {
-                    Debug.Log("Couldn't load texture from " + path);
-                    return;
-                }
-
-                //NativeGallery.GetImageProperties(path);
-
-                //screenShotImage.sprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
-
-                //screenShotImage.SetNativeSize();
-
-                byte[] textureBytes = texture.EncodeToPNG();
-
-                string filePath = APIConstants.IMAGES_PATH + "/GalleryPhotos";
-
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-
-                File.WriteAllBytes(filePath, textureBytes);
-            }
-        }, "Select a PNG image");
-
-        Debug.Log("Permission result: " + permission);
-    }
-
-    void UploadFile(string filePath)
-    {
-        GameManager.Instance.apiHandler.UploadFile(filePath, EMediaType.Image, (status, response) => {
-
-            FileUploadResponseModel responseModel = JsonUtility.FromJson<FileUploadResponseModel>(response);
-
-            contentUrl = responseModel.data.s3_file_path;
-        });
+        contentUrl = imageURLs[0];
     }
 
     public void OnBackAction()

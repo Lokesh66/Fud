@@ -32,6 +32,8 @@ public class UpdateCharacterView : MonoBehaviour
 
     StoryCharacterModel characterModel;
 
+    string suitable_performer = string.Empty;
+
     Action<StoryCharacterModel> OnCreateCharacter;
 
 
@@ -40,6 +42,18 @@ public class UpdateCharacterView : MonoBehaviour
         gameObject.SetActive(true);
 
         this.characterModel = characterModel;
+
+        int storyId = StoryDetailsController.Instance.GetStoryId();
+
+        GameManager.Instance.apiHandler.GetOtherUserInfo(characterModel.id, storyId, (status, response) => {
+
+            if (status)
+            {
+                PerformerResponse reponseModel = JsonUtility.FromJson<PerformerResponse>(response);
+
+                suitable_performer = reponseModel.data.UserInfo.name;
+            }
+        });
 
         SetView();
     }

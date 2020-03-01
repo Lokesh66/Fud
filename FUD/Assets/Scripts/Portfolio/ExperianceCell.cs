@@ -1,11 +1,10 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using TMPro;
-using System.Collections.Generic;
+using System;
 
 public class ExperianceCell : MonoBehaviour
 {
-    public RectTransform content;
-
     public TextMeshProUGUI titleText;
 
     public TextMeshProUGUI locationText;
@@ -19,29 +18,30 @@ public class ExperianceCell : MonoBehaviour
 
     WorkExperianceModel experianceModel;
 
-    PortfolioView portfolioView;
+    Action<WorkExperianceModel> OnButtonAction;
 
-    public void SetView(WorkExperianceModel experianceModel, PortfolioView portfolioView)
+    public void SetView(WorkExperianceModel experianceModel, Action<WorkExperianceModel> OnButtonAction)
     {
         this.experianceModel = experianceModel;
 
-        this.portfolioView = portfolioView;
+        this.OnButtonAction = OnButtonAction;
     }
 
-    public void OnButtonAction()
+    public void OnTapAction()
     {
-        ShowAlbums();
+        //ShowAlbums();
+        OnButtonAction?.Invoke(experianceModel);
     }
 
     void ShowAlbums()
     {
-        List<WorkExpMedia> expMedia = experianceModel.WorkExpMedia;
+        /*List<WorkExpMedia> expMedia = experianceModel.WorkExpMedia;
 
         for (int i = 0; i < expMedia.Count; i++)
         {
             GameObject cellObject = Instantiate(mediaCell, content);
 
             cellObject.GetComponent<PortfolioMediaCell>().SetView(expMedia[i]);
-        }
+        }*/
     }
 }

@@ -644,3 +644,29 @@ public class CreatedStoryVersionResponse : BaseResponse
 {
     public CreatedStoryVerionModel data;
 }
+
+[Serializable]
+public class PerformerModel
+{
+    public int id;
+    public int story_id;
+    public string title;
+    public string description;
+    public string suitable_performer;
+    public object project_cast_id;
+    public object project_id;
+    public object estimated_working_days;
+    public object project_status;
+    public string status;
+    public object story_version_id;
+    public string gender;
+    public DateTime created_date_time;
+    public DateTime updatedAt;
+    public UserData UserInfo;
+}
+
+[Serializable]
+public class PerformerResponse : BaseResponse
+{
+    public PerformerModel data;
+}
