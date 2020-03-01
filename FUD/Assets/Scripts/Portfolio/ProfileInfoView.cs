@@ -51,7 +51,7 @@ public class ProfileInfoView : MonoBehaviour
 
     public void DateOfBirthButtonAction()
     {
-        DatePicker.Instance.GetDate(System.DateTime.MinValue, (dateString) => {
+        DatePicker.Instance.GetDate(System.DateTime.MinValue, System.DateTime.Now, (dateString) => {
             if (!string.IsNullOrEmpty(dateString))
             {
                 dobText.text = dateString;
@@ -107,6 +107,10 @@ public class ProfileInfoView : MonoBehaviour
             {
                 alertModel.message = "User data updated successfully";
                 alertModel.okayButtonAction = OnBackButtonAction;
+                if(model != null)
+                {
+                    DataManager.Instance.UpdateUserInfo(model);
+                }
             }
             else
             {

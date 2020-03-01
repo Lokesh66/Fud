@@ -178,7 +178,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateProfileInfo(ProfileInfoModel infoModel, Action<bool, List<WorkExperianceModel>> action)
+    public void UpdateProfileInfo(ProfileInfoModel infoModel, Action<bool, UserData> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -200,11 +200,12 @@ public partial class APIHandler
         parameters.Add("current_location", infoModel.currentLocation);
         parameters.Add("native_location", infoModel.nativeLocation);
 
-        gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_USER_PROFILE, true, parameters, (bool status, string response) => {
-
+        gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_USER_PROFILE, true, parameters, (bool status, string response) =>
+        {
+            Debug.Log("UpdateProfileInfo : "+response);
             if (status)
             {
-                WorkExperianceResponseModel responseModel = JsonUtility.FromJson<WorkExperianceResponseModel>(response);
+                UserDataObject responseModel = JsonUtility.FromJson<UserDataObject>(response);
 
                 action?.Invoke(true, responseModel.data);
             }
