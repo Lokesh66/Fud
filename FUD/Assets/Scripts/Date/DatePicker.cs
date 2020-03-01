@@ -30,6 +30,7 @@ public class DatePicker : MonoBehaviour
     #region variables
     public GameObject parentPanel;
     public GameObject leftButton;
+    public GameObject rightButton;
     public TMP_Text dateText;
     public GameObject frame;
     
@@ -39,6 +40,7 @@ public class DatePicker : MonoBehaviour
 
     private DateTime selectedDate;
     private DateTime startDate;
+    public DateTime endDate;
 
     System.Action<string> OnSelectDate;
 
@@ -47,10 +49,11 @@ public class DatePicker : MonoBehaviour
         DontDestroyOnLoad(this);
     }
 
-    public void GetDate(DateTime _startDate, System.Action<string> action)
+    public void GetDate(DateTime _startDate, DateTime _endDate, System.Action<string> action)
     {
         OnSelectDate = action;
         startDate = _startDate;
+        endDate = _endDate;
         parentPanel.SetActive(true);
         _dateTime = DateTime.Now;
         selectedDate = _dateTime;
@@ -91,17 +94,16 @@ public class DatePicker : MonoBehaviour
 
     bool IsValidDate(DateTime selectedDate)
     {
-        if (selectedDate.Year > startDate.Year)
+        if (selectedDate.Year > startDate.Year ||
+            (selectedDate.Year == startDate.Year && selectedDate.Month > startDate.Month) ||
+            (selectedDate.Month == startDate.Month && selectedDate.Date >= startDate.Date))
         {
-            return true;
-        }
-        else if (selectedDate.Year == startDate.Year && selectedDate.Month > startDate.Month)
-        {
-            return true;
-        }
-        else if (selectedDate.Month == startDate.Month && selectedDate.Date >= startDate.Date)
-        {
-            return true;
+            if(selectedDate.Year < endDate.Year ||
+                (selectedDate.Year == endDate.Year && selectedDate.Month < endDate.Month) ||
+                (selectedDate.Month == endDate.Month && selectedDate.Day <= endDate.Day))
+            {
+                return true;
+            }
         }
         return false; ;
     }
@@ -173,6 +175,7 @@ public class DatePicker : MonoBehaviour
         }
         
         leftButton.SetActive(IsValidDate(firstDay.AddDays(-1)));
+        rightButton.SetActive(IsValidDate(firstDay.AddMonths(1)));
 
         dateText.text = _dateTime.ToString("MMMM")+" "+_dateTime.Year.ToString();
     }
