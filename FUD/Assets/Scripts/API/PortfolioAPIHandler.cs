@@ -28,9 +28,9 @@ public partial class APIHandler
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
+        /*List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
 
-        string jsonData = JsonUtility.ToJson(portMultimedias);
+        string jsonData = JsonUtility.ToJson(portMultimedias);*/
 
         parameters.Add("title", title);
 
@@ -38,7 +38,10 @@ public partial class APIHandler
 
         parameters.Add("description", description);
 
-        //parameters.Add("port_multi_media", multimediaModels);
+        if (multimediaModels.Count > 0)
+        {
+            parameters.Add("port_multi_media", multimediaModels);
+        }
 
         gameManager.StartCoroutine(PutRequest(APIConstants.USER_PORTFOLIO, true, parameters, (status, response) => {
 

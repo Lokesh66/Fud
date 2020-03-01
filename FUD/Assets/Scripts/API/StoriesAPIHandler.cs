@@ -50,7 +50,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateStory(string storyId, string title, string subTitle, int genreId, Action<bool, string> action)
+    public void UpdateStory(string storyId, string title, string subTitle, int genreId, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -63,6 +63,11 @@ public partial class APIHandler
         parameters.Add("description", subTitle);
 
         parameters.Add("genre_id", genreId);
+
+        if (multimediaModels.Count > 0)
+        {
+            parameters.Add("port_multi_media", multimediaModels);
+        }
 
         gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_STORY, true, parameters, (status, response) => {
 
@@ -84,7 +89,6 @@ public partial class APIHandler
 
     public void CreateStoryVersion(int storyId, string description, int roleId, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
-
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
         parameters.Add("story_id", storyId);
@@ -108,13 +112,15 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateStoryVersion(int storyId, int versionId, string description, int roleId, bool canUpdateMedia, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
+    public void UpdateStoryVersion(int storyId, int versionId, string description, int roleId, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
+        int mediaStatus = multimediaModels.Count > 0 ? 1 : 0;
+
         parameters.Add("story_id", storyId);
 
-        parameters.Add("only_media", 0);
+        parameters.Add("only_media", mediaStatus);
 
         parameters.Add("id", versionId);
 
@@ -122,11 +128,14 @@ public partial class APIHandler
 
         parameters.Add("genre_id", roleId);
 
-        //parameters.Add("port_multi_media", multimediaModels);
+        if (multimediaModels.Count > 0)
+        {
+            parameters.Add("port_multi_media", multimediaModels);
+        }
 
-        List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
+        /*List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
 
-        string jsonData = JsonUtility.ToJson(portMultimedias);
+        string jsonData = JsonUtility.ToJson(portMultimedias);*/
 
         gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_STORY_VERSION, true, parameters, (status, response) => {
 

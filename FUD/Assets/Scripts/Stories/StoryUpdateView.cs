@@ -102,7 +102,7 @@ public class StoryUpdateView : MonoBehaviour
 
         Debug.Log("Genre Id = " + selectedGenre.id);
 
-        GameManager.Instance.apiHandler.UpdateStory(storyTitleField.text, subTitleField.text, descriptionField.text, selectedGenre.id, (status, response) => {
+        GameManager.Instance.apiHandler.UpdateStory(storyTitleField.text, subTitleField.text, descriptionField.text, selectedGenre.id, uploadedDict, (status, response) => {
 
             if (status)
             {

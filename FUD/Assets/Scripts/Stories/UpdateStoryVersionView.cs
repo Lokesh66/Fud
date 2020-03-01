@@ -91,24 +91,7 @@ public class UpdateStoryVersionView : MonoBehaviour
     }
 
     public void OnSubmitAction()
-    {
-        List<Dictionary<string, object>> parameters = new List<Dictionary<string, object>>();
-
-        bool canUpdateMedia = false;
-
-        if (imageUrls != null && imageUrls.Count > 0)
-        {
-            parameters.Add(new Dictionary<string, object>());
-
-            parameters[0].Add("content_id", 1);
-
-            parameters[0].Add("content_url", imageUrls[0]);
-
-            parameters[0].Add("media_type", "image");
-
-            canUpdateMedia = true;
-        }
-
+    {        
         string selectedGenreText = roledropDown.options[roledropDown.value].text;
 
         Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
@@ -117,12 +100,10 @@ public class UpdateStoryVersionView : MonoBehaviour
 
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
-        GameManager.Instance.apiHandler.UpdateStoryVersion(storyId, storyVersion.id, descriptionField.text, selectedGenre.id, canUpdateMedia, parameters, (status, response) => {
+        GameManager.Instance.apiHandler.UpdateStoryVersion(storyId, storyVersion.id, descriptionField.text, selectedGenre.id, uploadedDict, (status, response) => {
 
             if (status)
             {
-
-
                 OnBackButtonAction();
 
                 uploadedDict.Clear();

@@ -116,8 +116,6 @@ public class StoryCreationView : MonoBehaviour
 
         Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
 
-        Debug.Log("Genre Id = " + selectedGenre.id);
-
         GameManager.Instance.apiHandler.CreateStory(storyTitleField.text, subTitleField.text, descriptionField.text, selectedGenre.id, uploadedDict, (status, response) => {
 
             if (status)
@@ -127,27 +125,13 @@ public class StoryCreationView : MonoBehaviour
                 uploadedDict.Clear();
 
                 OnBackButtonAction();
+
                 Debug.Log("Story Uploaded Successfully");
             }
             else {
                 Debug.LogError("Story Updation Failed");
             }
         });
-    }
-
-    public void OnScreenShotAction()
-    {
-        GetScreenShot();
-    }
-
-    public void OnVideosAction()
-    {
-        GetGalleryVideos();
-    }
-
-    public void OnCancelAction()
-    { 
-        
     }
 
     public void OnMediaButtonAction(int mediaType)
@@ -279,22 +263,8 @@ public class StoryCreationView : MonoBehaviour
         
         float panelPosition = galleryPanel.anchoredPosition.y;
 
-        float targetPostion = panelPosition += canShow ? 500 : -500;
-
-        statusText.text = galleryPanel.anchoredPosition.y.ToString();
-
-        canSupportMultipleText.text = "targetPostion = " + targetPostion;
+        float targetPostion = panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
 
         galleryPanel.DOAnchorPosY(targetPostion, 0.4f);
-    }
-
-    void GetScreenShot()
-    { 
-    
-    }
-
-    void GetGalleryVideos()
-    { 
-    
     }
 }
