@@ -10,6 +10,8 @@ public class StoryActivitiesView : MonoBehaviour
 
     public GameObject noDataObject;
 
+    public StoryActivityPopUp activityPopUp;
+
     List<StoryActivityModel> activityModels;
 
     public void EnableView()
@@ -46,7 +48,7 @@ public class StoryActivitiesView : MonoBehaviour
         {
             GameObject cellObject = Instantiate(activityCell, content);
 
-            cellObject.GetComponent<StoryActivityCell>().Load(activityModels[i]);
+            cellObject.GetComponent<StoryActivityCell>().Load(activityModels[i], activityPopUp);
         }
     }
 }

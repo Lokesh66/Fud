@@ -11,8 +11,7 @@ public class VersionDetailsView : MonoBehaviour
 
     public TextMeshProUGUI description;
 
-
-    public GameObject updateStoryVersionCache;
+    public UpdateStoryVersionView updateVersionView;
 
 
     StoryVersion storyVersion;
@@ -69,11 +68,7 @@ public class VersionDetailsView : MonoBehaviour
 
     void OnEditButtonAction()
     {
-        Transform parent = StoryDetailsController.Instance.transform;
-
-        GameObject createObject = Instantiate(updateStoryVersionCache, parent);
-
-        createObject.GetComponent<UpdateStoryVersionView>().Load(storyVersion);
+        updateVersionView.Load(storyVersion, this);
     }
 
     void OnDeleteButtonAction()
@@ -106,4 +101,8 @@ public class VersionDetailsView : MonoBehaviour
         userImage.sprite = null;
     }
 
+    public void OnEditCallBack(StoryVersion storyVersion)
+    {
+        versionsView.UpdateStoryVersion(storyVersion);
+    }
 }

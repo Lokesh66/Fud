@@ -221,12 +221,16 @@ public class StoryDetailsController : MonoBehaviour
     {
         currentObject = charactersView.gameObject;
 
+        currentObject.SetActive(false);
+
         charactersView.Load(currentDetailsModel.StoryCharacters, this);
     }
 
     void ShowTeamsScreen()
     {
         currentObject = teamsView.gameObject;
+
+        currentObject.SetActive(false);
 
         teamsView.Load(currentDetailsModel.TeamMembers, this);
     }
@@ -286,7 +290,7 @@ public class StoryDetailsController : MonoBehaviour
         //storiesController.CreateSubView(addTeamObject);
         currentCreateScreen = addTeamObject;
 
-        addTeamObject.GetComponent<UpdateTeamView>().SetView(currentDetailsModel, UpdateTeams);
+        addTeamObject.GetComponent<CreateTeamView>().SetView(currentDetailsModel, UpdateTeams);
     }
 
     public void UpdataCharacters(StoryCharacterModel characterModel)

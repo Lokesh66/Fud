@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
-
+using System;
 
 public class StoryCharacterCell : MonoBehaviour
 {
@@ -15,9 +15,14 @@ public class StoryCharacterCell : MonoBehaviour
 
     StoryCharacterModel characterModel;
 
-    public void Load(StoryCharacterModel characterModel)
+    Action<StoryCharacterModel> OnButtonAction;
+
+
+    public void Load(StoryCharacterModel characterModel, Action<StoryCharacterModel> OnButtonAction)
     {
         this.characterModel = characterModel;
+
+        this.OnButtonAction = OnButtonAction;
 
         SetView();
     }
@@ -31,5 +36,10 @@ public class StoryCharacterCell : MonoBehaviour
         genderText.text = characterModel.gender;
 
         suitPerformerText.text = characterModel.suitable_performer;
+    }
+
+    public void OnTapAction()
+    {
+        OnButtonAction?.Invoke(characterModel);
     }
 }

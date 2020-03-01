@@ -51,10 +51,10 @@ public class GalleryManager : MonoBehaviour
 
                 selectedImagesCount = imagesPath.Length;
 
-                for (int i = 0; i < selectedImagesCount; i++)
+               /* for (int i = 0; i < selectedImagesCount; i++)
                 {
                     NativeGallery.LoadImageAtPath(imagesPath[i], SystemInfo.maxTextureSize, true, true, false, null);
-                }
+                }*/
 
                 if (imagesPath != null && imagesPath.Length > 0)
                 {
@@ -166,6 +166,14 @@ public class GalleryManager : MonoBehaviour
                     List<string> responses = new List<string>();
 
                     responses.Add("imageUrls.Count, selectedImagesCount are not equal");
+
+                    AlertModel alertModel = new AlertModel();
+
+                    alertModel.message = "imageUrls.Count, selectedImagesCount are not equal";
+
+                    //alertModel.okayButtonAction = AlertDismissAction;
+
+                    CanvasManager.Instance.alertView.ShowAlert(alertModel);
 
                     OnImagesUploaded?.Invoke(false, responses);
                 }

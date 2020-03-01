@@ -85,4 +85,11 @@ public class StoryVersionsView : MonoBehaviour
 
         storyObject.GetComponent<StoryVersionCell>().SetView(storyVersion, this);
     }
+
+    public void UpdateStoryVersion(StoryVersion storyVersion)
+    {
+        int versionIndex = storyVersionList.IndexOf(storyVersion);
+
+        content.GetChild(versionIndex).GetComponent<StoryVersionCell>().SetView(storyVersion, this);
+    }
 }

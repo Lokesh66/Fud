@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using System;
 using TMPro;
 using System.Linq;
+using System;
 
-public class UpdateTeamView : MonoBehaviour
+public class CreateTeamView : MonoBehaviour
 {
     public RectTransform searchContent;
 
@@ -21,7 +21,7 @@ public class UpdateTeamView : MonoBehaviour
 
     List<UserSearchModel> addedModels = new List<UserSearchModel>();
 
-    Action<StoryTeamModel> OnAddedTeam;
+    Action<StoryTeamModel> OnAddedTeam; 
 
     bool isSearchAPICalled = false;
 
@@ -30,23 +30,12 @@ public class UpdateTeamView : MonoBehaviour
     string inputData = string.Empty;
 
 
-    StoryTeamModel teamModel;
 
-    StoryTeamView teamView;
-
-
-    public void Load(StoryTeamModel teamModel)
+    public void SetView(StoryDetailsModel detailsModel, Action<StoryTeamModel> OnAddedTeam)
     {
-        gameObject.SetActive(true);
+        this.detailsModel = detailsModel;
 
-        this.teamModel = teamModel;
-
-        SetView();
-    }
-
-    public void SetView()
-    {
-        teamNameField.text = teamModel.title;
+        this.OnAddedTeam = OnAddedTeam;
     }
 
     void PopulateDropdown(List<UserSearchModel> searchModels)
@@ -71,8 +60,7 @@ public class UpdateTeamView : MonoBehaviour
         {
             addedMember = memberField.text.Split(',').Last();
         }
-        else
-        {
+        else {
             addedMember = memberField.text;
         }
 
@@ -86,13 +74,6 @@ public class UpdateTeamView : MonoBehaviour
 
             GetSearchedUsers();
         }
-    }
-
-    public void OnBackButtonAction()
-    {
-        gameObject.SetActive(false);
-
-        ClearData();
     }
 
     public void OnButtonAction()
@@ -170,16 +151,5 @@ public class UpdateTeamView : MonoBehaviour
         }
 
         return memberIds;
-    }
-
-    void ClearData()
-    {
-        searchContent.DestroyChildrens();
-
-        inputData = keyword = teamNameField.text = memberField.text = string.Empty;
-
-        selectedModel = null;
-
-        isSearchAPICalled = false;
     }
 }

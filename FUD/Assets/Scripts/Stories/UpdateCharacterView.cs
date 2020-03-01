@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using System;
+using TMPro;
 
-
-public class CreateCharacterView : MonoBehaviour
+public class UpdateCharacterView : MonoBehaviour
 {
     public RectTransform searchContent;
 
@@ -30,13 +29,28 @@ public class CreateCharacterView : MonoBehaviour
     bool isSearchAPICalled = false;
 
 
+
+    StoryCharacterModel characterModel;
+
     Action<StoryCharacterModel> OnCreateCharacter;
 
-    public void SetView(StoryDetailsModel detailsModel, Action<StoryCharacterModel> action)
-    {
-        this.detailsModel = detailsModel;
 
-        OnCreateCharacter = action;
+    public void Load(StoryCharacterModel characterModel)
+    {
+        gameObject.SetActive(true);
+
+        this.characterModel = characterModel;
+
+        SetView();
+    }
+
+    public void SetView()
+    {
+        castField.text = characterModel.title;
+
+        genderLabel.text = characterModel.gender;
+
+        suitableField.text = characterModel.suitable_performer;
     }
 
     void PopulateDropdown(List<UserSearchModel> searchModels)
@@ -74,9 +88,18 @@ public class CreateCharacterView : MonoBehaviour
         }
     }
 
+    public void OnBackButtonAction()
+    {
+        gameObject.SetActive(false);
+
+        ClearData();
+    }
+
     public void OnButtonAction()
     {
-        GameManager.Instance.apiHandler.CreateCharacter(detailsModel.id, castField.text, descriptionField.text, genderLabel.text, selectedModel.id, (status, response) => {
+        int storyId = StoryDetailsController.Instance.GetStoryId();
+
+        GameManager.Instance.apiHandler.UpdateCharacter(characterModel.id, storyId, castField.text, descriptionField.text, selectedModel.id, genderLabel.text, (status, response) => {
 
             if (status)
             {
@@ -115,5 +138,18 @@ public class CreateCharacterView : MonoBehaviour
                 isSearchAPICalled = false;
             }
         });
+    }
+
+    void ClearData()
+    {
+        searchContent.DestroyChildrens();
+
+        suitableField.text = string.Empty;
+
+        descriptionField.text = string.Empty;
+
+        castField.text = genderLabel.text = keyword = string.Empty;
+
+        isSearchAPICalled = false;
     }
 }

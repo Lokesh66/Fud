@@ -11,6 +11,7 @@ public class StoryCharactersView : MonoBehaviour
 
     public NoDataView noDataView;
 
+    public CharacterDetailsView detailsView;
 
     List<StoryCharacterModel> characterModels;
 
@@ -46,7 +47,7 @@ public class StoryCharactersView : MonoBehaviour
         {
             characterObject = Instantiate(cellCache, content);
 
-            characterObject.GetComponent<StoryCharacterCell>().Load(characterModels[i]);
+            characterObject.GetComponent<StoryCharacterCell>().Load(characterModels[i], OnCellButtonAction);
         }
     }
 
@@ -77,7 +78,30 @@ public class StoryCharactersView : MonoBehaviour
 
         GameObject characterObject = Instantiate(cellCache, content);
 
-        characterObject.GetComponent<StoryCharacterCell>().Load(characterModel);
+        characterObject.GetComponent<StoryCharacterCell>().Load(characterModel, OnCellButtonAction);
+
+        noDataView.gameObject.SetActive(characterModels?.Count == 0);
+    }
+
+    public void OnCellButtonAction(StoryCharacterModel characterModel)
+    {
+        detailsView.Load(characterModel, this);
+    }
+
+    public void OnRemoveCharacter(StoryCharacterModel characterModel)
+    {
+        gameObject.SetActive(true);
+
+        int characterIndex = characterModels.IndexOf(characterModel);
+
+        Destroy(content.GetChild(characterIndex).gameObject);
+
+        characterModels.Remove(characterModel);
+
+        if (characterModels.Count <= 0)
+        {
+            noDataView.SetView(GetNoDataModel());
+        }
 
         noDataView.gameObject.SetActive(characterModels?.Count == 0);
     }

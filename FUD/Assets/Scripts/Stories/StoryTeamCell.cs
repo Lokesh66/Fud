@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
+using System;
 using TMPro;
-
 
 public class StoryTeamCell : MonoBehaviour
 {
@@ -11,9 +11,13 @@ public class StoryTeamCell : MonoBehaviour
 
     StoryTeamModel teamModel;
 
-    public void Load(StoryTeamModel teamModel)
+    Action<StoryTeamModel> OnButtonAction;
+
+    public void Load(StoryTeamModel teamModel, Action<StoryTeamModel> OnButtonAction)
     {
         this.teamModel = teamModel;
+
+        this.OnButtonAction = OnButtonAction;
 
         SetView();
     }
@@ -25,8 +29,8 @@ public class StoryTeamCell : MonoBehaviour
         membersText.text = teamModel.members;
     }
 
-    public void OnButtonAction()
-    { 
-    
+    public void OnTapAction()
+    {
+        OnButtonAction?.Invoke(teamModel);
     }
 }

@@ -11,49 +11,40 @@ public class StoryActivityCell : MonoBehaviour
 
     //public Image storyImage;
 
-    public TextMeshProUGUI commentText;
+    public TextMeshProUGUI commentText;    
 
-    public GameObject acceptObject;
 
+    StoryActivityPopUp activityPopUp;
 
     StoryActivityModel activityModel;
 
     int currentUserId;
 
 
-    public void Load(StoryActivityModel activityModel)
+    public void Load(StoryActivityModel activityModel, StoryActivityPopUp activityPopUp)
     {
         this.activityModel = activityModel;
 
+        this.activityPopUp = activityPopUp;
+
         titleText.text = activityModel.title;
 
-        currentUserId = DataManager.Instance.userInfo.id;
-        Debug.Log("currentUserId = " + currentUserId);
-
-        Debug.Log("user_id = " + activityModel.user_id);
-
-        acceptObject.SetActive(44 != activityModel.user_id);
+        commentText.text = activityModel.comment;
     }
 
-    public void OnAcceptButtonAction()
+    public void OnTapAction()
     {
-        GameManager.Instance.apiHandler.UpdateStoryPostStatus(activityModel.id, 3, (status, message) => {
-
-            if (status)
-            {
-                Destroy(gameObject);
-            }
-        });
+        activityPopUp.Load(activityModel, OnPopUpClose);
     }
 
-    public void OnRejectButtonAction()
+    void OnPopUpClose(int updatedStatus)
     {
-        GameManager.Instance.apiHandler.UpdateStoryPostStatus(activityModel.id, 8, (status, message) => {
-
-            if (status)
-            {
+        switch (updatedStatus)
+        {
+            case 3:
+            case 8:
                 Destroy(gameObject);
-            }
-        });
+                break;
+        }
     }
 }

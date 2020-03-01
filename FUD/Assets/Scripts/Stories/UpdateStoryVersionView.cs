@@ -19,13 +19,17 @@ public class UpdateStoryVersionView : MonoBehaviour
 
     StoryVersion storyVersion;
 
+    VersionDetailsView detailsView;
+
     bool isShowingGalleryPanel = false;
 
-    public void Load(StoryVersion storyVersion)
+    public void Load(StoryVersion storyVersion, VersionDetailsView detailsView)
     {
         gameObject.SetActive(true);
 
         this.storyVersion = storyVersion;
+
+        this.detailsView = detailsView;
 
         SetView();
     }
@@ -115,7 +119,7 @@ public class UpdateStoryVersionView : MonoBehaviour
 
             if (status)
             {
-                Reset();
+
 
                 OnBackButtonAction();
                 Debug.Log("Story Uploaded Successfully");

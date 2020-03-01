@@ -158,7 +158,32 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateCharacterDetails(int story_id,  string title, string description, string gender, int performerId, Action<bool, string> action)
+    public void UpdateCharacter(int characterId, int storyId, string title, string description, int performerId, string gender, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("id", characterId);
+
+        parameters.Add("story_id", storyId);
+
+        parameters.Add("title", title);
+
+        parameters.Add("description", description);
+
+        parameters.Add("suitable_performer", performerId);
+
+        parameters.Add("gender", gender);
+
+        parameters.Add("status", 3);
+
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.SAVE_STORY_CHARACTER, true, parameters, (apiStatus, response) => {
+
+            action(apiStatus, response);
+        }));
+    }
+
+    public void CreateCharacter(int story_id,  string title, string description, string gender, int performerId, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -178,6 +203,40 @@ public partial class APIHandler
         }));
     }
 
+    public void RemoveCharacter(int id, int storyId, int status, Action<bool> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("story_id", storyId);
+
+        parameters.Add("id", id);
+
+        parameters.Add("status", status);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.SAVE_STORY_CHARACTER, true, parameters, (apiStatus, response) => {
+
+            action(apiStatus);
+        }));
+    }
+
+    public void UpdateCharacterStatus(int id, int storyId, int status, Action<bool> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("story_id", storyId);
+
+        parameters.Add("only_media", 0);
+
+        parameters.Add("id", id);
+
+        parameters.Add("status", status);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_STORY_VERSION, true, parameters, (apiStatus, response) => {
+
+            action(apiStatus);
+        }));
+    }
+
     public void UpdateStoryTeam(int story_id, string title, string members, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -191,6 +250,22 @@ public partial class APIHandler
         gameManager.StartCoroutine(PostRequest(APIConstants.UPDATE_STORY_TEAM, true, parameters, (status, response) => {
 
             action(status, response);
+        }));
+    }
+
+    public void RemoveTeam(int id, int storyId, int status, Action<bool> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("story_id", storyId);
+
+        parameters.Add("id", id);
+
+        parameters.Add("status", status);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_STORY_TEAM, true, parameters, (apiStatus, response) => {
+
+            action(apiStatus);
         }));
     }
 
@@ -223,6 +298,20 @@ public partial class APIHandler
         parameters.Add("comment", comment);
 
         gameManager.StartCoroutine(PostRequest(APIConstants.STORY_POST, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void GetOtherUserInfo(int id, int storyId, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("id", id);
+
+        parameters.Add("story_id", storyId);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.SEARCH_STORY_CHARACTER, true, parameters, (status, response) => {
 
             action(status, response);
         }));
