@@ -34,6 +34,9 @@ public class StoryUpdateView : MonoBehaviour
 
     StoryModel storyModel;
 
+    List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
+
+
 
     public void Load(StoryModel storyModel)
     {
@@ -104,6 +107,9 @@ public class StoryUpdateView : MonoBehaviour
             if (status)
             {
                 Destroy(gameObject);
+
+                uploadedDict.Clear();
+
                 Debug.Log("Story Uploaded Successfully");
             }
             else
@@ -144,10 +150,10 @@ public class StoryUpdateView : MonoBehaviour
                 GalleryManager.Instance.PickImages(OnImagesUploaded);
                 break;
             case EMediaType.Audio:
-                GalleryManager.Instance.GetAudiosFromGallery();
+                GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
                 break;
             case EMediaType.Video:
-                GalleryManager.Instance.GetVideosFromGallery();
+                GalleryManager.Instance.GetVideosFromGallery(OnAudiosUploaded);
                 break;
         }
     }
@@ -157,8 +163,88 @@ public class StoryUpdateView : MonoBehaviour
         if (status)
         {
             this.imageUrls = imageUrls;
+
+            for (int i = 0; i < imageUrls.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", imageUrls[i]);
+
+                kvp.Add("media_type", "image");
+
+                uploadedDict.Add(kvp);
+            }
+        }
+        else
+        {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = status.ToString() + imageUrls[0];
+
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
         }
     }
+
+    void OnAudiosUploaded(bool status, List<string> audioUrls)
+    {
+        if (status)
+        {
+            this.imageUrls = audioUrls;
+
+            for (int i = 0; i < audioUrls.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", audioUrls[i]);
+
+                kvp.Add("media_type", "audio");
+
+                uploadedDict.Add(kvp);
+            }
+        }
+        else
+        {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = status.ToString() + imageUrls[0];
+
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+        }
+    }
+
+    void OnVideosUploaded(bool status, List<string> videoUrls)
+    {
+        if (status)
+        {
+            this.imageUrls = videoUrls;
+
+            for (int i = 0; i < videoUrls.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", videoUrls[i]);
+
+                kvp.Add("media_type", "video");
+
+                uploadedDict.Add(kvp);
+            }
+        }
+        else
+        {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = status.ToString() + imageUrls[0];
+
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+        }
+    }
+
 
     public void OnCancelAction()
     {

@@ -22,6 +22,8 @@ public class CreateStoryVersion : MonoBehaviour
 
     bool isShowingGalleryPanel = false;
 
+    List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
+
     public void Load(StoryVersionsView versionsView)
     {
         gameObject.SetActive(true);
@@ -58,10 +60,10 @@ public class CreateStoryVersion : MonoBehaviour
                 GalleryManager.Instance.PickImages(OnImagesUploaded);
                 break;
             case EMediaType.Audio:
-                GalleryManager.Instance.GetAudiosFromGallery();
+                GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
                 break;
             case EMediaType.Video:
-                GalleryManager.Instance.GetVideosFromGallery();
+                GalleryManager.Instance.GetVideosFromGallery(OnVideosUploaded);
                 break;
         }
     }
@@ -75,19 +77,6 @@ public class CreateStoryVersion : MonoBehaviour
 
     public void OnSubmitAction()
     {
-        List<Dictionary<string, object>> parameters = new List<Dictionary<string, object>>();
-
-        if (imageUrls != null && imageUrls.Count > 0)
-        {
-            parameters.Add(new Dictionary<string, object>());
-
-            parameters[0].Add("content_id", 1);
-
-            parameters[0].Add("content_url", imageUrls[0]);
-
-            parameters[0].Add("media_type", "image");
-        }
-
         string selectedGenreText = roledropDown.options[roledropDown.value].text;
 
         Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
@@ -96,7 +85,7 @@ public class CreateStoryVersion : MonoBehaviour
 
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
-        GameManager.Instance.apiHandler.CreateStoryVersion(storyId, descriptionField.text, selectedGenre.id, parameters, (status, response) => {
+        GameManager.Instance.apiHandler.CreateStoryVersion(storyId, descriptionField.text, selectedGenre.id, uploadedDict, (status, response) => {
 
             if (status)
             {
@@ -107,6 +96,9 @@ public class CreateStoryVersion : MonoBehaviour
                 versionsView.AddStoryVersion(responseModel.data);
 
                 OnBackButtonAction();
+
+                uploadedDict.Clear();
+
                 Debug.Log("Story Uploaded Successfully");
             }
             else
@@ -128,6 +120,77 @@ public class CreateStoryVersion : MonoBehaviour
         if (status)
         {
             this.imageUrls = imageUrls;
+
+            for (int i = 0; i < imageUrls.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", imageUrls[i]);
+
+                kvp.Add("media_type", "image");
+
+                uploadedDict.Add(kvp);
+            }
+        }
+        else
+        {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = status.ToString() + imageUrls[0];
+
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+        }
+    }
+
+    void OnAudiosUploaded(bool status, List<string> audioUrls)
+    {
+        if (status)
+        {
+            this.imageUrls = audioUrls;
+
+            for (int i = 0; i < audioUrls.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", audioUrls[i]);
+
+                kvp.Add("media_type", "audio");
+
+                uploadedDict.Add(kvp);
+            }
+        }
+        else
+        {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = status.ToString() + imageUrls[0];
+
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+        }
+    }
+
+    void OnVideosUploaded(bool status, List<string> videoUrls)
+    {
+        if (status)
+        {
+            this.imageUrls = videoUrls;
+
+            for (int i = 0; i < videoUrls.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", videoUrls[i]);
+
+                kvp.Add("media_type", "video");
+
+                uploadedDict.Add(kvp);
+            }
         }
         else
         {

@@ -72,4 +72,6 @@ public class APIConstants
 
     public const string UPDATE_USER_PROFILE = BASE_URL + "v1/userInfo";
 
+    public const string PORTFOLIO_SHARE = BASE_URL + "v1/sharePortfolio/";
+
 }

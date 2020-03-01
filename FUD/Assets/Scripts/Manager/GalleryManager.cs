@@ -6,9 +6,9 @@ using UnityEngine;
 
 public class GalleryManager : MonoBehaviour
 {
-    Action<bool, List<string>> OnImagesUploaded;
+    Action<bool, List<string>> OnUploaded;
 
-    private List<string> imageUrls = new List<string>();
+    private List<string> uploadedURLs = new List<string>();
 
     private int selectedImagesCount;
 
@@ -39,22 +39,17 @@ public class GalleryManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void PickImages(Action<bool, List<string>> OnImagesUploaded)
+    public void PickImages(Action<bool, List<string>> OnUploaded)
     {
         NativeGallery.Permission permission = NativeGallery.GetImagesFromGallery((imagesPath) =>
         {
             if (imagesPath != null && imagesPath.Length > 0)
             {
-                imageUrls.Clear();
+                uploadedURLs.Clear();
 
-                this.OnImagesUploaded = OnImagesUploaded;
+                this.OnUploaded = OnUploaded;
 
                 selectedImagesCount = imagesPath.Length;
-
-               /* for (int i = 0; i < selectedImagesCount; i++)
-                {
-                    NativeGallery.LoadImageAtPath(imagesPath[i], SystemInfo.maxTextureSize, true, true, false, null);
-                }*/
 
                 if (imagesPath != null && imagesPath.Length > 0)
                 {
@@ -62,68 +57,48 @@ public class GalleryManager : MonoBehaviour
 
                     for (int i = 0; i < imagesPath.Length; i++)
                     {
-                        /*AlertModel alertModel = new AlertModel();
-
-                        alertModel.message = audiosPaths[i];
-
-                        alertModel.okayButtonAction = AlertDismissAction;
-
-                        CanvasManager.Instance.alertView.ShowAlert(alertModel);*/
-
                         UploadFile(imagesPath[i], EMediaType.Image);
                     }
                 }
             }
             else {
-                OnImagesUploaded?.Invoke(false, null);
+                OnUploaded?.Invoke(false, null);
             }
         }, "Select a PNG image");
 
         Debug.Log("Permission result: " + permission);
     }
 
-    public void GetAudiosFromGallery()
+    public void GetAudiosFromGallery(Action<bool, List<string>> OnUploaded)
     {
         NativeGallery.Permission permission = NativeGallery.GetAudiosFromGallery((audiosPaths) =>
         {
             if (audiosPaths != null && audiosPaths.Length > 0)
             {
+                this.OnUploaded = OnUploaded;
+
                 selectedImagesCount = audiosPaths.Length;
 
                 for (int i = 0; i < audiosPaths.Length; i++)
                 {
-                    /*AlertModel alertModel = new AlertModel();
-
-                    alertModel.message = audiosPaths[i];
-
-                    alertModel.okayButtonAction = AlertDismissAction;
-
-                    CanvasManager.Instance.alertView.ShowAlert(alertModel);*/
-
                     UploadFile(audiosPaths[i], EMediaType.Audio);
                 }
             }
         });
     }
 
-    public void GetVideosFromGallery()
+    public void GetVideosFromGallery(Action<bool, List<string>> OnUploaded)
     {
         NativeGallery.Permission permission = NativeGallery.GetVideosFromGallery((videoPaths) =>
         {
             if (videoPaths != null && videoPaths.Length > 0)
             {
+                this.OnUploaded = OnUploaded;
+
                 selectedImagesCount = videoPaths.Length;
 
                 for (int i = 0; i < videoPaths.Length; i++)
                 {
-                    /*AlertModel alertModel = new AlertModel();
-
-                    alertModel.message = videoPaths[i];
-
-                    alertModel.okayButtonAction = AlertDismissAction;
-
-                    CanvasManager.Instance.alertView.ShowAlert(alertModel);*/
-
                     UploadFile(videoPaths[i], EMediaType.Video);
                 }
             }
@@ -140,15 +115,13 @@ public class GalleryManager : MonoBehaviour
             {
                 FileUploadResponseModel responseModel = JsonUtility.FromJson<FileUploadResponseModel>(response);
 
-                imageUrls.Add(responseModel.data.s3_file_path);
+                uploadedURLs.Add(responseModel.data.s3_file_path);
 
-                //OnImagesUploaded?.Invoke(true, imageUrls);
-
-                if (imageUrls.Count == selectedImagesCount)
+                if (uploadedURLs.Count == selectedImagesCount)
                 {
-                    UpdateLocalData(imageUrls, mediaType);
+                    UpdateLocalData(uploadedURLs, mediaType);
 
-                    OnImagesUploaded?.Invoke(true, imageUrls);
+                    OnUploaded?.Invoke(true, uploadedURLs);
 
                     selectedImagesCount = 0;
 
@@ -160,7 +133,7 @@ public class GalleryManager : MonoBehaviour
 
                     CanvasManager.Instance.alertView.ShowAlert(alertModel);
 
-                    imageUrls.Clear();
+                    uploadedURLs.Clear();                    
                 }
                 else {
                     List<string> responses = new List<string>();
@@ -175,7 +148,7 @@ public class GalleryManager : MonoBehaviour
 
                     CanvasManager.Instance.alertView.ShowAlert(alertModel);
 
-                    OnImagesUploaded?.Invoke(false, responses);
+                    OnUploaded?.Invoke(false, responses);
                 }
             }
             else
@@ -184,8 +157,10 @@ public class GalleryManager : MonoBehaviour
 
                 responses.Add(response);
 
-                OnImagesUploaded?.Invoke(false, responses);
-            }           
+                OnUploaded?.Invoke(false, responses);
+            }
+
+            OnUploaded = null;
 
         });
     }

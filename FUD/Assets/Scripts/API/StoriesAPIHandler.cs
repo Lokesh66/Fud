@@ -27,7 +27,7 @@ public partial class APIHandler
         }));
     }
 
-    public void CreateStory(string title, string subTitle, string description,int genreId, Action<bool, string> action)
+    public void CreateStory(string title, string subTitle, string description,int genreId, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -38,6 +38,11 @@ public partial class APIHandler
         parameters.Add("description", description);
 
         parameters.Add("genre_id", genreId);
+
+        if (multimediaModels.Count > 0)
+        {
+            parameters.Add("port_multi_media", multimediaModels);
+        }
 
         gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_STORY, true, parameters, (status, response) => {
 
@@ -88,11 +93,14 @@ public partial class APIHandler
 
         parameters.Add("genre_id", roleId);
 
-        //parameters.Add("port_multi_media", multimediaModels);
+        if (multimediaModels.Count > 0)
+        {
+            parameters.Add("port_multi_media", multimediaModels);
+        }
 
-        List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
+        /*List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
 
-        string jsonData = JsonUtility.ToJson(portMultimedias);
+        string jsonData = JsonUtility.ToJson(portMultimedias);*/
 
         gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_STORY_VERSION, true, parameters, (status, response) => {
 
