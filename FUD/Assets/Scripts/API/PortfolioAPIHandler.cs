@@ -16,7 +16,10 @@ public partial class APIHandler
 
         parameters.Add("description", description);
 
-        //parameters.Add("port_multi_media", multimediaModels);
+        if (multimediaModels.Count > 0)
+        {
+            parameters.Add("port_multi_media", multimediaModels);
+        }
 
         gameManager.StartCoroutine(PostRequest(APIConstants.USER_PORTFOLIO, true, parameters, (status, response) => {
 

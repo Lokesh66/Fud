@@ -60,6 +60,8 @@ public class StoryCreationView : MonoBehaviour
 
     System.Action OnClose;
 
+    string errorMessage;
+
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
 
     private bool isShowingGalleryPanel = false;
@@ -112,26 +114,45 @@ public class StoryCreationView : MonoBehaviour
 
     public void OnSubmitAction()
     {
-        string selectedGenreText = dropdown.options[dropdown.value].text;
+        if (!CanCallAPI())
+        {
 
-        Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
+        }
+        else
+        {
+            string selectedGenreText = dropdown.options[dropdown.value].text;
 
-        GameManager.Instance.apiHandler.CreateStory(storyTitleField.text, subTitleField.text, descriptionField.text, selectedGenre.id, uploadedDict, (status, response) => {
+            Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
 
-            if (status)
+           /* Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+            kvp.Add("content_id", 1);
+
+            kvp.Add("content_url", "https://fud-user-1.s3.ap-south-1.amazonaws.com/04041934-32fa-4bcd-8946-692775222291.JPG");
+
+            kvp.Add("media_type", "image");
+
+            uploadedDict.Add(kvp);*/
+
+            GameManager.Instance.apiHandler.CreateStory(storyTitleField.text, subTitleField.text, descriptionField.text, selectedGenre.id, uploadedDict, (status, response) =>
             {
-                Reset();
 
-                uploadedDict.Clear();
+                if (status)
+                {
+                    Reset();
 
-                OnBackButtonAction();
+                    uploadedDict.Clear();
 
-                Debug.Log("Story Uploaded Successfully");
-            }
-            else {
-                Debug.LogError("Story Updation Failed");
-            }
-        });
+                    OnBackButtonAction();
+
+                    Debug.Log("Story Uploaded Successfully");
+                }
+                else
+                {
+                    Debug.LogError("Story Updation Failed");
+                }
+            });
+        }
     }
 
     public void OnMediaButtonAction(int mediaType)
@@ -152,6 +173,15 @@ public class StoryCreationView : MonoBehaviour
                 GalleryManager.Instance.GetVideosFromGallery(OnVideosUploaded);
                 break;
         }
+    }
+
+    bool CanCallAPI()
+    {
+        /*if (string.IsNullOrEmpty(storyTitleField.text))
+        { 
+        
+        }*/
+        return true;
     }
 
     void Reset()

@@ -28,10 +28,7 @@ public class HomeStoriesPanel : MonoBehaviour
 
     void SetView()
     {
-        foreach (Transform child in parentContent)
-        {
-            GameObject.Destroy(child.gameObject);
-        }
+        parentContent.DestroyChildrens();
 
         if (storiesList == null)
         {

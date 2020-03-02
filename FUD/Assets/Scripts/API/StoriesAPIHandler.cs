@@ -41,7 +41,7 @@ public partial class APIHandler
 
         if (multimediaModels.Count > 0)
         {
-            parameters.Add("port_multi_media", multimediaModels);
+            parameters.Add("pro_multi_media", multimediaModels);
         }
 
         gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_STORY, true, parameters, (status, response) => {
@@ -66,7 +66,7 @@ public partial class APIHandler
 
         if (multimediaModels.Count > 0)
         {
-            parameters.Add("port_multi_media", multimediaModels);
+            parameters.Add("pro_multi_media", multimediaModels);
         }
 
         gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_STORY, true, parameters, (status, response) => {
@@ -99,7 +99,7 @@ public partial class APIHandler
 
         if (multimediaModels.Count > 0)
         {
-            parameters.Add("port_multi_media", multimediaModels);
+            parameters.Add("pro_multi_media", multimediaModels);
         }
 
         /*List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
@@ -130,7 +130,7 @@ public partial class APIHandler
 
         if (multimediaModels.Count > 0)
         {
-            parameters.Add("port_multi_media", multimediaModels);
+            parameters.Add("pro_multi_media", multimediaModels);
         }
 
         /*List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();

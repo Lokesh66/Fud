@@ -33,6 +33,13 @@ public class HomeCell : MonoBehaviour
                 titleText.text = string.Empty;
                 break;
             case HomeCellType.STORY:
+                addNewContent.SetActive(false);
+                titleText.text = title;
+                /*GameManager.Instance.downLoadManager.DownloadImage(model.PortfolioMedia[0].content_url, (sprite) =>
+                {
+                    iconImage.sprite = sprite;
+                });*/
+                break;
             case HomeCellType.AUDITION:
                 addNewContent.SetActive(false);
                 titleText.text = title;
