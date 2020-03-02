@@ -69,6 +69,9 @@ public partial class APIHandler
                 File.WriteAllText(userFilePath, response);
 
                 UserDataObject loginResponse = JsonUtility.FromJson<UserDataObject>(response);
+
+                DataManager.Instance.UpdateUserInfo(loginResponse.data);
+
                 gameManager.apiHandler.SetToken(loginResponse.data.token);
                 action?.Invoke(true, loginResponse.data);
             }

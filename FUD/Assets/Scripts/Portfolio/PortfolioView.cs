@@ -15,6 +15,8 @@ public class PortfolioView : BaseView
 
     public TextMeshProUGUI[] buttonList;
 
+    public PortfolioBasicInfo basicInfoView;
+
     public PortfolioMediaView mediaView;
 
     public PortfolioExperianceView experianceView;
@@ -47,6 +49,8 @@ public class PortfolioView : BaseView
         ShowMedia();
 
         ShowExperianceScreen();
+
+        ShowBasicInfo();
 
         //UpdateScreen();
     }
@@ -116,9 +120,7 @@ public class PortfolioView : BaseView
 
     void ShowBasicInfo()
     {
-       /* currentObject = basicInfoView.gameObject;
-
-        basicInfoView.SetView();*/
+        basicInfoView.Load();
     }
 
     void ShowMedia()
