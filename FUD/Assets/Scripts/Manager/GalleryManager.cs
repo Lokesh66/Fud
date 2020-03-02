@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class GalleryManager : MonoBehaviour
@@ -9,6 +10,8 @@ public class GalleryManager : MonoBehaviour
     Action<bool, List<string>> OnUploaded;
 
     private List<string> uploadedURLs = new List<string>();
+
+    List<string> loadedFiles;
 
     private int selectedImagesCount;
 
@@ -46,6 +49,8 @@ public class GalleryManager : MonoBehaviour
             if (imagesPath != null && imagesPath.Length > 0)
             {
                 uploadedURLs.Clear();
+
+                loadedFiles = imagesPath.ToList();
 
                 this.OnUploaded = OnUploaded;
 
@@ -201,6 +206,11 @@ public class GalleryManager : MonoBehaviour
                 
             }*/
         }
+    }
+
+    public List<string> GetLoadedFiles()
+    {
+        return loadedFiles;
     }
 
     #endregion

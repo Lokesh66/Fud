@@ -8,6 +8,8 @@ using TMPro;
 
 public class StoryUpdateView : MonoBehaviour
 {
+    public UploadedFilesHandler filesHandler;
+
     public RectTransform galleryPanel;
 
     public TMP_InputField storyTitleField;
@@ -100,8 +102,6 @@ public class StoryUpdateView : MonoBehaviour
 
         Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
 
-        Debug.Log("Genre Id = " + selectedGenre.id);
-
         GameManager.Instance.apiHandler.UpdateStory(storyTitleField.text, subTitleField.text, descriptionField.text, selectedGenre.id, uploadedDict, (status, response) => {
 
             if (status)
@@ -163,6 +163,8 @@ public class StoryUpdateView : MonoBehaviour
         if (status)
         {
             this.imageUrls = imageUrls;
+
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles());
 
             for (int i = 0; i < imageUrls.Count; i++)
             {
