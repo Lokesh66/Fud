@@ -80,12 +80,9 @@ public class StoryDetailsController : MonoBehaviour
     System.Action BackAction;
 
     public void Load(object storyId, System.Action onBackAction)
-    {
-        Debug.Log("Load : "+storyId);
+    {        
         GameManager.Instance.apiHandler.GetStoryDetails((int)storyId, (status, response) =>
         {
-            Debug.Log("status = " + status);
-
             if (status)
             {
                 StoryDetailsResponseModel responseModel = JsonUtility.FromJson<StoryDetailsResponseModel>(response);
@@ -119,11 +116,6 @@ public class StoryDetailsController : MonoBehaviour
         currentDetailsModel = detailsModel;
     }
 
-    void SetData()
-    { 
-        
-    }
-
     public void OnBackButtonAction()
     {
         creationPanelParent.gameObject.SetActive(false);
@@ -131,6 +123,8 @@ public class StoryDetailsController : MonoBehaviour
         Destroy(currentCreateScreen);
 
         BackAction?.Invoke();
+
+        ResetData();
 
         BackAction = null;
     }
@@ -264,7 +258,7 @@ public class StoryDetailsController : MonoBehaviour
     {
         currentObject?.SetActive(false);
 
-        currentCreateScreen = storyVersionObject;
+        //currentCreateScreen = storyVersionObject;
 
         storyVersionObject.GetComponent<CreateStoryVersion>().Load(versionsView);
     }
@@ -305,5 +299,23 @@ public class StoryDetailsController : MonoBehaviour
         currentDetailsModel.TeamMembers.Add(teamModel);
 
         teamsView.Refresh(teamModel);
+    }
+
+    void ResetData()
+    {
+        currentDetailsModel = null;
+
+        if (currentCreateScreen != null)
+        {
+            Destroy(currentCreateScreen);
+        }
+
+        currentObject?.SetActive(false);
+
+        currentObject = null;
+
+        buttonList[(int)currentType].color = disabledColor;
+
+        currentType = EScreenSubType.Details;
     }
 }
