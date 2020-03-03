@@ -31,6 +31,7 @@ public class CreateAuditionView : MonoBehaviour
     public Transform parentPanel;
 
     public TMP_Dropdown typeDropdown;
+    public TMP_InputField membersText;
     public TMP_InputField topicText;
     public TMP_InputField titleText;
     public TMP_InputField payAmountText;
@@ -47,6 +48,8 @@ public class CreateAuditionView : MonoBehaviour
 
     string defaultDateText = "Select Date";
 
+    List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
+
     System.Action<bool> backAction;
     public void SetView(int projectId, System.Action<bool> action)
     {
@@ -54,6 +57,19 @@ public class CreateAuditionView : MonoBehaviour
         parentPanel.gameObject.SetActive(true);
         backAction = action;
         isNewAuditionCreated = false;
+    }
+
+    public void OnAuditionTypeSelectedAction()
+    {
+        Debug.Log(typeDropdown.captionText.text);
+        if (typeDropdown.captionText.text.ToLower().Equals("group"))
+        {
+            membersText.gameObject.SetActive(true);
+        }
+        else
+        {
+            membersText.gameObject.SetActive(false);
+        }
     }
 
     public void OnDateSelectAction()
@@ -76,6 +92,41 @@ public class CreateAuditionView : MonoBehaviour
         backAction?.Invoke(isNewAuditionCreated);
         backAction = null;
     }
+
+    public void UploadImageAction()
+    {
+        GalleryManager.Instance.GetImageFromGallaery(OnImagesUploaded);
+    }
+
+    void OnImagesUploaded(bool status, List<string> imageUrl)
+    {
+        if (status)
+        {
+            if(imageUrl!=null && imageUrl.Count > 0)
+            {
+                uploadedDict.Clear();
+
+                Dictionary<string, object> galleryImageDict = new Dictionary<string, object>();
+
+                galleryImageDict.Add("content_id", 1);
+
+                galleryImageDict.Add("content_url", imageUrl);
+
+                galleryImageDict.Add("media_type", "image");
+
+                uploadedDict.Add(galleryImageDict);
+            }
+        }
+        else
+        {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = status.ToString() + imageUrl;
+
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+        }
+    }
+
     public void CreateAuditionButtonAction()
     {
         string errorMessage = string.Empty;
@@ -85,6 +136,10 @@ public class CreateAuditionView : MonoBehaviour
         {
             errorMessage = "Audition type should not be empty";
             //ShowErrorMessage("Audition type should not be empty");
+        }else if (typeDropdown.captionText.text.ToLower().Equals("group") &&
+            string.IsNullOrEmpty(membersText.text))
+        {
+            errorMessage = "Group Audition members should not be empty";
         }
         else if (string.IsNullOrEmpty(topicText.text))
         {
@@ -144,6 +199,13 @@ public class CreateAuditionView : MonoBehaviour
         parameters.Add("age_from", Convert.ToInt16(ageFromText.text));
         parameters.Add("age_to", Convert.ToInt16(ageToText.text));
         parameters.Add("type", typeDropdown.captionText.text.ToLower());// "group","individual");
+        if (typeDropdown.captionText.text.ToLower().Equals("group"))
+        {
+            parameters.Add("no_of_persons_req", membersText.text);
+        }
+        if (uploadedDict.Count > 0) {
+            parameters.Add("image_url", uploadedDict);
+        }
         GameManager.Instance.apiHandler.CreateAudition(parameters, (status, response) => {
             Debug.Log("OnCreateAudition : "+response);
             if (status)

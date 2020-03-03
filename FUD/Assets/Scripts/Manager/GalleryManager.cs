@@ -39,6 +39,24 @@ public class GalleryManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    public void GetImageFromGallaery(Action<bool, List<string>> OnImageUploaded)
+    {
+        NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((imagesPath) => {
+            if (imagesPath != null)
+            {
+                uploadedURLs.Clear();
+
+                this.OnUploaded = OnImageUploaded;
+
+                UploadFile(imagesPath, EMediaType.Image);
+            }
+            else
+            {
+                OnUploaded?.Invoke(false, null);
+            }
+        }, "Select a PNG image");
+
+    }
     public void PickImages(Action<bool, List<string>> OnUploaded)
     {
         NativeGallery.Permission permission = NativeGallery.GetImagesFromGallery((imagesPath) =>
