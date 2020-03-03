@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.IO;
 
 public partial class APIHandler
 {
@@ -196,21 +197,41 @@ public partial class APIHandler
 
         //parameters.Add("role_id", infoModel.actor);
 
+        UserData user = DataManager.Instance.userInfo;
+
         parameters.Add("agree_terms_condition", 1);
+        if(!infoModel.mail.Equals(user.email_id))
+            parameters.Add("email_id", infoModel.mail);
 
-        parameters.Add("email_id", infoModel.mail);
-
-        parameters.Add("name", infoModel.name);
-        parameters.Add("dob", infoModel.dob);
-        parameters.Add("maa_membership_id", infoModel.memberId);
-        parameters.Add("current_location", infoModel.currentLocation);
-        parameters.Add("native_location", infoModel.nativeLocation);
+        if (!infoModel.name.Equals(user.name))
+            parameters.Add("name", infoModel.name);
+        if (infoModel.dob != user.dob)
+            parameters.Add("dob", infoModel.dob);
+        if (!infoModel.memberId.Equals(user.maa_membership_id))
+            parameters.Add("maa_membership_id", infoModel.memberId);
+        if (!infoModel.currentLocation.Equals(user.current_location))
+            parameters.Add("current_location", infoModel.currentLocation);
+        if (!infoModel.nativeLocation.Equals(user.native_location))
+            parameters.Add("native_location", infoModel.nativeLocation);
 
         gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_USER_PROFILE, true, parameters, (bool status, string response) =>
         {
             Debug.Log("UpdateProfileInfo : "+response);
             if (status)
             {
+                string userFilePath = APIConstants.PERSISTENT_PATH + "UserInfo";
+
+                string fileName = Path.GetDirectoryName(userFilePath);
+
+                if (!Directory.Exists(userFilePath))
+                {
+                    Directory.CreateDirectory(userFilePath);
+                }
+
+                userFilePath += "/Userinfo";
+
+                File.WriteAllText(userFilePath, response);
+
                 UserDataObject responseModel = JsonUtility.FromJson<UserDataObject>(response);
 
                 action?.Invoke(true, responseModel.data);

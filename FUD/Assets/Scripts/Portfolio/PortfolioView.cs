@@ -162,7 +162,15 @@ public class PortfolioView : BaseView
 
     public void OnEditButtonAction()
     {
-        infoView.Load();     
+        infoView.Load(OnPortifolioClose);     
+    }
+
+    void OnPortifolioClose(bool isDataUpdated)
+    {
+        if (isDataUpdated)
+        {
+            ShowBasicInfo();
+        }
     }
 
     public void OnCreateButtonAction()

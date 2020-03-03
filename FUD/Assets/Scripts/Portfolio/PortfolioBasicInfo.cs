@@ -19,7 +19,7 @@ public class PortfolioBasicInfo : MonoBehaviour
         SetView();
     }
 
-    void SetView()
+    public void SetView()
     {
         UserData data = DataManager.Instance.userInfo;
 

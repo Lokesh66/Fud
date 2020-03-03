@@ -20,9 +20,16 @@ public class ProfileInfoView : MonoBehaviour
 
     DateTime dateOfBirth;
 
-    public void Load()
+    Action<bool> OnCloseAction;
+
+    bool isUserDataUpdated = false;
+
+    public void Load(Action<bool> action)
     {
+        isUserDataUpdated = false;
+        OnCloseAction = action;
         SetView();
+        dateOfBirth = DateTime.Now;
 
         gameObject.SetActive(true);
     }
@@ -46,6 +53,11 @@ public class ProfileInfoView : MonoBehaviour
             {
                 dobText.text = data.dob;
                 dobText.color = Color.white;
+                string[] date = dobText.text.Split('-');
+                dateOfBirth = DateTime.MinValue;
+                dateOfBirth.AddYears(Convert.ToInt16(date[0]));
+                dateOfBirth.AddMonths(Convert.ToInt16(date[1]));
+                dateOfBirth.AddDays(Convert.ToInt16(date[2]));
             }
         }
     }
@@ -107,12 +119,13 @@ public class ProfileInfoView : MonoBehaviour
             AlertModel alertModel = new AlertModel();
             if (status)
             {
-                alertModel.message = "User data updated successfully";
-                alertModel.okayButtonAction = OnBackButtonAction;
+                isUserDataUpdated = true;
                 if(model != null)
                 {
                     DataManager.Instance.UpdateUserInfo(model);
                 }
+                alertModel.message = "User data updated successfully";
+                alertModel.okayButtonAction = OnBackButtonAction;
             }
             else
             {
@@ -125,5 +138,6 @@ public class ProfileInfoView : MonoBehaviour
     public void OnBackButtonAction()
     {
         gameObject.SetActive(false);
+        OnCloseAction?.Invoke(isUserDataUpdated);
     }
 }
