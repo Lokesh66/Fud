@@ -74,16 +74,9 @@ public class CreateAuditionView : MonoBehaviour
 
     public void OnDateSelectAction()
     {
-        DatePicker.Instance.GetDate(DateTime.Now, DateTime.MaxValue, (dateString) =>
+        DatePicker.Instance.GetDate(DateTime.Now, DateTime.Now, DateTime.MaxValue, (date, dateString) =>
         {
-            if (string.IsNullOrEmpty(dateString))
-            {
-                endDateText.text = defaultDateText;
-            }
-            else
-            {
-                endDateText.text = dateString;
-            }
+            endDateText.text = string.IsNullOrEmpty(dateString) ? defaultDateText : dateString;
         });
     }
     public void BackButtonAction()

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 using TMPro;
 
@@ -18,6 +17,8 @@ public class ProfileInfoView : MonoBehaviour
     public TMP_InputField nativeLocationField;
 
     private string defaultDobText = "Date of Birth";
+
+    DateTime dateOfBirth;
 
     public void Load()
     {
@@ -51,11 +52,12 @@ public class ProfileInfoView : MonoBehaviour
 
     public void DateOfBirthButtonAction()
     {
-        DatePicker.Instance.GetDate(System.DateTime.MinValue, System.DateTime.Now, (dateString) => {
+        DatePicker.Instance.GetDate(dateOfBirth, DateTime.MinValue, DateTime.Now, (date, dateString) => {
             if (!string.IsNullOrEmpty(dateString))
             {
                 dobText.text = dateString;
                 dobText.color = Color.white;
+                dateOfBirth = date;
             }
             else
             {

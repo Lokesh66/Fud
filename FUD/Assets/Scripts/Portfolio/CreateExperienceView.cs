@@ -10,12 +10,15 @@ public class CreateExperienceView : MonoBehaviour
 
     public TMP_Dropdown roleDropDown;
 
-    public TMP_InputField startDate;
+    public TMP_Text startDateText;
 
-    public TMP_InputField endDate;
+    public TMP_Text endDateText;
 
     public TMP_InputField descriptionField;
 
+    DateTime startDate;
+    DateTime endDate;
+    string dateDefaultText = "Select Date";
 
     string contentUrl = string.Empty;
 
@@ -25,10 +28,12 @@ public class CreateExperienceView : MonoBehaviour
 
     List<IndustryModel> industryModels;
 
-
     public void Load(PortfolioView portfolioView)
     {
         this.portfolioView = portfolioView;
+
+        startDate = DateTime.MinValue;
+        endDate = DateTime.Now;
 
         LoadRoles();
 
@@ -95,9 +100,9 @@ public class CreateExperienceView : MonoBehaviour
 
         experianceModel.industryId = selectedIndustry.id ;
 
-        experianceModel.startDate = string.Format("{0:yyyy/MM/dd} {1:hh:mm:ss}", System.DateTime.Now, System.DateTime.Now);
+        experianceModel.startDate = startDateText.text;
 
-        experianceModel.endDate = string.Format("{0:yyyy/MM/dd} {1:hh:mm:ss}", System.DateTime.Now, System.DateTime.Now);
+        experianceModel.endDate = endDateText.text;
 
         PortMultimediaModels multimediaModels = new PortMultimediaModels();
 
@@ -134,6 +139,38 @@ public class CreateExperienceView : MonoBehaviour
         portfolioView.OnRemoveLastSubView();
 
         Destroy(gameObject);
+    }
+
+    public void OnStartDateSelectedAction()
+    {
+        DatePicker.Instance.GetDate(startDate == DateTime.MinValue ? DateTime.Now : startDate, DateTime.MinValue, endDate, (date, value) =>
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                startDateText.text = value;
+                startDate = date;
+            }
+            else
+            {
+                startDateText.text = dateDefaultText;
+            }
+        });
+    }
+
+    public void OnEndDateSelectedAction()
+    {
+        DatePicker.Instance.GetDate(endDate, startDate, DateTime.Now, (date, value) =>
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                endDateText.text = value;
+                endDate = date;
+            }
+            else
+            {
+                endDateText.text = dateDefaultText;
+            }
+        });
     }
 }
 

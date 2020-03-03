@@ -42,21 +42,21 @@ public class DatePicker : MonoBehaviour
     private DateTime startDate;
     public DateTime endDate;
 
-    System.Action<string> OnSelectDate;
+    System.Action<DateTime, string> OnSelectDate;
 
     private void Awake()
     {
         DontDestroyOnLoad(this);
     }
 
-    public void GetDate(DateTime _startDate, DateTime _endDate, System.Action<string> action)
+    public void GetDate(DateTime _selectedDate, DateTime _startDate, DateTime _endDate, System.Action<DateTime, string> action)
     {
         OnSelectDate = action;
         startDate = _startDate;
         endDate = _endDate;
         parentPanel.SetActive(true);
-        _dateTime = DateTime.Now;
-        selectedDate = _dateTime;
+        selectedDate = _selectedDate;
+        _dateTime = selectedDate;
         CreateCalendar();
     }
 
@@ -147,7 +147,7 @@ public class DatePicker : MonoBehaviour
     void ClosePanel(string result = "")
     {
         parentPanel.SetActive(false);
-        OnSelectDate?.Invoke(result);
+        OnSelectDate?.Invoke(selectedDate, result);
     }
 
     private DateTime _dateTime;
