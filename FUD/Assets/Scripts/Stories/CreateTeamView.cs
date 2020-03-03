@@ -78,13 +78,18 @@ public class CreateTeamView : MonoBehaviour
 
     public void OnButtonAction()
     {
+        if (!CanCallAPI())
+        {
+            return;
+        }
+
         string[] membersList = memberField.text.Split(',');
 
         List<string> member = new List<string>(membersList);
 
         string members = GetMemberIds(member);
 
-        GameManager.Instance.apiHandler.UpdateStoryTeam(detailsModel.id, detailsModel.title, members, (status, response) =>
+        GameManager.Instance.apiHandler.UpdateStoryTeam(detailsModel.id, teamNameField.text, members, (status, response) =>
         {
             if (status)
             {
@@ -97,6 +102,30 @@ public class CreateTeamView : MonoBehaviour
                 Destroy(gameObject);
             }
         });
+    }
+
+    bool CanCallAPI()
+    {
+        string errorMessage = string.Empty;
+
+        if (string.IsNullOrEmpty(teamNameField.text))
+        {
+            errorMessage = "Team title should not be empty";
+        }
+        else if (string.IsNullOrEmpty(memberField.text))
+        {
+            errorMessage = "Add the team members";
+        }
+
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            AlertModel alertModel = new AlertModel();
+            alertModel.message = errorMessage;
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            return false;
+        }
+
+        return true;
     }
 
     void OnSelectMember(object _selectedModel)

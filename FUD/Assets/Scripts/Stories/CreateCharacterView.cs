@@ -76,6 +76,11 @@ public class CreateCharacterView : MonoBehaviour
 
     public void OnButtonAction()
     {
+        if (!CanCallAPI())
+        {
+            return;
+        }
+
         GameManager.Instance.apiHandler.CreateCharacter(detailsModel.id, castField.text, descriptionField.text, genderLabel.text, selectedModel.id, (status, response) => {
 
             if (status)
@@ -89,6 +94,34 @@ public class CreateCharacterView : MonoBehaviour
                 Destroy(gameObject);
             }
         });
+    }
+
+    bool CanCallAPI()
+    {
+        string errorMessage = string.Empty;
+
+        if (string.IsNullOrEmpty(castField.text))
+        {
+            errorMessage = "Character name should not be empty";
+        }
+        else if (string.IsNullOrEmpty(suitableField.text))
+        {
+            errorMessage = "Suitable performer should not be empty";
+        }
+        else if (string.IsNullOrEmpty(descriptionField.text))
+        {
+            errorMessage = "Story description should not be empty";
+        }
+
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            AlertModel alertModel = new AlertModel();
+            alertModel.message = errorMessage;
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            return false;
+        }
+
+        return true;
     }
 
     void OnSelectMember(object _selectedModel)

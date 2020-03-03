@@ -98,6 +98,11 @@ public class StoryUpdateView : MonoBehaviour
 
     public void OnSubmitAction()
     {
+        if(!CanCallAPI())
+        {
+            return;
+        }
+
         string selectedGenreText = dropdown.options[dropdown.value].text;
 
         Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
@@ -105,10 +110,7 @@ public class StoryUpdateView : MonoBehaviour
         GameManager.Instance.apiHandler.UpdateStory(storyTitleField.text, subTitleField.text, descriptionField.text, selectedGenre.id, uploadedDict, (status, response) => {
 
             if (status)
-            {
-                Destroy(gameObject);
-
-                uploadedDict.Clear();
+            {                
 
                 Debug.Log("Story Uploaded Successfully");
             }
@@ -116,7 +118,58 @@ public class StoryUpdateView : MonoBehaviour
             {
                 Debug.LogError("Story Updation Failed");
             }
+
+            OnAPIResponse(status);
         });
+    }
+
+    void OnAPIResponse(bool status)
+    {
+        AlertModel alertModel = new AlertModel();
+
+        alertModel.message = status ? "Story Updation Success" : "Something went wrong, please try again.";
+
+        if (status)
+        {
+            alertModel.okayButtonAction = OnSuccessResponse;
+        }
+
+        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+    }
+
+    void OnSuccessResponse()
+    {
+        Destroy(gameObject);
+
+        uploadedDict.Clear();
+    }
+
+    bool CanCallAPI()
+    {
+        string errorMessage = string.Empty;
+
+        if (string.IsNullOrEmpty(storyTitleField.text))
+        {
+            errorMessage = "Story title should not be empty";
+        }
+        else if (string.IsNullOrEmpty(subTitleField.text))
+        {
+            errorMessage = "Story sub title should not be empty";
+        }
+        else if (string.IsNullOrEmpty(descriptionField.text))
+        {
+            errorMessage = "Story description should not be empty";
+        }
+
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            AlertModel alertModel = new AlertModel();
+            alertModel.message = errorMessage;
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            return false;
+        }
+
+        return true;
     }
 
     public void OnScreenShotAction()

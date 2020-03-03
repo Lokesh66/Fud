@@ -185,6 +185,32 @@ public partial class APIHandler
         }));
     }
 
+    public void GetPortfolioPosts(Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("status", 0);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.GET_PORTFOLIO_POSTS, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void UpdatePortfolioPostStatus(int postId, string postStatus, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("id", postId);
+
+        parameters.Add("status", postStatus);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.PORTFOLIO_SHARE, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
     public void UpdateProfileInfo(ProfileInfoModel infoModel, Action<bool, UserData> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -359,6 +385,42 @@ public class ProfileInfoModel
     public string memberId;
     public string currentLocation;
     public string nativeLocation;
+}
+
+[Serializable]
+public class PortfolioMediaModel
+{
+    public int id;
+    public int user_id;
+    public string title;
+    public int status;
+    public object likes;
+    public string description;
+    public DateTime created_date_time;
+    public DateTime updatedAt;
+    public List<object> PortfolioMedia;
+}
+
+[Serializable]
+public class PortfolioActivityModel
+{
+    public int id;
+    public int user_id;
+    public int shared_to;
+    public string status;
+    public string reciever_status;
+    public int portfolio_id;
+    public int access_modifier;
+    public string comments;
+    public DateTime created_date_time;
+    public DateTime updatedAt;
+    public PortfolioMediaModel Portfolio;
+}
+
+[Serializable]
+public class PortfolioPostResponse : BaseResponse
+{
+    public List<PortfolioActivityModel> data;
 }
 
 

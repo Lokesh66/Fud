@@ -83,8 +83,8 @@ public class PortfolioMediaDetails : MonoBehaviour
     }
 
     void OnShareButtonAction()
-    { 
-    
+    {
+        mediaView.OnShareButtonAction(portfolioModel);
     }
 
     void Reset()

@@ -144,6 +144,10 @@ public class UpdatePortfolioView : MonoBehaviour
 
     public void OnSaveButtonAction()
     {
+        if (!CanCallAPI())
+        {
+            return;
+        }   
         GameManager.Instance.apiHandler.UpdatePortfolio(titleField.text, descriptionField.text, portfolioModel.id, uploadedDict, (status, response) => {
 
             if (status)
@@ -151,6 +155,30 @@ public class UpdatePortfolioView : MonoBehaviour
                 OnBackButtonAction();
             }
         });
+    }
+
+    bool CanCallAPI()
+    {
+        string errorMessage = string.Empty;
+
+        if (string.IsNullOrEmpty(titleField.text))
+        {
+            errorMessage = "Title should not be empty";
+        }
+        else if (string.IsNullOrEmpty(descriptionField.text))
+        {
+            errorMessage = "Description should not be empty";
+        }
+
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            AlertModel alertModel = new AlertModel();
+            alertModel.message = errorMessage;
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            return false;
+        }
+
+        return true;
     }
 
     void ShowGalleryPanel()

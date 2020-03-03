@@ -13,46 +13,41 @@ public class PortfolioView : BaseView
         Experiance
     }
 
+    public enum EPortfolioTab
+    {
+        Portfolio,
+        Activities
+    }
+
     public TextMeshProUGUI[] buttonList;
 
-    public PortfolioBasicInfo basicInfoView;
-
-    public PortfolioMediaView mediaView;
-
-    public PortfolioExperianceView experianceView;
-
-    public ProfileInfoView infoView;
-
-    public GameObject createPortfolioCache;
+    public RectTransform parentTrans;
 
     public GameObject createPanel;
-
-    public RectTransform parentTrans;
 
     public Color selectedColor;
 
     public Color disabledColor;
 
 
+    public PortfolioHandler portfolioHandler;
+    
+    public PortfolioActivitiesView activitiesView;
+
+
+    public GameObject createPortfolioCache;
+
     public GameObject createWorkExperianceCache;
 
 
-    private GameObject currentObject;
-
-    private ETabType currentTab;
+    private EPortfolioTab currentTab;
 
 
     protected override void EnableView()
     {
         base.EnableView();
 
-        ShowMedia();
-
-        ShowExperianceScreen();
-
-        ShowBasicInfo();
-
-        //UpdateScreen();
+        OnPortfolioButtonAction();
     }
 
     protected override void OnAddSubView(GameObject addedObject)
@@ -74,75 +69,51 @@ public class PortfolioView : BaseView
         base.OnExitScreen();
     }
 
+    #region Button Actions
 
-    public void OnTabAction(int tabIndex)
+    public void OnPortfolioButtonAction()
     {
-        ETabType clickedTab = (ETabType)tabIndex;
+        currentTab = EPortfolioTab.Portfolio;
 
-        if (currentTab != clickedTab)
-        {
-            buttonList[(int)currentTab].color = disabledColor;
+        activitiesView.gameObject.SetActive(false);
 
-            currentTab = clickedTab;
+        portfolioHandler.Load();
 
-            currentObject?.SetActive(false);
-        }
+        buttonList[0].color = selectedColor;
 
-        UpdateScreen();
+        buttonList[1].color = disabledColor;
     }
 
-    void OnCreateAction()
+    public void OnActivitiesTabAction()
     {
-        createPanel.SetActive(false);
+        buttonList[0].color = disabledColor;
 
-        ShowCreatePortfolioScreen();
+        buttonList[1].color = selectedColor;
+
+        currentTab = EPortfolioTab.Activities;
+
+        portfolioHandler.gameObject.SetActive(false);
+
+        ShowActivitiesScreen();
     }
 
-    void UpdateScreen()
+    #endregion
+
+    void ShowActivitiesScreen()
     {
-        buttonList[(int)currentTab].color = selectedColor;
-
-        switch (currentTab)
-        {
-            case ETabType.BasicInfo:
-                ShowBasicInfo();
-                break;
-            case ETabType.Media:
-                ShowMedia();
-                break;
-            case ETabType.Experiance:
-                ShowExperianceScreen();
-                break;
-        }
-
-        currentObject.SetActive(true);
+        activitiesView.EnableView();
     }
 
-    void ShowBasicInfo()
+    public void OnCreateButtonAction()
     {
-        basicInfoView.Load();
+        createPanel.SetActive(true);
+
+        //infoView.gameObject.SetActive(true);
     }
-
-    void ShowMedia()
-    {
-        currentObject = mediaView.gameObject;
-
-        mediaView.Load();
-    }
-
-    void ShowExperianceScreen()
-    {
-        currentObject = experianceView.gameObject;
-
-        experianceView.Load(this);
-    }
- 
 
     void ShowCreatePortfolioScreen()
     {
         GameObject creationObject = Instantiate(createPortfolioCache, parentTrans);
-
-        OnAddSubView(creationObject);
 
         gameObject.SetActive(false);
 
@@ -158,26 +129,6 @@ public class PortfolioView : BaseView
         createPanel.SetActive(false);
 
         creationObject.GetComponent<CreateExperienceView>().Load(this);
-    }
-
-    public void OnEditButtonAction()
-    {
-        infoView.Load(OnPortifolioClose);     
-    }
-
-    void OnPortifolioClose(bool isDataUpdated)
-    {
-        if (isDataUpdated)
-        {
-            ShowBasicInfo();
-        }
-    }
-
-    public void OnCreateButtonAction()
-    {
-        createPanel.SetActive(true);
-
-        //infoView.gameObject.SetActive(true);
     }
 
     public void OnDismissCreation()

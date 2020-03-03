@@ -91,12 +91,14 @@ public class UpdateStoryVersionView : MonoBehaviour
     }
 
     public void OnSubmitAction()
-    {        
+    {
+        if (!CanCallAPI())
+        {
+            return;
+        }
         string selectedGenreText = roledropDown.options[roledropDown.value].text;
 
         Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
-
-        Debug.Log("Genre Id = " + selectedGenre.id);
 
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
@@ -104,17 +106,56 @@ public class UpdateStoryVersionView : MonoBehaviour
 
             if (status)
             {
-                OnBackButtonAction();
-
-                uploadedDict.Clear();
-
                 Debug.Log("Story Uploaded Successfully");
             }
             else
             {
                 Debug.LogError("Story Updation Failed");
             }
+
+            OnAPIResponse(status);
         });
+    }
+
+    bool CanCallAPI()
+    {
+        string errorMessage = string.Empty;
+
+        if (string.IsNullOrEmpty(descriptionField.text))
+        {
+            errorMessage = "Description field should not be empty";
+        }
+
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            AlertModel alertModel = new AlertModel();
+            alertModel.message = errorMessage;
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            return false;
+        }
+
+        return true;
+    }
+
+    void OnAPIResponse(bool status)
+    {
+        AlertModel alertModel = new AlertModel();
+
+        alertModel.message = status ? "Story Version updation Success" : "Something went wrong, please try again.";
+
+        if (status)
+        {
+            alertModel.okayButtonAction = OnSuccessResponse;
+        }
+
+        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+    }
+
+    void OnSuccessResponse()
+    {
+        OnBackButtonAction();
+
+        uploadedDict.Clear();
     }
 
     void Reset()

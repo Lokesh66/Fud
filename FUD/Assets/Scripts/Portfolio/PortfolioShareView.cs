@@ -77,9 +77,12 @@ public class PortfolioShareView : MonoBehaviour
 
     void OnSelectMember(object id)
     {
-        int userId = (int)id;
+        if (!CanCallAPI())
+        {
+            return;
+        }
 
-        string storyTitle = StoryDetailsController.Instance.GetStoryTitle();
+        int userId = (int)id;
 
         GameManager.Instance.apiHandler.PostPortfolio(currentModel.id, commentField.text, userId, (status, response) => {
 
@@ -90,6 +93,26 @@ public class PortfolioShareView : MonoBehaviour
                 OnBackAction();
             }
         });
+    }
+
+    bool CanCallAPI()
+    {
+        string errorMessage = string.Empty;
+
+        if (string.IsNullOrEmpty(commentField.text))
+        {
+            errorMessage = "Please add the comment";
+        }
+
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            AlertModel alertModel = new AlertModel();
+            alertModel.message = errorMessage;
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            return false;
+        }
+
+        return true;
     }
 
     public void OnBackAction()

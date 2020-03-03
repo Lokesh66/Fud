@@ -74,4 +74,6 @@ public class APIConstants
 
     public const string PORTFOLIO_SHARE = BASE_URL + "v1/sharePortfolio/";
 
+    public const string GET_PORTFOLIO_POSTS = BASE_URL + "v1/searchSharedPortfolio";
+
 }

@@ -11,13 +11,13 @@ public class PortfolioExperianceView : MonoBehaviour
     public PortfolioExperienceDetails experienceDetails;
 
 
-    private PortfolioView portfolioView;
+    private PortfolioHandler portfolioHandler;
 
     List<WorkExperianceModel> experianceModels;
 
-    public void Load(PortfolioView portfolioView)
+    public void Load(PortfolioHandler portfolioHandler)
     {
-        this.portfolioView = portfolioView;
+        this.portfolioHandler = portfolioHandler;
 
         SetExperianceModels();
     }

@@ -97,6 +97,10 @@ public class UpdateTeamView : MonoBehaviour
 
     public void OnButtonAction()
     {
+        if (!CanCallAPI())
+        {
+            return;
+        }
         string[] membersList = memberField.text.Split(',');
 
         List<string> member = new List<string>(membersList);
@@ -116,6 +120,30 @@ public class UpdateTeamView : MonoBehaviour
                 Destroy(gameObject);
             }
         });
+    }
+
+    bool CanCallAPI()
+    {
+        string errorMessage = string.Empty;
+
+        if (string.IsNullOrEmpty(teamNameField.text))
+        {
+            errorMessage = "Team title should not be empty";
+        }
+        else if (string.IsNullOrEmpty(memberField.text))
+        {
+            errorMessage = "Add the team members";
+        }
+
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            AlertModel alertModel = new AlertModel();
+            alertModel.message = errorMessage;
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            return false;
+        }
+
+        return true;
     }
 
     void OnSelectMember(object _selectedModel)

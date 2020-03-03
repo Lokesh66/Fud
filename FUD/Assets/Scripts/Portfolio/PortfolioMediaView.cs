@@ -11,6 +11,9 @@ public class PortfolioMediaView : MonoBehaviour
 
     public PortfolioMediaDetails mediaDetailsView;
 
+    public PortfolioShareView shareView;
+
+    PortfolioModel selectedModel;
 
     List<PortfolioModel> portfolioModels;
     public void Load()
@@ -38,6 +41,11 @@ public class PortfolioMediaView : MonoBehaviour
     void OnCellButtonAction(PortfolioModel portfolioModel)
     {
         mediaDetailsView.Load(portfolioModel, this);
+    }
+
+    public void OnShareButtonAction(PortfolioModel portfolioModel)
+    {
+        shareView.Load(portfolioModel);
     }
 
     public void RemovePortfolio(PortfolioModel portfolioModel)

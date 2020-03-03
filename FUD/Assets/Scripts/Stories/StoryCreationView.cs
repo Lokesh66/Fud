@@ -116,7 +116,7 @@ public class StoryCreationView : MonoBehaviour
     {
         if (!CanCallAPI())
         {
-
+            return;
         }
         else
         {
@@ -139,20 +139,39 @@ public class StoryCreationView : MonoBehaviour
 
                 if (status)
                 {
-                    Reset();
-
-                    uploadedDict.Clear();
-
-                    OnBackButtonAction();
-
                     Debug.Log("Story Uploaded Successfully");
                 }
                 else
                 {
                     Debug.LogError("Story Updation Failed");
                 }
+
+                OnAPIResponse(status);
             });
         }
+    }
+
+    void OnAPIResponse(bool status)
+    {
+        AlertModel alertModel = new AlertModel();
+
+        alertModel.message = status ? "Story Creation Success" : "Something went wrong, please try again.";
+
+        if (status)
+        {
+            alertModel.okayButtonAction = OnSuccessResponse;
+        }
+
+        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+    }
+
+    void OnSuccessResponse()
+    {
+        Reset();
+
+        uploadedDict.Clear();
+
+        OnBackButtonAction();
     }
 
     public void OnMediaButtonAction(int mediaType)
@@ -177,10 +196,29 @@ public class StoryCreationView : MonoBehaviour
 
     bool CanCallAPI()
     {
-        /*if (string.IsNullOrEmpty(storyTitleField.text))
-        { 
-        
-        }*/
+        string errorMessage = string.Empty;
+
+        if (string.IsNullOrEmpty(storyTitleField.text))
+        {
+            errorMessage = "Story title should not be empty";
+        }
+        else if (string.IsNullOrEmpty(subTitleField.text))
+        {
+            errorMessage = "Story sub title should not be empty";
+        }
+        else if (string.IsNullOrEmpty(descriptionField.text))
+        {
+            errorMessage = "Story description should not be empty";
+        }
+
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            AlertModel alertModel = new AlertModel();
+            alertModel.message = errorMessage;
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            return false;
+        }
+
         return true;
     }
 

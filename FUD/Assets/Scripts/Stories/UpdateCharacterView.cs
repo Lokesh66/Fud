@@ -111,6 +111,10 @@ public class UpdateCharacterView : MonoBehaviour
 
     public void OnButtonAction()
     {
+        if (!CanCallAPI())
+        {
+            return;
+        }
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
         GameManager.Instance.apiHandler.UpdateCharacter(characterModel.id, storyId, castField.text, descriptionField.text, selectedModel.id, genderLabel.text, (status, response) => {
@@ -126,6 +130,34 @@ public class UpdateCharacterView : MonoBehaviour
                 Destroy(gameObject);
             }
         });
+    }
+
+    bool CanCallAPI()
+    {
+        string errorMessage = string.Empty;
+
+        if (string.IsNullOrEmpty(castField.text))
+        {
+            errorMessage = "Character name should not be empty";
+        }
+        else if (string.IsNullOrEmpty(suitableField.text))
+        {
+            errorMessage = "Suitable performer should not be empty";
+        }
+        else if (string.IsNullOrEmpty(descriptionField.text))
+        {
+            errorMessage = "Story description should not be empty";
+        }
+
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            AlertModel alertModel = new AlertModel();
+            alertModel.message = errorMessage;
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            return false;
+        }
+
+        return true;
     }
 
     void OnSelectMember(object _selectedModel)
