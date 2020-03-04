@@ -282,7 +282,6 @@ public class StoryDetailsController : MonoBehaviour
 
         GameObject addCharacterObject = Instantiate(addCharacterCache, creationPanelParent);
 
-        //storiesController.CreateSubView(addCharacterObject);
         currentCreateScreen = addCharacterObject;
 
         addCharacterObject.GetComponent<CreateCharacterView>().SetView(currentDetailsModel, UpdataCharacters);
@@ -294,7 +293,6 @@ public class StoryDetailsController : MonoBehaviour
 
         GameObject addTeamObject = Instantiate(addTeamMemberCache, creationPanelParent);
 
-        //storiesController.CreateSubView(addTeamObject);
         currentCreateScreen = addTeamObject;
 
         addTeamObject.GetComponent<CreateTeamView>().SetView(currentDetailsModel, UpdateTeams);

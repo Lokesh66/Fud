@@ -11,7 +11,7 @@ public class GalleryManager : MonoBehaviour
 
     private List<string> uploadedURLs = new List<string>();
 
-    List<string> loadedFiles;
+    string[] loadedFiles;
 
     private int selectedImagesCount;
 
@@ -68,7 +68,7 @@ public class GalleryManager : MonoBehaviour
             {
                 uploadedURLs.Clear();
 
-                loadedFiles = imagesPath.ToList();
+                loadedFiles = imagesPath;
 
                 this.OnUploaded = OnUploaded;
 
@@ -226,7 +226,7 @@ public class GalleryManager : MonoBehaviour
         }
     }
 
-    public List<string> GetLoadedFiles()
+    public string[] GetLoadedFiles()
     {
         return loadedFiles;
     }
