@@ -213,9 +213,13 @@ public class StoryUpdateView : MonoBehaviour
 
     void OnImagesUploaded(bool status, List<string> imageUrls)
     {
+        canSupportMultipleText.text = status.ToString();
+
         if (status)
         {
             this.imageUrls = imageUrls;
+
+            statusText.text = GalleryManager.Instance.GetLoadedFiles().Count.ToString();
 
             filesHandler.Load(GalleryManager.Instance.GetLoadedFiles());
 

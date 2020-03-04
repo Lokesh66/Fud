@@ -34,6 +34,8 @@ public class UpdateCharacterView : MonoBehaviour
 
     string suitable_performer = string.Empty;
 
+    string apiResponse = string.Empty;
+
     Action<StoryCharacterModel> OnCreateCharacter;
 
 
@@ -121,15 +123,37 @@ public class UpdateCharacterView : MonoBehaviour
 
             if (status)
             {
-                UpdatedCharaterModel responseModel = JsonUtility.FromJson<UpdatedCharaterModel>(response);
-
-                StoryCharacterModel characterModel = responseModel.data;
-
-                OnCreateCharacter?.Invoke(characterModel);
-
-                Destroy(gameObject);
+                apiResponse = response;
             }
+            OnAPIResponse(status);
         });
+    }
+
+    void OnAPIResponse(bool status)
+    {
+        AlertModel alertModel = new AlertModel();
+
+        alertModel.message = status ? "Story Character Creation Success" : "Something went wrong, please try again.";
+
+        if (status)
+        {
+            alertModel.okayButtonAction = OnSuccessResponse;
+        }
+
+        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+    }
+
+    void OnSuccessResponse()
+    {
+        UpdatedCharaterModel responseModel = JsonUtility.FromJson<UpdatedCharaterModel>(apiResponse);
+
+        StoryCharacterModel characterModel = responseModel.data;
+
+        OnCreateCharacter?.Invoke(characterModel);
+
+        Destroy(gameObject);
+
+        apiResponse = string.Empty;
     }
 
     bool CanCallAPI()

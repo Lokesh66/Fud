@@ -29,6 +29,8 @@ public class CreateTeamView : MonoBehaviour
 
     string inputData = string.Empty;
 
+    string apiResponse = string.Empty;
+
 
 
     public void SetView(StoryDetailsModel detailsModel, Action<StoryTeamModel> OnAddedTeam)
@@ -93,15 +95,38 @@ public class CreateTeamView : MonoBehaviour
         {
             if (status)
             {
-                UpdatedTeamModel responseModel = JsonUtility.FromJson<UpdatedTeamModel>(response);
-
-                StoryTeamModel teamModel = responseModel.data;
-
-                OnAddedTeam?.Invoke(teamModel);
-
-                Destroy(gameObject);
+                apiResponse = response;
             }
+
+            OnAPIResponse(status);
         });
+    }
+
+    void OnAPIResponse(bool status)
+    {
+        AlertModel alertModel = new AlertModel();
+
+        alertModel.message = status ? "Story Team Creation Success" : "Something went wrong, please try again.";
+
+        if (status)
+        {
+            alertModel.okayButtonAction = OnSuccessResponse;
+        }
+
+        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+    }
+
+    void OnSuccessResponse()
+    {
+        UpdatedTeamModel responseModel = JsonUtility.FromJson<UpdatedTeamModel>(apiResponse);
+
+        StoryTeamModel teamModel = responseModel.data;
+
+        OnAddedTeam?.Invoke(teamModel);
+
+        Destroy(gameObject);
+
+        apiResponse = string.Empty;
     }
 
     bool CanCallAPI()
