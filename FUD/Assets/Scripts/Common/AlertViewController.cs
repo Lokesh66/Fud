@@ -8,6 +8,8 @@ public class AlertViewController : MonoBehaviour
 {
     public TextMeshProUGUI messageText;
 
+    public GameObject tickObject;
+
     public Button okayClick;
 
     AlertModel alertModel;
@@ -41,6 +43,8 @@ public class AlertViewController : MonoBehaviour
 public class AlertModel
 {
     public string message;
+
+    public bool canEnableTick = false;
 
     public List<string> buttonTitles;
 

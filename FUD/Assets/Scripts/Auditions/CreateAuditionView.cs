@@ -207,6 +207,7 @@ public class CreateAuditionView : MonoBehaviour
                 AlertModel alertModel = new AlertModel();
                 alertModel.message = "Audition Created Successfully";
                 alertModel.okayButtonAction = BackButtonAction;
+                alertModel.canEnableTick = true;
                 CanvasManager.Instance.alertView.ShowAlert(alertModel);
             }
             else

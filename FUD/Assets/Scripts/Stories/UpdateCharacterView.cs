@@ -133,11 +133,13 @@ public class UpdateCharacterView : MonoBehaviour
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Story Character Creation Success" : "Something went wrong, please try again.";
+        alertModel.message = status ? "Story Character Updation Success" : "Something went wrong, please try again.";
 
         if (status)
         {
             alertModel.okayButtonAction = OnSuccessResponse;
+
+            alertModel.canEnableTick = true;
         }
 
         CanvasManager.Instance.alertView.ShowAlert(alertModel);

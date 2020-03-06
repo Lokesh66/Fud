@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class ProjectAuditionsPanel : MonoBehaviour
+public class ProjectScenesPanel : MonoBehaviour
 {
     public Transform parentContent;
-    public GameObject auditionCell;
+    public GameObject sceneCell;
     public GameObject addNewButton;
     public NoDataView noData;
 
-    int projectId;
+    Project projectModel;
 
     private void OnEnable()
     {
@@ -20,21 +20,21 @@ public class ProjectAuditionsPanel : MonoBehaviour
         addNewButton.SetActive(false);
     }
 
-    public void SetData(int projectId, List<Audition> auditions)
+    public void SetData(Project projectModel, List<SceneModel> sceneModels)
     {
-        this.projectId = projectId;
+        this.projectModel = projectModel;
 
         parentContent.DestroyChildrens();
 
-        if (auditions != null && auditions.Count > 0)
+        if (sceneModels != null && sceneModels.Count > 0)
         {
             noData.gameObject.SetActive(false);
 
-            for (int i = 0; i < auditions.Count; i++)
+            for (int i = 0; i < sceneModels.Count; i++)
             {
-                GameObject auditionObject = Instantiate(auditionCell, parentContent);
+                GameObject sceneObject = Instantiate(sceneCell, parentContent);
 
-                auditionObject.GetComponent<ProjectAuditionCell>().SetView(i, auditions[i]);
+                sceneObject.GetComponent<ProjectSceneCell>().SetView(i, sceneModels[i]);
             }
         }
         else
@@ -43,9 +43,9 @@ public class ProjectAuditionsPanel : MonoBehaviour
         }
 
     }
-    public void CreateAudition()
+    public void CreateScene()
     {
-        CreateAuditionView.Instance.SetView(projectId, (isNewDataUpdated) => {
+        CreateScenesView.Instance.SetView(projectModel, (isNewDataUpdated) => {
             if (isNewDataUpdated)
             {
                 ProjectsDetailedView.Instance.Reload();
@@ -61,9 +61,9 @@ public class ProjectAuditionsPanel : MonoBehaviour
     NoDataModel GetNoDataModel()
     {
         NoDataModel model = new NoDataModel();
-        model.buttonName = "Create Audition";
-        model.subTitle = "No Audition Right now";
-        model.buttonAction = CreateAudition;
+        model.buttonName = "Create Scene";
+        model.subTitle = "No Scenes Right now";
+        model.buttonAction = CreateScene;
         return model;
     }
 }

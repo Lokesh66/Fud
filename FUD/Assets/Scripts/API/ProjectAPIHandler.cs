@@ -82,6 +82,36 @@ public partial class APIHandler
         }));
     }
 
+    public void CreateProjectScene(SceneCreationModel creationModel, List<Dictionary<string, object>> characterScenes, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("project_id", creationModel.project_id);
+
+        parameters.Add("story_id", creationModel.story_id);
+
+        parameters.Add("story_version_id", creationModel.story_version_id);
+
+        parameters.Add("start_time", creationModel.start_time);
+
+        parameters.Add("decsription", creationModel.decsription);
+
+        parameters.Add("location", creationModel.location);
+
+        parameters.Add("scene_order", creationModel.scene_order);
+
+        parameters.Add("place_type", creationModel.place_type);
+
+        parameters.Add("shoot_time", creationModel.shoot_time);
+
+        parameters.Add("scene_characters", characterScenes);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_PROJECT_SCENE, true, parameters, (status, response) =>
+        {
+            action(status, response);
+        }));
+    }
+
     public void CreateProjectCast(Dictionary<string, object> parameters, Action<bool, string> action)
     {
         gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_PROJECT_CAST, true, parameters, (status, response) => {
@@ -125,7 +155,24 @@ public class Project
     public List<StoryVersion> StoryVersions;
     public List<ProjectCast> Project_cast;
     public List<Audition> Audition;
+    public List<SceneModel> StoryScenes;
     public DateTime created_date_time;
+    public DateTime updatedAt;
+}
+
+[Serializable]
+public class SceneModel
+{
+    public int id;
+    public string place_type;
+    public string shoot_time;
+    public int story_id;
+    public int scene_order;
+    public int story_version_id;
+    public int project_id;
+    public string location;
+    public DateTime start_time;
+    public int status;
     public DateTime updatedAt;
 }
 
@@ -159,4 +206,25 @@ public class ProjectCharacter
 public class ProjectCharactersResponse : BaseResponse
 {
     public List<ProjectCharacter> data;
+}
+
+[Serializable]
+public class SceneCharacter
+{
+    public int character_id = 1;
+    public string dailogue = "Hello hero";
+}
+
+public class SceneCreationModel
+{
+    public int project_id;
+    public int story_id;
+    public int story_version_id;
+    public string place_type;
+    public string decsription;
+    public string shoot_time;
+    public int scene_order;
+    public string location;
+    public string start_time;
+    public List<SceneCharacter> scene_characters;
 }

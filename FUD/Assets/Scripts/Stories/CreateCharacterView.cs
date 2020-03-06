@@ -102,6 +102,8 @@ public class CreateCharacterView : MonoBehaviour
         if (status)
         {
             alertModel.okayButtonAction = OnSuccessResponse;
+
+            alertModel.canEnableTick = true;
         }
 
         CanvasManager.Instance.alertView.ShowAlert(alertModel);

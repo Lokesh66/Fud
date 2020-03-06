@@ -120,6 +120,7 @@ public class ProjectCreationView : MonoBehaviour
                 AlertModel alertModel = new AlertModel();
                 alertModel.message = "Project Created Successfully";
                 alertModel.okayButtonAction = BackButtonAction;
+                alertModel.canEnableTick = true;
                 CanvasManager.Instance.alertView.ShowAlert(alertModel);
             }
             else

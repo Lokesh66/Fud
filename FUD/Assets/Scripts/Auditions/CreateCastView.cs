@@ -116,6 +116,7 @@ public class CreateCastView : MonoBehaviour
                 AlertModel alertModel = new AlertModel();
                 alertModel.message = "Cast Added Successfully";
                 alertModel.okayButtonAction = BackButtonAction;
+                alertModel.canEnableTick = true;
                 CanvasManager.Instance.alertView.ShowAlert(alertModel);
             }
             else

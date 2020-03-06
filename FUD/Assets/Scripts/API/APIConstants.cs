@@ -76,4 +76,6 @@ public class APIConstants
 
     public const string GET_PORTFOLIO_POSTS = BASE_URL + "v1/searchSharedPortfolio";
 
+    public const string CREATE_PROJECT_SCENE = BASE_URL + "v1/project/storyScene/";
+
 }

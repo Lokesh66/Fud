@@ -68,12 +68,15 @@ public class PortfolioActivityPopUp : MonoBehaviour
 
         alertModel.okayButtonAction = OnCloseButton;
 
-        CanvasManager.Instance.alertView.ShowAlert(alertModel);
 
         if (status)
         {
             gameObject.SetActive(false);
+
+            alertModel.canEnableTick = true;
         }
+
+        CanvasManager.Instance.alertView.ShowAlert(alertModel);
     }
 
     void OnCloseButton()

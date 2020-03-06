@@ -32,6 +32,7 @@ public class ProjectsDetailedView : MonoBehaviour
     public ProjectStoriesPanel storiesPanel;
     public ProjectCastsPanel castsPanel;
     public ProjectAuditionsPanel auditionsPanel;
+    public ProjectScenesPanel scenesPanel;
 
     System.Action OnBackButtonClick;
 
@@ -46,9 +47,15 @@ public class ProjectsDetailedView : MonoBehaviour
 
     private void Load()
     {
-        storiesPanel.SetData(project.StoryVersions[0]);
+        if (project.StoryVersions.Count > 0)
+        {
+            storiesPanel.SetData(project.StoryVersions[0]);
+        }
+
         castsPanel.SetData(project.id, project.Project_cast);
         auditionsPanel.SetData(project.id, project.Audition);
+        scenesPanel.SetData(project, project.StoryScenes);
+
     }
     public void Reload()
     {
@@ -73,4 +80,6 @@ public class ProjectsDetailedView : MonoBehaviour
     {
 
     }
+
+
 }

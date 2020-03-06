@@ -125,6 +125,7 @@ public class ProfileInfoView : MonoBehaviour
                     DataManager.Instance.UpdateUserInfo(model);
                 }
                 alertModel.message = "User data updated successfully";
+                alertModel.canEnableTick = true;
                 alertModel.okayButtonAction = OnBackButtonAction;
             }
             else
