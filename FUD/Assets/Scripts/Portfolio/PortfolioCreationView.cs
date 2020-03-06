@@ -164,13 +164,3 @@ public class PortfolioCreationView : MonoBehaviour
     }
 }
 
-public class FileUploadModel
-{
-    public bool success;
-    public string s3_file_path;
-}
-
-public class FileUploadResponseModel : BaseResponse
-{
-    public FileUploadModel data;
-}

@@ -687,3 +687,16 @@ public class PerformerResponse : BaseResponse
 {
     public PerformerModel data;
 }
+
+[Serializable]
+public class FileUploadModel
+{
+    public bool success;
+    public string s3_file_path;
+}
+
+[Serializable]
+public class FileUploadResponseModel : BaseResponse
+{
+    public FileUploadModel data;
+}
