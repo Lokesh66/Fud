@@ -17,34 +17,8 @@ public class UploadedFileCell : MonoBehaviour
     {
         Texture2D texture = NativeGallery.LoadImageAtPath(imagePath);
 
-        // Assign texture to a temporary quad and destroy it after 5 seconds
-        /*GameObject quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
-        quad.transform.position = Camera.main.transform.position + Camera.main.transform.forward * 2.5f;
-        quad.transform.forward = Camera.main.transform.forward;
-        quad.transform.localScale = new Vector3(1f, texture.height / (float)texture.width, 1f);
+        TextureScale.ThreadedScale(texture, 300, 400, true);
 
-        Material material = quad.GetComponent<Renderer>().material;
-        if (!material.shader.isSupported) // happens when Standard shader is not included in the build
-            material.shader = Shader.Find("Legacy Shaders/Diffuse");
-
-        material.mainTexture = texture;*/
-        size2Text.text = texture.width + ", " + texture.height;
-        
-        texture.Resize((int)selectedImage.rectTransform.rect.width, (int)selectedImage.rectTransform.rect.height);
-
-        texture.Apply();
-
-        size1Text.text = selectedImage.rectTransform.rect.width + ", " + selectedImage.rectTransform.rect.height;
-
-
-        selectedImage.sprite = Sprite.Create(texture, new Rect(0, 0, selectedImage.rectTransform.rect.width, selectedImage.rectTransform.rect.height), new Vector2(0.5f, 0.5f));
-
-        //selectedImage.SetNativeSize();
-
-
-
-        // If a procedural texture is not destroyed manually, 
-        // it will only be freed after a scene change
-        //Destroy(texture, 5f);
+        selectedImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
     }
 }
