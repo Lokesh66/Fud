@@ -15,7 +15,7 @@ public class UploadedFileCell : MonoBehaviour
 
     public void Load(string imagePath)
     {
-        Texture2D texture = NativeGallery.LoadImageAtPath(imagePath);
+        Texture2D texture = NativeGallery.LoadImageAtPath(imagePath, markTextureNonReadable: false);
 
         TextureScale.ThreadedScale(texture, 300, 400, true);
 
