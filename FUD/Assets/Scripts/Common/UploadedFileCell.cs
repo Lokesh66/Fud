@@ -28,14 +28,18 @@ public class UploadedFileCell : MonoBehaviour
             material.shader = Shader.Find("Legacy Shaders/Diffuse");
 
         material.mainTexture = texture;*/
-
-        size1Text.text = selectedImage.rectTransform.sizeDelta.x + ", " + selectedImage.rectTransform.sizeDelta.y;
-
         size2Text.text = texture.width + ", " + texture.height;
+        
+        texture.Resize((int)selectedImage.rectTransform.rect.width, (int)selectedImage.rectTransform.rect.height);
 
-        selectedImage.sprite = Sprite.Create(texture, new Rect(0, 0, selectedImage.rectTransform.sizeDelta.x, selectedImage.rectTransform.sizeDelta.y), new Vector2(0.5f, 0.5f));
+        texture.Apply();
 
-        selectedImage.SetNativeSize();
+        size1Text.text = selectedImage.rectTransform.rect.width + ", " + selectedImage.rectTransform.rect.height;
+
+
+        selectedImage.sprite = Sprite.Create(texture, new Rect(0, 0, selectedImage.rectTransform.rect.width, selectedImage.rectTransform.rect.height), new Vector2(0.5f, 0.5f));
+
+        //selectedImage.SetNativeSize();
 
 
 

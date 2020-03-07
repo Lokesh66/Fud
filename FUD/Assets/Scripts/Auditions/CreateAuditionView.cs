@@ -40,6 +40,7 @@ public class CreateAuditionView : MonoBehaviour
     public TMP_InputField descriptionText;
     public TMP_Text endDateText;
 
+    public TMP_Text buttonText;
     public TMP_Text errorText;
 
     bool isNewAuditionCreated;
@@ -48,15 +49,75 @@ public class CreateAuditionView : MonoBehaviour
 
     string defaultDateText = "Select Date";
 
-    List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
+    string uploadedImageUrl = string.Empty;
+
+    Audition audition;
+
+    bool isUpdate = false;
+
+    DateTime selectedDate;
 
     System.Action<bool> backAction;
-    public void SetView(int projectId, System.Action<bool> action)
+    public void SetView(int projectId, Action<bool> action)
     {
+        isUpdate = false;
         this.projectId = projectId;
+        parentPanel.gameObject.SetActive(true);
+        uploadedImageUrl = string.Empty;
+        backAction = action;
+        isNewAuditionCreated = false;
+        buttonText.text = "Create Audition";
+    }
+
+    public void EditView(Audition audition, Action<bool> action)
+    {
+        isUpdate = true;
+        this.audition = audition;
+        SetData();
         parentPanel.gameObject.SetActive(true);
         backAction = action;
         isNewAuditionCreated = false;
+    }
+
+    void SetData()
+    {
+        projectId = audition.project_id;
+        selectedDate = audition.end_date;
+
+        typeDropdown.captionText.SetText(audition.type);
+        if (audition.type.Equals("group"))
+        {
+            membersText.gameObject.SetActive(true);
+            membersText.text = audition.no_of_persons_req.ToString();
+        }
+        else
+        {
+            membersText.gameObject.SetActive(false);
+        }
+        topicText.text = audition.topic;
+        titleText.text = audition.title;
+        payAmountText.text = audition.rate_of_pay.ToString();
+        ageFromText.text = audition.age_from.ToString();
+        ageToText.text = audition.age_to.ToString();
+        if (audition.end_date != DateTime.MinValue || audition.end_date != DateTime.MaxValue)
+        {
+            endDateText.text = DatePicker.Instance.GetDateString(audition.end_date);
+        }
+        else
+        {
+            endDateText.text = defaultDateText;
+        }
+        descriptionText.text = audition.description;
+
+        if (!string.IsNullOrEmpty(audition.image_url))
+        {
+            uploadedImageUrl = audition.image_url;
+        }
+        else
+        {
+            uploadedImageUrl = string.Empty;
+        }
+        buttonText.text = "Update Audition";
     }
 
     public void OnAuditionTypeSelectedAction()
@@ -76,7 +137,8 @@ public class CreateAuditionView : MonoBehaviour
     {
         DatePicker.Instance.GetDate(DateTime.Now, DateTime.Now, DateTime.MaxValue, (date, dateString) =>
         {
-            endDateText.text = string.IsNullOrEmpty(dateString) ? defaultDateText : dateString;
+            if(!string.IsNullOrEmpty(dateString))
+                endDateText.text = dateString;
         });
     }
     public void BackButtonAction()
@@ -91,30 +153,19 @@ public class CreateAuditionView : MonoBehaviour
         GalleryManager.Instance.GetImageFromGallaery(OnImagesUploaded);
     }
 
-    void OnImagesUploaded(bool status, List<string> imageUrl)
+    void OnImagesUploaded(bool status, List<string> imagesList)
     {
         if (status)
-        {
-            if(imageUrl!=null && imageUrl.Count > 0)
-            {
-                uploadedDict.Clear();
-
-                Dictionary<string, object> galleryImageDict = new Dictionary<string, object>();
-
-                galleryImageDict.Add("content_id", 1);
-
-                galleryImageDict.Add("content_url", imageUrl);
-
-                galleryImageDict.Add("media_type", "image");
-
-                uploadedDict.Add(galleryImageDict);
+        {            
+            if (imagesList != null && imagesList.Count > 0){
+                uploadedImageUrl = imagesList[0];
             }
         }
         else
         {
             AlertModel alertModel = new AlertModel();
 
-            alertModel.message = status.ToString() + imageUrl;
+            alertModel.message = "Media upload failed";
 
             CanvasManager.Instance.alertView.ShowAlert(alertModel);
         }
@@ -184,20 +235,52 @@ public class CreateAuditionView : MonoBehaviour
 
         Dictionary<string, object> parameters = new Dictionary<string, object>();
         parameters.Add("project_id", projectId);
-        parameters.Add("topic", topicText.text);
-        parameters.Add("rate_of_pay", long.Parse(payAmountText.text));
-        parameters.Add("end_date", endDateText.text);// "2020-03-23");
-        parameters.Add("title", titleText.text);
-        parameters.Add("description", descriptionText.text);
-        parameters.Add("age_from", Convert.ToInt16(ageFromText.text));
-        parameters.Add("age_to", Convert.ToInt16(ageToText.text));
-        parameters.Add("type", typeDropdown.captionText.text.ToLower());// "group","individual");
-        if (typeDropdown.captionText.text.ToLower().Equals("group"))
+        if(!isUpdate || (isUpdate && !audition.topic.Equals(topicText.text)) )
+            parameters.Add("topic", topicText.text);
+        if (!isUpdate || (isUpdate && !audition.rate_of_pay.Equals(long.Parse(payAmountText.text))))
+            parameters.Add("rate_of_pay", long.Parse(payAmountText.text));
+        if (!isUpdate || (isUpdate && !DatePicker.Instance.GetDateString(audition.end_date).Equals(endDateText.text)))
+            parameters.Add("end_date", endDateText.text);// "2020-03-23");
+        if (!isUpdate || (isUpdate && !audition.title.Equals(titleText.text)))
+            parameters.Add("title", titleText.text);
+        if (!isUpdate || (isUpdate && !audition.description.Equals(descriptionText.text)))
+            parameters.Add("description", descriptionText.text);
+        if (!isUpdate || (isUpdate && !audition.age_from.Equals(Convert.ToInt16(ageFromText.text))))
+            parameters.Add("age_from", Convert.ToInt16(ageFromText.text));
+        if (!isUpdate || (isUpdate && !audition.age_to.Equals(Convert.ToInt16(ageToText.text))))
+            parameters.Add("age_to", Convert.ToInt16(ageToText.text));
+
+        string auditionType = typeDropdown.captionText.text.ToLower();
+        if (!isUpdate || (isUpdate && 
+            ((!audition.type.Equals(auditionType) || 
+            (audition.type.Equals("group") && audition.no_of_persons_req != Convert.ToInt16(membersText.text))
+            ))))
         {
-            parameters.Add("no_of_persons_req", membersText.text);
+            parameters.Add("type", auditionType);// "group","individual");
+            if (auditionType.Equals("group"))
+            {
+                parameters.Add("no_of_persons_req", Convert.ToInt16(membersText.text));
+            }
+            else if (auditionType.Equals("individual"))
+            {
+                parameters.Add("no_of_persons_req", 1);
+            }
         }
-        if (uploadedDict.Count > 0) {
-            parameters.Add("image_url", uploadedDict);
+
+        if (!string.IsNullOrEmpty(uploadedImageUrl)) {
+            if (!isUpdate || (isUpdate &&
+                 (string.IsNullOrEmpty(audition.image_url) || !audition.image_url.Equals(uploadedImageUrl))))
+            {
+                parameters.Add("image_url", uploadedImageUrl);
+            }
+        }
+
+        if(parameters.Count <= 1)
+        {
+            AlertModel alertModel = new AlertModel();
+            alertModel.message = "No data to update";
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            return;
         }
         GameManager.Instance.apiHandler.CreateAudition(parameters, (status, response) => {
             Debug.Log("OnCreateAudition : "+response);

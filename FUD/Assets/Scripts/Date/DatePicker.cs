@@ -38,6 +38,7 @@ public class DatePicker : MonoBehaviour
 
     #endregion
 
+    private DateTime currentDate;
     private DateTime selectedDate;
     private DateTime startDate;
     public DateTime endDate;
@@ -55,8 +56,9 @@ public class DatePicker : MonoBehaviour
         startDate = _startDate;
         endDate = _endDate;
         parentPanel.SetActive(true);
-        selectedDate = _selectedDate;
-        _dateTime = selectedDate;
+        currentDate = _selectedDate;
+        selectedDate = currentDate;
+        _dateTime = currentDate;
         CreateCalendar();
     }
 
@@ -132,16 +134,24 @@ public class DatePicker : MonoBehaviour
         CreateCalendar();
     }
 
-    public void OkButtonAction()
+    public string GetDateString(DateTime dateTime)
     {
-        string dateString = selectedDate.Year.ToString() + "-" + selectedDate.Month.ToString("d2") + "-" + selectedDate.Day.ToString("d2");
-        
-        ClosePanel(dateString);
+        if(dateTime == DateTime.MinValue || dateTime == DateTime.MaxValue)
+        {
+            return string.Empty;
+        }
+        string dateString = dateTime.Year.ToString("d4") + "-" + dateTime.Month.ToString("d2") + "-" + dateTime.Day.ToString("d2");
+        return dateString;
+    }
+
+    public void OkButtonAction()
+    {        
+        ClosePanel(GetDateString(selectedDate));
     }
 
     public void CancelButtonAction()
     {
-        ClosePanel();
+        ClosePanel(GetDateString(currentDate));
     }
 
     void ClosePanel(string result = "")

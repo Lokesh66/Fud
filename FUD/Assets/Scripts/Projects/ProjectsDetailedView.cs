@@ -34,6 +34,8 @@ public class ProjectsDetailedView : MonoBehaviour
     public ProjectAuditionsPanel auditionsPanel;
     public ProjectScenesPanel scenesPanel;
 
+    public AuditionDetailsView auditionDetails;
+
     System.Action OnBackButtonClick;
 
     private Project project;

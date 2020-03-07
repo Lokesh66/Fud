@@ -50,7 +50,7 @@ public class GalleryManager : MonoBehaviour
                 uploadedURLs.Clear();
 
                 this.OnUploaded = OnImageUploaded;
-
+                selectedImagesCount = 1;
                 UploadFile(imagesPath, EMediaType.Image);
             }
             else

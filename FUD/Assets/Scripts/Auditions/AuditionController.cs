@@ -74,7 +74,7 @@ public class AuditionController : MonoBehaviour
     public void ModifyAudition()
     {
         Dictionary<string, object> parametres = new Dictionary<string, object>();
-        GameManager.Instance.apiHandler.UpdateCreatedAudition(parametres, (bool status, string response) =>
+        GameManager.Instance.apiHandler.DeleteAudition(parametres, (bool status, string response) =>
         {
             if (status)
             {
