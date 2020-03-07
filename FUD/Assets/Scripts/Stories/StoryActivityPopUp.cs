@@ -10,8 +10,11 @@ public class StoryActivityPopUp : MonoBehaviour
 
     public GameObject acceptObject;
 
+    public StoryActivitiesView activitiesView;
+
 
     StoryActivityModel activityModel;
+
 
     Action<int> OnClose;
 
@@ -25,7 +28,7 @@ public class StoryActivityPopUp : MonoBehaviour
 
         this.OnClose = OnClose;
 
-        descriptionText.text = activityModel.comment;
+        //descriptionText.text = activityModel.comment;
 
         currentUserId = DataManager.Instance.userInfo.id;
 
@@ -41,6 +44,7 @@ public class StoryActivityPopUp : MonoBehaviour
 
                 if (status)
                 {
+                    activitiesView.OnStatusApplied(activityModel);
                     OnClose?.Invoke(statusIndex);
                     gameObject.SetActive(false);
                 }

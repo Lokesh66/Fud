@@ -4,7 +4,7 @@ using TMPro;
 
 public class CharacterDetailsView : MonoBehaviour
 {
-    public Image userImage;
+    //public Image userImage;
 
     public TextMeshProUGUI description;
 
@@ -79,6 +79,6 @@ public class CharacterDetailsView : MonoBehaviour
     {
         description.text = string.Empty;
 
-        userImage.sprite = null;
+        //userImage.sprite = null;
     }
 }

@@ -12,6 +12,8 @@ public class StoryActivitiesView : MonoBehaviour
 
     public StoryActivityPopUp activityPopUp;
 
+
+
     List<StoryActivityModel> activityModels;
 
     public void EnableView()
@@ -50,5 +52,12 @@ public class StoryActivitiesView : MonoBehaviour
 
             cellObject.GetComponent<StoryActivityCell>().Load(activityModels[i], activityPopUp);
         }
+    }
+
+    public void OnStatusApplied(StoryActivityModel activityModel)
+    {
+        activityModels.Remove(activityModel);
+
+        noDataObject.SetActive(activityModels.Count == 0);
     }
 }

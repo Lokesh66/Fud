@@ -31,7 +31,6 @@ public class StoryDetailsController : MonoBehaviour
         Versions,
         Characters,
         Team,
-        Scenes
     }
 
     public Transform creationPanelParent;
@@ -175,9 +174,6 @@ public class StoryDetailsController : MonoBehaviour
             case EScreenSubType.Team:
                 ShowTeamsScreen();
                 break;
-            case EScreenSubType.Scenes:
-                ShowScenesScreen();
-                break;
         }
     }
 
@@ -225,15 +221,6 @@ public class StoryDetailsController : MonoBehaviour
     }
 
     void ShowTeamsScreen()
-    {
-        currentObject = teamsView.gameObject;
-
-        currentObject.SetActive(false);
-
-        teamsView.Load(currentDetailsModel.TeamMembers, this);
-    }
-
-    void ShowScenesScreen()
     {
         currentObject = teamsView.gameObject;
 

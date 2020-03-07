@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class VersionDetailsView : MonoBehaviour
 {
 
-    public Image userImage;
+    //public Image userImage;
 
     public TextMeshProUGUI description;
 
@@ -32,7 +32,7 @@ public class VersionDetailsView : MonoBehaviour
 
     void SetView()
     {
-        description.text = storyVersion.description;
+        //description.text = storyVersion.description;
     }
 
     public void OnButtonAction(int buttonIndex)
@@ -45,13 +45,13 @@ public class VersionDetailsView : MonoBehaviour
                 OnEditButtonAction();
                 break;
             case 1:
-                OnDeleteButtonAction();
+                OnMediaButtonAction();
                 break;
             case 2:
                 OnShareButtonAction();
                 break;
             case 3:
-                OnMediaButtonAction();
+                OnDeleteButtonAction();
                 break;
             case 4:
                 OnCancelButtonAction();
@@ -98,7 +98,7 @@ public class VersionDetailsView : MonoBehaviour
     {
         description.text = string.Empty;
 
-        userImage.sprite = null;
+        //userImage.sprite = null;
     }
 
     public void OnEditCallBack(StoryVersion storyVersion)
