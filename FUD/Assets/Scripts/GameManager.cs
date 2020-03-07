@@ -57,6 +57,10 @@ public class GameManager : MonoBehaviour
 
     void StartGame()
     {
+        apiHandler.GetCraftRoles();
+
+        apiHandler.GetGenres();
+
         if (File.Exists(APIConstants.TOKEN_PATH))
         {
             sceneController.SwitchScene(ESceneType.HomeScene);

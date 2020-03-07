@@ -27,7 +27,7 @@ public class StoryTeamDetails : MonoBehaviour
 
     void SetView()
     {
-        titleText.text = teamModel.title;
+        //titleText.text = teamModel.title;
     }
 
     public void OnButtonAction(int buttonIndex)
@@ -75,6 +75,6 @@ public class StoryTeamDetails : MonoBehaviour
 
     void Reset()
     {
-        titleText.text = string.Empty;
+        //titleText.text = string.Empty;
     }
 }
