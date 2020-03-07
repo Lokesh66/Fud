@@ -29,6 +29,9 @@ public class StoryCreationView : MonoBehaviour
     }
 
     #endregion
+
+    public UploadedFilesHandler filesHandler;
+
     public Transform parentPanel;
 
     public RectTransform galleryPanel;
@@ -241,6 +244,8 @@ public class StoryCreationView : MonoBehaviour
         if (status)
         {
             this.imageUrls = imageUrls;
+
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles());
 
             for (int i = 0; i < imageUrls.Count; i++)
             {

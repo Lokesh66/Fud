@@ -215,8 +215,6 @@ public class StoryUpdateView : MonoBehaviour
         {
             this.imageUrls = imageUrls;
 
-            statusText.text = GalleryManager.Instance.GetLoadedFiles().Length.ToString();
-
             filesHandler.Load(GalleryManager.Instance.GetLoadedFiles());
 
             for (int i = 0; i < imageUrls.Count; i++)

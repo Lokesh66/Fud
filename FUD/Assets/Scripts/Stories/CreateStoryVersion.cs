@@ -6,6 +6,8 @@ using DG.Tweening;
 [DisallowMultipleComponent]
 public class CreateStoryVersion : MonoBehaviour
 {
+    public UploadedFilesHandler filesHandler;
+
     public TMP_Dropdown roledropDown;
 
     public TMP_InputField descriptionField;
@@ -169,6 +171,8 @@ public class CreateStoryVersion : MonoBehaviour
         if (status)
         {
             this.imageUrls = imageUrls;
+
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles());
 
             for (int i = 0; i < imageUrls.Count; i++)
             {

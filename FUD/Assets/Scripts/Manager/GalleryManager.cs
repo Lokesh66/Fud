@@ -64,6 +64,8 @@ public class GalleryManager : MonoBehaviour
     {
         NativeGallery.Permission permission = NativeGallery.GetImagesFromGallery((imagesPath) =>
         {
+            Array.Clear(loadedFiles, 0, loadedFiles.Length);
+
             if (imagesPath != null && imagesPath.Length > 0)
             {
                 uploadedURLs.Clear();
@@ -159,7 +161,7 @@ public class GalleryManager : MonoBehaviour
                     uploadedURLs.Clear();                    
                 }
                 else {
-                    List<string> responses = new List<string>();
+                   /* List<string> responses = new List<string>();
 
                     responses.Add("imageUrls.Count, selectedImagesCount are not equal");
 
@@ -171,7 +173,7 @@ public class GalleryManager : MonoBehaviour
 
                     CanvasManager.Instance.alertView.ShowAlert(alertModel);
 
-                    OnUploaded?.Invoke(false, responses);
+                    OnUploaded?.Invoke(false, responses);*/
                 }
             }
             else
