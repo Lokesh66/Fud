@@ -30,7 +30,7 @@ public class AuditionController : MonoBehaviour
             {
                 GameObject auditionObject = Instantiate(auditionCell, content);
 
-                auditionObject.GetComponent<AuditionCell>().SetView(i, auditions[i]);
+                auditionObject.GetComponent<AuditionCell>().SetView(isJoined, auditions[i]);
             }
         }
         else

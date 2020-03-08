@@ -63,11 +63,8 @@ public partial class APIHandler
         }));
     }
 
-    public void JoinAudition(int auditionId, Action<bool, string> action)
-    {
-        Dictionary<string, object> parameters = new Dictionary<string, object>();
-        parameters.Add("audition_id", auditionId);
-
+    public void JoinAudition(Dictionary<string, object> parameters, Action<bool, string> action)
+    { 
         gameManager.StartCoroutine(PostRequest(APIConstants.USER_AUDITION, true, parameters, (bool status, string response) => {
             if (status)
             {
@@ -88,10 +85,7 @@ public partial class APIHandler
     "audition_id": "audition_id",
     "status": "yes"*/
 
-        parameters.Add("id", 1);
-        parameters.Add("user_id", "user_id");
-        parameters.Add("audition_id", "audition_id");
-        parameters.Add("status", "yes");
+        
 
         gameManager.StartCoroutine(PutRequest(APIConstants.USER_AUDITION, true, parameters, (bool status, string response) => {
             if (status)
