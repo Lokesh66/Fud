@@ -231,59 +231,49 @@ public class CreateAuditionView : MonoBehaviour
             alertModel.message = errorMessage;
             CanvasManager.Instance.alertView.ShowAlert(alertModel); 
             return;
+        }        
+        
+        if (isUpdate)
+        {
+            UpdateAudition();
         }
-
+        else
+        {
+            CreateAudition();
+        }
+    }
+    
+    void CreateAudition()
+    {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
         parameters.Add("project_id", projectId);
-        if(!isUpdate || (isUpdate && !audition.topic.Equals(topicText.text)) )
-            parameters.Add("topic", topicText.text);
-        if (!isUpdate || (isUpdate && !audition.rate_of_pay.Equals(long.Parse(payAmountText.text))))
-            parameters.Add("rate_of_pay", long.Parse(payAmountText.text));
-        if (!isUpdate || (isUpdate && !DatePicker.Instance.GetDateString(audition.end_date).Equals(endDateText.text)))
-            parameters.Add("end_date", endDateText.text);// "2020-03-23");
-        if (!isUpdate || (isUpdate && !audition.title.Equals(titleText.text)))
-            parameters.Add("title", titleText.text);
-        if (!isUpdate || (isUpdate && !audition.description.Equals(descriptionText.text)))
-            parameters.Add("description", descriptionText.text);
-        if (!isUpdate || (isUpdate && !audition.age_from.Equals(Convert.ToInt16(ageFromText.text))))
-            parameters.Add("age_from", Convert.ToInt16(ageFromText.text));
-        if (!isUpdate || (isUpdate && !audition.age_to.Equals(Convert.ToInt16(ageToText.text))))
-            parameters.Add("age_to", Convert.ToInt16(ageToText.text));
+        parameters.Add("topic", topicText.text);
+        parameters.Add("rate_of_pay", long.Parse(payAmountText.text));
+        parameters.Add("end_date", endDateText.text);// "2020-03-23");
+        parameters.Add("title", titleText.text);
+        parameters.Add("description", descriptionText.text);
+        parameters.Add("age_from", Convert.ToInt16(ageFromText.text));
+        parameters.Add("age_to", Convert.ToInt16(ageToText.text));
 
         string auditionType = typeDropdown.captionText.text.ToLower();
-        if (!isUpdate || (isUpdate && 
-            ((!audition.type.Equals(auditionType) || 
-            (audition.type.Equals("group") && audition.no_of_persons_req != Convert.ToInt16(membersText.text))
-            ))))
+        parameters.Add("type", auditionType);// "group","individual");
+        if (auditionType.Equals("group"))
         {
-            parameters.Add("type", auditionType);// "group","individual");
-            if (auditionType.Equals("group"))
-            {
-                parameters.Add("no_of_persons_req", Convert.ToInt16(membersText.text));
-            }
-            else if (auditionType.Equals("individual"))
-            {
-                parameters.Add("no_of_persons_req", 1);
-            }
+            parameters.Add("no_of_persons_req", Convert.ToInt16(membersText.text));
+        }
+        else if (auditionType.Equals("individual"))
+        {
+            parameters.Add("no_of_persons_req", 1);
         }
 
-        if (!string.IsNullOrEmpty(uploadedImageUrl)) {
-            if (!isUpdate || (isUpdate &&
-                 (string.IsNullOrEmpty(audition.image_url) || !audition.image_url.Equals(uploadedImageUrl))))
-            {
-                parameters.Add("image_url", uploadedImageUrl);
-            }
+        if (!string.IsNullOrEmpty(uploadedImageUrl))
+        {
+            parameters.Add("image_url", uploadedImageUrl);
         }
 
-        if(parameters.Count <= 1)
+        GameManager.Instance.apiHandler.CreateAudition(parameters, (status, response) =>
         {
-            AlertModel alertModel = new AlertModel();
-            alertModel.message = "No data to update";
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
-            return;
-        }
-        GameManager.Instance.apiHandler.CreateAudition(parameters, (status, response) => {
-            Debug.Log("OnCreateAudition : "+response);
+            Debug.Log("OnCreateAudition : " + response);
             if (status)
             {
                 isNewAuditionCreated = true;
@@ -302,19 +292,73 @@ public class CreateAuditionView : MonoBehaviour
         });
     }
 
-    void ShowErrorMessage(string message)
+    void UpdateAudition()
     {
-        errorText.text = message;
-        if (IsInvoking("DisableErrorMessage"))
-            CancelInvoke("DisableErrorMessage");
-        Invoke("DisableErrorMessage", 2.0f);
-    }
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+        parameters.Add("id", audition.id);
+        if (!audition.topic.Equals(topicText.text))
+            parameters.Add("topic", topicText.text);
+        if (!audition.rate_of_pay.Equals(long.Parse(payAmountText.text)))
+            parameters.Add("rate_of_pay", long.Parse(payAmountText.text));
+        if (!DatePicker.Instance.GetDateString(audition.end_date).Equals(endDateText.text))
+            parameters.Add("end_date", endDateText.text);// "2020-03-23");
+        if (!audition.title.Equals(titleText.text))
+            parameters.Add("title", titleText.text);
+        if (!audition.description.Equals(descriptionText.text))
+            parameters.Add("description", descriptionText.text);
+        if (!audition.age_from.Equals(Convert.ToInt16(ageFromText.text)))
+            parameters.Add("age_from", Convert.ToInt16(ageFromText.text));
+        if (!audition.age_to.Equals(Convert.ToInt16(ageToText.text)))
+            parameters.Add("age_to", Convert.ToInt16(ageToText.text));
 
-    void DisableErrorMessage()
-    {
-        errorText.DOFade(0f,0.5f).OnComplete(() => {
-            errorText.text = string.Empty;
-            errorText.color = Color.red;
+        string auditionType = typeDropdown.captionText.text.ToLower();
+        if (!audition.type.Equals(auditionType) ||
+            (audition.type.Equals("group") && audition.no_of_persons_req != Convert.ToInt16(membersText.text)))
+        {
+            parameters.Add("type", auditionType);// "group","individual");
+            if (auditionType.Equals("group"))
+            {
+                parameters.Add("no_of_persons_req", Convert.ToInt16(membersText.text));
+            }
+            else if (auditionType.Equals("individual"))
+            {
+                parameters.Add("no_of_persons_req", 1);
+            }
+        }
+
+        if (!string.IsNullOrEmpty(uploadedImageUrl))
+        {
+            if (string.IsNullOrEmpty(audition.image_url) || !audition.image_url.Equals(uploadedImageUrl))
+            {
+                parameters.Add("image_url", uploadedImageUrl);
+            }
+        }
+
+        if (parameters.Count == 0)
+        {
+            AlertModel alertModel = new AlertModel();
+            alertModel.message = "No data to update";
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            return;
+        }
+        GameManager.Instance.apiHandler.ModifyAudition(parameters, (status, response) =>
+        {
+            Debug.Log("ModifyAudition : " + response);
+            if (status)
+            {
+                isNewAuditionCreated = true;
+                AlertModel alertModel = new AlertModel();
+                alertModel.message = "Audition Updated Successfully";
+                alertModel.okayButtonAction = BackButtonAction;
+                alertModel.canEnableTick = true;
+                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            }
+            else
+            {
+                AlertModel alertModel = new AlertModel();
+                alertModel.message = "Updating Audition Failed";
+                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            }
         });
     }
 }

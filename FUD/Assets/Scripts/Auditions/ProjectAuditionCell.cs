@@ -71,18 +71,18 @@ public class ProjectAuditionCell : MonoBehaviour
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
         parameters.Add("id", auditionData.id);
-        parameters.Add("user_id", DataManager.Instance.userInfo.id);
-        parameters.Add("project_id", auditionData.project_id);
+        //parameters.Add("user_id", DataManager.Instance.userInfo.id);
+        //parameters.Add("project_id", auditionData.project_id);
         //parameters.Add("project_cast_id",auditionData.project_cast_id.ToString());
-        parameters.Add("topic", auditionData.topic);
+        /*parameters.Add("topic", auditionData.topic);
         string endDate = DatePicker.Instance.GetDateString(auditionData.end_date);
         if(!string.IsNullOrEmpty(endDate))
             parameters.Add("end_date", endDate);
-        parameters.Add("rate_of_pay", auditionData.rate_of_pay);
+        parameters.Add("rate_of_pay", auditionData.rate_of_pay);*/
 
-        parameters.Add("status","yes");
-        GameManager.Instance.apiHandler.DeleteAudition(parameters, (status, response) => {
-            Debug.Log("UpdateCreatedAudition : " + response);
+        parameters.Add("status","inactive");
+        GameManager.Instance.apiHandler.ModifyAudition(parameters, (status, response) => {
+            Debug.Log("DeleteAudition : " + response);
             if (status)
             {
                 AlertModel alertModel = new AlertModel();

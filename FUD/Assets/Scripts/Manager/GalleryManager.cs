@@ -64,7 +64,10 @@ public class GalleryManager : MonoBehaviour
     {
         NativeGallery.Permission permission = NativeGallery.GetImagesFromGallery((imagesPath) =>
         {
-            Array.Clear(loadedFiles, 0, loadedFiles.Length);
+            if (loadedFiles != null && loadedFiles.Length > 0)
+            {
+                Array.Clear(loadedFiles, 0, loadedFiles.Length);
+            }
 
             if (imagesPath != null && imagesPath.Length > 0)
             {

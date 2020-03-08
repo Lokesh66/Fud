@@ -28,7 +28,7 @@ public partial class APIHandler
         }));
     }
 
-    public void DeleteAudition(Dictionary<string, object> parameters, Action<bool, string> action)
+    public void ModifyAudition(Dictionary<string, object> parameters, Action<bool, string> action)
     {
         gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_AUDITION, true, parameters, (status, response) => {
 
@@ -80,13 +80,6 @@ public partial class APIHandler
 
     public void UpdateJoinedAudition(Dictionary<string, object> parameters, Action<bool, string> action)
     {
-        /*"id":1,
-    "user_id":"user_id",
-    "audition_id": "audition_id",
-    "status": "yes"*/
-
-        
-
         gameManager.StartCoroutine(PutRequest(APIConstants.USER_AUDITION, true, parameters, (bool status, string response) => {
             if (status)
             {

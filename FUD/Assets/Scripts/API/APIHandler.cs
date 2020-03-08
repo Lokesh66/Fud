@@ -511,6 +511,8 @@ public partial class APIHandler
 
         Loader.Instance.StopLoading();
 
+        Debug.Log("@@@@@ : "+webRequest.downloadHandler.text);
+
         if (webRequest.responseCode.Equals(401))
         {
             GameManager.Instance.SwitchToLogin();

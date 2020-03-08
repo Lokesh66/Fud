@@ -11,14 +11,18 @@ public class AuditionCell : MonoBehaviour
 /*    public TMP_Text otherText;
 */
     Audition auditionData;
+    AuditionController auditionController;
     bool isJoined;
+    bool isUpdated;
 
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
 
-    public void SetView(bool isJoined, Audition audition)
+    public void SetView(AuditionController auditionController, Audition audition)
     {
         auditionData = audition;
-        this.isJoined = isJoined;
+        this.auditionController = auditionController;
+        isJoined = auditionController.isJoined; ;
+        isUpdated = false;
         if (auditionData != null)
         {
             titleText.text = auditionData.topic;
@@ -40,6 +44,11 @@ public class AuditionCell : MonoBehaviour
                     break;
             }
         });
+    }
+
+    void Refresh()
+    {
+        auditionController?.GetAuditions();
     }
 
     void MediaButtonAction(int index)
@@ -78,13 +87,20 @@ public class AuditionCell : MonoBehaviour
 
                 uploadedDict.Add(kvp);
             }
-            JoinAudition();
+            if (isJoined)
+            {
+                UpdateAudition();
+            }
+            else
+            {
+                JoinAudition();
+            }
         }
         else
         {
             AlertModel alertModel = new AlertModel();
 
-            alertModel.message = status.ToString() + imageUrls[0];
+            alertModel.message = status.ToString();
 
             CanvasManager.Instance.alertView.ShowAlert(alertModel);
         }
@@ -106,7 +122,14 @@ public class AuditionCell : MonoBehaviour
 
                 uploadedDict.Add(kvp);
             }
-            JoinAudition();
+            if (isJoined)
+            {
+                UpdateAudition();
+            }
+            else
+            {
+                JoinAudition();
+            }
         }
         else
         {
@@ -134,7 +157,14 @@ public class AuditionCell : MonoBehaviour
 
                 uploadedDict.Add(kvp);
             }
-            JoinAudition();
+            if (isJoined)
+            {
+                UpdateAudition();
+            }
+            else
+            {
+                JoinAudition();
+            }
         }
         else
         {
@@ -151,7 +181,49 @@ public class AuditionCell : MonoBehaviour
         Dictionary<string, object> parameters = new Dictionary<string, object>();
         parameters.Add("audition_id", auditionData.id);
         parameters.Add("port_album_media", uploadedDict);
-        GameManager.Instance.apiHandler.JoinAudition(parameters,(status,response) => { 
+        GameManager.Instance.apiHandler.JoinAudition(parameters, (status, response) => {
+            if (status)
+            {
+                isUpdated = true;
+                AlertModel alertModel = new AlertModel();
+                alertModel.message = "Audition Joined Successfully";
+                alertModel.okayButtonAction = Refresh;
+                alertModel.canEnableTick = true;
+                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            }
+            else
+            {
+                AlertModel alertModel = new AlertModel();
+                alertModel.message = "Joining Audition Failed";
+                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            }
+        });
+    }
+
+    void UpdateAudition()
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+        parameters.Add("audition_id", auditionData.id);
+        parameters.Add("id", auditionData.project_id);
+        parameters.Add("user_id", DataManager.Instance.userInfo.id);
+        parameters.Add("port_album_media", uploadedDict);
+
+        GameManager.Instance.apiHandler.UpdateJoinedAudition(parameters, (status, response) => {
+            if (status)
+            {
+                isUpdated = true;
+                AlertModel alertModel = new AlertModel();
+                alertModel.message = "Audition Updated Successfully";
+                alertModel.okayButtonAction = Refresh;
+                alertModel.canEnableTick = true;
+                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            }
+            else
+            {
+                AlertModel alertModel = new AlertModel();
+                alertModel.message = "Updating Audition Failed";
+                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            }        
         });
     }
 
@@ -161,9 +233,24 @@ public class AuditionCell : MonoBehaviour
         parameters.Add("audition_id", auditionData.id);
         parameters.Add("id", auditionData.project_id);
         parameters.Add("user_id", DataManager.Instance.userInfo.id);
-        parameters.Add("status", "yes");
+        parameters.Add("status", "inactive");
 
         GameManager.Instance.apiHandler.UpdateJoinedAudition(parameters, (status, response) => {
+            if (status)
+            {
+                isUpdated = true;
+                AlertModel alertModel = new AlertModel();
+                alertModel.message = "Audition Deleted Successfully";
+                alertModel.okayButtonAction = Refresh;
+                alertModel.canEnableTick = true;
+                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            }
+            else
+            {
+                AlertModel alertModel = new AlertModel();
+                alertModel.message = "Deleting Audition Failed";
+                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            }
         });
     }
 

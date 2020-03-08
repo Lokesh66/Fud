@@ -35,14 +35,14 @@ public class AuditionJoinView : MonoBehaviour
     public Image icon;
 
     public GameObject joinButton;
-    public GameObject withdrawButton;
 
+    public GameObject withdrawButton;
 
     System.Action<int> buttonAction;
     public void Load(Audition audition,bool isJoined, System.Action<int> action)
     {
         parentPanel.SetActive(true);
-        joinButton.SetActive(!isJoined);
+        //joinButton.SetActive(!isJoined);
         withdrawButton.SetActive(isJoined);
         title.text = audition.title;
         description.text = audition.description;

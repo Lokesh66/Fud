@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-
 public class AuditionController : MonoBehaviour
 {
     public RectTransform content;
@@ -16,6 +15,7 @@ public class AuditionController : MonoBehaviour
     {
         GetAuditions();
     }
+
     public void Load(List<Audition> auditions)
     {
         foreach (Transform child in content)
@@ -30,7 +30,7 @@ public class AuditionController : MonoBehaviour
             {
                 GameObject auditionObject = Instantiate(auditionCell, content);
 
-                auditionObject.GetComponent<AuditionCell>().SetView(isJoined, auditions[i]);
+                auditionObject.GetComponent<AuditionCell>().SetView(this, auditions[i]);
             }
         }
         else
@@ -74,7 +74,7 @@ public class AuditionController : MonoBehaviour
     public void ModifyAudition()
     {
         Dictionary<string, object> parametres = new Dictionary<string, object>();
-        GameManager.Instance.apiHandler.DeleteAudition(parametres, (bool status, string response) =>
+        GameManager.Instance.apiHandler.ModifyAudition(parametres, (bool status, string response) =>
         {
             if (status)
             {
