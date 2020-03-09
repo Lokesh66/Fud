@@ -23,6 +23,10 @@ public class UpdateStoryVersionView : MonoBehaviour
 
     VersionDetailsView detailsView;
 
+    StoryVersionDetailModel storyVersionDetail;
+
+    List<MultimediaModel> mediaList;
+
     bool isShowingGalleryPanel = false;
 
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
@@ -35,7 +39,21 @@ public class UpdateStoryVersionView : MonoBehaviour
 
         this.detailsView = detailsView;
 
-        SetView();
+        GameManager.Instance.apiHandler.GetStoryVersionDetails(storyVersion.id, (status, response) => {
+
+            MultiMediaResponse responseModel = JsonUtility.FromJson<MultiMediaResponse>(response);
+
+            if (status)
+            {
+                gameObject.SetActive(true);
+
+                storyVersionDetail = responseModel.data[0];
+
+                mediaList = storyVersionDetail.Multimedia;
+
+                SetView();
+            }
+        });
     }
 
     void SetView()
@@ -43,6 +61,8 @@ public class UpdateStoryVersionView : MonoBehaviour
         descriptionField.text = storyVersion.description;
 
         PopulateDropdown();
+
+        SetMediaView();
     }
 
     void PopulateDropdown()
@@ -67,6 +87,29 @@ public class UpdateStoryVersionView : MonoBehaviour
         roledropDown.value = roledropDown.options.FindIndex(option => options.Equals(selectedGenre.name));
     }
 
+    void SetMediaView()
+    {
+        if (mediaList != null && mediaList.Count > 0)
+        {
+            string[] imageURLs = new string[mediaList.Count];
+
+            int imageIndex = 0;
+
+            for (int i = 0; i < mediaList.Count; i++)
+            {
+                if (mediaList[i].media_type == "image")
+                {
+                    imageURLs[imageIndex] = mediaList[i].content_url;
+
+                    imageIndex++;
+                }
+            }
+
+            filesHandler.Load(imageURLs, true);
+        }
+    }
+
+
     public void OnMediaButtonAction(int mediaType)
     {
         EMediaType selectedType = (EMediaType)mediaType;
@@ -89,6 +132,11 @@ public class UpdateStoryVersionView : MonoBehaviour
 
     public void OnBackButtonAction()
     {
+        if (isShowingGalleryPanel)
+        {
+            SlideGalleryView(false);
+        }
+
         Reset();
     }
 
@@ -175,7 +223,7 @@ public class UpdateStoryVersionView : MonoBehaviour
         {
             this.imageUrls = imageUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles());
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
 
             for (int i = 0; i < imageUrls.Count; i++)
             {

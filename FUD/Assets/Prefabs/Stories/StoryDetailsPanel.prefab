@@ -12154,7 +12154,7 @@ MonoBehaviour:
   mediaContent: {fileID: 2883539887484288894}
   descriptionText: {fileID: 1852974915991272485}
   genreText: {fileID: 5678858290108350761}
-  mediaCell: {fileID: 5539595678095660358, guid: 6c28877bc18161245b270203f6475b9d,
+  mediaCell: {fileID: 5539595678095660358, guid: 323a835e416b7f146a13f6e3ca0adb83,
     type: 3}
 --- !u!1 &6681242441924258774
 GameObject:
@@ -14125,7 +14125,7 @@ MonoBehaviour:
   m_Spacing: 20
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 1
+  m_ChildControlWidth: 0
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
@@ -16200,6 +16200,26 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2878403517304857566, guid: 3008742321ae83e47b9f64fe6de56e3a,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1339692873954893754}
+    - target: {fileID: 2878403517304857566, guid: 3008742321ae83e47b9f64fe6de56e3a,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnBackButtonAction
+      objectReference: {fileID: 0}
+    - target: {fileID: 6029413702835505787, guid: 3008742321ae83e47b9f64fe6de56e3a,
+        type: 3}
+      propertyPath: m_Vertical
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5699231361868029522, guid: 3008742321ae83e47b9f64fe6de56e3a,
+        type: 3}
+      propertyPath: m_Spacing
+      value: 30
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3008742321ae83e47b9f64fe6de56e3a, type: 3}
 --- !u!114 &1339692873954893754 stripped
@@ -17048,6 +17068,16 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6221197521249722848, guid: c882cebb04131ef469fe1f2e32417d40,
+        type: 3}
+      propertyPath: m_firstOverflowCharacterIndex
+      value: 62
+      objectReference: {fileID: 0}
+    - target: {fileID: 6221197521249722848, guid: c882cebb04131ef469fe1f2e32417d40,
+        type: 3}
+      propertyPath: m_textInfo.lineCount
+      value: 74
+      objectReference: {fileID: 0}
     - target: {fileID: 5304528649497565907, guid: c882cebb04131ef469fe1f2e32417d40,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -17152,16 +17182,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6221197521249722848, guid: c882cebb04131ef469fe1f2e32417d40,
-        type: 3}
-      propertyPath: m_firstOverflowCharacterIndex
-      value: 62
-      objectReference: {fileID: 0}
-    - target: {fileID: 6221197521249722848, guid: c882cebb04131ef469fe1f2e32417d40,
-        type: 3}
-      propertyPath: m_textInfo.lineCount
-      value: 74
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c882cebb04131ef469fe1f2e32417d40, type: 3}

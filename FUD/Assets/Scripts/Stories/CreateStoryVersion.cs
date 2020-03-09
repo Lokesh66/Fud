@@ -76,6 +76,11 @@ public class CreateStoryVersion : MonoBehaviour
     {
         versionsView.gameObject.SetActive(true);
 
+        if (isShowingGalleryPanel)
+        {
+            SlideGalleryView(false);
+        }
+
         Reset();
     }
 
@@ -172,7 +177,7 @@ public class CreateStoryVersion : MonoBehaviour
         {
             this.imageUrls = imageUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles());
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
 
             for (int i = 0; i < imageUrls.Count; i++)
             {

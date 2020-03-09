@@ -31,9 +31,9 @@ public class PortfolioMediaDetails : MonoBehaviour
 
     void SetView()
     {
-        titleText.text = portfolioModel.title;
+        //titleText.text = portfolioModel.title;
 
-        description.text = portfolioModel.description;
+        //description.text = portfolioModel.description;
     }
 
     public void OnButtonAction(int buttonIndex)
@@ -46,10 +46,10 @@ public class PortfolioMediaDetails : MonoBehaviour
                 OnEditButtonAction();
                 break;
             case 1:
-                OnDeleteButtonAction();
+                OnShareButtonAction();
                 break;
             case 2:
-                OnShareButtonAction();
+                OnDeleteButtonAction();
                 break;
             case 3:
                 OnCancelButtonAction();
@@ -71,8 +71,6 @@ public class PortfolioMediaDetails : MonoBehaviour
 
     void OnDeleteButtonAction()
     {
-        int storyId = StoryDetailsController.Instance.GetStoryId();
-
         GameManager.Instance.apiHandler.RemovePortfolio(portfolioModel.id, 8, (status) => {
 
             if (status)
@@ -89,8 +87,8 @@ public class PortfolioMediaDetails : MonoBehaviour
 
     void Reset()
     {
-        description.text = string.Empty;
+        //description.text = string.Empty;
 
-        userImage.sprite = null;
+        //userImage.sprite = null;
     }
 }

@@ -245,7 +245,7 @@ public class StoryCreationView : MonoBehaviour
         {
             this.imageUrls = imageUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles());
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
 
             for (int i = 0; i < imageUrls.Count; i++)
             {

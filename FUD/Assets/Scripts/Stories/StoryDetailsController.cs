@@ -249,11 +249,6 @@ public class StoryDetailsController : MonoBehaviour
         }
     }
 
-    public void OnUpdateStory()
-    {
-        
-    }
-
     void CreateStoryVersion()
     {
         currentObject?.SetActive(false);

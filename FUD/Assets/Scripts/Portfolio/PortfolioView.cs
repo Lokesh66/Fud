@@ -111,11 +111,13 @@ public class PortfolioView : BaseView
         //infoView.gameObject.SetActive(true);
     }
 
-    void ShowCreatePortfolioScreen()
+    public void ShowCreatePortfolioScreen()
     {
         GameObject creationObject = Instantiate(createPortfolioCache, parentTrans);
 
         gameObject.SetActive(false);
+
+        createPanel.SetActive(false);
 
         creationObject.GetComponent<PortfolioCreationView>().Init(this);
     }

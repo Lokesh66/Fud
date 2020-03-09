@@ -13,12 +13,21 @@ public class UploadedFileCell : MonoBehaviour
     public TextMeshProUGUI size2Text;
 
 
-    public void Load(string imagePath)
+    public void Load(string imagePath, bool isDownloadedImage)
     {
-        Texture2D texture = NativeGallery.LoadImageAtPath(imagePath, markTextureNonReadable: false);
+        if (isDownloadedImage)
+        {
+            GameManager.Instance.downLoadManager.DownloadImage(imagePath, (sprite) => {
 
-        TextureScale.ThreadedScale(texture, 300, 400, true);
+                selectedImage.sprite = sprite;
+            });
+        }
+        else {
+            Texture2D texture = NativeGallery.LoadImageAtPath(imagePath, markTextureNonReadable: false);
 
-        selectedImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            TextureScale.ThreadedScale(texture, 300, 400, true);
+
+            selectedImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+        }
     }
 }

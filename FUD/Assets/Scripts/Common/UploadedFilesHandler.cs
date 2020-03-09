@@ -9,15 +9,20 @@ public class UploadedFilesHandler : MonoBehaviour
     public GameObject cellCache;
 
 
-    public void Load(string[] urls)
+    public void Load(string[] urls, bool isDownloadedFile)
     {
-        content.DestroyChildrens();
+        //content.DestroyChildrens();
 
         for (int i = 0; i < urls.Length; i++)
         {
             GameObject cellObject = Instantiate(cellCache, content);
 
-            cellObject.GetComponent<UploadedFileCell>().Load(urls[i]);
+            cellObject.GetComponent<UploadedFileCell>().Load(urls[i], isDownloadedFile);
         }
+    }
+
+    private void OnDisable()
+    {
+        content.DestroyChildrens();
     }
 }

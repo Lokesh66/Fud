@@ -12,6 +12,8 @@ public class UpdatePortfolioView : MonoBehaviour
 
     public RectTransform galleryPanel;
 
+    public UploadedFilesHandler filesHandler;
+
 
     PortfolioModel portfolioModel;
 
@@ -65,6 +67,8 @@ public class UpdatePortfolioView : MonoBehaviour
     {
         if (status)
         {
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+
             for (int i = 0; i < imageUrls.Count; i++)
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();

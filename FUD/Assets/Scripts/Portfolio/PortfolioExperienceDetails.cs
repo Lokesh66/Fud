@@ -5,11 +5,11 @@ using TMPro;
 
 public class PortfolioExperienceDetails : MonoBehaviour
 {
-    public Image userImage;
+    //public Image userImage;
 
-    public TextMeshProUGUI titleText;
+    //public TextMeshProUGUI titleText;
 
-    public TextMeshProUGUI description;
+    //public TextMeshProUGUI description;
 
     public UpdateExperienceView updatePortfolioExperiance;
 
@@ -34,7 +34,7 @@ public class PortfolioExperienceDetails : MonoBehaviour
     {
         //titleText.text = experianceModel.title;
 
-        description.text = experianceModel.description;
+        //description.text = experianceModel.description;
     }
 
     public void OnButtonAction(int buttonIndex)
@@ -69,8 +69,6 @@ public class PortfolioExperienceDetails : MonoBehaviour
 
     void OnDeleteButtonAction()
     {
-        int storyId = StoryDetailsController.Instance.GetStoryId();
-
         GameManager.Instance.apiHandler.RemovePortfolioExperiance(experianceModel.id, 8, (status) => {
 
             if (status)
@@ -82,8 +80,8 @@ public class PortfolioExperienceDetails : MonoBehaviour
 
     void Reset()
     {
-        description.text = string.Empty;
+        /*description.text = string.Empty;
 
-        userImage.sprite = null;
+        userImage.sprite = null;*/
     }
 }
