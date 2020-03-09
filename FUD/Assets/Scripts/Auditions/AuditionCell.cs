@@ -55,7 +55,7 @@ public class AuditionCell : MonoBehaviour
     {
         EMediaType selectedType = (EMediaType)index;
 
-        uploadedDict.Clear();
+        uploadedDict = new List<Dictionary<string, object>>();
 
         switch (selectedType)
         {
