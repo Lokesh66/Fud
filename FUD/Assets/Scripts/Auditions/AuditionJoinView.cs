@@ -36,6 +36,8 @@ public class AuditionJoinView : MonoBehaviour
 
     public GameObject joinButton;
 
+    public TMP_Text joinButtonText;
+
     public GameObject withdrawButton;
 
     System.Action<int> buttonAction;
@@ -43,6 +45,7 @@ public class AuditionJoinView : MonoBehaviour
     {
         parentPanel.SetActive(true);
         //joinButton.SetActive(!isJoined);
+        joinButtonText.text = isJoined ? "Update" : "Join";
         withdrawButton.SetActive(isJoined);
         title.text = audition.title;
         description.text = audition.description;
