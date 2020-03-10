@@ -12,6 +12,8 @@ public class PortfolioMediaDetails : MonoBehaviour
 
     public UpdatePortfolioView updateView;
 
+    public CreatedPortfolioView createdPortfolioView;
+
 
     PortfolioModel portfolioModel;
 
@@ -46,12 +48,15 @@ public class PortfolioMediaDetails : MonoBehaviour
                 OnEditButtonAction();
                 break;
             case 1:
-                OnShareButtonAction();
+                OnViewButtonAction();
                 break;
             case 2:
-                OnDeleteButtonAction();
+                OnShareButtonAction();
                 break;
             case 3:
+                OnDeleteButtonAction();
+                break;
+            case 4:
                 OnCancelButtonAction();
                 break;
         }
@@ -67,6 +72,11 @@ public class PortfolioMediaDetails : MonoBehaviour
     void OnEditButtonAction()
     {
         updateView.Load(portfolioModel);
+    }
+
+    void OnViewButtonAction()
+    {
+        createdPortfolioView.SetView(portfolioModel);
     }
 
     void OnDeleteButtonAction()

@@ -21,7 +21,6 @@ public class PortfolioMediaCell : MonoBehaviour
         {
             GameManager.Instance.downLoadManager.DownloadImage(model.PortfolioMedia[0].content_url, (sprite) =>
             {
-
                 albumImage.sprite = sprite;
             });
         }

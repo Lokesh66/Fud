@@ -8,6 +8,8 @@ public class APIConstants
 
     public const string BASE_URL = "http://18.217.51.190:7000/";
 
+    public const string SUBSCRIPTION_BASE_URL = "http://18.217.51.190:7004/";
+
     public const string MEDIA_UPLOAD_BASE_URL = "http://18.217.51.190:7005/";
 
     public static string PERSISTENT_PATH = Application.persistentDataPath + "/";
@@ -78,4 +80,5 @@ public class APIConstants
 
     public const string CREATE_PROJECT_SCENE = BASE_URL + "v1/project/storyScene/";
 
+    public const string GET_SUBSCRIPTION_PLANS = SUBSCRIPTION_BASE_URL + "v1/getPlanFeatures?";
 }

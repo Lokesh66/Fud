@@ -36,6 +36,11 @@ public class SubscriptionView : MonoBehaviour
         dropdown.AddOptions(options);
     }
 
+    public void OnValueChange()
+    { 
+    
+    }
+
     public void OnBackButtonAction()
     {
         gameObject.SetActive(false);
