@@ -58,9 +58,33 @@ public class PortfolioCreationView : MonoBehaviour
 
             if (status)
             {
-                OnBackAction();
+                
             }
+            OnAPIResponse(status);
         });
+    }
+
+    void OnAPIResponse(bool status)
+    {
+        AlertModel alertModel = new AlertModel();
+
+        alertModel.message = status ? "Portfolio Creation Success" : "Something went wrong, please try again.";
+
+        if (status)
+        {
+            alertModel.okayButtonAction = OnSuccessResponse;
+
+            alertModel.canEnableTick = true;
+        }
+
+        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+    }
+
+    void OnSuccessResponse()
+    {
+        OnBackAction();
+
+        uploadedDict.Clear();
     }
 
     void OnImagesUploaded(bool status, List<string> imageUrls)

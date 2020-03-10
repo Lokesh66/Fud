@@ -170,9 +170,33 @@ public class UpdatePortfolioView : MonoBehaviour
 
             if (status)
             {
-                OnBackButtonAction();
+                
             }
+            OnAPIResponse(status);
         });
+    }
+
+    void OnAPIResponse(bool status)
+    {
+        AlertModel alertModel = new AlertModel();
+
+        alertModel.message = status ? "Update portfolio Success" : "Something went wrong, please try again.";
+
+        if (status)
+        {
+            alertModel.okayButtonAction = OnSuccessResponse;
+
+            alertModel.canEnableTick = true;
+        }
+
+        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+    }
+
+    void OnSuccessResponse()
+    {
+        OnBackButtonAction();
+
+        uploadedDict.Clear();
     }
 
     bool CanCallAPI()

@@ -31,11 +31,11 @@ public class PortfolioActivityPopUp : MonoBehaviour
 
         this.OnClose = OnClose;
 
-        titleText.text = activityModel.Portfolio.title;
+        //titleText.text = activityModel.Portfolio.title;
 
-        commentText.text = activityModel.comments;
+        //commentText.text = activityModel.comments;
 
-        descriptionText.text = activityModel.Portfolio.description;
+        //descriptionText.text = activityModel.Portfolio.description;
 
         currentUserId = DataManager.Instance.userInfo.id;
 
