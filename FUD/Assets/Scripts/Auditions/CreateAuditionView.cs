@@ -84,7 +84,7 @@ public class CreateAuditionView : MonoBehaviour
         projectId = audition.project_id;
         selectedDate = audition.end_date;
 
-        typeDropdown.captionText.SetText(audition.type);
+        typeDropdown.value = typeDropdown.options.FindIndex(option => option.text == audition.type);
         if (audition.type.Equals("group"))
         {
             membersText.gameObject.SetActive(true);
