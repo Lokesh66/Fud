@@ -242,7 +242,7 @@ public class UpdateStoryVersionView : MonoBehaviour
         {
             AlertModel alertModel = new AlertModel();
 
-            alertModel.message = status.ToString() + imageUrls[0];
+            alertModel.message = status.ToString();
 
             CanvasManager.Instance.alertView.ShowAlert(alertModel);
         }

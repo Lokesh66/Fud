@@ -55,6 +55,8 @@ public class VersionMultimediaView : MonoBehaviour
 
     void LoadMedia()
     {
+        mediaContent.DestroyChildrens();
+
         for (int i = 0; i < mediaList.Count; i++)
         {
             GameObject mediaObject = Instantiate(mediaCell, mediaContent);

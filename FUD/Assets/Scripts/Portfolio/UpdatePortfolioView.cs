@@ -14,6 +14,10 @@ public class UpdatePortfolioView : MonoBehaviour
 
     public UploadedFilesHandler filesHandler;
 
+    public GameObject mediaCell;
+
+    public RectTransform content;
+
 
     PortfolioModel portfolioModel;
 
@@ -36,6 +40,16 @@ public class UpdatePortfolioView : MonoBehaviour
         titleField.text = portfolioModel.title;
 
         descriptionField.text = portfolioModel.description;
+
+        for (int i = 0; i < portfolioModel.PortfolioMedia.Count; i++)
+        {
+            if (portfolioModel.PortfolioMedia[i].media_type == "image")
+            {
+                GameObject mediaObject = Instantiate(mediaCell, content);
+
+                mediaObject.GetComponent<CreatedPortfolioMediaCell>().SetView(portfolioModel.PortfolioMedia[i].content_url);
+            }
+        }
     }
 
     public void OnUploadButtonAction()
