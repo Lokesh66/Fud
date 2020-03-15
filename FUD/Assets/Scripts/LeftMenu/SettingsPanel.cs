@@ -16,7 +16,11 @@ public class SettingsPanel : MonoBehaviour
 
     public void CashFree ()
     {
-        GameManager.Instance.apiHandler.CashFreeRequest ("123456789012", "jka@gmail.com");
+        Dictionary<string, object> planIdInfo = new Dictionary<string, object>
+        {
+            { "plan_id", 1 }
+        };
+        GameManager.Instance.apiHandler.CashFreeRequest ("911234567890", "GMAIL_ACCOUNT", planIdInfo);
     }
 
 
