@@ -82,6 +82,6 @@ public class APIConstants
 
     public const string GET_SUBSCRIPTION_PLANS = SUBSCRIPTION_BASE_URL + "v1/getPlanFeatures?";
 
-    public const string GET_CASH_FREE_TOKEN = BASE_URL + "v1/getCashFreeToken/";
+    public const string GET_CASH_FREE_TOKEN = SUBSCRIPTION_BASE_URL + "v1/generateOrderToken/";
 
 }

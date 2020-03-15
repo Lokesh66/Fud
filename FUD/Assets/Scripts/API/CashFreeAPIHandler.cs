@@ -13,6 +13,7 @@ public partial class APIHandler
     public const string CUSTOMER_PHONE_KEY = "customerPhone";
     public const string CUSTOMER_EMAIL_KEY = "customerEmail";
     public const string ORDER_NOTE_KEY = "orderNote";
+    public const string NOTIFY_URL_KEY = "notifyUrl";
 
     public const string APP_ID = "1362262b24f262b46ab91599e22631";
 
@@ -27,11 +28,18 @@ public partial class APIHandler
 
     public void CashFreeRequest (string customerPhone, string customerEmail, Dictionary<string, object>  planIdInfo, string customerName = null, string orderNote = null)
     {
-        gameManager.apiHandler.PostRequest (APIConstants.GET_CASH_FREE_TOKEN, true, planIdInfo, (bool status, string responseString) => 
+        Debug.Log ("CashFree CashFreeRequest");
+
+        gameManager.StartCoroutine(gameManager.apiHandler.PostRequest (APIConstants.GET_CASH_FREE_TOKEN, true, planIdInfo, (bool status, string responseString) => 
         {
+            Debug.Log ("CashFree CashFreeRequest status = " + status);
+
+       //"data":{ "appId":"1362262b24f262b46ab91599e22631","orderId":8,"orderAmount":1000,"customerEmail":"lmoakm@gmail.com","customerPhone":919133532445,"token":"lb9JCN4MzUIJiOicGbhJCLiQ1VKJiOiAXe0Jye.gV0nIkZWZkRTZhF2MlZTZ1IiOiQHbhN3XiwiN4IDN3gjN4UTM6ICc4VmIsIiUOlkI6ISej5WZyJXdDJXZkJ3biwCMwATM6ICduV3btFkclRmcvJCL4ojIklkclRmcvJye.jmlUm863f1eFUTAx6dPOwjB0vIUXbx2HKcIIUFH-eLbhnkAc-JWG8KDiHt7hFck1x7","stage":"TEST","notifyUrl":"http://18.217.51.190:7004/v1/verify/order"}
+        //})
+
             if (status)
             {
-                CFPTokenResponse response = JsonUtility.FromJson<CFPTokenResponse> (responseString);
+                CFPToken response = JsonUtility.FromJson<CFPTokenResponse> (responseString).data;
                 Dictionary<string, string> parameters = response.ConvertToParameters ();
 
 #if UNITY_ANDROID
@@ -42,6 +50,8 @@ public partial class APIHandler
 
                 response.Add (orderNote, ORDER_NOTE_KEY, orderNote, parameters);            // Optional
                 response.Add (customerName, CUSTOMER_NAME_KEY, customerName, parameters);   // Optional
+                response.Add (response.notifyUrl, CUSTOMER_NAME_KEY, response.notifyUrl, parameters);   // Optional
+
 
                 AndroidJavaObject paramObj = CreateJavaMapFromDictainary (parameters);
 
@@ -65,7 +75,7 @@ public partial class APIHandler
         Debug.Log("iOS Cash free implementation is pending");
 #endif
             }
-        });
+        }));
     }
 
     string GetCFPToken()
@@ -98,6 +108,13 @@ public partial class APIHandler
 [Serializable]
 public class CFPTokenResponse
 {
+    public string message;
+    public int status;
+    public CFPToken data;
+}
+[Serializable]
+public class CFPToken
+{
     public string appId;
     public string orderId;
     public string orderAmount;
@@ -105,6 +122,7 @@ public class CFPTokenResponse
     public string customerPhone;
     public string token;
     public string stage;
+    public string notifyUrl;
 
     public Dictionary<string, string> ConvertToParameters()
     {

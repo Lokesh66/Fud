@@ -6,6 +6,6 @@ public class PaymentRespose : MonoBehaviour
 {
     public void onPaymentResponseRecieved(string s)
     {
-        Debug.Log (s);
+        Debug.Log ("onPaymentResponseRecieved = " + s);
     }
 }

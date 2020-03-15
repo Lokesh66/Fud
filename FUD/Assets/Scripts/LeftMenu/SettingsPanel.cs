@@ -20,6 +20,7 @@ public class SettingsPanel : MonoBehaviour
         {
             { "plan_id", 1 }
         };
+        Debug.Log ("CashFree button action");
         GameManager.Instance.apiHandler.CashFreeRequest ("911234567890", "GMAIL_ACCOUNT", planIdInfo);
     }
 
