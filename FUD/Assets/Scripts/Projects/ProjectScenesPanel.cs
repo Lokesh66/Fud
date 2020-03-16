@@ -8,7 +8,16 @@ public class ProjectScenesPanel : MonoBehaviour
     public GameObject addNewButton;
     public NoDataView noData;
 
+    public ProjectSceneDetails sceneDetails;
+
+    public ProjectSceneView sceneView;
+
+
+
+
     Project projectModel;
+
+    List<SceneModel> sceneModels;
 
     private void OnEnable()
     {
@@ -23,6 +32,8 @@ public class ProjectScenesPanel : MonoBehaviour
     public void SetData(Project projectModel, List<SceneModel> sceneModels)
     {
         this.projectModel = projectModel;
+
+        this.sceneModels = sceneModels;
 
         parentContent.DestroyChildrens();
 
@@ -65,5 +76,19 @@ public class ProjectScenesPanel : MonoBehaviour
         model.subTitle = "No Scenes Right now";
         model.buttonAction = CreateScene;
         return model;
+    }
+
+    public void RemoveScene(SceneModel sceneModel)
+    {
+        int modelIndex = sceneModels.IndexOf(sceneModel);
+
+        Destroy(parentContent.GetChild(modelIndex).gameObject);
+
+        sceneModels.Remove(sceneModel);
+
+        if (sceneModels.Count <= 0)
+        {
+            EnableNodata();
+        }
     }
 }

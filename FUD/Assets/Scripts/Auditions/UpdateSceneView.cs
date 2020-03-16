@@ -4,30 +4,8 @@ using System.Collections.Generic;
 using DG.Tweening;
 using System;
 
-public class CreateScenesView : MonoBehaviour
+public class UpdateSceneView : MonoBehaviour
 {
-    #region Singleton
-
-    private static CreateScenesView instance = null;
-
-    private CreateScenesView()
-    {
-
-    }
-
-    public static CreateScenesView Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = FindObjectOfType<CreateScenesView>();
-            }
-            return instance;
-        }
-    }
-    #endregion
-
     public CharacterDialoguesView dialoguesView;
 
     public Transform parentPanel;
@@ -43,30 +21,37 @@ public class CreateScenesView : MonoBehaviour
 
     public TMP_Text errorText;
 
+
+    ProjectScenesPanel scenesPanel;
+
     bool isNewSceneCreated;
 
     bool isDialoguesAdded = false;
 
-    Project projectModel;
+    SceneModel sceneModel;
 
     string defaultDateText = "Select Date";
-
-    Action<bool> backAction;
 
     List<Dictionary<string, object>> dialoguesList = new List<Dictionary<string, object>>();
 
 
-    public void SetView(Project projectModel, Action<bool> action)
+    public void SetView(SceneModel sceneModel, ProjectScenesPanel scenesPanel)
     {
-        this.projectModel = projectModel;
+        this.sceneModel = sceneModel;
         parentPanel.gameObject.SetActive(true);
-        backAction = action;
+        this.scenesPanel = scenesPanel;
         isNewSceneCreated = false;
 
         isDialoguesAdded = false;
 
         buttonText.text = "Next";
 
+        SetView();
+    }
+
+    void SetView()
+    { 
+    
     }
 
     public void OnDateSelectAction()
@@ -79,9 +64,7 @@ public class CreateScenesView : MonoBehaviour
 
     public void BackButtonAction()
     {
-        parentPanel.gameObject.SetActive(false);
-        backAction?.Invoke(isNewSceneCreated);
-        backAction = null;
+        gameObject.SetActive(false);
     }
 
     public void CreateSceneButtonAction()
@@ -109,9 +92,9 @@ public class CreateScenesView : MonoBehaviour
                 creationModel.decsription = descriptionText.text;
                 creationModel.location = locationText.text;
                 creationModel.place_type = selectedPlace;
-                creationModel.project_id = projectModel.id;
+                /*creationModel.project_id = projectModel.id;
                 creationModel.story_id = projectModel.story_id;
-                creationModel.story_version_id = projectModel.story_version_id;
+                creationModel.story_version_id = projectModel.story_version_id;*/
                 creationModel.shoot_time = shootTime;
                 creationModel.scene_order = int.Parse(sceneOrderText.text);
                 creationModel.start_time = startDateText.text;

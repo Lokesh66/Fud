@@ -119,6 +119,20 @@ public partial class APIHandler
             action(status, response);
         }));
     }
+
+    public void RemoveProjectScene(int id, int status, Action<bool> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("id", id);
+
+        parameters.Add("status", status);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_PROJECT_SCENE, true, parameters, (apiStatus, response) => {
+
+            action(apiStatus);
+        }));
+    }
 }
 
 [Serializable]
