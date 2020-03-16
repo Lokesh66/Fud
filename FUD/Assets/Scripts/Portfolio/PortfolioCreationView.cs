@@ -15,9 +15,9 @@ public class PortfolioCreationView : MonoBehaviour
     public UploadedFilesHandler filesHandler;
     
 
-    string contentUrl = string.Empty;
-
     PortfolioView portfolioView = null;
+
+    private bool isShowingGalleryPanel = false;
 
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
 
@@ -172,6 +172,11 @@ public class PortfolioCreationView : MonoBehaviour
 
     public void OnBackAction()
     {
+        if (isShowingGalleryPanel)
+        {
+            SlideGalleryView(false);
+        }
+
         portfolioView.OnRemoveLastSubView();
 
         Destroy(gameObject);

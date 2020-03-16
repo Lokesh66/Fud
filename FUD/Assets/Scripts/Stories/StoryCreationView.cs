@@ -46,14 +46,6 @@ public class StoryCreationView : MonoBehaviour
 
     public Image screenShotImage;
 
-    public TextMeshProUGUI contentType;
-
-    public TextMeshProUGUI filePath;
-
-    public TextMeshProUGUI statusText;
-
-    public TextMeshProUGUI canSupportMultipleText;
-
 
     MyStoriesController storiesController;
 
@@ -74,10 +66,6 @@ public class StoryCreationView : MonoBehaviour
         parentPanel.gameObject.SetActive(true);
 
         OnClose = onClose;
-
-        statusText.text = galleryPanel.anchoredPosition.y.ToString();
-
-        filePath.text = galleryPanel.rect.height.ToString(); ;
 
         PopulateDropdown();
     }
@@ -126,16 +114,6 @@ public class StoryCreationView : MonoBehaviour
             string selectedGenreText = dropdown.options[dropdown.value].text;
 
             Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
-
-           /* Dictionary<string, object> kvp = new Dictionary<string, object>();
-
-            kvp.Add("content_id", 1);
-
-            kvp.Add("content_url", "https://fud-user-1.s3.ap-south-1.amazonaws.com/04041934-32fa-4bcd-8946-692775222291.JPG");
-
-            kvp.Add("media_type", "image");
-
-            uploadedDict.Add(kvp);*/
 
             GameManager.Instance.apiHandler.CreateStory(storyTitleField.text, subTitleField.text, descriptionField.text, selectedGenre.id, uploadedDict, (status, response) =>
             {
@@ -195,8 +173,13 @@ public class StoryCreationView : MonoBehaviour
                 break;
             case EMediaType.Video:
                 GalleryManager.Instance.GetVideosFromGallery(OnVideosUploaded);
-                break;
+                break;           
         }
+    }
+
+    public void OnCancelButtonAction()
+    {
+        SlideGalleryView(false);
     }
 
     bool CanCallAPI()

@@ -69,7 +69,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateWorkExperiance(CreateExperianceModel experianceModel, Action<bool, string> action)
+    public void CreateWorkExperiance(CreateExperianceModel experianceModel, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -87,9 +87,43 @@ public partial class APIHandler
 
         parameters.Add("role_id", experianceModel.roleId);
 
-        parameters.Add("work_exp_media", experianceModel.multimediaModels);
+        if (multimediaModels.Count > 0)
+        {
+            parameters.Add("work_exp_media", multimediaModels);
+        }
 
         gameManager.StartCoroutine(PostRequest(APIConstants.UPDATE_EXPERIANCE, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void UpdateWorkExperiance(CreateExperianceModel experianceModel, int id, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
+
+        string jsonData = JsonUtility.ToJson(portMultimedias);
+
+        parameters.Add("id", id);
+
+        parameters.Add("description", experianceModel.description);
+
+        parameters.Add("start_date", experianceModel.startDate);
+
+        parameters.Add("end_date", experianceModel.endDate);
+
+        parameters.Add("industry_id", experianceModel.industryId);
+
+        parameters.Add("role_id", experianceModel.roleId);
+
+        if (multimediaModels.Count > 0)
+        {
+            parameters.Add("work_exp_media", multimediaModels);
+        }
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_EXPERIANCE, true, parameters, (status, response) => {
 
             action(status, response);
         }));
@@ -335,7 +369,11 @@ public class WorkExperianceModel
     public int role_id;
     public int user_id;
     public string description;
+    public int status;
+    public int industry_id;
     public DateTime date_exp;
+    public string start_date;
+    public string end_date;
     public DateTime created_date_time;
     public DateTime updatedAt;
     public List<WorkExpMedia> WorkExpMedia;

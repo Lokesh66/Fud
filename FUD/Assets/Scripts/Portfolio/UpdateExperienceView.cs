@@ -2,26 +2,41 @@
 using TMPro;
 using System.IO;
 using System.Collections.Generic;
+using System;
+using DG.Tweening;
 
 public class UpdateExperienceView : MonoBehaviour
 {
+    public UploadedFilesHandler filesHandler;
+
+    public RectTransform galleryPanel;
+
     public TMP_Dropdown industryDropDown;
 
     public TMP_Dropdown roleDropDown;
 
-    public TMP_InputField startDate;
+    public TMP_Text startDateText;
 
-    public TMP_InputField endDate;
+    public TMP_Text endDateText;
 
     public TMP_InputField descriptionField;
 
 
-    string contentUrl = string.Empty;
-
     WorkExperianceModel workModel = null;
+
+    DateTime startDate;
+
+    DateTime endDate;
+
+    string dateDefaultText = "Select Date";
 
     List<Genre> genres;
 
+    List<string> imageUrls;
+
+    List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
+
+    private bool isShowingGalleryPanel = false;
 
     List<IndustryModel> industryModels;
 
@@ -29,6 +44,8 @@ public class UpdateExperienceView : MonoBehaviour
     public void Load(WorkExperianceModel workModel)
     {
         this.workModel = workModel;
+
+        gameObject.SetActive(true);
 
         LoadRoles();
 
@@ -44,11 +61,43 @@ public class UpdateExperienceView : MonoBehaviour
            
     }
 
+    public void OnStartDateSelectedAction()
+    {
+        DatePicker.Instance.GetDate(startDate == DateTime.MinValue ? DateTime.Now : startDate, DateTime.MinValue, endDate, (date, value) =>
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                startDateText.text = value;
+                startDate = date;
+            }
+            else
+            {
+                startDateText.text = dateDefaultText;
+            }
+        });
+    }
+
+    public void OnEndDateSelectedAction()
+    {
+        DatePicker.Instance.GetDate(endDate, startDate, DateTime.Now, (date, value) =>
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                endDateText.text = value;
+                endDate = date;
+            }
+            else
+            {
+                endDateText.text = dateDefaultText;
+            }
+        });
+    }
+
     void LoadRoles()
     {
         genres = DataManager.Instance.genres;
 
-        Genre requiredGenre = genres.Find(genre => genre.id == workModel.id);
+        Genre requiredGenre = genres.Find(genre => genre.id == workModel.role_id);
 
         Genre selectedGenre = genres.Find(genre => genre.name.Equals(requiredGenre.name));
 
@@ -68,13 +117,13 @@ public class UpdateExperienceView : MonoBehaviour
 
     void LoadIndustries()
     {
-        IndustryModel requiredGenre = industryModels.Find(industryModel => industryModel.id == workModel.id);
+        IndustryModel requiredGenre = industryModels.Find(industryModel => industryModel.id == workModel.industry_id);
 
         IndustryModel selectedGenre = industryModels.Find(industryModel => industryModel.name.Equals(requiredGenre.name));
 
         List<string> options = new List<string>();
 
-        foreach (var option in genres)
+        foreach (var option in industryModels)
         {
             options.Add(option.name);
         }
@@ -86,56 +135,100 @@ public class UpdateExperienceView : MonoBehaviour
         industryDropDown.value = industryDropDown.options.FindIndex(option => options.Equals(selectedGenre.name));
     }
 
+    public void OnCancelButtonAction()
+    {
+        SlideGalleryView(false);
+    }
+
     public void OnUploadButtonAction()
     {
-        GalleryManager.Instance.PickImages(OnImagesUploaded);
+        ShowGalleryPanel();
     }
 
     public void CreateButtonAction()
     {
-        string selectedGenreText = roleDropDown.options[roleDropDown.value].text;
+        if (!CanCallAPI())
+        {
+            return;
+        }
+        else
+        {
+            string selectedGenreText = roleDropDown.options[roleDropDown.value].text;
 
-        Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
+            Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
 
-        string selectedIndustryText = industryDropDown.options[industryDropDown.value].text;
+            string selectedIndustryText = industryDropDown.options[industryDropDown.value].text;
 
-        IndustryModel selectedIndustry = industryModels.Find(industry => industry.name.Equals(selectedIndustryText));
+            IndustryModel selectedIndustry = industryModels.Find(industry => industry.name.Equals(selectedIndustryText));
 
-        CreateExperianceModel experianceModel = new CreateExperianceModel();
+            CreateExperianceModel experianceModel = new CreateExperianceModel();
 
-        experianceModel.roleId = selectedGenre.id;
+            experianceModel.roleId = selectedGenre.id;
 
-        experianceModel.description = descriptionField.text;
+            experianceModel.description = descriptionField.text;
 
-        experianceModel.industryId = selectedIndustry.id ;
+            experianceModel.industryId = selectedIndustry.id;
 
-        experianceModel.startDate = string.Format("{0:yyyy/MM/dd} {1:hh:mm:ss}", System.DateTime.Now, System.DateTime.Now);
+            experianceModel.startDate = startDateText.text;
 
-        experianceModel.endDate = string.Format("{0:yyyy/MM/dd} {1:hh:mm:ss}", System.DateTime.Now, System.DateTime.Now);
+            experianceModel.endDate = endDateText.text;
 
-        PortMultimediaModels multimediaModels = new PortMultimediaModels();
-
-        PortMultiMediaModel mediaModel = new PortMultiMediaModel();
-
-        List<Dictionary<string, object>> parameters = new List<Dictionary<string, object>>();
-
-        parameters.Add(new Dictionary<string, object>());
-
-        parameters[0].Add("content_id", 1);
-
-        parameters[0].Add("content_url", "https://fud-user-1.s3.ap-south-1.amazonaws.com/15572033-40e9-47c2-8532-9a49d7206e6c.png");
-
-        parameters[0].Add("media_type", "image");
-
-        experianceModel.multimediaModels = parameters;
-
-        GameManager.Instance.apiHandler.UpdateWorkExperiance(experianceModel, (status, response) => {
-
-            if (status)
+            GameManager.Instance.apiHandler.UpdateWorkExperiance(experianceModel, workModel.id, uploadedDict, (status, response) =>
             {
-                OnBackAction();
-            }
-        });
+                OnAPIResponse(status);
+            });
+        }
+    }
+
+    void OnAPIResponse(bool status)
+    {
+        AlertModel alertModel = new AlertModel();
+
+        alertModel.message = status ? "Experiance Updation Success" : "Something went wrong, please try again.";
+
+        if (status)
+        {
+            alertModel.okayButtonAction = OnSuccessResponse;
+
+            alertModel.canEnableTick = true;
+        }
+
+        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+    }
+
+    void OnSuccessResponse()
+    {
+        OnBackAction();
+
+        uploadedDict.Clear();
+    }
+
+    bool CanCallAPI()
+    {
+        string errorMessage = string.Empty;
+
+        if ((string.IsNullOrEmpty(startDateText.text) || startDateText.text.Equals(dateDefaultText)))
+        {
+            errorMessage = "Start date should not be empty";
+        }
+        else if (string.IsNullOrEmpty(endDateText.text) || endDateText.text.Equals(dateDefaultText))
+        {
+            errorMessage = "End date should not be empty";
+        }
+        else if (string.IsNullOrEmpty(descriptionField.text))
+        {
+            errorMessage = "Experience description should not be empty";
+        }
+
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            AlertModel alertModel = new AlertModel();
+            alertModel.message = errorMessage;
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            return false;
+        }
+
+        return true;
     }
 
     public void OnBackAction()
@@ -145,16 +238,134 @@ public class UpdateExperienceView : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    void OnImagesUploaded(bool status, List<string> imageURLs)
-    {
-        contentUrl = imageURLs[0];
-    }
-
     void ClearData()
     {
         industryDropDown.ClearOptions();
 
         roleDropDown.ClearOptions();
+    }
+
+    void ShowGalleryPanel()
+    {
+        SlideGalleryView(true);
+    }
+
+    void SlideGalleryView(bool canShow)
+    {
+        float panelPosition = galleryPanel.anchoredPosition.y;
+
+        float targetPostion = panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
+
+        galleryPanel.DOAnchorPosY(targetPostion, 0.4f);
+    }
+
+    public void OnMediaButtonAction(int mediaType)
+    {
+        EMediaType selectedType = (EMediaType)mediaType;
+
+        SlideGalleryView(false);
+
+        switch (selectedType)
+        {
+            case EMediaType.Image:
+                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                break;
+            case EMediaType.Audio:
+                GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
+                break;
+            case EMediaType.Video:
+                GalleryManager.Instance.GetVideosFromGallery(OnVideosUploaded);
+                break;
+        }
+    }
+
+    void OnImagesUploaded(bool status, List<string> imageUrls)
+    {
+        if (status)
+        {
+            this.imageUrls = imageUrls;
+
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+
+            for (int i = 0; i < imageUrls.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", imageUrls[i]);
+
+                kvp.Add("media_type", "image");
+
+                uploadedDict.Add(kvp);
+            }
+        }
+        else
+        {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = status.ToString();
+
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+        }
+    }
+
+    void OnAudiosUploaded(bool status, List<string> audioUrls)
+    {
+        if (status)
+        {
+            this.imageUrls = audioUrls;
+
+            for (int i = 0; i < audioUrls.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", audioUrls[i]);
+
+                kvp.Add("media_type", "audio");
+
+                uploadedDict.Add(kvp);
+            }
+        }
+        else
+        {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = status.ToString() + imageUrls[0];
+
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+        }
+    }
+
+    void OnVideosUploaded(bool status, List<string> videoUrls)
+    {
+        if (status)
+        {
+            this.imageUrls = videoUrls;
+
+            for (int i = 0; i < videoUrls.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", videoUrls[i]);
+
+                kvp.Add("media_type", "video");
+
+                uploadedDict.Add(kvp);
+            }
+        }
+        else
+        {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = status.ToString() + imageUrls[0];
+
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+        }
     }
 }
 

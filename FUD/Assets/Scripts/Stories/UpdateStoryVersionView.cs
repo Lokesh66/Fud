@@ -130,6 +130,11 @@ public class UpdateStoryVersionView : MonoBehaviour
         }
     }
 
+    public void OnCancelButtonAction()
+    {
+        SlideGalleryView(false);
+    }
+
     public void OnBackButtonAction()
     {
         if (isShowingGalleryPanel)

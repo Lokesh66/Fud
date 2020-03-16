@@ -22,14 +22,6 @@ public class StoryUpdateView : MonoBehaviour
 
     public Image screenShotImage;
 
-    public TextMeshProUGUI contentType;
-
-    public TextMeshProUGUI filePath;
-
-    public TextMeshProUGUI statusText;
-
-    public TextMeshProUGUI canSupportMultipleText;
-
     List<Genre> genres;
 
     List<string> imageUrls;
@@ -209,8 +201,6 @@ public class StoryUpdateView : MonoBehaviour
 
     void OnImagesUploaded(bool status, List<string> imageUrls)
     {
-        canSupportMultipleText.text = status.ToString();
-
         if (status)
         {
             this.imageUrls = imageUrls;
