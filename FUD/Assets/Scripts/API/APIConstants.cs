@@ -64,6 +64,10 @@ public class APIConstants
 
     public const string USER_AUDITION = BASE_URL + "v1/userAudition/";
 
+    public const string SEARCH_AUDITION = BASE_URL + "v1/searchAudition";
+
+    public const string UPDATE_AUDITION_STATUS = BASE_URL + "v1/audition/updateStatus/";
+
     public const string USER_PORTFOLIO = BASE_URL + "v1/userPortfolio/";
 
     public const string UPDATE_EXPERIANCE = BASE_URL + "v1/workExperience/";
