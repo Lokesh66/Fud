@@ -72,6 +72,11 @@ public class CreateStoryVersion : MonoBehaviour
         }
     }
 
+    public void OnCancelButtonAction()
+    {
+        SlideGalleryView(false);
+    }
+
     public void OnBackButtonAction()
     {
         versionsView.gameObject.SetActive(true);
