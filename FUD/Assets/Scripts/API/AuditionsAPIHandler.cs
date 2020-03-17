@@ -36,31 +36,17 @@ public partial class APIHandler
         }));
     }
 
-    public void SearchAuditions(bool isJoined, Action<bool, List<Audition>> action)
+    public void FetchAuditions(AuditionType type, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
-
-        if (isJoined)
-        {
-            parameters.Add("fetch_joined", 1);            
-        }
-        else
-        {
+        if (type == AuditionType.Live)
             parameters.Add("fetch_live", 1);
-        }
+        else if (type == AuditionType.Joined)
+            parameters.Add("fetch_joined", 1);
+        else if (type == AuditionType.Created)
+            parameters.Add("fetch_created", 1);
 
-        gameManager.StartCoroutine(PostRequest(APIConstants.SEARCH_USER_AUDITION, true, parameters, (bool status, string response) => {
-            if (status)
-            {
-                AuditionsResponse auditions = JsonUtility.FromJson<AuditionsResponse>(response);
-                action?.Invoke(true, auditions.data);
-            }
-            else
-            {
-                action?.Invoke(false, null);
-            }
-
-        }));
+        gameManager.StartCoroutine(PostRequest(APIConstants.SEARCH_USER_AUDITION, true, parameters, action));
     }
 
     public void JoinAudition(Dictionary<string, object> parameters, Action<bool, string> action)
@@ -80,17 +66,20 @@ public partial class APIHandler
 
     public void UpdateJoinedAudition(Dictionary<string, object> parameters, Action<bool, string> action)
     {
-        gameManager.StartCoroutine(PutRequest(APIConstants.USER_AUDITION, true, parameters, (bool status, string response) => {
-            if (status)
-            {
-                action?.Invoke(true, response);
-            }
-            else
-            {
-                action?.Invoke(false, null);
-            }
+        gameManager.StartCoroutine(PutRequest(APIConstants.USER_AUDITION, true, parameters, action));
+    }
 
-        }));
+
+    public void SearchAuditions(Dictionary<string, object> parameters, Action<bool, string> action)
+    {
+        gameManager.StartCoroutine(PostRequest(APIConstants.SEARCH_AUDITION, true, parameters, action));
+    }
+    public void AcceptOrRejectAudition(Dictionary<string, object> parameters, Action<bool, string> action)
+    {
+        //"audition_id": 13,
+        //"user_audition_id": 13,
+        //"status": “selected“ or “rejected”
+        gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_AUDITION_STATUS, true, parameters, action));
     }
 }
 
@@ -122,5 +111,69 @@ public class AuditionsResponse
 {
     public string message;
     public List<Audition> data;
+    public int status;
+}
+
+[Serializable]
+public class JoinedAudition
+{
+    public int id;
+    public int audition_id;
+    public int user_id;
+    public string status;
+    public DateTime created_date_time;
+    public DateTime updatedAt;
+    public Audition Audition;
+}
+
+[Serializable]
+public class JoinedAuditionsResponse
+{
+    public string message;
+    public List<JoinedAudition> data;
+    public int status;
+}
+
+[Serializable]
+public class UserAudition
+{
+    public int id;
+    public int audition_id;
+    public int user_id;
+    public string status;
+    public DateTime created_date_time;
+    public DateTime updatedAt;
+    public List<string> UserAuditionMultimedia;
+}
+
+[Serializable]
+public class SearchAudition
+{
+    public int id;
+    public object project_cast_id;
+    public string topic;
+    public int project_id;
+    public int user_id;
+    public int rate_of_pay;
+    public string status;
+    public string title;
+    public object image_url;
+    public string description;
+    public int age_from;
+    public int no_of_persons_req;
+    public int no_of_persons_joined;
+    public int age_to;
+    public string type;
+    public DateTime end_date;
+    public DateTime created_date_time;
+    public DateTime updatedAt;
+    public List<UserAudition> UserAudition;
+}
+
+[Serializable]
+public class SearchAuditionResponse
+{
+    public string message;
+    public SearchAudition data;
     public int status;
 }

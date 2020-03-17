@@ -3,48 +3,85 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 
-public class AuditionCell : MonoBehaviour
+public class JoinedAuditionCell : MonoBehaviour
 {
     public Image icon;
     public TMP_Text titleText;
-    public TMP_Text ageText;
+    public TMP_Text endDate;
+    public TMP_Text statusText;
+    public GameObject TagObject;
 
-    Audition auditionData;
+    JoinedAudition auditionData;
     AuditionController auditionController;
     AuditionType auditionType;
 
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
 
-    public void SetView(AuditionController auditionController, Audition audition)
+    public void SetView(AuditionController auditionController, JoinedAudition audition)
     {
         auditionData = audition;
         this.auditionController = auditionController;
         auditionType = auditionController.auditionType;
         if (auditionData != null)
         {
-            titleText.text = auditionData.topic;
-            ageText.text = auditionData.age_to.ToString();
-
-            GameManager.Instance.downLoadManager.DownloadImage(auditionData.image_url, (sprite) => {
+            titleText.text = auditionData.Audition.topic;
+            endDate.text = "End date : " + DatePicker.Instance.GetDateString(auditionData.Audition.end_date);
+            GameManager.Instance.downLoadManager.DownloadImage(auditionData.Audition.image_url, (sprite) => {
                 icon.sprite = sprite;
             });
+            SetStatus(auditionData.status);
         }
     }
 
+    void SetStatus(string status)
+    {
+        if (string.IsNullOrEmpty(status))
+        {
+            TagObject.SetActive(false);
+            return;
+        }
+        TagObject.SetActive(true);
+        statusText.text = status;
+    }
     public void OnClickAction()
     {
+        AlertMessage.Instance.SetText("OnClickAction : "+auditionData.id, false);
         Debug.Log("OnClickAction ");
-        AuditionJoinView.Instance.Load(auditionData, false, (index) => {
-            switch (index)
+        if (auditionType == AuditionType.Joined)
+        {
+            AuditionJoinView.Instance.Load(auditionData.Audition, true, (index) =>
             {
-                case 3:
-                    GalleryButtonsPanel.Instance.Load(MediaButtonAction);
-                    break;
-                case 4:
-                    WithDrawAudition();
-                    break;
-            }
-        });
+                switch (index)
+                {
+                    case 3:
+                        GalleryButtonsPanel.Instance.Load(MediaButtonAction);
+                        break;
+                    case 4:
+                        WithDrawAudition();
+                        break;
+                }
+            });
+        }else if (auditionType == AuditionType.Created)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("id", auditionData.id);
+            parameters.Add("page", 0);
+            parameters.Add("limit", 20);
+
+            GameManager.Instance.apiHandler.SearchAuditions(parameters, (status, response) => {
+                if (status)
+                {
+                    Debug.Log(response);
+
+                    SearchAuditionResponse auditionResponse = JsonUtility.FromJson<SearchAuditionResponse>(response);
+                    
+                    if(auditionResponse.data.UserAudition!=null && auditionResponse.data.UserAudition.Count > 0)
+                    {
+                        auditionController.SetUserAuditions(auditionResponse.data.UserAudition);
+                    }
+                }
+            });
+        }
     }
 
     void Refresh()
@@ -89,7 +126,7 @@ public class AuditionCell : MonoBehaviour
 
                 uploadedDict.Add(kvp);
             }
-            JoinAudition();
+            UpdateAudition();
         }
         else
         {
@@ -117,7 +154,7 @@ public class AuditionCell : MonoBehaviour
 
                 uploadedDict.Add(kvp);
             }
-            JoinAudition();
+            UpdateAudition();
         }
         else
         {
@@ -145,7 +182,7 @@ public class AuditionCell : MonoBehaviour
 
                 uploadedDict.Add(kvp);
             }
-            JoinAudition();
+            UpdateAudition();
         }
         else
         {
@@ -184,9 +221,7 @@ public class AuditionCell : MonoBehaviour
     {
         AlertMessage.Instance.SetText("AuditionCell/UpdateAudition");
         Dictionary<string, object> parameters = new Dictionary<string, object>();
-        //parameters.Add("audition_id", auditionData.id);
-        parameters.Add("id", auditionData.project_id);
-        //parameters.Add("user_id", DataManager.Instance.userInfo.id);
+        parameters.Add("id", auditionData.id);
         parameters.Add("port_album_media", uploadedDict);
 
         GameManager.Instance.apiHandler.UpdateJoinedAudition(parameters, (status, response) => {
@@ -213,9 +248,7 @@ public class AuditionCell : MonoBehaviour
     void WithDrawAudition()
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
-        //parameters.Add("audition_id", auditionData.id);
-        parameters.Add("id", auditionData.project_id);
-        //parameters.Add("user_id", DataManager.Instance.userInfo.id);
+        parameters.Add("id", auditionData.id);
         parameters.Add("status", "inactive");
 
         GameManager.Instance.apiHandler.UpdateJoinedAudition(parameters, (status, response) => {

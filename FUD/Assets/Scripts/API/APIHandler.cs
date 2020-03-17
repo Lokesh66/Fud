@@ -410,7 +410,7 @@ public partial class APIHandler
         
         if (webRequest.responseCode.Equals(401))
         {
-            GameManager.Instance.SwitchToLogin();       
+            GameManager.Instance.SessionExpired();       
         }
         else if (webRequest.isNetworkError || webRequest.isHttpError)
         {
@@ -464,11 +464,11 @@ public partial class APIHandler
 
         if (webRequest.responseCode.Equals(401))
         {
-            GameManager.Instance.SwitchToLogin();
+            GameManager.Instance.SessionExpired();
         }
         else if (webRequest.isNetworkError || webRequest.isHttpError)
         {
-            Debug.LogErrorFormat("<APIManager/ POST/ ({0})> Error ({1})", webRequest.error, url);
+            Debug.LogErrorFormat("<APIManager/ POST/ ({0})> Error ({1})", webRequest.downloadHandler.text, url);
             callback?.Invoke(false, webRequest.error);
         }
         else
@@ -515,11 +515,11 @@ public partial class APIHandler
 
         if (webRequest.responseCode.Equals(401))
         {
-            GameManager.Instance.SwitchToLogin();
+            GameManager.Instance.SessionExpired();
         }
         else if (webRequest.isNetworkError || webRequest.isHttpError)
         {
-            Debug.LogErrorFormat("<APIManager/ PUT/ ({0})> Error ({1})", webRequest.error, url);
+            Debug.LogErrorFormat("<APIManager/ PUT/ ({0})> Error ({1})", webRequest.downloadHandler.text, url);
             callback?.Invoke(false, webRequest.error);
         }
         else

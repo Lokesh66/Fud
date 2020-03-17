@@ -93,7 +93,7 @@ public class GalleryManager : MonoBehaviour
                 OnUploaded?.Invoke(false, null);
             }
         }, "Select a PNG image");
-
+        AlertMessage.Instance.SetText("Permission result: " + permission);
         Debug.Log("Permission result: " + permission);
     }
 

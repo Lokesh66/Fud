@@ -70,6 +70,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void SessionExpired()
+    {
+        AlertModel alertModel = new AlertModel();
+
+        alertModel.message = "Session expired. \n Please login again.";
+
+        alertModel.okayButtonAction = SwitchToLogin;
+
+        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+    }
+
     public void SwitchToLogin()
     {
         sceneController.SwitchScene(ESceneType.LoginScene);

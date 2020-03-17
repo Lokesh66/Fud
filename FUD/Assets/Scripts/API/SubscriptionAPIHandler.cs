@@ -1,18 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using System;
 
 public partial class APIHandler
 {
-    public void GetSubscriptionPlans(int roleId, Action<bool, string> OnResponse)
+    public void GetSubscriptionPlans(string roleId, Action<bool, string> OnResponse)
     {
-        string url = APIConstants.GET_SUBSCRIPTION_PLANS + "role_id=" + roleId;
-
-        GetRequest(url, true, (status, response) => {
+        string url = APIConstants.GET_SUBSCRIPTION_PLANS;
+        if (!string.IsNullOrEmpty(roleId))
+        {
+            url += "?role_id=" + roleId;
+        }
+        gameManager.StartCoroutine(GetRequest(url, true, (status, response) => {
 
             OnResponse(status, response);
-        });
+        }));
     }
 }
 
