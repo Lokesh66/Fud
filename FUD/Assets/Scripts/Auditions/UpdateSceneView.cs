@@ -6,9 +6,7 @@ using System;
 
 public class UpdateSceneView : MonoBehaviour
 {
-    public CharacterDialoguesView dialoguesView;
-
-    public Transform parentPanel;
+    public UpdateSceneCharacterView dialoguesView;
 
     public TMP_Dropdown shootTimeDropdown;
     public TMP_Dropdown placeDropdown;
@@ -19,39 +17,54 @@ public class UpdateSceneView : MonoBehaviour
 
     public TextMeshProUGUI buttonText;
 
-    public TMP_Text errorText;
-
 
     ProjectScenesPanel scenesPanel;
 
-    bool isNewSceneCreated;
-
-    bool isDialoguesAdded = false;
-
-    SceneModel sceneModel;
+    SceneDetailsModel detailsModel;
 
     string defaultDateText = "Select Date";
 
     List<Dictionary<string, object>> dialoguesList = new List<Dictionary<string, object>>();
 
 
-    public void SetView(SceneModel sceneModel, ProjectScenesPanel scenesPanel)
+    public void Load(SceneDetailsModel detailsModel, ProjectScenesPanel scenesPanel)
     {
-        this.sceneModel = sceneModel;
-        parentPanel.gameObject.SetActive(true);
         this.scenesPanel = scenesPanel;
-        isNewSceneCreated = false;
 
-        isDialoguesAdded = false;
+        this.detailsModel = detailsModel;
+
+        gameObject.SetActive(true);
 
         buttonText.text = "Next";
 
-        SetView();
+        GameManager.Instance.apiHandler.GetSceneDetails(detailsModel.id, (status, response) => {
+
+            if (status)
+            {
+                SceneResponse responseModel = JsonUtility.FromJson<SceneResponse>(response);
+
+                this.detailsModel = responseModel.data;
+
+                SetView();
+            }
+        });
     }
 
     void SetView()
-    { 
-    
+    {
+        sceneOrderText.text = detailsModel.scene_order.ToString();
+
+        locationText.text = detailsModel.location;
+
+        descriptionText.text = detailsModel.description;
+
+        //TMP_Dropdown.OptionData option = shootTimeDropdown.options.Find(option => option.text.Equals(detailsModel.shoot_time));
+
+        shootTimeDropdown.value = shootTimeDropdown.options.FindIndex(option => shootTimeDropdown.options.Equals(detailsModel.shoot_time));
+
+        //TMP_Dropdown.OptionData placeOption = placeDropdown.options.Find(option => option.text.Equals(detailsModel.place_type));
+
+        placeDropdown.value = placeDropdown.options.FindIndex(option => placeDropdown.options.Equals(detailsModel.place_type));
     }
 
     public void OnDateSelectAction()
@@ -67,43 +80,36 @@ public class UpdateSceneView : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void CreateSceneButtonAction()
+    public void OnSaveButtonAction()
     {
-        if (!isDialoguesAdded)
+        if (!CanCallAPI())
         {
-            ShowDialougesPanel();
+            return;
         }
         else
         {
-            if (!CanCallAPI())
+            string selectedPlace = placeDropdown.options[placeDropdown.value].text;
+
+            string shootTime = shootTimeDropdown.options[shootTimeDropdown.value].text;
+
+            SceneCreationModel creationModel = new SceneCreationModel();
+
+            creationModel.scene_characters = new List<SceneCharacterBody>();
+
+            creationModel.decsription = descriptionText.text;
+            creationModel.location = locationText.text;
+            creationModel.place_type = selectedPlace;
+            creationModel.project_id = detailsModel.project_id;
+            creationModel.story_id = detailsModel.story_id;
+            creationModel.story_version_id = detailsModel.story_version_id;
+            creationModel.shoot_time = shootTime;
+            creationModel.scene_order = int.Parse(sceneOrderText.text);
+            creationModel.start_time = startDateText.text;
+
+            /*GameManager.Instance.apiHandler.UpdateProjectScene(creationModel, detailsModel.id, dialoguesList, (status, response) =>
             {
-                return;
-            }
-            else
-            {
-                string selectedPlace = placeDropdown.options[placeDropdown.value].text;
-
-                string shootTime = shootTimeDropdown.options[shootTimeDropdown.value].text;
-
-                SceneCreationModel creationModel = new SceneCreationModel();
-
-                creationModel.scene_characters = new List<SceneCharacter>();
-
-                creationModel.decsription = descriptionText.text;
-                creationModel.location = locationText.text;
-                creationModel.place_type = selectedPlace;
-                /*creationModel.project_id = projectModel.id;
-                creationModel.story_id = projectModel.story_id;
-                creationModel.story_version_id = projectModel.story_version_id;*/
-                creationModel.shoot_time = shootTime;
-                creationModel.scene_order = int.Parse(sceneOrderText.text);
-                creationModel.start_time = startDateText.text;
-
-                GameManager.Instance.apiHandler.CreateProjectScene(creationModel, dialoguesList, (status, response) =>
-                {
-                    OnAPIResponse(status);
-                });
-            }
+                OnAPIResponse(status);
+            });*/
         }
     }
 
@@ -111,7 +117,7 @@ public class UpdateSceneView : MonoBehaviour
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Story Creation Success" : "Something went wrong, please try again.";
+        alertModel.message = status ? "Scene Updation Success" : "Something went wrong, please try again.";
 
         if (status)
         {
@@ -125,8 +131,6 @@ public class UpdateSceneView : MonoBehaviour
 
     void OnSuccessResponse()
     {
-        isNewSceneCreated = true;
-
         BackButtonAction();
     }
 
@@ -168,18 +172,16 @@ public class UpdateSceneView : MonoBehaviour
 
     void ShowDialougesPanel()
     {
-        dialoguesView.EnableView();
+        //dialoguesView.EnableView();
     }
 
     public void OnSaveDialogues(List<Dictionary<string, object>> dialogues)
     {
         dialoguesList = dialogues;
+    }
 
-        if (dialoguesList.Count > 0)
-        {
-            buttonText.text = "Create";
-
-            isDialoguesAdded = true;
-        }
+    public void OnNextButtonAction()
+    { 
+    
     }
 }

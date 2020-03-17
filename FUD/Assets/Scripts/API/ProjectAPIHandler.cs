@@ -82,7 +82,7 @@ public partial class APIHandler
         }));
     }
 
-    public void CreateProjectScene(SceneCreationModel creationModel, List<Dictionary<string, object>> characterScenes, Action<bool, string> action)
+    public void CreateProjectScene(SceneCreationModel creationModel, List<SceneCharacterBody> characterScenes, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -112,9 +112,53 @@ public partial class APIHandler
         }));
     }
 
+    public void UpdateProjectScene(SceneCreationModel creationModel, int sceneId, List<SceneCharacterBody> characterScenes, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("id", sceneId);
+
+        parameters.Add("project_id", creationModel.project_id);
+
+        parameters.Add("story_id", creationModel.story_id);
+
+        parameters.Add("story_version_id", creationModel.story_version_id);
+
+        parameters.Add("start_time", creationModel.start_time);
+
+        parameters.Add("decsription", creationModel.decsription);
+
+        parameters.Add("location", creationModel.location);
+
+        parameters.Add("scene_order", creationModel.scene_order);
+
+        parameters.Add("place_type", creationModel.place_type);
+
+        parameters.Add("shoot_time", creationModel.shoot_time);
+
+        parameters.Add("scene_characters", characterScenes);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_PROJECT_SCENE, true, parameters, (status, response) =>
+        {
+            action(status, response);
+        }));
+    }
+
     public void CreateProjectCast(Dictionary<string, object> parameters, Action<bool, string> action)
     {
         gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_PROJECT_CAST, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void GetSceneDetails(int id, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("id", id);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.GET_SCENE_DETAILS, true, parameters, (status, response) => {
 
             action(status, response);
         }));
@@ -223,12 +267,13 @@ public class ProjectCharactersResponse : BaseResponse
 }
 
 [Serializable]
-public class SceneCharacter
+public class SceneCharacterBody
 {
-    public int character_id = 1;
-    public string dailogue = "Hello hero";
+    public int character_id;
+    public string dailogue;
 }
 
+[Serializable]
 public class SceneCreationModel
 {
     public int project_id;
@@ -240,5 +285,42 @@ public class SceneCreationModel
     public int scene_order;
     public string location;
     public string start_time;
-    public List<SceneCharacter> scene_characters;
+    public List<SceneCharacterBody> scene_characters;
+}
+
+[Serializable]
+public class SceneCharacter
+{
+    public int id;
+    public int scene_id;
+    public int character_id;
+    public string dailogue;
+    public DateTime created_date_time;
+    public string updatedAt;
+    public UserData Users;
+}
+
+[Serializable]
+public class SceneDetailsModel
+{
+    public int id;
+    public string place_type;
+    public string description;
+    public string shoot_time;
+    public int story_id;
+    public int scene_order;
+    public int story_version_id;
+    public int project_id;
+    public string location;
+    public DateTime start_time;
+    public int status;
+    public DateTime created_date_time;
+    public string updatedAt;
+    public List<SceneCharacter> SceneCharacters;
+}
+
+[Serializable]
+public class SceneResponse : BaseResponse
+{
+    public SceneDetailsModel data;
 }

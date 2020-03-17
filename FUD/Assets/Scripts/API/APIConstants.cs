@@ -84,6 +84,8 @@ public class APIConstants
 
     public const string CREATE_PROJECT_SCENE = BASE_URL + "v1/project/storyScene/";
 
+    public const string GET_SCENE_DETAILS = BASE_URL + "v1/project/searchStoryScene/";
+
     public const string GET_SUBSCRIPTION_PLANS = SUBSCRIPTION_BASE_URL + "v1/getPlanFeatures";
 
     public const string GET_CASH_FREE_TOKEN = SUBSCRIPTION_BASE_URL + "v1/generateOrderToken/";

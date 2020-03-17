@@ -6,32 +6,18 @@ using TMPro;
 public class SceneDetailsView : MonoBehaviour
 {
 
-    //public Image userImage;
+    SceneModel sceneModel;
 
-    public TextMeshProUGUI description;
-
-    public UpdateStoryVersionView updateVersionView;
+    ProjectScenesPanel scenesPanel;
 
 
-    StoryVersion storyVersion;
-
-    StoryVersionsView versionsView;
-
-
-    public void Load(StoryVersion storyVersion, StoryVersionsView versionsView)
+    public void Load(SceneModel sceneModel, ProjectScenesPanel scenesPanel)
     {
-        this.storyVersion = storyVersion;
+        this.sceneModel = sceneModel;
 
-        this.versionsView = versionsView;
+        this.scenesPanel = scenesPanel;
 
         gameObject.SetActive(true);
-
-        SetView();
-    }
-
-    void SetView()
-    {
-        //description.text = storyVersion.description;
     }
 
     public void OnButtonAction(int buttonIndex)
@@ -44,15 +30,12 @@ public class SceneDetailsView : MonoBehaviour
                 OnEditButtonAction();
                 break;
             case 1:
-                OnMediaButtonAction();
+                OnViewButtonAction();
                 break;
             case 2:
-                OnShareButtonAction();
-                break;
-            case 3:
                 OnDeleteButtonAction();
                 break;
-            case 4:
+            case 3:
                 OnCancelButtonAction();
                 break;
         }
@@ -67,41 +50,28 @@ public class SceneDetailsView : MonoBehaviour
 
     void OnEditButtonAction()
     {
-        //updateVersionView.Load(storyVersion, this);
+        //sceneView.Load(sceneModel);
+    }
+
+    void OnViewButtonAction()
+    {
+        scenesPanel.OnViewButtonAction(sceneModel);
     }
 
     void OnDeleteButtonAction()
     {
-        int storyId = StoryDetailsController.Instance.GetStoryId();
-
-        GameManager.Instance.apiHandler.RemoveStoryVersion(storyVersion.id, storyId, 8, (status) => {
+        GameManager.Instance.apiHandler.RemoveProjectScene(sceneModel.id, 8, (status) =>
+        {
 
             if (status)
             {
-                versionsView.OnRemoveVersion(storyVersion);
+                scenesPanel.RemoveScene(sceneModel);
             }
         });
     }
 
-    void OnShareButtonAction()
-    {
-        versionsView.OnShareButtonAction(storyVersion);
-    }
-
-    void OnMediaButtonAction()
-    {
-        versionsView.OnMediaButtonAction(storyVersion);
-    }
-
     void Reset()
     {
-        description.text = string.Empty;
-
-        //userImage.sprite = null;
-    }
-
-    public void OnEditCallBack(StoryVersion storyVersion)
-    {
-        versionsView.UpdateStoryVersion(storyVersion);
+        
     }
 }

@@ -28,7 +28,7 @@ public class CreateScenesView : MonoBehaviour
     }
     #endregion
 
-    public CharacterDialoguesView dialoguesView;
+    public CreateDialoguesView dialoguesView;
 
     public Transform parentPanel;
 
@@ -53,7 +53,7 @@ public class CreateScenesView : MonoBehaviour
 
     Action<bool> backAction;
 
-    List<Dictionary<string, object>> dialoguesList = new List<Dictionary<string, object>>();
+    List<SceneCharacterBody> dialoguesList = new List<SceneCharacterBody>();
 
 
     public void SetView(Project projectModel, Action<bool> action)
@@ -104,7 +104,7 @@ public class CreateScenesView : MonoBehaviour
 
                 SceneCreationModel creationModel = new SceneCreationModel();
 
-                creationModel.scene_characters = new List<SceneCharacter>();
+                creationModel.scene_characters = new List<SceneCharacterBody>();
 
                 creationModel.decsription = descriptionText.text;
                 creationModel.location = locationText.text;
@@ -188,7 +188,7 @@ public class CreateScenesView : MonoBehaviour
         dialoguesView.EnableView();
     }
 
-    public void OnSaveDialogues(List<Dictionary<string, object>> dialogues)
+    public void OnSaveDialogues(List<SceneCharacterBody> dialogues)
     {
         dialoguesList = dialogues;
 

@@ -167,7 +167,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6857406062479569033}
+      - m_Target: {fileID: 0}
         m_MethodName: OnBackButtonAction
         m_Mode: 1
         m_Arguments:
@@ -375,7 +375,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 300}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &802569075405042150
 MonoBehaviour:
@@ -409,7 +409,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 0
+  m_Spacing: 30
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -476,7 +476,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -736,7 +736,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6857406062479569033}
+      - m_Target: {fileID: 0}
         m_MethodName: OnSaveButtonAction
         m_Mode: 1
         m_Arguments:
@@ -1539,7 +1539,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6857406062479569033}
+      - m_Target: {fileID: 0}
         m_MethodName: OnEnterButtonAction
         m_Mode: 1
         m_Arguments:
@@ -1561,9 +1561,9 @@ GameObject:
   - component: {fileID: 2424957851327601070}
   - component: {fileID: 5666779305173455557}
   - component: {fileID: 2273017432998259633}
-  - component: {fileID: 6857406062479569033}
   - component: {fileID: 6780928104938629625}
   - component: {fileID: 7558687174771732671}
+  - component: {fileID: 6731443456305267300}
   m_Layer: 5
   m_Name: CharacterDialougesPanel
   m_TagString: Untagged
@@ -1628,28 +1628,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6857406062479569033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6459716536251983860}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34d18312ea1591d4b84121977bfa280e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scrollRect: {fileID: 7263708245331662816}
-  dialogueCell: {fileID: 8915839698818473315, guid: 3e28435f21d55014288a25107e48eb5d,
-    type: 3}
-  enterButton: {fileID: 1078278077223656682}
-  dialogueField: {fileID: 4308117357658387625}
-  searchContent: {fileID: 369369520086260333}
-  searchScrollTrans: {fileID: 2586293029965326079}
-  searchCell: {fileID: 5902583662671737061, guid: 4214330a0bc88df4b9979a669fad107c,
-    type: 3}
-  scrollObject: {fileID: 5202317918970134007}
 --- !u!223 &6780928104938629625
 Canvas:
   m_ObjectHideFlags: 0
@@ -1688,6 +1666,28 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &6731443456305267300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6459716536251983860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e2e23413d7505f4b8b895615763abc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scrollRect: {fileID: 7263708245331662816}
+  dialogueCell: {fileID: 8915839698818473315, guid: 3e28435f21d55014288a25107e48eb5d,
+    type: 3}
+  enterButton: {fileID: 1078278077223656682}
+  dialogueField: {fileID: 4308117357658387625}
+  searchContent: {fileID: 369369520086260333}
+  searchScrollTrans: {fileID: 2586293029965326079}
+  searchCell: {fileID: 5902583662671737061, guid: 4214330a0bc88df4b9979a669fad107c,
+    type: 3}
+  scrollObject: {fileID: 5202317918970134007}
 --- !u!1 &6755121902250669542
 GameObject:
   m_ObjectHideFlags: 0
@@ -1996,7 +1996,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6857406062479569033}
+      - m_Target: {fileID: 0}
         m_MethodName: OnValueChange
         m_Mode: 1
         m_Arguments:

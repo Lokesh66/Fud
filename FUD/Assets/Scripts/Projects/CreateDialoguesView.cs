@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 
-public class CharacterDialoguesView : MonoBehaviour
+public class CreateDialoguesView : MonoBehaviour
 {
     public ScrollRect scrollRect;
 
@@ -22,7 +22,9 @@ public class CharacterDialoguesView : MonoBehaviour
     public GameObject scrollObject;
 
 
-    List<Dictionary<string, object>> dialogues = new List<Dictionary<string, object>>();
+    List<SceneCharacterBody> dialogues = new List<SceneCharacterBody>();
+
+    List<DialogueCell> dialogueCells = new List<DialogueCell>();
 
     UserSearchModel selectedModel = null;
 
@@ -35,6 +37,8 @@ public class CharacterDialoguesView : MonoBehaviour
     float searchScrollMaxHeight = 400.0f;
 
     float searchCellHeight = 100.0f;
+
+    DialogueCell editedDialogueCell;
 
 
     public void EnableView()
@@ -136,25 +140,38 @@ public class CharacterDialoguesView : MonoBehaviour
 
     public void OnEnterButtonAction()
     {
-        GameObject dialogueObj = Instantiate(dialogueCell, scrollRect.content);
+        if (editedDialogueCell != null)
+        {
+            int index = dialogueCells.IndexOf(editedDialogueCell);
 
-        dialogueObj.GetComponent<DialogueCell>().SetView(dialogueField.text, isLeftAlign);
+            editedDialogueCell.SetView(dialogueField.text, editedDialogueCell.isLeftAlign, OnButtonAction);
 
-        Dictionary<string, object> kvp = new Dictionary<string, object>();
+            editedDialogueCell = null;
+        }
+        else
+        {
+            GameObject dialogueObj = Instantiate(dialogueCell, scrollRect.content);
 
-        kvp.Add("character_id", selectedModel.id);
+            dialogueObj.GetComponent<DialogueCell>().SetView(dialogueField.text, isLeftAlign, OnButtonAction);
 
-        kvp.Add("dailogue", dialogueField.text);
+            dialogueCells.Add(dialogueObj.GetComponent<DialogueCell>());
 
-        dialogues.Add(kvp);
+            SceneCharacterBody sceneCharacter = new SceneCharacterBody();
+            
+            sceneCharacter.character_id = selectedModel.id;
 
-        keyword = dialogueField.text = string.Empty;
+            sceneCharacter.dailogue = dialogueField.text;
 
-        scrollRect.verticalNormalizedPosition = 0.0f;
+            dialogues.Add(sceneCharacter);
 
-        selectedModel = null;
+            keyword = dialogueField.text = string.Empty;
 
-        isLeftAlign = !isLeftAlign;
+            scrollRect.verticalNormalizedPosition = 0.0f;
+
+            selectedModel = null;
+
+            isLeftAlign = !isLeftAlign;
+        }
     }
 
     public void OnSaveButtonAction()
@@ -171,11 +188,24 @@ public class CharacterDialoguesView : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    void OnButtonAction(DialogueCell editedDialogueCell)
+    {
+        this.editedDialogueCell = editedDialogueCell;
+
+        TouchScreenKeyboard.Open(editedDialogueCell.dialogueText.text);
+
+        dialogueField.text = editedDialogueCell.dialogueText.text;
+    }
+
     void ResetData()
     {
         selectedModel = null;
 
         keyword = dialogueField.text = string.Empty;
+
+        dialogues.Clear();
+
+        dialogueCells.Clear();
 
         searchContent.DestroyChildrens();
 

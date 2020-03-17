@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using TMPro;
 
 public class ProjectSceneCell : MonoBehaviour
@@ -11,10 +12,14 @@ public class ProjectSceneCell : MonoBehaviour
     SceneModel sceneModel;
     int index = 0;
 
-    public void SetView(int index, SceneModel sceneModel)
+    Action<SceneModel> OnCellButtonAction;
+
+    public void SetView(int index, SceneModel sceneModel, Action<SceneModel> OnCellButtonAction)
     {
         this.sceneModel = sceneModel;
         this.index = index;
+
+        this.OnCellButtonAction = OnCellButtonAction;
 
         if (this.sceneModel != null)
         {
@@ -28,5 +33,6 @@ public class ProjectSceneCell : MonoBehaviour
     public void OnClickAction()
     {
         Debug.Log("OnClickAction ");
+        OnCellButtonAction?.Invoke(sceneModel);
     }
 }

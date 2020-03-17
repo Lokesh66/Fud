@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine.UI;
+using UnityEngine;
+using System;
 using TMPro;
-using System.Collections;
 
 public class DialogueCell : MonoBehaviour
 {
@@ -10,6 +12,10 @@ public class DialogueCell : MonoBehaviour
 
     public TextMeshProUGUI dialogueText;
 
+    public Button cellButton;
+
+    [HideInInspector]
+    public bool isLeftAlign;
 
     Vector2 topLeftAnchor = new Vector2(0, 1);
 
@@ -17,10 +23,17 @@ public class DialogueCell : MonoBehaviour
 
     float padding = 40.0f;
 
+    Action<DialogueCell> OnCellButtonAction;
 
-    public void SetView(string message, bool isLeftAlign)
+    public void SetView(string message, bool isLeftAlign, Action<DialogueCell> OnCellButtonAction)
     {
         dialogueText.text = message;
+
+        this.isLeftAlign = isLeftAlign;
+
+        this.OnCellButtonAction = OnCellButtonAction;
+
+        cellButton.enabled = OnCellButtonAction != null;
 
         StartCoroutine(UpdateBackGround(isLeftAlign)); 
     }
@@ -42,5 +55,10 @@ public class DialogueCell : MonoBehaviour
         backGroundTrans.anchorMax = anchorPoint;
 
         backGroundTrans.pivot = anchorPoint;
+    }
+
+    public void OnButtonAction()
+    {
+        OnCellButtonAction?.Invoke(this);
     }
 }

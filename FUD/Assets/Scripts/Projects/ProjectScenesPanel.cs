@@ -8,11 +8,11 @@ public class ProjectScenesPanel : MonoBehaviour
     public GameObject addNewButton;
     public NoDataView noData;
 
-    public ProjectSceneDetails sceneDetails;
+    public SceneDetailsView sceneDetails;
 
     public ProjectSceneView sceneView;
 
-
+    public UpdateSceneView updateSceneView;
 
 
     Project projectModel;
@@ -45,15 +45,20 @@ public class ProjectScenesPanel : MonoBehaviour
             {
                 GameObject sceneObject = Instantiate(sceneCell, parentContent);
 
-                sceneObject.GetComponent<ProjectSceneCell>().SetView(i, sceneModels[i]);
+                sceneObject.GetComponent<ProjectSceneCell>().SetView(i, sceneModels[i], OnCellButtonAction);
             }
         }
         else
         {
             EnableNodata();
         }
-
     }
+
+    void OnCellButtonAction(SceneModel sceneModel)
+    {
+        sceneDetails.Load(sceneModel, this);
+    }
+
     public void CreateScene()
     {
         CreateScenesView.Instance.SetView(projectModel, (isNewDataUpdated) => {
@@ -90,5 +95,15 @@ public class ProjectScenesPanel : MonoBehaviour
         {
             EnableNodata();
         }
+    }
+
+    public void OnEditButtonAction(SceneModel sceneModel)
+    {
+        //updateSceneView.Load(sceneModel, this);
+    }
+
+    public void OnViewButtonAction(SceneModel sceneModel)
+    {
+        sceneView.Load(sceneModel, this);
     }
 }
