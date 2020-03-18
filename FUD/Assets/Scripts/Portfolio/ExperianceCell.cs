@@ -25,6 +25,8 @@ public class ExperianceCell : MonoBehaviour
         this.experianceModel = experianceModel;
 
         this.OnButtonAction = OnButtonAction;
+
+        descriptionText.text = experianceModel.description;
     }
 
     public void OnTapAction()

@@ -35,6 +35,8 @@ public class UpdateStoryVersionView : MonoBehaviour
     {
         gameObject.SetActive(true);
 
+        descriptionField.textComponent.enableWordWrapping = true;
+
         this.storyVersion = storyVersion;
 
         this.detailsView = detailsView;

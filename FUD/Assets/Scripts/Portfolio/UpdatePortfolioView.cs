@@ -21,7 +21,7 @@ public class UpdatePortfolioView : MonoBehaviour
 
     PortfolioModel portfolioModel;
 
-    string contentUrl = string.Empty;
+    bool isShowingGalleryPanel = false;
 
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
 
@@ -230,6 +230,8 @@ public class UpdatePortfolioView : MonoBehaviour
 
     void SlideGalleryView(bool canShow)
     {
+        isShowingGalleryPanel = canShow;
+
         float panelPosition = galleryPanel.anchoredPosition.y;
 
         float targetPostion = panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
@@ -239,6 +241,11 @@ public class UpdatePortfolioView : MonoBehaviour
 
     public void OnBackButtonAction()
     {
+        if (isShowingGalleryPanel)
+        {
+            SlideGalleryView(false);
+        }
+
         gameObject.SetActive(false);
     }
 }

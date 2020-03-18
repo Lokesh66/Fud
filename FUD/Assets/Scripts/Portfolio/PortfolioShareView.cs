@@ -44,6 +44,12 @@ public class PortfolioShareView : MonoBehaviour
 
             GetSearchedUsers();
         }
+        else {
+            if (searchField.text.Length == 0)
+            {
+                searchContent.DestroyChildrens();
+            }
+        }
     }
 
     void GetSearchedUsers()
@@ -88,11 +94,34 @@ public class PortfolioShareView : MonoBehaviour
 
             if (status)
             {
-                Reset();
 
-                OnBackAction();
             }
+
+            OnAPIResponse(status);
         });
+    }
+
+    void OnAPIResponse(bool status)
+    {
+        AlertModel alertModel = new AlertModel();
+
+        alertModel.message = status ? "Story Creation Success" : "Something went wrong, please try again.";
+
+        if (status)
+        {
+            alertModel.okayButtonAction = OnSuccessResponse;
+
+            alertModel.canEnableTick = true;
+        }
+
+        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+    }
+
+    void OnSuccessResponse()
+    {
+        Reset();
+
+        OnBackAction();
     }
 
     bool CanCallAPI()
