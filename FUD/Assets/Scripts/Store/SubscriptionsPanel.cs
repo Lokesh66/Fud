@@ -18,7 +18,7 @@ public class SubscriptionsPanel : MonoBehaviour
         subscriptionsList = new List<SubscriptionModel>();
         string roleId = DataManager.Instance.userInfo.role_id.ToString();
         roleId = "";
-        GameManager.Instance.apiHandler.GetSubscriptionPlans(roleId, (status, response) => {
+        /*GameManager.Instance.apiHandler.GetSubscriptionPlans(roleId, (status, response) => {
 
             if (status)
             {
@@ -27,7 +27,7 @@ public class SubscriptionsPanel : MonoBehaviour
                     
                 SetView();
             }
-        });
+        });*/
     }
 
     void SetView()

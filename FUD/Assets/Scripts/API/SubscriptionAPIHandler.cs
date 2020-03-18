@@ -3,13 +3,20 @@ using System;
 
 public partial class APIHandler
 {
-    public void GetSubscriptionPlans(string roleId, Action<bool, string> OnResponse)
+    public void GetSubscriptionPlans(string roleId, string planDuration, Action<bool, string> OnResponse)
     {
         string url = APIConstants.GET_SUBSCRIPTION_PLANS;
+
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
         if (!string.IsNullOrEmpty(roleId))
         {
             url += "?role_id=" + roleId;
+            
+            parameters.Add("Plan_duration", planDuration);
         }
+
+
         gameManager.StartCoroutine(GetRequest(url, true, (status, response) => {
 
             OnResponse(status, response);

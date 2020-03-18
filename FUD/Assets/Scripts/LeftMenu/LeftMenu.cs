@@ -8,7 +8,7 @@ public class LeftMenu : MonoBehaviour
 {
     public SettingsPanel settingsPanel;
     public MyProfilePanel profilePanel;
-    public SubscriptionView subscriptionView;
+    public SubscriptionController subscriptionController;
 
     public Image profileIcon;
     public TMP_Text nameText;
@@ -38,6 +38,6 @@ public class LeftMenu : MonoBehaviour
 
     public void OnSubscrptionButtonAction()
     {
-        subscriptionView.Load();
+        subscriptionController.EnableView();
     }
 }
