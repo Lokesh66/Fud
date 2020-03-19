@@ -51,6 +51,7 @@ public partial class APIHandler
                 response.Add (orderNote, ORDER_NOTE_KEY, orderNote, parameters);            // Optional
                 response.Add (customerName, CUSTOMER_NAME_KEY, customerName, parameters);   // Optional
                 response.Add (response.notifyUrl, CUSTOMER_NAME_KEY, response.notifyUrl, parameters);   // Optional
+                response.Add(response.returnUrl, CUSTOMER_NAME_KEY, response.returnUrl, parameters);   // Optional
 
 
                 AndroidJavaObject paramObj = CreateJavaMapFromDictainary (parameters);
@@ -123,6 +124,7 @@ public class CFPToken
     public string token;
     public string stage;
     public string notifyUrl;
+    public string returnUrl;
 
     public Dictionary<string, string> ConvertToParameters()
     {

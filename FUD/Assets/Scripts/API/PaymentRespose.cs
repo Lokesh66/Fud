@@ -7,5 +7,6 @@ public class PaymentRespose : MonoBehaviour
     public void onPaymentResponseRecieved(string s)
     {
         Debug.Log ("onPaymentResponseRecieved = " + s);
+        AlertMessage.Instance.SetText("onPaymentResponseRecieved : "+s, false);
     }
 }

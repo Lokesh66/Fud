@@ -14,7 +14,7 @@ public class AuditionController : MonoBehaviour
 
     public GameObject auditionCell;
 
-    public GameObject noDataObject;
+    public NoDataView noDataView;
 
     public AuditionType auditionType;
 
@@ -32,7 +32,7 @@ public class AuditionController : MonoBehaviour
         }
         if (auditions != null && auditions.Count > 0)
         {
-            noDataObject.SetActive(false);
+            noDataView.gameObject.SetActive(false);
 
             for (int i = 0; i < auditions.Count; i++)
             {
@@ -43,7 +43,8 @@ public class AuditionController : MonoBehaviour
         }
         else
         {
-            noDataObject.SetActive(true);
+            noDataView.gameObject.SetActive(true);
+            noDataView.SetView(GetNoDataModel());
         }
     }
 
@@ -55,7 +56,7 @@ public class AuditionController : MonoBehaviour
         }
         if (auditions != null && auditions.Count > 0)
         {
-            noDataObject.SetActive(false);
+            noDataView.gameObject.SetActive(false);
 
             for (int i = 0; i < auditions.Count; i++)
             {
@@ -66,7 +67,8 @@ public class AuditionController : MonoBehaviour
         }
         else
         {
-            noDataObject.SetActive(true);
+            noDataView.gameObject.SetActive(true);
+            noDataView.SetView(GetNoDataModel());
         }
     }
 
@@ -80,7 +82,7 @@ public class AuditionController : MonoBehaviour
 
     public void GetAuditions()
     {
-        noDataObject.SetActive(false);
+        noDataView.gameObject.SetActive(false);
 
         Debug.Log("GetAuditions");
         GameManager.Instance.apiHandler.FetchAuditions(auditionType, (status, response) => {
@@ -99,7 +101,8 @@ public class AuditionController : MonoBehaviour
             }
             else
             {
-                noDataObject.SetActive(true);
+                noDataView.gameObject.SetActive(true);
+                noDataView.SetView(GetNoDataModel());
             }
         });   
     }
@@ -128,4 +131,23 @@ public class AuditionController : MonoBehaviour
         });
     }
     #endregion
+
+    NoDataModel GetNoDataModel()
+    {
+        NoDataModel noDataModel = new NoDataModel();
+        switch (auditionType)
+        {
+            case AuditionType.Live:
+                noDataModel.subTitle = "No Live Auditions Right Now";
+                break;
+            case AuditionType.Joined:
+                noDataModel.subTitle = "No Joined Auditions Right Now";
+                break;
+            case AuditionType.Created:
+                noDataModel.subTitle = "No Created Auditions Right Now";
+                break;
+        }
+
+        return noDataModel;
+    }
 }
