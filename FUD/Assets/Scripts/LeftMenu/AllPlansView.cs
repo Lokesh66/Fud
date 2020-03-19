@@ -90,8 +90,21 @@ public class AllPlansView : MonoBehaviour
         {
             GameObject planObject = Instantiate(planCell, content);
 
-            planObject.GetComponent<SubscriptionPlanCell>().Load(modelsList[i]);
+            planObject.GetComponent<SubscriptionPlanCell>().Load(modelsList[i], OnSubscriptionSelectAction);
         }
+    }
+
+    void OnSubscriptionSelectAction(SubscriptionModel model)
+    {
+        Debug.Log("OnSubscriptionSelectAction : " + model.name);
+
+        Dictionary<string, object> planIdInfo = new Dictionary<string, object>
+        {
+            { "plan_id", model.id }
+        };
+        Debug.Log("CashFree button action");
+        GameManager.Instance.apiHandler.CashFreeRequest(DataManager.Instance.userInfo.phone.ToString(),
+            DataManager.Instance.userInfo.email_id, planIdInfo);
     }
 
     void ShowRoleDropDown()

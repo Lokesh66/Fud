@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class SubscriptionPlanCell : MonoBehaviour
 {
@@ -22,11 +23,12 @@ public class SubscriptionPlanCell : MonoBehaviour
 
 
     SubscriptionModel subscriptionModel;
+    Action<SubscriptionModel> OnClick;
 
-    public void Load(SubscriptionModel subscriptionModel)
+    public void Load(SubscriptionModel subscriptionModel, Action<SubscriptionModel> action)
     {
         this.subscriptionModel = subscriptionModel;
-
+        OnClick = action;
         SetView();
     }
 
@@ -46,5 +48,10 @@ public class SubscriptionPlanCell : MonoBehaviour
 
             subCellObject.GetComponent<PlanSubCell>().Load(featuresList[i]);
         }
+    }
+
+    public void OnClickAction()
+    {
+        OnClick?.Invoke(subscriptionModel);
     }
 }
