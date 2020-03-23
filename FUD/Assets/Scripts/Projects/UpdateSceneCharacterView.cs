@@ -27,7 +27,7 @@ public class UpdateSceneCharacterView : MonoBehaviour
 
     DialogueCell editedDialogueCell;
 
-    List<Dictionary<string, object>> dialogues = new List<Dictionary<string, object>>();
+    List<SceneCharacterBody> dialogues = new List<SceneCharacterBody>();
 
     List<DialogueCell> dialogueCells = new List<DialogueCell>();
 
@@ -44,7 +44,7 @@ public class UpdateSceneCharacterView : MonoBehaviour
 
             string fieldMessage = sceneCharacters[i].Users.name + " : " + sceneCharacters[i].dailogue;
 
-            dialogueObject.GetComponent<DialogueCell>().SetView(fieldMessage, isLeftAlign, null, OnCellButtonAction);
+            dialogueObject.GetComponent<DialogueCell>().SetView(fieldMessage, isLeftAlign, OnCellButtonAction);
 
             isLeftAlign = !isLeftAlign;
         }
@@ -63,7 +63,7 @@ public class UpdateSceneCharacterView : MonoBehaviour
         {
             int index = dialogueCells.IndexOf(editedDialogueCell);
 
-            //editedDialogueCell.SetView(dialogueField.text, editedDialogueCell.isLeftAlign, OnCellButtonAction);
+            editedDialogueCell.SetView(dialogueField.text, editedDialogueCell.isLeftAlign, OnCellButtonAction);
 
             editedDialogueCell = null;
         }
@@ -71,15 +71,15 @@ public class UpdateSceneCharacterView : MonoBehaviour
         {
             GameObject dialogueObj = Instantiate(dialogueCell, scrollRect.content);
 
-            //dialogueObj.GetComponent<DialogueCell>().SetView(dialogueField.text, isLeftAlign, OnCellButtonAction);
+            dialogueObj.GetComponent<DialogueCell>().SetView(dialogueField.text, isLeftAlign, OnCellButtonAction);
 
             dialogueCells.Add(dialogueObj.GetComponent<DialogueCell>());
 
-            Dictionary<string, object> sceneCharacter = new Dictionary<string, object>();
+            SceneCharacterBody sceneCharacter = new SceneCharacterBody();
 
-            sceneCharacter.Add("character_id", selectedModel.id);
+            sceneCharacter.character_id = selectedModel.id;
 
-            sceneCharacter.Add("dailogue", dialogueField.text);
+            sceneCharacter.dailogue = dialogueField.text;
 
             dialogues.Add(sceneCharacter);
 

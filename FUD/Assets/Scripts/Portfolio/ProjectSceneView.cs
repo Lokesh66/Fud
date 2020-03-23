@@ -21,7 +21,7 @@ public class ProjectSceneView : MonoBehaviour
 
     SceneDetailsModel detailsModel;
 
-    List<Dictionary<string, object>> dialoguesList = new List<Dictionary<string, object>>();
+    List<SceneCharacterBody> dialoguesList = new List<SceneCharacterBody>();
 
 
     public void Load(SceneModel sceneModel, ProjectScenesPanel scenesPanel)

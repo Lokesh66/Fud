@@ -15,9 +15,6 @@ public class DialogueCell : MonoBehaviour
     public Button cellButton;
 
     [HideInInspector]
-    public UserSearchModel userSearchModel;
-
-    [HideInInspector]
     public bool isLeftAlign;
 
     Vector2 topLeftAnchor = new Vector2(0, 1);
@@ -28,15 +25,13 @@ public class DialogueCell : MonoBehaviour
 
     Action<DialogueCell> OnCellButtonAction;
 
-    public void SetView(string message, bool isLeftAlign, UserSearchModel userSearchModel, Action<DialogueCell> OnCellButtonAction)
+    public void SetView(string message, bool isLeftAlign, Action<DialogueCell> OnCellButtonAction)
     {
         dialogueText.text = message;
 
         this.isLeftAlign = isLeftAlign;
 
         this.OnCellButtonAction = OnCellButtonAction;
-
-        this.userSearchModel = userSearchModel;
 
         cellButton.enabled = OnCellButtonAction != null;
 

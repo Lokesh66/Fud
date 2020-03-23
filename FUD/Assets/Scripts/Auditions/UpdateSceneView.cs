@@ -94,6 +94,8 @@ public class UpdateSceneView : MonoBehaviour
 
             SceneCreationModel creationModel = new SceneCreationModel();
 
+            creationModel.scene_characters = new List<SceneCharacterBody>();
+
             creationModel.decsription = descriptionText.text;
             creationModel.location = locationText.text;
             creationModel.place_type = selectedPlace;

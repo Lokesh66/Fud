@@ -2,12 +2,9 @@
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
-using System.Linq;
 
 public class CreateDialoguesView : MonoBehaviour
 {
-    public RectTransform enterPanelTrans;
-
     public ScrollRect scrollRect;
 
     public GameObject dialogueCell;
@@ -25,7 +22,7 @@ public class CreateDialoguesView : MonoBehaviour
     public GameObject scrollObject;
 
 
-    List<Dictionary<string, object>> dialogues = new List<Dictionary<string, object>>();
+    List<SceneCharacterBody> dialogues = new List<SceneCharacterBody>();
 
     List<DialogueCell> dialogueCells = new List<DialogueCell>();
 
@@ -47,29 +44,6 @@ public class CreateDialoguesView : MonoBehaviour
     public void EnableView()
     {
         gameObject.SetActive(true);
-
-        dialogueField.onTouchScreenKeyboardStatusChanged.RemoveAllListeners();
-
-        dialogueField.onTouchScreenKeyboardStatusChanged.AddListener(delegate { OnStatusChanged(); });
-    }
-    void OnStatusChanged()
-    {
-        if (!dialogueField.wasCanceled)
-        {
-            enterPanelTrans.anchoredPosition = new Vector2(enterPanelTrans.anchoredPosition.x, 0.0f);
-        }
-    }
-
-    void SetDialougeFieldPosition()
-    {
-        enterPanelTrans.anchoredPosition = new Vector2(enterPanelTrans.anchoredPosition.x, GetKeyboardHeight(true));
-    }
-
-    public void OnSelect()
-    {
-#if !UNITY_EDITOR
-        Invoke("SetDialougeFieldPosition", 0.3f);
-#endif
     }
 
     public void OnValueChange()
@@ -82,60 +56,34 @@ public class CreateDialoguesView : MonoBehaviour
             {
                 keyword = dialogueField.text;
 
-                CallSearchAPI();
+                if (keyword.IndexOf('@') == 0)
+                {
+                    keyword = keyword.Remove(0, 1);
+                }
+                
+                Debug.Log("keyword = " + keyword);
+
+                if (keyword.Length > 2)
+                {
+                    //Call Search API
+                    isSearchAPICalled = true;
+
+                    GetSearchedUsers();
+                }
             }
         }
         else
         {
             int characterIndex = dialogueField.text.IndexOf(':');
 
-            //Debug.Log("characterIndex = " + characterIndex);
-
-            int startIndex = dialogueField.text.Contains("@") ? 1 : 0;
-
-            int lastIndex = dialogueField.text.Contains(":") ? characterIndex - startIndex : selectedModel.name.Length - startIndex;
-
-            //Debug.Log("lastIndex = " + lastIndex);
-
-            string subString = dialogueField.text.Substring(startIndex, lastIndex);
-
-            //Debug.Log("subString = " + subString);
-
-            if (!subString.Equals(selectedModel.name) && !isSearchAPICalled)
-            {
-                keyword = subString;
-
-                CallSearchAPI();
-            }
-
-            if (characterIndex + 2 < dialogueField.text.Length)
+            if (characterIndex + 1 < dialogueField.text.Length)
             {
                 enterButton.interactable = true;
-
-                Debug.Log("Making True");
             }
             else
             {
                 enterButton.interactable = false;
             }
-        }
-    }
-
-    void CallSearchAPI()
-    {
-        if (keyword.IndexOf('@') == 0)
-        {
-            keyword = keyword.Remove(0, 1);
-        }
-
-        Debug.Log("keyword = " + keyword);
-
-        if (keyword.Length > 2)
-        {
-            //Call Search API
-            isSearchAPICalled = true;
-
-            GetSearchedUsers();
         }
     }
 
@@ -183,7 +131,7 @@ public class CreateDialoguesView : MonoBehaviour
     {
         this.selectedModel = _selectedModel as UserSearchModel;
 
-        dialogueField.text = "@" + selectedModel.name + ":";
+        dialogueField.text = "@" + selectedModel.name + " : ";
 
         searchContent.DestroyChildrens();
 
@@ -196,41 +144,33 @@ public class CreateDialoguesView : MonoBehaviour
         {
             int index = dialogueCells.IndexOf(editedDialogueCell);
 
-            editedDialogueCell.SetView(dialogueField.text, editedDialogueCell.isLeftAlign, editedDialogueCell.userSearchModel, OnButtonAction);
-
-            Dictionary<string, object> characterBody = dialogues.ElementAt(index);
-
-            characterBody["character_id"] = selectedModel.id;
-
-            characterBody["dailogue"] = dialogueField.text;
-
-            dialogues.RemoveAt(index);
-
-            dialogues.Insert(index, characterBody);
+            editedDialogueCell.SetView(dialogueField.text, editedDialogueCell.isLeftAlign, OnButtonAction);
 
             editedDialogueCell = null;
-
-            ClearFieldData();
         }
         else
         {
             GameObject dialogueObj = Instantiate(dialogueCell, scrollRect.content);
 
-            dialogueObj.GetComponent<DialogueCell>().SetView(dialogueField.text, isLeftAlign, selectedModel, OnButtonAction);
+            dialogueObj.GetComponent<DialogueCell>().SetView(dialogueField.text, isLeftAlign, OnButtonAction);
 
             dialogueCells.Add(dialogueObj.GetComponent<DialogueCell>());
 
-            Dictionary<string, object> characterBody = new Dictionary<string, object>();
+            SceneCharacterBody sceneCharacter = new SceneCharacterBody();
+            
+            sceneCharacter.character_id = selectedModel.id;
 
-            characterBody.Add("character_id", selectedModel.id);
+            sceneCharacter.dailogue = dialogueField.text;
 
-            characterBody.Add("dailogue", dialogueField.text);
+            dialogues.Add(sceneCharacter);
 
-            dialogues.Add(characterBody);
+            keyword = dialogueField.text = string.Empty;
 
             scrollRect.verticalNormalizedPosition = 0.0f;
 
-            ClearFieldData();
+            selectedModel = null;
+
+            isLeftAlign = !isLeftAlign;
         }
     }
 
@@ -248,24 +188,9 @@ public class CreateDialoguesView : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    void ClearFieldData()
-    {
-        enterButton.interactable = false;
-
-        selectedModel = null;
-
-        isLeftAlign = !isLeftAlign;
-
-        keyword = dialogueField.text = string.Empty;
-    }
-
     void OnButtonAction(DialogueCell editedDialogueCell)
     {
         this.editedDialogueCell = editedDialogueCell;
-
-        int modelIndex = dialogueCells.IndexOf(editedDialogueCell);
-
-        selectedModel = editedDialogueCell.userSearchModel;
 
         TouchScreenKeyboard.Open(editedDialogueCell.dialogueText.text);
 
@@ -287,37 +212,18 @@ public class CreateDialoguesView : MonoBehaviour
         scrollRect.content.DestroyChildrens();
     }
 
-    public static int GetKeyboardHeight(bool includeInput)
+    public int GetKeyboardSize()
     {
-#if UNITY_ANDROID
-        using (var unityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+        using (AndroidJavaClass UnityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
         {
-            var unityPlayer = unityClass.GetStatic<AndroidJavaObject>("currentActivity").Get<AndroidJavaObject>("mUnityPlayer");
-            var view = unityPlayer.Call<AndroidJavaObject>("getView");
-            var dialog = unityPlayer.Get<AndroidJavaObject>("b");
+            AndroidJavaObject View = UnityClass.GetStatic<AndroidJavaObject>("currentActivity").Get<AndroidJavaObject>("mUnityPlayer").Call<AndroidJavaObject>("getView");
 
-            if (view == null || dialog == null)
-                return 0;
-
-            var decorHeight = 0;
-
-            if (includeInput)
+            using (AndroidJavaObject Rct = new AndroidJavaObject("android.graphics.Rect"))
             {
-                var decorView = dialog.Call<AndroidJavaObject>("getWindow").Call<AndroidJavaObject>("getDecorView");
+                View.Call("getWindowVisibleDisplayFrame", Rct);
 
-                if (decorView != null)
-                    decorHeight = decorView.Call<int>("getHeight");
-            }
-
-            using (var rect = new AndroidJavaObject("android.graphics.Rect"))
-            {
-                view.Call("getWindowVisibleDisplayFrame", rect);
-                return Display.main.systemHeight - rect.Call<int>("height") + decorHeight;
+                return Screen.height - Rct.Call<int>("height");
             }
         }
-#else
-        var height = Mathf.RoundToInt(TouchScreenKeyboard.area.height);
-        return height >= Display.main.systemHeight ? 0 : height;
-#endif
     }
 }
