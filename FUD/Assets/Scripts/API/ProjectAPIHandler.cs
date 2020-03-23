@@ -82,7 +82,7 @@ public partial class APIHandler
         }));
     }
 
-    public void CreateProjectScene(SceneCreationModel creationModel, List<SceneCharacterBody> characterScenes, Action<bool, string> action)
+    public void CreateProjectScene(SceneCreationModel creationModel, List<Dictionary<string, object>> characterScenes, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -104,7 +104,10 @@ public partial class APIHandler
 
         parameters.Add("shoot_time", creationModel.shoot_time);
 
-        parameters.Add("scene_characters", characterScenes);
+        if (characterScenes.Count > 0)
+        {
+            parameters.Add("scene_characters", characterScenes);
+        }
 
         gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_PROJECT_SCENE, true, parameters, (status, response) =>
         {
@@ -112,7 +115,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateProjectScene(SceneCreationModel creationModel, int sceneId, List<SceneCharacterBody> characterScenes, Action<bool, string> action)
+    public void UpdateProjectScene(SceneCreationModel creationModel, int sceneId, List<Dictionary<string, object>> characterScenes, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -267,13 +270,6 @@ public class ProjectCharactersResponse : BaseResponse
 }
 
 [Serializable]
-public class SceneCharacterBody
-{
-    public int character_id;
-    public string dailogue;
-}
-
-[Serializable]
 public class SceneCreationModel
 {
     public int project_id;
@@ -285,7 +281,6 @@ public class SceneCreationModel
     public int scene_order;
     public string location;
     public string start_time;
-    public List<SceneCharacterBody> scene_characters;
 }
 
 [Serializable]
