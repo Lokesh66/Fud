@@ -53,7 +53,7 @@ public class CreateScenesView : MonoBehaviour
 
     Action<bool> backAction;
 
-    List<SceneCharacterBody> dialoguesList = new List<SceneCharacterBody>();
+    List<Dictionary<string, object>> dialoguesList = new List<Dictionary<string, object>>();
 
 
     public void SetView(Project projectModel, Action<bool> action)
@@ -104,8 +104,6 @@ public class CreateScenesView : MonoBehaviour
 
                 SceneCreationModel creationModel = new SceneCreationModel();
 
-                creationModel.scene_characters = new List<SceneCharacterBody>();
-
                 creationModel.decsription = descriptionText.text;
                 creationModel.location = locationText.text;
                 creationModel.place_type = selectedPlace;
@@ -128,7 +126,7 @@ public class CreateScenesView : MonoBehaviour
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Story Creation Success" : "Something went wrong, please try again.";
+        alertModel.message = status ? "Scene Creation Success" : "Something went wrong, please try again.";
 
         if (status)
         {
@@ -188,15 +186,25 @@ public class CreateScenesView : MonoBehaviour
         dialoguesView.EnableView();
     }
 
-    public void OnSaveDialogues(List<SceneCharacterBody> dialogues)
+    public void OnSaveDialogues(List<Dictionary<string, object>> dialogues)
     {
-        dialoguesList = dialogues;
-
-        if (dialoguesList.Count > 0)
+        if (dialogues.Count > 0)
         {
             buttonText.text = "Create";
 
             isDialoguesAdded = true;
+
+            for (int i = 0; i < dialogues.Count; i++)
+            {
+                Dictionary<string, object> element = new Dictionary<string, object>();
+
+                foreach (var item in dialogues[i])
+                {
+                    element.Add(item.Key, item.Value);
+                }
+
+                dialoguesList.Add(element);
+            }
         }
     }
 }

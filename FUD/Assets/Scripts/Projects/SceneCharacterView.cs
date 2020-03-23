@@ -22,7 +22,7 @@ public class SceneCharacterView : MonoBehaviour
 
             string fieldMessage = sceneCharacters[i].Users.name + " : " + sceneCharacters[i].dailogue;
 
-            dialogueObject.GetComponent<DialogueCell>().SetView(fieldMessage, isLeftAlign, null);
+            dialogueObject.GetComponent<DialogueCell>().SetView(fieldMessage, isLeftAlign, null, null);
 
             isLeftAlign = !isLeftAlign;
         }
