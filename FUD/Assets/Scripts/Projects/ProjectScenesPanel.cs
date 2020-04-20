@@ -99,7 +99,7 @@ public class ProjectScenesPanel : MonoBehaviour
 
     public void OnEditButtonAction(SceneModel sceneModel)
     {
-        //updateSceneView.Load(sceneModel, this);
+        updateSceneView.Load(sceneModel, this);
     }
 
     public void OnViewButtonAction(SceneModel sceneModel)

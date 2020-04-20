@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
+using System.Collections;
 using UnityEngine.UI;
 using UnityEngine;
 using System;
@@ -18,7 +19,14 @@ public class DialogueCell : MonoBehaviour
     public UserSearchModel userSearchModel;
 
     [HideInInspector]
+    public Dictionary<string, object> dialogueModel = new Dictionary<string, object>();
+
+    [HideInInspector]
     public bool isLeftAlign;
+
+    [HideInInspector]
+    public int dialogueId;
+
 
     Vector2 topLeftAnchor = new Vector2(0, 1);
 
@@ -28,7 +36,7 @@ public class DialogueCell : MonoBehaviour
 
     Action<DialogueCell> OnCellButtonAction;
 
-    public void SetView(string message, bool isLeftAlign, UserSearchModel userSearchModel, Action<DialogueCell> OnCellButtonAction)
+    public void SetView(string message, bool isLeftAlign, UserSearchModel userSearchModel, Action<DialogueCell> OnCellButtonAction, int dialogueId = -1)
     {
         dialogueText.text = message;
 
@@ -38,7 +46,18 @@ public class DialogueCell : MonoBehaviour
 
         this.userSearchModel = userSearchModel;
 
+        this.dialogueId = dialogueId; 
+
         cellButton.enabled = OnCellButtonAction != null;
+
+        if (dialogueId != -1)
+        {
+            dialogueModel["id"] = dialogueId;
+        }
+
+        dialogueModel["character_id"] = userSearchModel.id;
+
+        dialogueModel["dailogue"] = message;
 
         StartCoroutine(UpdateBackGround(isLeftAlign)); 
     }

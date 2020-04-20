@@ -50,7 +50,7 @@ public class SceneDetailsView : MonoBehaviour
 
     void OnEditButtonAction()
     {
-        //sceneView.Load(sceneModel);
+        scenesPanel.OnEditButtonAction(sceneModel);
     }
 
     void OnViewButtonAction()

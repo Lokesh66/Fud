@@ -209,8 +209,6 @@ public class CreateDialoguesView : MonoBehaviour
             dialogues.Insert(index, characterBody);
 
             editedDialogueCell = null;
-
-            ClearFieldData();
         }
         else
         {
@@ -228,10 +226,10 @@ public class CreateDialoguesView : MonoBehaviour
 
             dialogues.Add(characterBody);
 
-            scrollRect.verticalNormalizedPosition = 0.0f;
-
-            ClearFieldData();
+            isLeftAlign = !isLeftAlign;
         }
+
+        ClearFieldData();
     }
 
     public void OnSaveButtonAction()
@@ -254,16 +252,14 @@ public class CreateDialoguesView : MonoBehaviour
 
         selectedModel = null;
 
-        isLeftAlign = !isLeftAlign;
-
         keyword = dialogueField.text = string.Empty;
+
+        scrollRect.verticalNormalizedPosition = 0.0f;
     }
 
     void OnButtonAction(DialogueCell editedDialogueCell)
     {
         this.editedDialogueCell = editedDialogueCell;
-
-        int modelIndex = dialogueCells.IndexOf(editedDialogueCell);
 
         selectedModel = editedDialogueCell.userSearchModel;
 
@@ -287,7 +283,7 @@ public class CreateDialoguesView : MonoBehaviour
         scrollRect.content.DestroyChildrens();
     }
 
-    public static int GetKeyboardHeight(bool includeInput)
+    int GetKeyboardHeight(bool includeInput)
     {
 #if UNITY_ANDROID
         using (var unityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))

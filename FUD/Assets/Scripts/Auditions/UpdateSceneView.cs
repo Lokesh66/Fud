@@ -9,7 +9,7 @@ public class UpdateSceneView : MonoBehaviour
     public UpdateSceneCharacterView dialoguesView;
 
     public TMP_Dropdown shootTimeDropdown;
-    public TMP_Dropdown placeDropdown;
+    public TMP_Dropdown placeDropdown;  
     public TMP_InputField sceneOrderText;
     public TMP_InputField locationText;
     public TMP_InputField descriptionText;
@@ -18,26 +18,26 @@ public class UpdateSceneView : MonoBehaviour
     public TextMeshProUGUI buttonText;
 
 
-    ProjectScenesPanel scenesPanel;
+    SceneModel sceneModel;
 
     SceneDetailsModel detailsModel;
+
+    ProjectScenesPanel scenesPanel;
 
     string defaultDateText = "Select Date";
 
     List<Dictionary<string, object>> dialoguesList = new List<Dictionary<string, object>>();
 
 
-    public void Load(SceneDetailsModel detailsModel, ProjectScenesPanel scenesPanel)
+    public void Load(SceneModel sceneModel, ProjectScenesPanel scenesPanel)
     {
         this.scenesPanel = scenesPanel;
 
-        this.detailsModel = detailsModel;
+        this.sceneModel = sceneModel;
 
         gameObject.SetActive(true);
 
-        buttonText.text = "Next";
-
-        GameManager.Instance.apiHandler.GetSceneDetails(detailsModel.id, (status, response) => {
+        GameManager.Instance.apiHandler.GetSceneDetails(sceneModel.id, (status, response) => {
 
             if (status)
             {
@@ -58,11 +58,7 @@ public class UpdateSceneView : MonoBehaviour
 
         descriptionText.text = detailsModel.description;
 
-        //TMP_Dropdown.OptionData option = shootTimeDropdown.options.Find(option => option.text.Equals(detailsModel.shoot_time));
-
         shootTimeDropdown.value = shootTimeDropdown.options.FindIndex(option => shootTimeDropdown.options.Equals(detailsModel.shoot_time));
-
-        //TMP_Dropdown.OptionData placeOption = placeDropdown.options.Find(option => option.text.Equals(detailsModel.place_type));
 
         placeDropdown.value = placeDropdown.options.FindIndex(option => placeDropdown.options.Equals(detailsModel.place_type));
     }
@@ -80,7 +76,7 @@ public class UpdateSceneView : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void OnSaveButtonAction()
+    public void OnUpdateButtonAction()
     {
         if (!CanCallAPI())
         {
@@ -102,12 +98,12 @@ public class UpdateSceneView : MonoBehaviour
             creationModel.story_version_id = detailsModel.story_version_id;
             creationModel.shoot_time = shootTime;
             creationModel.scene_order = int.Parse(sceneOrderText.text);
-            creationModel.start_time = startDateText.text;
+            creationModel.start_time = DateTime.Now.ToString();
 
-            /*GameManager.Instance.apiHandler.UpdateProjectScene(creationModel, detailsModel.id, dialoguesList, (status, response) =>
+            GameManager.Instance.apiHandler.UpdateProjectScene(creationModel, detailsModel.id, dialoguesList, (status, response) =>
             {
                 OnAPIResponse(status);
-            });*/
+            });
         }
     }
 
@@ -130,6 +126,8 @@ public class UpdateSceneView : MonoBehaviour
     void OnSuccessResponse()
     {
         BackButtonAction();
+
+        dialoguesView.ClearData();
     }
 
     bool CanCallAPI()
@@ -168,18 +166,25 @@ public class UpdateSceneView : MonoBehaviour
         return true;
     }
 
-    void ShowDialougesPanel()
-    {
-        //dialoguesView.EnableView();
-    }
-
     public void OnSaveDialogues(List<Dictionary<string, object>> dialogues)
     {
-        dialoguesList = dialogues;
+        dialoguesList.Clear();
+
+        for (int i = 0; i < dialogues.Count; i++)
+        {
+            Dictionary<string, object> dialogueItem = new Dictionary<string, object>();
+
+            foreach (var item in dialogues[i])
+            {
+                dialogueItem.Add(item.Key, item.Value);
+            }
+
+            dialoguesList.Add(dialogueItem);
+        }
     }
 
     public void OnNextButtonAction()
-    { 
-    
+    {
+        dialoguesView.EnableView(detailsModel.SceneCharacters, this);
     }
 }

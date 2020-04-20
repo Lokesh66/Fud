@@ -94,7 +94,7 @@ public partial class APIHandler
 
         parameters.Add("start_time", creationModel.start_time);
 
-        parameters.Add("decsription", creationModel.decsription);
+        parameters.Add("description", creationModel.decsription);
 
         parameters.Add("location", creationModel.location);
 
@@ -127,7 +127,7 @@ public partial class APIHandler
 
         parameters.Add("story_version_id", creationModel.story_version_id);
 
-        parameters.Add("start_time", creationModel.start_time);
+        parameters.Add("start_time", System.DateTime.Now);//creationModel.start_time);
 
         parameters.Add("decsription", creationModel.decsription);
 
