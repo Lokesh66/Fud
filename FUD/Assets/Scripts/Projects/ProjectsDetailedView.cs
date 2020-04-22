@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ProjectsDetailedView : MonoBehaviour
 {
@@ -29,6 +30,8 @@ public class ProjectsDetailedView : MonoBehaviour
     public GameObject parentPanel;
     public GameObject createButton;
 
+    public HorizontalLayoutGroup tabsLayoutGroup;
+
     public ProjectStoriesPanel storiesPanel;
     public ProjectCastsPanel castsPanel;
     public ProjectAuditionsPanel auditionsPanel;
@@ -44,6 +47,7 @@ public class ProjectsDetailedView : MonoBehaviour
         project = projectData;
         parentPanel.SetActive(true);
         OnBackButtonClick = backAction;
+        StartCoroutine(UpdateTabPanelView());
         Load();
     }
 
@@ -83,5 +87,14 @@ public class ProjectsDetailedView : MonoBehaviour
 
     }
 
+    IEnumerator UpdateTabPanelView()
+    {
+        yield return new WaitForEndOfFrame();
 
+        tabsLayoutGroup.enabled = false;
+
+        yield return new WaitForEndOfFrame();
+
+        tabsLayoutGroup.enabled = true;
+    }
 }

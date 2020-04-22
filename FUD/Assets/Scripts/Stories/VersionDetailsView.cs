@@ -77,11 +77,31 @@ public class VersionDetailsView : MonoBehaviour
 
         GameManager.Instance.apiHandler.RemoveStoryVersion(storyVersion.id, storyId, 8, (status) => {
 
-            if (status)
-            {
-                versionsView.OnRemoveVersion(storyVersion);
-            }
+            OnAPIResponse(status);
         });
+    }
+
+    void OnAPIResponse(bool status)
+    {
+        AlertModel alertModel = new AlertModel();
+
+        alertModel.message = status ? "Story Version Removed Successfully" : "Something went wrong, please try again.";
+
+        if (status)
+        {
+            alertModel.okayButtonAction = OnSuccessResponse;
+
+            alertModel.canEnableTick = true;
+        }
+
+        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+    }
+
+    void OnSuccessResponse()
+    {
+        Reset();
+
+        versionsView.OnRemoveVersion(storyVersion);
     }
 
     void OnShareButtonAction()
@@ -96,7 +116,7 @@ public class VersionDetailsView : MonoBehaviour
 
     void Reset()
     {
-        description.text = string.Empty;
+        //description.text = string.Empty;
 
         //userImage.sprite = null;
     }

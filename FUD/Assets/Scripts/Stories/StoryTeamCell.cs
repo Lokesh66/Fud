@@ -26,7 +26,11 @@ public class StoryTeamCell : MonoBehaviour
     {
         titleText.text = teamModel.title;
 
-        membersText.text = teamModel.members;
+        for (int i = 0; i < teamModel.TeamMembersUsers.Count; i++)
+        {
+            string appendString = i != teamModel.TeamMembersUsers.Count - 1 ? "," : string.Empty;
+            membersText.text = teamModel.TeamMembersUsers[i].name + ",";
+        }
     }
 
     public void OnTapAction()

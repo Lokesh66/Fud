@@ -43,7 +43,7 @@ public class PortfolioExperianceView : MonoBehaviour
         {
             GameObject cellObject = Instantiate(cellCache, content);
 
-            cellObject.GetComponent<ExperianceCell>().SetView(experianceModels[i], OnCellButtonAction);
+            cellObject.GetComponent<ExperianceCell>().Load(experianceModels[i], OnCellButtonAction);
         }
     }
 

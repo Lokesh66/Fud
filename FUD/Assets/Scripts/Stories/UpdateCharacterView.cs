@@ -54,6 +54,16 @@ public class UpdateCharacterView : MonoBehaviour
                 PerformerResponse reponseModel = JsonUtility.FromJson<PerformerResponse>(response);
 
                 suitable_performer = reponseModel.data.UserInfo.name;
+
+                UserSearchModel userSearchModel = new UserSearchModel();
+
+                userSearchModel.id = reponseModel.data.UserInfo.id;
+
+                userSearchModel.name = reponseModel.data.UserInfo.name;
+
+                selectedModel = userSearchModel;
+
+                suitableField.text = suitable_performer;
             }
         });
 
@@ -66,7 +76,7 @@ public class UpdateCharacterView : MonoBehaviour
 
         genderLabel.text = characterModel.gender;
 
-        suitableField.text = characterModel.suitable_performer;
+        descriptionField.text = characterModel.description;
     }
 
     void PopulateDropdown(List<UserSearchModel> searchModels)
@@ -153,7 +163,7 @@ public class UpdateCharacterView : MonoBehaviour
 
         OnCreateCharacter?.Invoke(characterModel);
 
-        Destroy(gameObject);
+        gameObject.SetActive(false);
 
         apiResponse = string.Empty;
     }

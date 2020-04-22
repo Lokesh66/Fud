@@ -5,7 +5,7 @@ using System;
 
 public class ExperianceCell : MonoBehaviour
 {
-    public TextMeshProUGUI titleText;
+    public TextMeshProUGUI roleText;
 
     public TextMeshProUGUI locationText;
 
@@ -20,11 +20,24 @@ public class ExperianceCell : MonoBehaviour
 
     Action<WorkExperianceModel> OnButtonAction;
 
-    public void SetView(WorkExperianceModel experianceModel, Action<WorkExperianceModel> OnButtonAction)
+    public void Load(WorkExperianceModel experianceModel, Action<WorkExperianceModel> OnButtonAction)
     {
         this.experianceModel = experianceModel;
 
         this.OnButtonAction = OnButtonAction;
+
+        SetView();
+    }
+
+    void SetView()
+    {
+        List<Genre> genres = DataManager.Instance.genres;
+
+        Genre genre = genres.Find(item => item.id == experianceModel.role_id);
+
+        roleText.text = genre.name;
+
+        locationText.text = experianceModel.MasterData.name;
 
         descriptionText.text = experianceModel.description;
     }

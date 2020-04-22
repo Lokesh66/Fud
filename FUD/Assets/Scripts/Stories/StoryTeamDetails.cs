@@ -66,11 +66,33 @@ public class StoryTeamDetails : MonoBehaviour
 
         GameManager.Instance.apiHandler.RemoveTeam(teamModel.id, storyId, 8, (status) => {
 
-            if (status)
-            {
-                teamsView.RemoveTeam(teamModel);
-            }
+            Debug.Log("status = " + status);
+
+            OnAPIResponse(status);
         });
+    }
+
+    void OnAPIResponse(bool status)
+    {
+        AlertModel alertModel = new AlertModel();
+
+        alertModel.message = status ? "Team Removed Successfully" : "Something went wrong, please try again.";
+
+        if (status)
+        {
+            alertModel.okayButtonAction = OnSuccessResponse;
+
+            alertModel.canEnableTick = true;
+        }
+
+        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+    }
+
+    void OnSuccessResponse()
+    {
+        Reset();
+
+        teamsView.RemoveTeam(teamModel);
     }
 
     void Reset()

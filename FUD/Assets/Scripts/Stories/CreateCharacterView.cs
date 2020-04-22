@@ -33,6 +33,7 @@ public class CreateCharacterView : MonoBehaviour
 
     Action<StoryCharacterModel> OnCreateCharacter;
 
+
     public void SetView(StoryDetailsModel detailsModel, Action<StoryCharacterModel> action)
     {
         this.detailsModel = detailsModel;

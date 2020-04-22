@@ -8915,7 +8915,7 @@ MonoBehaviour:
   storyVersionObject: {fileID: 926440754420874265}
   addCharacterCache: {fileID: 5436187452039118490, guid: 6cb47fb9e469a66409e1026373a14298,
     type: 3}
-  addTeamMemberCache: {fileID: 2415095159386453069, guid: a76cef8f3a4a3ea4ab4b70a8b53f97e5,
+  addTeamMemberCache: {fileID: 2415095159386453069, guid: 186ce45428a839742abb7f8f646b596e,
     type: 3}
   updateStoryCache: {fileID: 7947380890573207486, guid: 96a28f3e056f738458b2358bd1829670,
     type: 3}
@@ -11066,7 +11066,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Update Character
+  m_text: Update Team
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -13978,6 +13978,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7556114333180637033, guid: 3a502ad2bb71c8445a7bf76be02a71c2,
+        type: 3}
+      propertyPath: m_LineType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2001610269370124309, guid: 3a502ad2bb71c8445a7bf76be02a71c2,
         type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -13993,7 +13998,13 @@ PrefabInstance:
       propertyPath: m_text
       value: Save
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7099024780753760917, guid: 3a502ad2bb71c8445a7bf76be02a71c2,
+        type: 3}
+      propertyPath: m_enableWordWrapping
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5391391289942914404, guid: 3a502ad2bb71c8445a7bf76be02a71c2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3a502ad2bb71c8445a7bf76be02a71c2, type: 3}
 --- !u!114 &352907354276971499 stripped
 MonoBehaviour:
@@ -14077,6 +14088,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6221197521249722848, guid: c882cebb04131ef469fe1f2e32417d40,
+        type: 3}
+      propertyPath: m_firstOverflowCharacterIndex
+      value: 62
+      objectReference: {fileID: 0}
+    - target: {fileID: 6221197521249722848, guid: c882cebb04131ef469fe1f2e32417d40,
+        type: 3}
+      propertyPath: m_textInfo.lineCount
+      value: 74
       objectReference: {fileID: 0}
     - target: {fileID: 5304528649497565907, guid: c882cebb04131ef469fe1f2e32417d40,
         type: 3}
@@ -14182,16 +14203,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6221197521249722848, guid: c882cebb04131ef469fe1f2e32417d40,
-        type: 3}
-      propertyPath: m_firstOverflowCharacterIndex
-      value: 62
-      objectReference: {fileID: 0}
-    - target: {fileID: 6221197521249722848, guid: c882cebb04131ef469fe1f2e32417d40,
-        type: 3}
-      propertyPath: m_textInfo.lineCount
-      value: 74
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c882cebb04131ef469fe1f2e32417d40, type: 3}

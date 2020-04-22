@@ -93,11 +93,10 @@ public class StoryUpdateView : MonoBehaviour
 
         Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
 
-        GameManager.Instance.apiHandler.UpdateStory(storyTitleField.text, subTitleField.text, descriptionField.text, selectedGenre.id, uploadedDict, (status, response) => {
+        GameManager.Instance.apiHandler.UpdateStory(storyModel.id, storyTitleField.text, subTitleField.text, descriptionField.text, selectedGenre.id, uploadedDict, (status, response) => {
 
             if (status)
             {                
-
                 Debug.Log("Story Uploaded Successfully");
             }
             else

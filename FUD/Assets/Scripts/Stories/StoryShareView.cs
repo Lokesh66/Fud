@@ -79,6 +79,11 @@ public class StoryShareView : MonoBehaviour
 
     void OnSelectMember(object id)
     {
+        if (!CanCallAPI())
+        {
+            return;
+        }
+
         int userId = (int)id;
 
         string storyTitle = StoryDetailsController.Instance.GetStoryTitle();
@@ -93,6 +98,26 @@ public class StoryShareView : MonoBehaviour
             }
 
         });
+    }
+
+    bool CanCallAPI()
+    {
+        string errorMessage = string.Empty;
+
+        if (string.IsNullOrEmpty(commentField.text))
+        {
+            errorMessage = "Comment field should not be empty";
+        }
+
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            AlertModel alertModel = new AlertModel();
+            alertModel.message = errorMessage;
+            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            return false;
+        }
+
+        return true;
     }
 
     public void OnBackAction()

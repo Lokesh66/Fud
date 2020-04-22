@@ -377,6 +377,7 @@ public class WorkExperianceModel
     public DateTime created_date_time;
     public DateTime updatedAt;
     public List<WorkExpMedia> WorkExpMedia;
+    public IndustryModel MasterData;
 }
 
 

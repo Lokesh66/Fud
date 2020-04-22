@@ -4,6 +4,8 @@ using System;
 
 public class StoryCharacterCell : MonoBehaviour
 {
+    public RectTransform rectTransform;
+
     public TextMeshProUGUI titleText;
 
     public TextMeshProUGUI descriptionText;
@@ -11,6 +13,8 @@ public class StoryCharacterCell : MonoBehaviour
     public TextMeshProUGUI suitPerformerText;
 
     public TextMeshProUGUI genderText;
+
+    public GameObject readMoreObject;
 
 
     StoryCharacterModel characterModel;
@@ -36,6 +40,23 @@ public class StoryCharacterCell : MonoBehaviour
         genderText.text = characterModel.gender;
 
         suitPerformerText.text = characterModel.suitable_performer;
+
+        Debug.Log("SetView : Preferred Height : " + descriptionText.preferredHeight);
+    }
+
+    public void OnReadMoreButtonAction()
+    {
+        descriptionText.overflowMode = TextOverflowModes.Overflow;
+
+        readMoreObject.SetActive(false);
+
+        Debug.Log("OnReadMoreButtonAction : Preferred Height : " + descriptionText.preferredHeight);
+
+        Vector2 cellSize = rectTransform.sizeDelta;
+
+        cellSize.y += descriptionText.preferredHeight - 120.0f;
+
+        rectTransform.sizeDelta = new Vector2(cellSize.x, cellSize.y);
     }
 
     public void OnTapAction()

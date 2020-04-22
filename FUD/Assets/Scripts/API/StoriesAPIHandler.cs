@@ -50,7 +50,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateStory(string storyId, string title, string subTitle, int genreId, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
+    public void UpdateStory(int storyId, string title, string subTitle, string description, int genreId, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -60,7 +60,7 @@ public partial class APIHandler
 
         parameters.Add("story_line", subTitle);
 
-        parameters.Add("description", subTitle);
+        parameters.Add("description", description);
 
         parameters.Add("genre_id", genreId);
 
@@ -500,6 +500,7 @@ public class StoryTeamModel
     public DateTime created_date_time;
     public string title;
     public DateTime updatedAt;
+    public List<UserData> TeamMembersUsers;
 }
 
 [Serializable]

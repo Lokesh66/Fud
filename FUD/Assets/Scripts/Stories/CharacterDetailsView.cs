@@ -29,7 +29,7 @@ public class CharacterDetailsView : MonoBehaviour
 
     void SetView()
     {
-        description.text = characterModel.description;
+        //description.text = characterModel.description;
     }
 
     public void OnButtonAction(int buttonIndex)
@@ -72,7 +72,32 @@ public class CharacterDetailsView : MonoBehaviour
             {
                 charactersView.OnRemoveCharacter(characterModel);
             }
+
+            OnAPIResponse(status);
         });
+    }
+
+    void OnAPIResponse(bool status)
+    {
+        AlertModel alertModel = new AlertModel();
+
+        alertModel.message = status ? "Character Removed Successfully" : "Something went wrong, please try again.";
+
+        if (status)
+        {
+            alertModel.okayButtonAction = OnSuccessResponse;
+
+            alertModel.canEnableTick = true;
+        }
+
+        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+    }
+
+    void OnSuccessResponse()
+    {
+        Reset();
+
+        charactersView.OnRemoveCharacter(characterModel);
     }
 
     void Reset()

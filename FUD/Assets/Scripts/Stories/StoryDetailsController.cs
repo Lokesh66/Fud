@@ -158,7 +158,9 @@ public class StoryDetailsController : MonoBehaviour
     {
         buttonList[(int)currentType].color = selectedColor;
 
-        DestroyCreationScreen();        
+        DestroyCreationScreen();
+
+        noDataObject.SetActive(false);
 
         switch (currentType)
         {
