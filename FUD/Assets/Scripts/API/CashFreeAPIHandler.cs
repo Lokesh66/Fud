@@ -26,7 +26,7 @@ public partial class APIHandler
         CashFreeRequest ("911234567890", "GMAIL_ACCOUNT", planIdInfo);
     }
 
-    public void CashFreeRequest (string customerPhone, string customerEmail, Dictionary<string, object>  planIdInfo, string customerName = null, string orderNote = null)
+    public void CashFreeRequest (string customerPhone, string customerEmail, Dictionary<string, object>  planIdInfo, string customerName = null, string orderNote = null, Action<bool, string> OnResponse = null)
     {
         Debug.Log ("CashFree CashFreeRequest");
 
@@ -70,6 +70,8 @@ public partial class APIHandler
 
                 AndroidJavaClass paymentActivity = new AndroidJavaClass ("com.phonatoto.cashfree.PaymentActivity");
                 paymentActivity.CallStatic ("doPayment", currentActivity, paramObj, response.token, response.stage);
+
+                OnResponse(status, response.orderId);
 
 #else
         //TODO: iOS is pending

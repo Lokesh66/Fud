@@ -90,4 +90,6 @@ public class APIConstants
 
     public const string GET_CASH_FREE_TOKEN = SUBSCRIPTION_BASE_URL + "v1/generateOrderToken/";
 
+    public const string VERIFY_ORDER_ID = SUBSCRIPTION_BASE_URL + "v1/order/payment/verify";
+
 }

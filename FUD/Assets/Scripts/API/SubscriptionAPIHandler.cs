@@ -22,6 +22,21 @@ public partial class APIHandler
             OnResponse(status, response);
         }));
     }
+
+    public void VerifyPurchsedOrderId(string orderId, Action<bool> OnResponse)
+    {
+        string url = APIConstants.VERIFY_ORDER_ID;
+
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("order_id", orderId);
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
+
+            OnResponse(status);
+
+        }));
+    }
 }
 
 [Serializable]

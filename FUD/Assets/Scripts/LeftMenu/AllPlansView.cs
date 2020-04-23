@@ -104,7 +104,33 @@ public class AllPlansView : MonoBehaviour
         };
         Debug.Log("CashFree button action");
         GameManager.Instance.apiHandler.CashFreeRequest(DataManager.Instance.userInfo.phone.ToString(),
-            DataManager.Instance.userInfo.email_id, planIdInfo);
+            DataManager.Instance.userInfo.email_id, planIdInfo, OnResponse: OnResponse);
+    }
+
+    void OnResponse(bool status, string orderId)
+    {
+        if (status)
+        {
+            GameManager.Instance.apiHandler.VerifyPurchsedOrderId(orderId, (apiStatus) =>
+            {
+                if (apiStatus)
+                {
+                    AlertModel alertModel = new AlertModel();
+
+                    alertModel.message = "Order Verified Success";
+
+                    CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                }
+                else
+                {
+                    AlertModel alertModel = new AlertModel();
+
+                    alertModel.message = "Order verification Failed";
+
+                    CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                }
+            });
+        }
     }
 
     void ShowRoleDropDown()
