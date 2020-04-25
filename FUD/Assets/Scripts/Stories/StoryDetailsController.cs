@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class StoryDetailsController : MonoBehaviour
 {
@@ -58,6 +59,8 @@ public class StoryDetailsController : MonoBehaviour
 
     public GameObject noDataObject;
 
+    public ScrollRect tabScrollRect;
+
 
     public Color selectedColor;
 
@@ -80,7 +83,9 @@ public class StoryDetailsController : MonoBehaviour
     System.Action BackAction;
 
     public void Load(object storyId, System.Action onBackAction)
-    {        
+    {
+        tabScrollRect.horizontalNormalizedPosition = 0.0f;
+
         GameManager.Instance.apiHandler.GetStoryDetails((int)storyId, (status, response) =>
         {
             if (status)

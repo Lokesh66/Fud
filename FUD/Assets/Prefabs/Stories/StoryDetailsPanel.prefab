@@ -8920,6 +8920,7 @@ MonoBehaviour:
   updateStoryCache: {fileID: 7947380890573207486, guid: 96a28f3e056f738458b2358bd1829670,
     type: 3}
   noDataObject: {fileID: 1995366569746210925}
+  tabScrollRect: {fileID: 3212825454192770481}
   selectedColor: {r: 1, g: 1, b: 1, a: 1}
   disabledColor: {r: 0.56078434, g: 0.56078434, b: 0.56078434, a: 1}
 --- !u!1 &5633605300955789949
@@ -13200,6 +13201,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 552884192628373457, guid: 3008742321ae83e47b9f64fe6de56e3a,
+        type: 3}
+      propertyPath: m_lineSpacing
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 2878403517304857566, guid: 3008742321ae83e47b9f64fe6de56e3a,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -13210,6 +13216,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnBackButtonAction
       objectReference: {fileID: 0}
+    - target: {fileID: 4030063120166319262, guid: 3008742321ae83e47b9f64fe6de56e3a,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -20
+      objectReference: {fileID: 0}
     - target: {fileID: 6029413702835505787, guid: 3008742321ae83e47b9f64fe6de56e3a,
         type: 3}
       propertyPath: m_Vertical
@@ -13219,16 +13230,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Spacing
       value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 552884192628373457, guid: 3008742321ae83e47b9f64fe6de56e3a,
-        type: 3}
-      propertyPath: m_lineSpacing
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 4030063120166319262, guid: 3008742321ae83e47b9f64fe6de56e3a,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3008742321ae83e47b9f64fe6de56e3a, type: 3}
@@ -13988,6 +13989,11 @@ PrefabInstance:
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 6955080267609211118}
+    - target: {fileID: 7099024780753760917, guid: 3a502ad2bb71c8445a7bf76be02a71c2,
+        type: 3}
+      propertyPath: m_enableWordWrapping
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8933056498309982107, guid: 3a502ad2bb71c8445a7bf76be02a71c2,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -13998,13 +14004,7 @@ PrefabInstance:
       propertyPath: m_text
       value: Save
       objectReference: {fileID: 0}
-    - target: {fileID: 7099024780753760917, guid: 3a502ad2bb71c8445a7bf76be02a71c2,
-        type: 3}
-      propertyPath: m_enableWordWrapping
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 5391391289942914404, guid: 3a502ad2bb71c8445a7bf76be02a71c2, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a502ad2bb71c8445a7bf76be02a71c2, type: 3}
 --- !u!114 &352907354276971499 stripped
 MonoBehaviour:
