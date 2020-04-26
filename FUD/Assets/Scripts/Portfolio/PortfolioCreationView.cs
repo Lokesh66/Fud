@@ -75,6 +75,8 @@ public class PortfolioCreationView : MonoBehaviour
             alertModel.okayButtonAction = OnSuccessResponse;
 
             alertModel.canEnableTick = true;
+
+            DataManager.Instance.UpdateFeaturedData(EFeatureType.PortfolioCreation);
         }
 
         CanvasManager.Instance.alertView.ShowAlert(alertModel);

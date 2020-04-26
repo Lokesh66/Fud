@@ -31,7 +31,7 @@ public class DataManager : MonoBehaviour
 
     public UserData userInfo;
 
-    private List<FeaturedModel> activityModels;
+    private List<FeaturedModel> featuredModels;
 
     private void Awake()
     {
@@ -54,26 +54,52 @@ public class DataManager : MonoBehaviour
 
     public void UpdateUserAvailableActvities(List<FeaturedModel> activityModels)
     {
-        this.activityModels = activityModels;
+        this.featuredModels = activityModels;
     }
 
     public void GetAvailableActivities(Action<List<FeaturedModel>> action)
     {
-        if (activityModels != null)
+        if (featuredModels != null)
         {
-            action?.Invoke(activityModels);
+            action?.Invoke(featuredModels);
         }
         else {
             GameManager.Instance.apiHandler.GetAvailableActvities((status, activityModels) => {
 
                 if (status)
                 {
-                    this.activityModels = activityModels;
+                    this.featuredModels = activityModels;
 
                     action?.Invoke(activityModels);
                 }
             });
         }
+    }
+
+    public void UpdateFeaturedData(EFeatureType featureType, int count = 1)
+    {
+        FeaturedModel featuredModel = GetFeaturedData(featureType);
+
+        featuredModel.used_count += count;
+    }
+
+    public bool CanLoadScreen(EFeatureType featureType)
+    {
+        FeaturedModel featuredModel = GetFeaturedData(featureType);
+
+        if (featuredModel != null)
+        {
+            return featuredModel.used_count < featuredModel.available_count;
+        }
+
+        return false;
+    }
+
+    public FeaturedModel GetFeaturedData(EFeatureType featureType)
+    {
+        int featureId = (int)featureType;
+
+        return featuredModels.Find(item => item.feature_id == featureId);
     }
 }
 

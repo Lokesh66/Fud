@@ -258,11 +258,17 @@ public class StoryDetailsController : MonoBehaviour
 
     void CreateStoryVersion()
     {
-        currentObject?.SetActive(false);
-
         //currentCreateScreen = storyVersionObject;
+        if (DataManager.Instance.CanLoadScreen(EFeatureType.StoryVersionCreation))
+        {
+            currentObject?.SetActive(false);
 
-        storyVersionObject.GetComponent<CreateStoryVersion>().Load(versionsView);
+            storyVersionObject.GetComponent<CreateStoryVersion>().Load(versionsView);
+        }
+        else
+        {
+            UIManager.Instance.CreateUnAvaiableAlert(EFeatureType.StoryVersionCreation);
+        }
     }
 
     void CreateCharacter()

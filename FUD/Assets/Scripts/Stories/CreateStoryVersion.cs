@@ -149,6 +149,8 @@ public class CreateStoryVersion : MonoBehaviour
             alertModel.okayButtonAction = OnSuccessResponse;
 
             alertModel.canEnableTick = true;
+
+            DataManager.Instance.UpdateFeaturedData(EFeatureType.StoryVersionCreation);
         }
 
         CanvasManager.Instance.alertView.ShowAlert(alertModel);

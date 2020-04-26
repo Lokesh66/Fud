@@ -106,7 +106,14 @@ public class VersionDetailsView : MonoBehaviour
 
     void OnShareButtonAction()
     {
-        versionsView.OnShareButtonAction(storyVersion);
+        if (DataManager.Instance.CanLoadScreen(EFeatureType.ShareStoryVersion))
+        {
+            versionsView.OnShareButtonAction(storyVersion);
+        }
+        else
+        {
+            UIManager.Instance.CreateUnAvaiableAlert(EFeatureType.ShareStoryVersion);
+        }
     }
 
     void OnMediaButtonAction()

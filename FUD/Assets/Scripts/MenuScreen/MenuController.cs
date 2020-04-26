@@ -31,3 +31,15 @@ public class MenuController : MonoBehaviour
         }
     }
 }
+
+public enum EFeatureType
+{ 
+    StoryCreation = 1,
+    StoryVersionCreation,
+    ShareStoryVersion,
+    PortfolioCreation,
+    PortfolioAlbums,
+    ProjectCreation,
+    AuditionCreation,
+    AuditionJoining,
+}

@@ -143,6 +143,8 @@ public class StoryCreationView : MonoBehaviour
             alertModel.okayButtonAction = OnSuccessResponse;
 
             alertModel.canEnableTick = true;
+
+            DataManager.Instance.UpdateFeaturedData(EFeatureType.StoryCreation);
         }
 
         CanvasManager.Instance.alertView.ShowAlert(alertModel);

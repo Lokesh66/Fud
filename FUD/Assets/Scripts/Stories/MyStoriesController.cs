@@ -131,7 +131,13 @@ public class MyStoriesController : BaseView
 
         OnAddSubView(createObject);*/
 
-        StoryCreationView.Instance.Load(OnStoryCreationCloseAction);
+        if (DataManager.Instance.CanLoadScreen(EFeatureType.StoryCreation))
+        {
+            StoryCreationView.Instance.Load(OnStoryCreationCloseAction);
+        }
+        else {
+            UIManager.Instance.CreateUnAvaiableAlert(EFeatureType.StoryCreation);
+        }
     }
 
     void OnStoryCreationCloseAction()

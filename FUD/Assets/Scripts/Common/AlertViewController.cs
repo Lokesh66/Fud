@@ -20,6 +20,8 @@ public class AlertViewController : MonoBehaviour
 
         messageText.text = alertModel.message;
 
+        tickObject.SetActive(alertModel.canEnableTick);
+
         gameObject.SetActive(true);
 
        // okayClick.onClick.AddListener(delegate { alertModel.okayButtonAction?.Invoke(); });

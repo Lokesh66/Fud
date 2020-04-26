@@ -90,14 +90,33 @@ public class StoryShareView : MonoBehaviour
 
         GameManager.Instance.apiHandler.UpdateStoryPost(currentVersion.story_id, currentVersion.id, storyTitle, commentField.text, userId, (status, response) => {
 
-            if (status)
-            {
-                Reset();
-
-                OnBackAction();
-            }
-
+            OnAPIResponse(status);
         });
+    }
+
+    void OnAPIResponse(bool status)
+    {
+        AlertModel alertModel = new AlertModel();
+
+        alertModel.message = status ? "Story Version Share Success" : "Something went wrong, please try again.";
+
+        if (status)
+        {
+            alertModel.okayButtonAction = OnSuccessResponse;
+
+            alertModel.canEnableTick = true;
+        }
+
+        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+    }
+
+    void OnSuccessResponse()
+    {
+        Reset();
+
+        OnBackAction();
+
+        DataManager.Instance.UpdateFeaturedData(EFeatureType.ShareStoryVersion);
     }
 
     bool CanCallAPI()

@@ -113,13 +113,20 @@ public class PortfolioView : BaseView
 
     public void ShowCreatePortfolioScreen()
     {
-        GameObject creationObject = Instantiate(createPortfolioCache, parentTrans);
+        if (DataManager.Instance.CanLoadScreen(EFeatureType.PortfolioCreation))
+        {
+            GameObject creationObject = Instantiate(createPortfolioCache, parentTrans);
 
-        gameObject.SetActive(false);
+            gameObject.SetActive(false);
 
-        createPanel.SetActive(false);
+            createPanel.SetActive(false);
 
-        creationObject.GetComponent<PortfolioCreationView>().Init(this);
+            creationObject.GetComponent<PortfolioCreationView>().Init(this);
+        }
+        else
+        {
+            UIManager.Instance.CreateUnAvaiableAlert(EFeatureType.PortfolioCreation);
+        }
     }
 
     public void OnExperianceCreateAction()
