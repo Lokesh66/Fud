@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class StoryCell : MonoBehaviour
 {
+    public RectTransform rectTransform;
+
     public RectTransform editStoryTrans;
 
     public TextMeshProUGUI titleText;
@@ -14,6 +16,8 @@ public class StoryCell : MonoBehaviour
     public TextMeshProUGUI description;
 
     public GameObject updateStoryCache;
+
+    public GameObject readMoreObject;
 
     public SwipeButtonsHelper swipeHelper;
 
@@ -41,6 +45,19 @@ public class StoryCell : MonoBehaviour
     public void OnButtonAction()
     {
         OnTapActon?.Invoke(storyModel.id);
+    }
+
+    public void OnReadMoreButtonAction()
+    {
+        description.overflowMode = TextOverflowModes.Overflow;
+
+        readMoreObject.SetActive(false);
+
+        Vector2 cellSize = rectTransform.sizeDelta;
+
+        cellSize.y += description.preferredHeight - 120.0f;
+
+        rectTransform.sizeDelta = new Vector2(cellSize.x, cellSize.y);
     }
 
     public void OnUpdateButtonAction()

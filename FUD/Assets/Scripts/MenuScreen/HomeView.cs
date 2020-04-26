@@ -49,6 +49,8 @@ public class HomeView : BaseView
         UserDataObject loginResponse = JsonUtility.FromJson<UserDataObject>(jsonData);
 
         DataManager.Instance.UpdateUserInfo(loginResponse.data);
+
+        GameManager.Instance.apiHandler.GetAvailableActvities(null);
     }
 
     public void OnMenuButtonAction()

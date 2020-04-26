@@ -223,6 +223,11 @@ public class UpdatePortfolioView : MonoBehaviour
         return true;
     }
 
+    public void OnCancelAction()
+    {
+        SlideGalleryView(false);
+    }
+
     void ShowGalleryPanel()
     {
         SlideGalleryView(true);

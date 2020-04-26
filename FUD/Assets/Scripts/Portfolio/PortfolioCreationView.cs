@@ -182,6 +182,11 @@ public class PortfolioCreationView : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public void OnCancelAction()
+    {
+        SlideGalleryView(false);
+    }
+
     void ShowGalleryPanel()
     {
         SlideGalleryView(true);

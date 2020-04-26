@@ -629,7 +629,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 7608556532850583949}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -1469,6 +1469,8 @@ MonoBehaviour:
   descriptionField: {fileID: 4211529358148130140}
   galleryPanel: {fileID: 8678374196093383942}
   filesHandler: {fileID: 2229767607246157669}
+  mediaCell: {fileID: 0}
+  content: {fileID: 0}
 --- !u!222 &5666779305173455557
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1665,7 +1667,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 12.799988}
+  m_AnchoredPosition: {x: 0, y: 12.800049}
   m_SizeDelta: {x: 0, y: 250}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &7016738605938523701
@@ -3004,17 +3006,32 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1853043853592265389, guid: 8e0a1324c7ff6de45b858aad67c96a56,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 6042163727382772400}
     - target: {fileID: 5509101816997158580, guid: 8e0a1324c7ff6de45b858aad67c96a56,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 6042163727382772400}
-    - target: {fileID: 7808532153612490291, guid: 8e0a1324c7ff6de45b858aad67c96a56,
+    - target: {fileID: 5217018323505178821, guid: 8e0a1324c7ff6de45b858aad67c96a56,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 6042163727382772400}
-    - target: {fileID: 1853043853592265389, guid: 8e0a1324c7ff6de45b858aad67c96a56,
+    - target: {fileID: 5217018323505178821, guid: 8e0a1324c7ff6de45b858aad67c96a56,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnCancelAction
+      objectReference: {fileID: 0}
+    - target: {fileID: 5217018323505178821, guid: 8e0a1324c7ff6de45b858aad67c96a56,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7808532153612490291, guid: 8e0a1324c7ff6de45b858aad67c96a56,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

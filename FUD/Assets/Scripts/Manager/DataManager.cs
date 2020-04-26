@@ -31,6 +31,8 @@ public class DataManager : MonoBehaviour
 
     public UserData userInfo;
 
+    private List<FeaturedModel> activityModels;
+
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -48,6 +50,30 @@ public class DataManager : MonoBehaviour
     public void UpdateUserInfo(UserData userData)
     {
         userInfo = userData;
+    }
+
+    public void UpdateUserAvailableActvities(List<FeaturedModel> activityModels)
+    {
+        this.activityModels = activityModels;
+    }
+
+    public void GetAvailableActivities(Action<List<FeaturedModel>> action)
+    {
+        if (activityModels != null)
+        {
+            action?.Invoke(activityModels);
+        }
+        else {
+            GameManager.Instance.apiHandler.GetAvailableActvities((status, activityModels) => {
+
+                if (status)
+                {
+                    this.activityModels = activityModels;
+
+                    action?.Invoke(activityModels);
+                }
+            });
+        }
     }
 }
 
@@ -73,6 +99,22 @@ public class UserData
     public object reffered_by;
     public string device_token;
     public string dob;
+    public DateTime created_date_time;
+    public DateTime updatedAt;
+    public List<FeaturedModel> UserFeatures;
+}
+
+[Serializable]
+public class FeaturedModel
+{
+    public int id;
+    public int feature_id;
+    public string name;
+    public int user_id;
+    public int status;
+    public int used_count;
+    public int available_count;
+    public int total_count;
     public DateTime created_date_time;
     public DateTime updatedAt;
 }

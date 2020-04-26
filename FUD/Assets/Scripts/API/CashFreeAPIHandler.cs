@@ -147,6 +147,5 @@ public class CFPToken
             data.Add (key, value);
         }
     }
-
 }
 

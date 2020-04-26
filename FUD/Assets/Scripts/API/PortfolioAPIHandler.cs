@@ -303,6 +303,21 @@ public partial class APIHandler
 
         }));
     }
+
+    public void GetAvailableActvities(Action<bool, List<FeaturedModel>> OnResponse)
+    {
+        gameManager.StartCoroutine(GetRequest(APIConstants.UPDATE_USER_PROFILE, true, (status, response) => {
+
+            if (status)
+            {
+                UserData userInfo = JsonUtility.FromJson<UserDataObject>(response).data;
+
+                DataManager.Instance.UpdateUserAvailableActvities(userInfo.UserFeatures);
+
+                OnResponse?.Invoke(status, userInfo.UserFeatures);
+            }
+        }));
+    }
 }
 
 [Serializable]
