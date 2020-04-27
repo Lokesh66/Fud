@@ -170,6 +170,8 @@ public class AuditionCell : MonoBehaviour
                 alertModel.okayButtonAction = Refresh;
                 alertModel.canEnableTick = true;
                 CanvasManager.Instance.alertView.ShowAlert(alertModel);
+
+                DataManager.Instance.UpdateFeaturedData(EFeatureType.AuditionJoining);
             }
             else
             {

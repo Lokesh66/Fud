@@ -15,6 +15,8 @@ public class AllPlansView : MonoBehaviour
 
     List<SubscriptionModel> modelsList = null;
 
+    List<SubscriptionCell> cellsList = new List<SubscriptionCell>();
+
     List<Genre> genres;
 
     bool isDropDownEnabled = false;
@@ -33,6 +35,8 @@ public class AllPlansView : MonoBehaviour
         Load();
 
         ShowRoleDropDown();
+
+        selectedDuration = durationDropDown.captionText.text;
 
         durationDropDown.onValueChanged.RemoveAllListeners();
 
@@ -89,6 +93,8 @@ public class AllPlansView : MonoBehaviour
         for (int i = 0; i < modelsList.Count; i++)
         {
             GameObject planObject = Instantiate(planCell, content);
+
+            modelsList[i].SetPlanPrice(selectedDuration);
 
             planObject.GetComponent<SubscriptionPlanCell>().Load(modelsList[i], OnSubscriptionSelectAction);
         }

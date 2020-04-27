@@ -61,6 +61,27 @@ public class SubscriptionModel
     public int price_per_year;
     public int price_per_forever;
     public List<Feature> features;
+
+    public int price;
+
+
+    public void SetPlanPrice(string duration)
+    {
+        switch (duration)
+        {
+            case "Monthly":
+                price = price_per_month;
+                break;
+
+            case "Yearly":
+                price = price_per_year;
+                break;
+
+            case "Forever":
+                price = price_per_forever;
+                break;
+        }
+    }
 }
 
 

@@ -36,7 +36,7 @@ public class SubscriptionPlanCell : MonoBehaviour
     {
         planNameText.text = subscriptionModel.name;
 
-        priceText.text = "Rs." + subscriptionModel.price_per_month;
+        priceText.text = "Rs." + subscriptionModel.price;
 
         List<Feature> featuresList = subscriptionModel.features;
 

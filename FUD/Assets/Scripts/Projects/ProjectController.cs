@@ -72,24 +72,31 @@ public class ProjectController : MonoBehaviour
 
     public void OnAddButtonAction()
     {
-        GameManager.Instance.apiHandler.GetProjectStories((status, response) => {
-            if (status)
+        if (DataManager.Instance.CanLoadScreen(EFeatureType.ProjectCreation))
+        {
+            GameManager.Instance.apiHandler.GetProjectStories((status, response) =>
             {
-                Debug.Log("OnAddButtonAction : "+response);
-
-                ProjectStoriesResponse stories = JsonUtility.FromJson<ProjectStoriesResponse>(response);
-                if (stories.data != null && stories.data.Count > 0)
+                if (status)
                 {
-                    ProjectCreationView.Instance.SetView(stories.data, (isProjectAdded) =>
+                    Debug.Log("OnAddButtonAction : " + response);
+
+                    ProjectStoriesResponse stories = JsonUtility.FromJson<ProjectStoriesResponse>(response);
+                    if (stories.data != null && stories.data.Count > 0)
                     {
-                        if (isProjectAdded)
+                        ProjectCreationView.Instance.SetView(stories.data, (isProjectAdded) =>
                         {
-                            GetAllProjects();
-                        }
-                    });
+                            if (isProjectAdded)
+                            {
+                                GetAllProjects();
+                            }
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
+        else {
+            UIManager.Instance.CreateUnAvaiableAlert(EFeatureType.ProjectCreation);
+        }
     }
 
     public void OnBackButtonAction()
