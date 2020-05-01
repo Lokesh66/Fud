@@ -29,4 +29,6 @@ public class CanvasManager : MonoBehaviour
     public RectTransform canvasTrans;
 
     public AlertViewController alertView;
+
+    public LeftMenu leftMenu;
 }

@@ -22,6 +22,9 @@ public class UIManager : MonoBehaviour
 
     public AlertViewController alertView;
 
+    public LeftMenu leftMenu;
+
+
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -32,6 +35,8 @@ public class UIManager : MonoBehaviour
     void Init()
     {
         alertView = new AlertViewController();
+
+        leftMenu = new LeftMenu();
     }
 
     #region Un Available Features
@@ -41,7 +46,9 @@ public class UIManager : MonoBehaviour
 
         alertModel.message = GetUnAvailableMessage(featureType);
 
-        alertView.ShowAlert(alertModel);
+        alertModel.okayButtonAction = LoadStore;
+
+        CanvasManager.Instance.alertView.ShowAlert(alertModel);
     }
 
     string GetUnAvailableMessage(EFeatureType featureType)
@@ -87,4 +94,11 @@ public class UIManager : MonoBehaviour
     }
 
     #endregion
+
+    void LoadStore()
+    {
+        CanvasManager.Instance.leftMenu.SetView(null);
+
+        CanvasManager.Instance.leftMenu.OnSubscrptionButtonAction();
+    }
 }
