@@ -31,7 +31,7 @@ public class DataManager : MonoBehaviour
 
     public UserData userInfo;
 
-    private List<FeaturedModel> featuredModels;
+    public List<FeaturedModel> featuredModels;
 
     private void Awake()
     {
@@ -81,6 +81,8 @@ public class DataManager : MonoBehaviour
         FeaturedModel featuredModel = GetFeaturedData(featureType);
 
         featuredModel.used_count += count;
+
+        featuredModel.available_count -= count;
     }
 
     public bool CanLoadScreen(EFeatureType featureType)
@@ -89,7 +91,7 @@ public class DataManager : MonoBehaviour
 
         if (featuredModel != null)
         {
-            return featuredModel.used_count < featuredModel.available_count;
+            return featuredModel.available_count > 0;
         }
 
         return false;
