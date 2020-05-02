@@ -22,6 +22,9 @@ public class UIManager : MonoBehaviour
     public TopCanvas topCanvas;
 
 
+    public LeftMenu leftMenu;
+
+
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -31,7 +34,7 @@ public class UIManager : MonoBehaviour
 
     void Init()
     {
-        
+        leftMenu = new LeftMenu();
     }
 
     #region Un Available Features
@@ -40,6 +43,8 @@ public class UIManager : MonoBehaviour
         AlertModel alertModel = new AlertModel();
 
         alertModel.message = GetUnAvailableMessage(featureType);
+
+        alertModel.okayButtonAction = LoadStore;
 
         topCanvas.alertView.ShowAlert(alertModel);
     }
@@ -98,4 +103,11 @@ public class UIManager : MonoBehaviour
     }
 
     #endregion
+
+    void LoadStore()
+    {
+        CanvasManager.Instance.leftMenu.SetView(null);
+
+        CanvasManager.Instance.leftMenu.OnSubscrptionButtonAction();
+    }
 }

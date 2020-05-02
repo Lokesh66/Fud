@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine;
 
 
 public class MenuController : MonoBehaviour
@@ -8,8 +8,7 @@ public class MenuController : MonoBehaviour
     public List<BaseView> baseViews;
     public List<Toggle> toggles;
 
-    [HideInInspector]
-    public BaseView currentBaseView;
+    private BaseView currentBaseView;
 
     private int currentViewIndex = -1;
     void Start()

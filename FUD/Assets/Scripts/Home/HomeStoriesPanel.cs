@@ -58,7 +58,14 @@ public class HomeStoriesPanel : MonoBehaviour
 
         if (index == -1)
         {
-            StoryCreationView.Instance.Load(OnStoryScreenClosed);
+            if (DataManager.Instance.CanLoadScreen(EFeatureType.StoryCreation))
+            {
+                StoryCreationView.Instance.Load(OnStoryScreenClosed);
+            }
+            else
+            {
+                UIManager.Instance.CreateUnAvaiableAlert(EFeatureType.StoryCreation);
+            }
         }
         else
         {
