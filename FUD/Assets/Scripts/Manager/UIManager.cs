@@ -19,8 +19,8 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public TopCanvas topCanvas;
 
-    public AlertViewController alertView;
 
     void Awake()
     {
@@ -31,7 +31,7 @@ public class UIManager : MonoBehaviour
 
     void Init()
     {
-        alertView = new AlertViewController();
+        
     }
 
     #region Un Available Features
@@ -41,7 +41,7 @@ public class UIManager : MonoBehaviour
 
         alertModel.message = GetUnAvailableMessage(featureType);
 
-        alertView.ShowAlert(alertModel);
+        topCanvas.alertView.ShowAlert(alertModel);
     }
 
     string GetUnAvailableMessage(EFeatureType featureType)
@@ -84,6 +84,17 @@ public class UIManager : MonoBehaviour
 
         }
         return message;
+    }
+
+    #endregion
+
+    #region Alerts
+
+    public void ShowAlert(AlertModel alertModel)
+    {
+        Debug.LogError("UIManager : Show Alert Called");
+
+        topCanvas.alertView.ShowAlert(alertModel);
     }
 
     #endregion
