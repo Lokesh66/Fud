@@ -71,7 +71,7 @@ public class LoginScreen : MonoBehaviour
                 ShowErrorText();
                 return;
             }
-            GameManager.Instance.apiHandler.SignIn(number, otpInputField.text, roleId, (bool status, User userData) => {
+            GameManager.Instance.apiHandler.SignIn(number, roleId, (bool status, UserData userData) => {
                 if (status)
                 {
                     Login();

@@ -14,6 +14,7 @@ public class AlertViewController : MonoBehaviour
 
     AlertModel alertModel;
 
+
     public void ShowAlert(AlertModel alertModel)
     {
         this.alertModel = alertModel;

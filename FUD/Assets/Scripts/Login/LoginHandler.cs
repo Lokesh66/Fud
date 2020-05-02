@@ -106,8 +106,22 @@ public class LoginHandler : MonoBehaviour
             if (mobileNumber != 0)
             {
                 contactNumber = mobileNumber;
+
+                if (isNewUser)
+                {
+                    GameManager.Instance.apiHandler.SignIn(contactNumber, selectedRole.id, (apiStatus, userInfo) =>
+                    {
+                        if (apiStatus)
+                        {
+                            SetView(ELoginFlow.Login);
+                        }
+                    });
+                }
             }
-            SetView(ELoginFlow.Login);
+            if (!isNewUser)
+            {
+                SetView(ELoginFlow.Login);
+            }
         }
         else
         {

@@ -8,12 +8,17 @@ public class DetailsScreen : MonoBehaviour
 
     System.Action<bool, long> OnButtonAction;
 
+    private bool isNewUser = false;
+
     public void SetView(bool isNewUser, System.Action<bool, long> action)
     {
         gameObject.SetActive(true);
 
         mobileNumberTextField.text = "";
         OnButtonAction = action;
+
+        this.isNewUser = isNewUser;
+
         signInText.text = isNewUser ? "SignIn" : "Login";
     }
 
@@ -23,16 +28,25 @@ public class DetailsScreen : MonoBehaviour
         {
             return;
         }
-        GameManager.Instance.apiHandler.SendOTP(long.Parse(mobileNumberTextField.text), (bool status) => {
-            if (status)
+
+        if (isNewUser)
+        {
+            OnButtonAction?.Invoke(true, long.Parse(mobileNumberTextField.text));
+        }
+        else
+        {
+            GameManager.Instance.apiHandler.SendOTP(long.Parse(mobileNumberTextField.text), (bool status) =>
             {
-                OnButtonAction?.Invoke(true, long.Parse(mobileNumberTextField.text));
-            }
-            else
-            {
-                //Erros message
-            }
-        });
+                if (status)
+                {
+                    OnButtonAction?.Invoke(true, long.Parse(mobileNumberTextField.text));
+                }
+                else
+                {
+                    //Erros message
+                }
+            });
+        }
     }
 
     public void OnClick_Back()
