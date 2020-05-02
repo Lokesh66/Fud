@@ -131,6 +131,8 @@ public class MyStoriesController : BaseView
 
         OnAddSubView(createObject);*/
 
+        Debug.LogError("CanLoadScreen : " + DataManager.Instance.CanLoadScreen(EFeatureType.StoryCreation));
+
         if (DataManager.Instance.CanLoadScreen(EFeatureType.StoryCreation))
         {
             StoryCreationView.Instance.Load(OnStoryCreationCloseAction);

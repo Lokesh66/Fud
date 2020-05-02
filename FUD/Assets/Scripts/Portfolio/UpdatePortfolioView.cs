@@ -102,7 +102,7 @@ public class UpdatePortfolioView : MonoBehaviour
 
             alertModel.message = status.ToString() + imageUrls[0];
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -129,7 +129,7 @@ public class UpdatePortfolioView : MonoBehaviour
 
             alertModel.message = status.ToString();
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -156,7 +156,7 @@ public class UpdatePortfolioView : MonoBehaviour
 
             alertModel.message = status.ToString();
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -189,7 +189,7 @@ public class UpdatePortfolioView : MonoBehaviour
             alertModel.canEnableTick = true;
         }
 
-        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+        UIManager.Instance.ShowAlert(alertModel);
     }
 
     void OnSuccessResponse()
@@ -216,7 +216,7 @@ public class UpdatePortfolioView : MonoBehaviour
         {
             AlertModel alertModel = new AlertModel();
             alertModel.message = errorMessage;
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
             return false;
         }
 

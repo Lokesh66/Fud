@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
 
         alertModel.okayButtonAction = SwitchToLogin;
 
-        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+        UIManager.Instance.ShowAlert(alertModel);
     }
 
     public void SwitchToLogin()

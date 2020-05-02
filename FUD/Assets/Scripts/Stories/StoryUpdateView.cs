@@ -121,7 +121,7 @@ public class StoryUpdateView : MonoBehaviour
             alertModel.canEnableTick = true;
         }
 
-        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+        UIManager.Instance.ShowAlert(alertModel);
     }
 
     void OnSuccessResponse()
@@ -152,7 +152,7 @@ public class StoryUpdateView : MonoBehaviour
         {
             AlertModel alertModel = new AlertModel();
             alertModel.message = errorMessage;
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
             return false;
         }
 
@@ -225,7 +225,7 @@ public class StoryUpdateView : MonoBehaviour
 
             alertModel.message = status.ToString() + imageUrls[0];
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -254,7 +254,7 @@ public class StoryUpdateView : MonoBehaviour
 
             alertModel.message = status.ToString() + imageUrls[0];
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -283,7 +283,7 @@ public class StoryUpdateView : MonoBehaviour
 
             alertModel.message = status.ToString() + imageUrls[0];
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 

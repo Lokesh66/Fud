@@ -133,7 +133,7 @@ public class UpdateTeamView : MonoBehaviour
             alertModel.canEnableTick = true;
         }
 
-        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+        UIManager.Instance.ShowAlert(alertModel);
     }
 
     void OnSuccessResponse()
@@ -167,7 +167,7 @@ public class UpdateTeamView : MonoBehaviour
         {
             AlertModel alertModel = new AlertModel();
             alertModel.message = errorMessage;
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
             return false;
         }
 

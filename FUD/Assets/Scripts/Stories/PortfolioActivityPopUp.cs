@@ -76,7 +76,7 @@ public class PortfolioActivityPopUp : MonoBehaviour
             alertModel.canEnableTick = true;
         }
 
-        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+        UIManager.Instance.ShowAlert(alertModel);
     }
 
     void OnCloseButton()

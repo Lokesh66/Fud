@@ -94,7 +94,7 @@ public class CreateCastView : MonoBehaviour
         {
             AlertModel alertModel = new AlertModel();
             alertModel.message = errorMessage;
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
             return;
         }
 
@@ -117,13 +117,13 @@ public class CreateCastView : MonoBehaviour
                 alertModel.message = "Cast Added Successfully";
                 alertModel.okayButtonAction = BackButtonAction;
                 alertModel.canEnableTick = true;
-                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                UIManager.Instance.ShowAlert(alertModel);
             }
             else
             {
                 AlertModel alertModel = new AlertModel();
                 alertModel.message = "Cast Creation Failed";
-                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                UIManager.Instance.ShowAlert(alertModel);
             }
         });
     }   

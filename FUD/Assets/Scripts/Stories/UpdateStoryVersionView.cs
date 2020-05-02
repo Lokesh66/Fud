@@ -187,7 +187,7 @@ public class UpdateStoryVersionView : MonoBehaviour
         {
             AlertModel alertModel = new AlertModel();
             alertModel.message = errorMessage;
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
             return false;
         }
 
@@ -207,7 +207,7 @@ public class UpdateStoryVersionView : MonoBehaviour
             alertModel.canEnableTick = true;
         }
 
-        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+        UIManager.Instance.ShowAlert(alertModel);
     }
 
     void OnSuccessResponse()
@@ -251,7 +251,7 @@ public class UpdateStoryVersionView : MonoBehaviour
 
             alertModel.message = status.ToString();
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -280,7 +280,7 @@ public class UpdateStoryVersionView : MonoBehaviour
 
             alertModel.message = status.ToString() + imageUrls[0];
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -309,7 +309,7 @@ public class UpdateStoryVersionView : MonoBehaviour
 
             alertModel.message = status.ToString() + imageUrls[0];
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 

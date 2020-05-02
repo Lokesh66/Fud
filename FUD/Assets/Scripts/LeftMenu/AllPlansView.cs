@@ -125,7 +125,7 @@ public class AllPlansView : MonoBehaviour
 
                     alertModel.message = "Order Verified Success";
 
-                    CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                    UIManager.Instance.ShowAlert(alertModel);
                 }
                 else
                 {
@@ -133,7 +133,7 @@ public class AllPlansView : MonoBehaviour
 
                     alertModel.message = "Order verification Failed";
 
-                    CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                    UIManager.Instance.ShowAlert(alertModel);
                 }
             });
         }

@@ -3,24 +3,19 @@ using System;
 
 public class TopCanvas : MonoBehaviour
 {
-    private static TopCanvas instance;
-
-    public static TopCanvas Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = FindObjectOfType<TopCanvas>();
-            }
-
-            return instance;
-        }
-    }
-
     public RectTransform rectTransform;
 
+    public AlertViewController alertView;
+
+
     private Action<object> OnClose;
+
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
 
     public void ShowScreen(GameObject _screenObject, Action<object> OnClose = null)
     {

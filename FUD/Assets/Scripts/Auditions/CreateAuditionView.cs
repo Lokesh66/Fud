@@ -167,7 +167,7 @@ public class CreateAuditionView : MonoBehaviour
 
             alertModel.message = "Media upload failed";
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -229,7 +229,7 @@ public class CreateAuditionView : MonoBehaviour
         {
             AlertModel alertModel = new AlertModel();
             alertModel.message = errorMessage;
-            CanvasManager.Instance.alertView.ShowAlert(alertModel); 
+            UIManager.Instance.ShowAlert(alertModel); 
             return;
         }        
         
@@ -281,13 +281,13 @@ public class CreateAuditionView : MonoBehaviour
                 alertModel.message = "Audition Created Successfully";
                 alertModel.okayButtonAction = BackButtonAction;
                 alertModel.canEnableTick = true;
-                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                UIManager.Instance.ShowAlert(alertModel);
             }
             else
             {
                 AlertModel alertModel = new AlertModel();
                 alertModel.message = "Creating Audition Failed";
-                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                UIManager.Instance.ShowAlert(alertModel);
             }
         });
     }
@@ -338,7 +338,7 @@ public class CreateAuditionView : MonoBehaviour
         {
             AlertModel alertModel = new AlertModel();
             alertModel.message = "No data to update";
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
             return;
         }
         GameManager.Instance.apiHandler.ModifyAudition(parameters, (status, response) =>
@@ -351,13 +351,13 @@ public class CreateAuditionView : MonoBehaviour
                 alertModel.message = "Audition Updated Successfully";
                 alertModel.okayButtonAction = BackButtonAction;
                 alertModel.canEnableTick = true;
-                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                UIManager.Instance.ShowAlert(alertModel);
             }
             else
             {
                 AlertModel alertModel = new AlertModel();
                 alertModel.message = "Updating Audition Failed";
-                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                UIManager.Instance.ShowAlert(alertModel);
             }
         });
     }

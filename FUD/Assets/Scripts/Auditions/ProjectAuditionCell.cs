@@ -89,13 +89,13 @@ public class ProjectAuditionCell : MonoBehaviour
                 alertModel.message = "Audition Deleted Successfully";
                 alertModel.okayButtonAction = UpdateList;
                 alertModel.canEnableTick = true;
-                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                UIManager.Instance.ShowAlert(alertModel);
             }
             else
             {
                 AlertModel alertModel = new AlertModel();
                 alertModel.message = "Deleting Audition Failed";
-                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                UIManager.Instance.ShowAlert(alertModel);
             }
         });
     }

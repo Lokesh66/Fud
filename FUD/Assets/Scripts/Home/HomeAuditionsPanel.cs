@@ -117,7 +117,7 @@ public class HomeAuditionsPanel : MonoBehaviour
 
             alertModel.message = status.ToString();
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -145,7 +145,7 @@ public class HomeAuditionsPanel : MonoBehaviour
 
             alertModel.message = status.ToString();
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -173,7 +173,7 @@ public class HomeAuditionsPanel : MonoBehaviour
 
             alertModel.message = status.ToString();
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -189,13 +189,13 @@ public class HomeAuditionsPanel : MonoBehaviour
                 alertModel.message = "Audition Joined Successfully";
                 alertModel.okayButtonAction = GetAuditions;
                 alertModel.canEnableTick = true;
-                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                UIManager.Instance.ShowAlert(alertModel);
             }
             else
             {
                 AlertModel alertModel = new AlertModel();
                 alertModel.message = "Joining Audition Failed";
-                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                UIManager.Instance.ShowAlert(alertModel);
             }
         });
     }

@@ -79,7 +79,7 @@ public class PortfolioCreationView : MonoBehaviour
             DataManager.Instance.UpdateFeaturedData(EFeatureType.PortfolioCreation);
         }
 
-        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+        UIManager.Instance.ShowAlert(alertModel);
     }
 
     void OnSuccessResponse()
@@ -114,7 +114,7 @@ public class PortfolioCreationView : MonoBehaviour
 
             alertModel.message = status.ToString() + imageUrls[0];
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -141,7 +141,7 @@ public class PortfolioCreationView : MonoBehaviour
 
             alertModel.message = status.ToString();
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -168,7 +168,7 @@ public class PortfolioCreationView : MonoBehaviour
 
             alertModel.message = status.ToString();
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 

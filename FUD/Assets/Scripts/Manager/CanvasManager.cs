@@ -26,9 +26,5 @@ public class CanvasManager : MonoBehaviour
     }
     #endregion
 
-    public RectTransform canvasTrans;
-
-    public AlertViewController alertView;
-
     public LeftMenu leftMenu;
 }

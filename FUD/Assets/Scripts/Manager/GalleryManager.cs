@@ -159,7 +159,7 @@ public class GalleryManager : MonoBehaviour
 
                     alertModel.okayButtonAction = AlertDismissAction;
 
-                    CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                    UIManager.Instance.ShowAlert(alertModel);
 
                     uploadedURLs.Clear();                    
                 }
@@ -174,7 +174,7 @@ public class GalleryManager : MonoBehaviour
 
                     //alertModel.okayButtonAction = AlertDismissAction;
 
-                    CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                    UIManager.Instance.ShowAlert(alertModel);
 
                     OnUploaded?.Invoke(false, responses);*/
                 }
@@ -195,7 +195,7 @@ public class GalleryManager : MonoBehaviour
 
     void AlertDismissAction()
     {
-        CanvasManager.Instance.alertView.gameObject.SetActive(false);
+        UIManager.Instance.gameObject.SetActive(false);
     }
 
     void UpdateLocalData(List<string> imageURls, EMediaType mediaType)

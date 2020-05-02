@@ -92,7 +92,7 @@ public class ProjectCreationView : MonoBehaviour
         {
             AlertModel alertModel = new AlertModel();
             alertModel.message = errorMessage;
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
             return;
         }
 
@@ -121,14 +121,14 @@ public class ProjectCreationView : MonoBehaviour
                 alertModel.message = "Project Created Successfully";
                 alertModel.okayButtonAction = BackButtonAction;
                 alertModel.canEnableTick = true;
-                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                UIManager.Instance.ShowAlert(alertModel);
             }
             else
             {
                 Debug.LogError("Project Failed To Save");
                 AlertModel alertModel = new AlertModel();
                 alertModel.message = "Project Creation Failed";
-                CanvasManager.Instance.alertView.ShowAlert(alertModel);
+                UIManager.Instance.ShowAlert(alertModel);
             }
         });
     }

@@ -102,7 +102,7 @@ public class ProfileInfoView : MonoBehaviour
         {
             AlertModel alertModel = new AlertModel();
             alertModel.message = errorMessage;
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
             return;
         }
 
@@ -132,7 +132,7 @@ public class ProfileInfoView : MonoBehaviour
             {
                 alertModel.message = "User data updated failed";
             }
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         });
     }
 

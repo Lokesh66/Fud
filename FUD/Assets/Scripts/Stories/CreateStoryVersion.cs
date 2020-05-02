@@ -131,7 +131,7 @@ public class CreateStoryVersion : MonoBehaviour
         {
             AlertModel alertModel = new AlertModel();
             alertModel.message = errorMessage;
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
             return false;
         }
 
@@ -153,7 +153,7 @@ public class CreateStoryVersion : MonoBehaviour
             DataManager.Instance.UpdateFeaturedData(EFeatureType.StoryVersionCreation);
         }
 
-        CanvasManager.Instance.alertView.ShowAlert(alertModel);
+        UIManager.Instance.ShowAlert(alertModel);
     }
 
     void OnSuccessResponse()
@@ -205,7 +205,7 @@ public class CreateStoryVersion : MonoBehaviour
 
             alertModel.message = status.ToString() + imageUrls[0];
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -234,7 +234,7 @@ public class CreateStoryVersion : MonoBehaviour
 
             alertModel.message = status.ToString() + imageUrls[0];
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -263,7 +263,7 @@ public class CreateStoryVersion : MonoBehaviour
 
             alertModel.message = status.ToString() + imageUrls[0];
 
-            CanvasManager.Instance.alertView.ShowAlert(alertModel);
+            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
