@@ -33,11 +33,15 @@ public class AllPlansView : MonoBehaviour
     {
         gameObject.SetActive(true);
 
-        Load();
+        durationDropDown.value = 0;
+
+        selectedDuration = durationDropDown.captionText.text;
 
         ShowRoleDropDown();
 
-        durationDropDown.value = 0;
+        roleDropDown.value = 0;
+
+        OnRoleValueChange();
 
         durationDropDown.onValueChanged.RemoveAllListeners();
 
