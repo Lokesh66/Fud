@@ -8,18 +8,29 @@ public class PlanSubCell : MonoBehaviour
     public TextMeshProUGUI countText;
 
 
-    Feature featureModel;
-    public void Load(Feature feature)
+    public void Load(object model, bool isPlanActive)
     {
-        featureModel = feature;
-
-        SetView();
+        SetView(model, isPlanActive);
     }
 
-    void SetView()
+    void SetView(object model, bool isPlanActive)
     {
-        moduleNameText.text = featureModel.name;
+        Feature feature = null;
 
-        countText.text = featureModel.count.ToString();
+        FeaturedModel featuredModel = null;
+
+        if (isPlanActive)
+        {
+            featuredModel = model as FeaturedModel;
+        }
+        else {
+            feature = model as Feature;
+        }
+        
+        moduleNameText.text = isPlanActive ? featuredModel.name : feature.name;
+
+        string countMessage = isPlanActive ? featuredModel.used_count.ToString("00") + "/" + featuredModel.total_count.ToString("00") : feature.count.ToString();
+
+        countText.text = countMessage;
     }
 }

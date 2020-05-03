@@ -282,6 +282,8 @@ public class CreateAuditionView : MonoBehaviour
                 alertModel.okayButtonAction = BackButtonAction;
                 alertModel.canEnableTick = true;
                 UIManager.Instance.ShowAlert(alertModel);
+
+                DataManager.Instance.UpdateFeaturedData(EFeatureType.AuditionCreation);
             }
             else
             {

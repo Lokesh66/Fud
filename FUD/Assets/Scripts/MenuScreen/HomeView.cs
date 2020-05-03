@@ -5,8 +5,6 @@ public class HomeView : BaseView
 {
     public LeftMenu leftMenuPanel;
 
-    public SubscriptionsPanel subscriptionsPanel;
-
 
     #region Ovveride Methods
     protected override void EnableView()
@@ -56,10 +54,6 @@ public class HomeView : BaseView
     public void OnMenuButtonAction()
     {
         leftMenuPanel.SetView(OnCloseLeftMenu);
-    }
-    public void OnStoreButtonAction()
-    {
-        subscriptionsPanel.Load();
     }
 
     public void OnCloseLeftMenu()

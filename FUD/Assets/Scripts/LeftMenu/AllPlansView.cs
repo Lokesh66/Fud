@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 
 public class AllPlansView : MonoBehaviour
 {
     public RectTransform content;
+
+    public ScrollRect scrollRect;
 
     public TMP_Dropdown roleDropDown;
 
@@ -13,13 +16,11 @@ public class AllPlansView : MonoBehaviour
     public GameObject planCell;
 
 
+    private List<Canvas> scrollCanvases = new List<Canvas>();
+
     List<SubscriptionModel> modelsList = null;
 
-    List<SubscriptionCell> cellsList = new List<SubscriptionCell>();
-
     List<Genre> genres;
-
-    bool isDropDownEnabled = false;
 
     string selectedRole = string.Empty;
 
@@ -36,7 +37,7 @@ public class AllPlansView : MonoBehaviour
 
         ShowRoleDropDown();
 
-        selectedDuration = durationDropDown.captionText.text;
+        durationDropDown.value = 0;
 
         durationDropDown.onValueChanged.RemoveAllListeners();
 
@@ -71,9 +72,7 @@ public class AllPlansView : MonoBehaviour
 
     void Load()
     {
-        Debug.Log("All Plans Load Called");
-
-        GameManager.Instance.apiHandler.GetSubscriptionPlans(roleId, GetDurationKey(durationDropDown.captionText.text), (status, response) => {
+        GameManager.Instance.apiHandler.GetSubscriptionPlans(roleId, GetDurationKey(selectedDuration), (status, response) => {
 
             if (status)
             {
@@ -96,7 +95,11 @@ public class AllPlansView : MonoBehaviour
 
             modelsList[i].SetPlanPrice(selectedDuration);
 
-            planObject.GetComponent<SubscriptionPlanCell>().Load(modelsList[i], OnSubscriptionSelectAction);
+            SubscriptionPlanCell subscriptionPlanCell = planObject.GetComponent<SubscriptionPlanCell>();
+
+            scrollCanvases.Add(subscriptionPlanCell.scrollCanvas);
+
+            subscriptionPlanCell.Load(modelsList[i], OnSubscriptionSelectAction);
         }
     }
 
@@ -189,5 +192,21 @@ public class AllPlansView : MonoBehaviour
         durationDropDown.onValueChanged.RemoveAllListeners();
 
         roleDropDown.onValueChanged.RemoveAllListeners();
+    }
+
+    public void OnDrag()
+    {
+        foreach (var item in scrollCanvases)
+        {
+            item.overrideSorting = false;
+        }
+    }
+
+    public void OnEndDrag()
+    {
+        foreach (var item in scrollCanvases)
+        {
+            item.overrideSorting = true;
+        }
     }
 }

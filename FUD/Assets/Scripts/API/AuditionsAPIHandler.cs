@@ -52,8 +52,11 @@ public partial class APIHandler
     public void JoinAudition(Dictionary<string, object> parameters, Action<bool, string> action)
     { 
         gameManager.StartCoroutine(PostRequest(APIConstants.USER_AUDITION, true, parameters, (bool status, string response) => {
+
             if (status)
             {
+                DataManager.Instance.UpdateFeaturedData(EFeatureType.AuditionJoining);
+
                 action?.Invoke(true, response);
             }
             else

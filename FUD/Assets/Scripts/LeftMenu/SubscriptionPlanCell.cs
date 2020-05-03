@@ -8,6 +8,8 @@ public class SubscriptionPlanCell : MonoBehaviour
 {
     public RectTransform content;
 
+    public Canvas scrollCanvas;
+
     public TextMeshProUGUI planNameText;
 
     public TextMeshProUGUI priceText;
@@ -25,10 +27,17 @@ public class SubscriptionPlanCell : MonoBehaviour
     SubscriptionModel subscriptionModel;
     Action<SubscriptionModel> OnClick;
 
+    bool isPlanActive = false;
+
+
     public void Load(SubscriptionModel subscriptionModel, Action<SubscriptionModel> action)
     {
         this.subscriptionModel = subscriptionModel;
+
+        isPlanActive = subscriptionModel.IsPlanActive();
+
         OnClick = action;
+
         SetView();
     }
 
@@ -36,17 +45,33 @@ public class SubscriptionPlanCell : MonoBehaviour
     {
         planNameText.text = subscriptionModel.name;
 
-        priceText.text = "Rs." + subscriptionModel.price;
 
-        List<Feature> featuresList = subscriptionModel.features;
+        priceText.text = isPlanActive ? "Active" : "Rs." + subscriptionModel.price;
+
+        topBG.sprite = isPlanActive ? activeTopBG : inActiveTopBG;
 
         content.DestroyChildrens();
 
-        for (int i = 0; i < featuresList.Count; i++)
-        {
-            GameObject subCellObject = Instantiate(planSubCell, content);
+        if (isPlanActive) {
 
-            subCellObject.GetComponent<PlanSubCell>().Load(featuresList[i]);
+            List<FeaturedModel> featuredModels = DataManager.Instance.featuredModels;
+
+            for (int i = 0; i < featuredModels.Count; i++)
+            {
+                GameObject subCellObject = Instantiate(planSubCell, content);
+
+                subCellObject.GetComponent<PlanSubCell>().Load(featuredModels[i], isPlanActive);
+            }
+        }
+        else {
+            List<Feature> featuredModels = subscriptionModel.features;
+
+            for (int i = 0; i < featuredModels.Count; i++)
+            {
+                GameObject subCellObject = Instantiate(planSubCell, content);
+
+                subCellObject.GetComponent<PlanSubCell>().Load(featuredModels[i], isPlanActive);
+            }
         }
     }
 

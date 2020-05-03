@@ -35,8 +35,6 @@ public class SubscriptionController : MonoBehaviour
 
     public void OnAllPlansTabAction()
     {
-        Debug.Log("OnAllPlansTabAction : currentTab = " + currentTab);
-
         if (currentTab != EScreenType.AllPlans)
         {
             currentTab = EScreenType.AllPlans;
@@ -73,6 +71,8 @@ public class SubscriptionController : MonoBehaviour
         else {
             storesView.ClearData();
         }
+
+        currentTab = EScreenType.None;
 
         gameObject.SetActive(false);
     }

@@ -97,8 +97,6 @@ public class UIManager : MonoBehaviour
 
     public void ShowAlert(AlertModel alertModel)
     {
-        Debug.LogError("UIManager : Show Alert Called");
-
         topCanvas.alertView.ShowAlert(alertModel);
     }
 

@@ -40,14 +40,8 @@ public partial class APIHandler
 }
 
 [Serializable]
-public class Feature
+public class Feature : FeaturedModel
 {
-    public int id;
-    public string name;
-    public string description;
-    public int status;
-    public object created_date_time;
-    public object updatedAt;
     public int count;
 }
 
@@ -60,10 +54,18 @@ public class SubscriptionModel
     public int price_per_month;
     public int price_per_year;
     public int price_per_forever;
+    public int plan_purchase;
     public List<Feature> features;
 
     public int price;
 
+
+    public bool IsPlanActive()
+    {
+        //plan_purchase = 1;
+        
+        return plan_purchase > 0;
+    }
 
     public void SetPlanPrice(string duration)
     {

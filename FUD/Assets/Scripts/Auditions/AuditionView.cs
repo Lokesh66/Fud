@@ -26,11 +26,19 @@ public class AuditionView : BaseView
 
     public void OnAddButtonAction()
     {
-        CreateAuditionView.Instance.SetView(1, (isNewDataUpdated) => {
-            if (isNewDataUpdated)
-            {
+        if (DataManager.Instance.CanLoadScreen(EFeatureType.AuditionCreation))
+        {
+            CreateAuditionView.Instance.SetView(1, (isNewDataUpdated) => {
 
-            }
-        });
+                if (isNewDataUpdated)
+                {
+
+                }
+            });
+        }
+        else
+        {
+            UIManager.Instance.CreateUnAvaiableAlert(EFeatureType.AuditionCreation);
+        }
     }
 }
