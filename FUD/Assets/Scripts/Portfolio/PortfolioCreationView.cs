@@ -76,6 +76,8 @@ public class PortfolioCreationView : MonoBehaviour
 
             alertModel.canEnableTick = true;
 
+            DataManager.Instance.UpdateFeaturedData(EFeatureType.PortfolioAlbums, uploadedDict.Count);
+
             DataManager.Instance.UpdateFeaturedData(EFeatureType.PortfolioCreation);
         }
 
@@ -93,19 +95,25 @@ public class PortfolioCreationView : MonoBehaviour
     {
         if (status)
         {
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
-
-            for (int i = 0; i < imageUrls.Count; i++)
+            if (DataManager.Instance.CanLoadScreen(EFeatureType.PortfolioAlbums))
             {
-                Dictionary<string, object> kvp = new Dictionary<string, object>();
+                filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
 
-                kvp.Add("content_id", 1);
+                for (int i = 0; i < imageUrls.Count; i++)
+                {
+                    Dictionary<string, object> kvp = new Dictionary<string, object>();
 
-                kvp.Add("content_url", imageUrls[i]);
+                    kvp.Add("content_id", 1);
 
-                kvp.Add("media_type", "image");
+                    kvp.Add("content_url", imageUrls[i]);
 
-                uploadedDict.Add(kvp);
+                    kvp.Add("media_type", "image");
+
+                    uploadedDict.Add(kvp);
+                }
+            }
+            else {
+                UIManager.Instance.CreateUnAvaiableAlert(EFeatureType.PortfolioAlbums);
             }
         }
         else
