@@ -133,6 +133,20 @@ public class GalleryManager : MonoBehaviour
         });
     }
 
+    public void UploadVideoFile(string filePath, Action<bool, List<string>> OnUploaded)
+    {
+        this.OnUploaded = OnUploaded;
+
+        selectedImagesCount = 1;
+
+        UploadFile(filePath, EMediaType.Video);
+    }
+
+    public void RecordVideo()
+    { 
+    
+    }
+
     #region Upload File
 
     void UploadFile(string filePath, EMediaType mediaType)

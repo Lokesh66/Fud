@@ -1,21 +1,27 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using TMPro;
 
 public class DetailsScreen : MonoBehaviour
 {
     public TextMeshProUGUI signInText;
-    public TMP_InputField mobileNumberTextField;
+    public TMP_InputField nameFieldText;
+    public TMP_InputField numberFieldText;
 
-    System.Action<bool, long> OnButtonAction;
+    System.Action<bool, object> OnButtonAction;
 
     private bool isNewUser = false;
 
-    public void SetView(bool isNewUser, System.Action<bool, long> action)
+
+    public void SetView(bool isNewUser, System.Action<bool, object> action)
     {
         gameObject.SetActive(true);
 
-        mobileNumberTextField.text = "";
+        numberFieldText.text = "";
+        nameFieldText.text = "";
         OnButtonAction = action;
+
+        nameFieldText.gameObject.SetActive(isNewUser);
 
         this.isNewUser = isNewUser;
 
@@ -24,22 +30,37 @@ public class DetailsScreen : MonoBehaviour
 
     public void OnClick_SendOTP()
     {
-        if (string.IsNullOrEmpty(mobileNumberTextField.text))
+        if (string.IsNullOrEmpty(numberFieldText.text))
+        {
+            return;
+        }
+
+        if (isNewUser && string.IsNullOrEmpty(nameFieldText.text))
         {
             return;
         }
 
         if (isNewUser)
         {
-            OnButtonAction?.Invoke(true, long.Parse(mobileNumberTextField.text));
+            Dictionary<string, string> body = new Dictionary<string, string>();
+
+            body.Add("name", nameFieldText.text);
+
+            body.Add("number", numberFieldText.text);
+
+            OnButtonAction?.Invoke(true, body);
         }
         else
         {
-            GameManager.Instance.apiHandler.SendOTP(long.Parse(mobileNumberTextField.text), (bool status) =>
+            GameManager.Instance.apiHandler.SendOTP(long.Parse(numberFieldText.text), (bool status) =>
             {
                 if (status)
                 {
-                    OnButtonAction?.Invoke(true, long.Parse(mobileNumberTextField.text));
+                    Dictionary<string, string> body = new Dictionary<string, string>();
+
+                    body.Add("number", numberFieldText.text);
+
+                    OnButtonAction?.Invoke(true, body);
                 }
                 else
                 {

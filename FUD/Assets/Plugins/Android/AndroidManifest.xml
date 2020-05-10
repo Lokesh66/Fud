@@ -28,5 +28,10 @@
             </intent-filter>
         </activity>
     tools:node="merge">
+	<provider
+      android:name="com.yasirkula.unity.NativeCameraContentProvider"
+      android:authorities="com.filmchances.fud"
+      android:exported="false"
+      android:grantUriPermissions="true" />
     </application>
 </manifest>

@@ -14,15 +14,17 @@ public class LoginScreen : MonoBehaviour
     bool isSignIn = false;
     int roleId;
     long number;
+    string userName;
     float timer = 120; //2 Minutes
     bool updateTimer;
 
     System.Action<bool, UserData> LoginAction;
-    public void SetView(long number,int roleId ,bool isNewUser, System.Action<bool, UserData> action)
+    public void SetView(string userName, long number,int roleId ,bool isNewUser, System.Action<bool, UserData> action)
     {
         gameObject.SetActive(true);
         this.number = number;
         this.roleId = roleId;
+        this.userName = name;
         isSignIn = isNewUser;
         otpInputField.text = "";
         LoginAction = action;
@@ -71,7 +73,7 @@ public class LoginScreen : MonoBehaviour
                 ShowErrorText();
                 return;
             }
-            GameManager.Instance.apiHandler.SignIn(number, roleId, (bool status, UserData userData) => {
+            GameManager.Instance.apiHandler.SignIn(userName, number, roleId, (bool status, UserData userData) => {
                 if (status)
                 {
                     Login();

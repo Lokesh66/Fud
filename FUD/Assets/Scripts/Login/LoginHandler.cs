@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 enum ELoginFlow
 {
@@ -39,6 +40,7 @@ public class LoginHandler : MonoBehaviour
 
     Craft selectedRole = new Craft();
     long contactNumber;
+    string userName = string.Empty;
     UserData user;
     bool isNewUser = true;
 
@@ -61,7 +63,7 @@ public class LoginHandler : MonoBehaviour
                 detailsScreen.SetView(isNewUser, OnDetailsScreen_CallBack);
                 break;
             case ELoginFlow.Login:
-                loginScreen.SetView(contactNumber, selectedRole.id, isNewUser, OnLoginScreen_CallBack);
+                loginScreen.SetView(userName, contactNumber, selectedRole.id, isNewUser, OnLoginScreen_CallBack);
                 break;
         }
     }
@@ -97,27 +99,29 @@ public class LoginHandler : MonoBehaviour
         }
     }
 
-    void OnDetailsScreen_CallBack(bool status, long mobileNumber)
+    void OnDetailsScreen_CallBack(bool status, object body)
     {
         detailsScreen.gameObject.SetActive(false);
 
         if (status)
         {
-            if (mobileNumber != 0)
-            {
-                contactNumber = mobileNumber;
+            Dictionary<string, string> _body = body as Dictionary<string, string>;
 
-                if (isNewUser)
+            contactNumber = long.Parse(_body["number"]);
+
+            if (isNewUser)
+            {
+                userName = _body["name"];
+
+                GameManager.Instance.apiHandler.SignIn(userName, contactNumber, selectedRole.id, (apiStatus, userInfo) =>
                 {
-                    GameManager.Instance.apiHandler.SignIn(contactNumber, selectedRole.id, (apiStatus, userInfo) =>
+                    if (apiStatus)
                     {
-                        if (apiStatus)
-                        {
-                            SetView(ELoginFlow.Login);
-                        }
-                    });
-                }
+                        SetView(ELoginFlow.Login);
+                    }
+                });
             }
+
             if (!isNewUser)
             {
                 SetView(ELoginFlow.Login);

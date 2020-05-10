@@ -3,6 +3,7 @@ using TMPro;
 using System.Collections.Generic;
 using DG.Tweening;
 using System;
+using System.IO;
 
 public class CreateAuditionView : MonoBehaviour
 {
@@ -151,6 +152,27 @@ public class CreateAuditionView : MonoBehaviour
     public void UploadImageAction()
     {
         GalleryManager.Instance.GetImageFromGallaery(OnImagesUploaded);
+    }
+
+    public void OnRecordVideoAction()
+    {
+        NativeCamera.Permission permission = NativeCamera.RecordVideo((path) =>
+        {
+            string fileName = Path.GetFileName(path);
+
+            byte[] fileBytes = File.ReadAllBytes(path);
+
+            titleText.text = fileBytes.Length.ToString();
+
+            NativeGallery.SaveVideoToGallery(fileBytes, "Videos", fileName);
+
+            GalleryManager.Instance.UploadVideoFile(path, OnVideoUploaded);
+        });
+    }
+
+    void OnVideoUploaded(bool status, List<string> imagesList)
+    {
+        
     }
 
     void OnImagesUploaded(bool status, List<string> imagesList)

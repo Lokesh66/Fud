@@ -27,6 +27,5 @@ public class CraftRoleItem : MonoBehaviour
     public void OnClick()
     {
         OnSelect?.Invoke(craft);
-        OnSelect = null;
     }
 }

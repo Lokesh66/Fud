@@ -3,7 +3,7 @@ using System;
 
 public partial class APIHandler
 {
-    public void GetSubscriptionPlans(string roleId, string planDuration, Action<bool, string> OnResponse)
+    public void GetSubscriptionPlans(int tabIndex, string roleId, string planDuration, Action<bool, string> OnResponse)
     {
         string url = APIConstants.GET_SUBSCRIPTION_PLANS;
 
@@ -11,7 +11,7 @@ public partial class APIHandler
 
         if (!string.IsNullOrEmpty(roleId))
         {
-            url += "?role_id=" + roleId;
+            url += "?role_id=" + roleId + "&type=" + tabIndex;
             
             parameters.Add("Plan_duration", planDuration);
         }
@@ -59,6 +59,7 @@ public class SubscriptionModel
 
     public int price;
 
+    public string durationTitle;
 
     public bool IsPlanActive()
     {
@@ -73,13 +74,16 @@ public class SubscriptionModel
         {
             case "Monthly":
                 price = price_per_month;
+                durationTitle = "Month";
                 break;
 
             case "Yearly":
+                durationTitle = "Year";
                 price = price_per_year;
                 break;
 
             case "Forever":
+                durationTitle = "Forever";
                 price = price_per_forever;
                 break;
         }

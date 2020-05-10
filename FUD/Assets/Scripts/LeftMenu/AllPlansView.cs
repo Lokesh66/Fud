@@ -15,6 +15,8 @@ public class AllPlansView : MonoBehaviour
 
     public GameObject planCell;
 
+    public EStoreScreenType screenType;
+
 
     private List<Canvas> scrollCanvases = new List<Canvas>();
 
@@ -76,7 +78,7 @@ public class AllPlansView : MonoBehaviour
 
     void Load()
     {
-        GameManager.Instance.apiHandler.GetSubscriptionPlans(roleId, GetDurationKey(selectedDuration), (status, response) => {
+        GameManager.Instance.apiHandler.GetSubscriptionPlans((int)screenType, roleId, GetDurationKey(selectedDuration), (status, response) => {
 
             if (status)
             {
@@ -84,12 +86,18 @@ public class AllPlansView : MonoBehaviour
 
                 modelsList = responseModel.data;
 
-                SetView();
+                if (screenType == EStoreScreenType.AllPlans)
+                {
+                    SetAllPlansView();
+                }
+                else {
+                    SetStoreView();
+                }
             }
         });
     }
 
-    void SetView()
+    void SetAllPlansView()
     {
         content.DestroyChildrens();
 
@@ -104,6 +112,22 @@ public class AllPlansView : MonoBehaviour
             scrollCanvases.Add(subscriptionPlanCell.scrollCanvas);
 
             subscriptionPlanCell.Load(modelsList[i], OnSubscriptionSelectAction);
+        }
+    }
+
+    void SetStoreView()
+    {
+        content.DestroyChildrens();
+
+        for (int i = 0; i < modelsList.Count; i++)
+        {
+            GameObject planObject = Instantiate(planCell, content);
+
+            modelsList[i].SetPlanPrice(selectedDuration);
+
+            StoreCell storeCell = planObject.GetComponent<StoreCell>();
+
+            storeCell.Load(modelsList[i], OnSubscriptionSelectAction);
         }
     }
 

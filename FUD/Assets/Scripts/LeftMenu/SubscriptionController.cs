@@ -3,16 +3,9 @@ using TMPro;
 
 public class SubscriptionController : MonoBehaviour
 {
-    public enum EScreenType
-    { 
-        None,
-        AllPlans,
-        Stores
-    }
-
     public AllPlansView plansView;
 
-    public StoresView storesView;
+    public AllPlansView storesView;
 
     public TextMeshProUGUI[] buttonsList;
 
@@ -22,7 +15,7 @@ public class SubscriptionController : MonoBehaviour
     public Color disabledColor;
 
 
-    private EScreenType currentTab = EScreenType.None;
+    private EStoreScreenType currentTab = EStoreScreenType.None;
 
 
 
@@ -35,9 +28,9 @@ public class SubscriptionController : MonoBehaviour
 
     public void OnAllPlansTabAction()
     {
-        if (currentTab != EScreenType.AllPlans)
+        if (currentTab != EStoreScreenType.AllPlans)
         {
-            currentTab = EScreenType.AllPlans;
+            currentTab = EStoreScreenType.AllPlans;
 
             storesView.gameObject.SetActive(false);
 
@@ -55,7 +48,7 @@ public class SubscriptionController : MonoBehaviour
 
         buttonsList[1].color = selectedColor;
 
-        currentTab = EScreenType.Stores;
+        currentTab = EStoreScreenType.Stores;
 
         plansView.gameObject.SetActive(false);
 
@@ -64,7 +57,7 @@ public class SubscriptionController : MonoBehaviour
 
     public void OnBackButtonAction()
     {
-        if (currentTab == EScreenType.AllPlans)
+        if (currentTab == EStoreScreenType.AllPlans)
         {
             plansView.ClearData();
         }
@@ -72,8 +65,15 @@ public class SubscriptionController : MonoBehaviour
             storesView.ClearData();
         }
 
-        currentTab = EScreenType.None;
+        currentTab = EStoreScreenType.None;
 
         gameObject.SetActive(false);
     }
+}
+
+public enum EStoreScreenType
+{    
+    AllPlans = 0,
+    Stores,
+    None,
 }

@@ -20,11 +20,11 @@ public partial class APIHandler
         }));
     }
 
-    public void SignIn(long phoneNumber, int roleId, Action<bool, UserData> action)
+    public void SignIn(string name, long phoneNumber, int roleId, Action<bool, UserData> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        parameters.Add("name", "Testname");
+        parameters.Add("name", name);
         parameters.Add("phone", phoneNumber);
         parameters.Add("role_id", roleId);
         //parameters.Add("login_code", "1234");// code);
