@@ -5,7 +5,10 @@ public class AuditionDetailsView : MonoBehaviour
 {
     public TextMeshProUGUI description;
 
+    public GameObject editObject;
+
     System.Action<int> buttonAction;
+
 
     public void Load(Audition audition, System.Action<int> action)
     {
@@ -14,6 +17,10 @@ public class AuditionDetailsView : MonoBehaviour
         description.text = audition.description;
 
         buttonAction = action;
+
+        bool isAuditionOwner = DataManager.Instance.userInfo.id == audition.user_id;
+
+        editObject.SetActive(!isAuditionOwner);
     }
 
     public void OnButtonAction(int buttonIndex)
