@@ -84,7 +84,7 @@ public class AuditionController : MonoBehaviour
     {
         noDataView.gameObject.SetActive(false);
 
-        Debug.Log("GetAuditions");
+        Debug.Log("GetAuditions Called");
         GameManager.Instance.apiHandler.FetchAuditions(auditionType, (status, response) => {
             if (status)
             {
@@ -150,4 +150,12 @@ public class AuditionController : MonoBehaviour
 
         return noDataModel;
     }
+}
+
+public enum EAuditionStatus
+{ 
+    None,
+    Review,
+    ShortListed,
+    Rejected,
 }

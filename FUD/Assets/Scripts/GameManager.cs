@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        //File.Delete(APIConstants.TOKEN_PATH);
+
         StartGame();
     }
 

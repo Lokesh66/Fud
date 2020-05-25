@@ -40,4 +40,17 @@ public class LeftMenu : MonoBehaviour
     {
         subscriptionController.EnableView();
     }
+
+    public void OnLogoutButtonAction()
+    {
+        GameManager.Instance.apiHandler.Logout((status, response) => {
+
+            if (status)
+            {
+                System.IO.File.Delete(APIConstants.TOKEN_PATH);
+
+                GameManager.Instance.sceneController.SwitchScene(ESceneType.LoginScene);
+            }
+        });
+    }
 }

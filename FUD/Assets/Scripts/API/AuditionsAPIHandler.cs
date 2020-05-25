@@ -38,6 +38,8 @@ public partial class APIHandler
 
     public void FetchAuditions(AuditionType type, Action<bool, string> action)
     {
+        Debug.LogError("FetchAuditions Called");
+
         Dictionary<string, object> parameters = new Dictionary<string, object>();
         if (type == AuditionType.Live)
             parameters.Add("fetch_live", 1);
@@ -47,6 +49,11 @@ public partial class APIHandler
             parameters.Add("fetch_created", 1);
 
         gameManager.StartCoroutine(PostRequest(APIConstants.SEARCH_USER_AUDITION, true, parameters, action));
+    }
+
+    public void GetHomeAuditions(Action<bool, string> action)
+    {
+        gameManager.StartCoroutine(GetRequest(APIConstants.CREATE_AUDITION, true, action));
     }
 
     public void JoinAudition(Dictionary<string, object> parameters, Action<bool, string> action)
@@ -104,7 +111,7 @@ public class Audition
     public int no_of_persons_req;
     public int no_of_persons_joined;
     public string type;
-    public DateTime end_date;
+    public int end_date;
     public DateTime created_date_time;
     public DateTime updatedAt;
 }
@@ -127,6 +134,26 @@ public class JoinedAudition
     public DateTime created_date_time;
     public DateTime updatedAt;
     public Audition Audition;
+
+    public EAuditionStatus GetAuditonStatus()
+    {
+        EAuditionStatus auditionStatus = EAuditionStatus.Review;
+
+        switch (status.ToLower())
+        {
+            case "joined":
+                auditionStatus = EAuditionStatus.Review;
+                break;
+            case "selected":
+                auditionStatus = EAuditionStatus.ShortListed;
+                break;
+            case "rejected":
+                auditionStatus = EAuditionStatus.Rejected;
+                break;
+        }
+
+        return auditionStatus;
+    }
 }
 
 [Serializable]

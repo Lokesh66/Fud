@@ -49,6 +49,9 @@ public class ProjectAuditionCell : MonoBehaviour
                     break;
                 case 2: //Close
                     break;
+
+                case 3: //View
+                    break;
             }
         });
     }

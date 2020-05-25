@@ -9,11 +9,23 @@ public class JoinedAuditionCell : MonoBehaviour
     public TMP_Text titleText;
     public TMP_Text endDate;
     public TMP_Text statusText;
-    public GameObject TagObject;
+
+    public Image tagImage;
+
+
+    public Sprite reviewSprite;
+
+    public Sprite shortlistedSprite;
+
+    public Sprite rejectedSprite;
 
     JoinedAudition auditionData;
     AuditionController auditionController;
     AuditionType auditionType;
+
+    int seconds;
+    int minutes;
+    int hours;
 
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
 
@@ -22,14 +34,18 @@ public class JoinedAuditionCell : MonoBehaviour
         auditionData = audition;
         this.auditionController = auditionController;
         auditionType = auditionController.auditionType;
+
+        Debug.Log("auditionData.Audition.end_date = " + auditionData.Audition.end_date);
+
         if (auditionData != null)
         {
             titleText.text = auditionData.Audition.topic;
-            endDate.text = "End date : " + DatePicker.Instance.GetDateString(auditionData.Audition.end_date);
             GameManager.Instance.downLoadManager.DownloadImage(auditionData.Audition.image_url, (sprite) => {
                 icon.sprite = sprite;
             });
             SetStatus(auditionData.status);
+
+            StartCountDown();
         }
     }
 
@@ -37,11 +53,35 @@ public class JoinedAuditionCell : MonoBehaviour
     {
         if (string.IsNullOrEmpty(status))
         {
-            TagObject.SetActive(false);
+            tagImage.gameObject.SetActive(false);
             return;
         }
-        TagObject.SetActive(true);
-        statusText.text = status;
+        tagImage.gameObject.SetActive(true);
+
+        tagImage.sprite = GetStatusSprite(auditionData.GetAuditonStatus());
+        //statusText.text = status;
+    }
+
+    Sprite GetStatusSprite(EAuditionStatus auditionStatus)
+    {
+        Sprite sprite = null;
+
+        switch (auditionStatus)
+        {
+            case EAuditionStatus.Review:
+                sprite = reviewSprite;
+                break;
+
+            case EAuditionStatus.ShortListed:
+                sprite = shortlistedSprite;
+                break;
+
+            case EAuditionStatus.Rejected:
+                sprite = rejectedSprite;
+                break;
+        }
+
+        return sprite;
     }
     public void OnClickAction()
     {
@@ -60,7 +100,7 @@ public class JoinedAuditionCell : MonoBehaviour
                         WithDrawAudition();
                         break;
                 }
-            });
+            }, auditionData.GetAuditonStatus()) ;
         }else if (auditionType == AuditionType.Created)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -269,4 +309,62 @@ public class JoinedAuditionCell : MonoBehaviour
         });
     }
 
+    void StartCountDown()
+    {
+        CancelInvoke("CountDown");
+
+        long totalSeconds = auditionData.Audition.end_date;
+
+        if (totalSeconds > 0)
+        {
+            System.TimeSpan timeSpan = System.TimeSpan.FromMilliseconds(totalSeconds);
+
+            if (timeSpan.Days > 2)
+            {
+                endDate.text = timeSpan.Days + " Days";
+            }
+            else
+            {
+                hours = (int)(totalSeconds / 3600);
+
+                int remainingSeconds = (int)(totalSeconds % 3600);
+
+                minutes = remainingSeconds / 60;
+
+                seconds = remainingSeconds % 60;
+
+                InvokeRepeating("CountDown", 0.0f, 1.0f);
+            }
+        }
+    }
+
+    void CountDown()
+    {
+        if (--seconds >= 0)
+        {
+
+        }
+        else {
+            if (minutes > 0)
+            {
+                minutes--;
+                seconds = 59;
+            }
+            else {
+                if (hours > 0)
+                {
+                    hours--;
+                    minutes = 59;
+                    seconds = 59;
+                }
+                else
+                {
+                    CancelInvoke("CountDown");
+                }
+            }
+        }
+
+        endDate.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+    }
 }
+

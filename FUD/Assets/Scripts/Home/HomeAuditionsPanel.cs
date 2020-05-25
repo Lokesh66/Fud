@@ -18,7 +18,7 @@ public class HomeAuditionsPanel : MonoBehaviour
     void GetAuditions()
     {
         auditionsList = new List<Audition>();
-        GameManager.Instance.apiHandler.FetchAuditions(AuditionType.Live, (status, response) => {
+        GameManager.Instance.apiHandler.GetHomeAuditions((status, response) => {
 
             if (status)
             {

@@ -58,6 +58,8 @@ public class CreateAuditionView : MonoBehaviour
 
     DateTime selectedDate;
 
+    DateTime previousDate;
+
     System.Action<bool> backAction;
     public void SetView(int projectId, Action<bool> action)
     {
@@ -83,7 +85,12 @@ public class CreateAuditionView : MonoBehaviour
     void SetData()
     {
         projectId = audition.project_id;
-        selectedDate = audition.end_date;
+
+        //TimeSpan timeSpan = TimeSpan.FromSeconds(audition.end_date);
+
+        previousDate = selectedDate = Convert.ToDateTime(audition.end_date);
+
+        Debug.Log("selectedDate = " + selectedDate);
 
         typeDropdown.value = typeDropdown.options.FindIndex(option => option.text == audition.type);
         if (audition.type.Equals("group"))
@@ -100,9 +107,9 @@ public class CreateAuditionView : MonoBehaviour
         payAmountText.text = audition.rate_of_pay.ToString();
         ageFromText.text = audition.age_from.ToString();
         ageToText.text = audition.age_to.ToString();
-        if (audition.end_date != DateTime.MinValue || audition.end_date != DateTime.MaxValue)
+        if (selectedDate != DateTime.MinValue || selectedDate != DateTime.MaxValue)
         {
-            endDateText.text = DatePicker.Instance.GetDateString(audition.end_date);
+            endDateText.text = DatePicker.Instance.GetDateString(selectedDate);
         }
         else
         {
@@ -324,8 +331,8 @@ public class CreateAuditionView : MonoBehaviour
             parameters.Add("topic", topicText.text);
         if (!audition.rate_of_pay.Equals(long.Parse(payAmountText.text)))
             parameters.Add("rate_of_pay", long.Parse(payAmountText.text));
-        if (!DatePicker.Instance.GetDateString(audition.end_date).Equals(endDateText.text))
-            parameters.Add("end_date", endDateText.text);// "2020-03-23");
+        if (!DatePicker.Instance.GetDateString(selectedDate).Equals(previousDate))
+            parameters.Add("end_date", selectedDate);// "2020-03-23");
         if (!audition.title.Equals(titleText.text))
             parameters.Add("title", titleText.text);
         if (!audition.description.Equals(descriptionText.text))

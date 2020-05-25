@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using System.IO;
 
 public class AuditionCell : MonoBehaviour
 {
@@ -43,8 +44,32 @@ public class AuditionCell : MonoBehaviour
                 case 4:
                     WithDrawAudition();
                     break;
+                case 5:
+                    RecordVideo();
+                    break;
             }
         });
+    }
+
+    void RecordVideo()
+    {
+        NativeCamera.Permission permission = NativeCamera.RecordVideo((path) =>
+        {
+            string fileName = Path.GetFileName(path);
+
+            byte[] fileBytes = File.ReadAllBytes(path);
+
+            titleText.text = fileBytes.Length.ToString();
+
+            NativeGallery.SaveVideoToGallery(fileBytes, "Videos", fileName);
+
+            GalleryManager.Instance.UploadVideoFile(path, OnVideoUploaded);
+        });
+    }
+
+    void OnVideoUploaded(bool status, List<string> imagesList)
+    {
+        JoinAudition();
     }
 
     void Refresh()

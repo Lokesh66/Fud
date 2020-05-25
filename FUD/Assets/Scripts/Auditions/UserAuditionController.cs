@@ -18,10 +18,9 @@ public class UserAuditionController : MonoBehaviour
 
         gameObject.SetActive(true);
         buttonsPanel.SetActive(false);
-        foreach (Transform child in content)
-        {
-            GameObject.Destroy(child.gameObject);
-        }
+
+        content.DestroyChildrens();
+
         for (int i = 0; i < auditions.Count; i++)
         {
             GameObject storyObject = Instantiate(userAuditionCell, content);
@@ -73,5 +72,15 @@ public class UserAuditionController : MonoBehaviour
                 Reload();
             }
         });
+    }
+
+    public void OnCancelButtonAction()
+    {
+        buttonsPanel.SetActive(false);
+    }
+
+    public void OnBackButtonAction()
+    {
+        gameObject.SetActive(false);
     }
 }

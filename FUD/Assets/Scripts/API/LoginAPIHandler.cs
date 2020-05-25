@@ -106,5 +106,22 @@ public partial class APIHandler
 
         }));
     }
+
+    public void Logout(Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.ACCOUNT_LOGOUT, true, parameters, (bool status, string response) => {
+
+            if (status)
+            {
+                action?.Invoke(true, string.Empty);
+            }
+            else
+            {
+                action?.Invoke(false, string.Empty);
+            }
+        }));
+    }
 }
 
