@@ -72,9 +72,9 @@ public class AuditionController : MonoBehaviour
         }
     }
 
-    public void SetUserAuditions(List<UserAudition> userAuditions)
+    public void SetUserAuditions(List<SearchAudition> userAuditions, int auditionId)
     {
-        userAuditionController.SetView(this, userAuditions);
+        userAuditionController.SetView(this, userAuditions, auditionId);
     }
 
 
@@ -84,8 +84,8 @@ public class AuditionController : MonoBehaviour
     {
         noDataView.gameObject.SetActive(false);
 
-        Debug.Log("GetAuditions Called");
         GameManager.Instance.apiHandler.FetchAuditions(auditionType, (status, response) => {
+
             if (status)
             {
                 if (auditionType == AuditionType.Live)

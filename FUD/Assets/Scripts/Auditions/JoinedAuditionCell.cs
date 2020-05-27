@@ -107,6 +107,7 @@ public class JoinedAuditionCell : MonoBehaviour
             parameters.Add("id", auditionData.id);
             parameters.Add("page", 0);
             parameters.Add("limit", 20);
+            parameters.Add("status", "live");
 
             GameManager.Instance.apiHandler.SearchAuditions(parameters, (status, response) => {
                 if (status)
@@ -115,9 +116,9 @@ public class JoinedAuditionCell : MonoBehaviour
 
                     SearchAuditionResponse auditionResponse = JsonUtility.FromJson<SearchAuditionResponse>(response);
                     
-                    if(auditionResponse.data.UserAudition!=null && auditionResponse.data.UserAudition.Count > 0)
+                    if(auditionResponse.data.Count > 0)
                     {
-                        auditionController.SetUserAuditions(auditionResponse.data.UserAudition);
+                        auditionController.SetUserAuditions(auditionResponse.data, auditionData.id);
                     }
                 }
             });

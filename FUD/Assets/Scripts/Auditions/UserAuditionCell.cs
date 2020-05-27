@@ -9,26 +9,37 @@ public class UserAuditionCell : MonoBehaviour
     public TMP_Text titleText;
     public TMP_Text ageText;
 
-    UserAudition auditionData;
+    SearchAudition auditionData;
 
-    Action<UserAudition> OnSelect;
+    UserAuditionMultimedia auditionMultimedia;
 
-    public void SetView(UserAudition audition, Action<UserAudition> action)
+    Action<SearchAudition> OnSelect;
+
+    public void SetView(SearchAudition audition, Action<SearchAudition> action)
     {
         auditionData = audition;
         OnSelect = action;
 
         if (auditionData != null)
         {
-            titleText.text = auditionData.audition_id.ToString();
+            titleText.text = auditionData.status;
             ageText.text = auditionData.user_id.ToString();
+
+            auditionMultimedia = auditionData.UserAuditionMultimedia[0];
 
             if (auditionData.UserAuditionMultimedia != null && auditionData.UserAuditionMultimedia.Count > 0)
             {
-                GameManager.Instance.downLoadManager.DownloadImage(auditionData.UserAuditionMultimedia[0], (sprite) =>
+                if (auditionMultimedia.GetMediaType(auditionMultimedia.media_type) == EMediaType.Image)
                 {
-                    icon.sprite = sprite;
-                });
+                    GameManager.Instance.downLoadManager.DownloadImage(auditionData.UserAuditionMultimedia[0].content_url, (sprite) =>
+                    {
+                        icon.sprite = sprite;
+                    });
+                }
+                else if (auditionMultimedia.GetMediaType(auditionMultimedia.media_type) == EMediaType.Video)
+                { 
+                    //Show the first frame of a video
+                }
             }
         }
     }

@@ -6,11 +6,11 @@ public class APIConstants
 {
     public const string SECRET_KEY = "SSht6KyxvwKZnsmbbbQUCm2va";
 
-    public const string BASE_URL = "http://18.217.51.190:7000/";
+    public const string BASE_URL = "http://18.223.235.179:7000/";
 
-    public const string SUBSCRIPTION_BASE_URL = "http://18.217.51.190:7004/";
+    public const string SUBSCRIPTION_BASE_URL = "http://18.223.235.179:7004/";
 
-    public const string MEDIA_UPLOAD_BASE_URL = "http://18.217.51.190:7005/";
+    public const string MEDIA_UPLOAD_BASE_URL = "http://18.223.235.179:7005/";
 
     public static string PERSISTENT_PATH = Application.persistentDataPath + "/";
 
@@ -22,7 +22,7 @@ public class APIConstants
 
     public const string USER_LOGIN = BASE_URL + "v1/login/";
 
-    public const string USER_OTP = BASE_URL + "v1/sendOtp";
+    public const string USER_OTP = BASE_URL + "v1/sendOtp/";
 
     public const string GET_CRATFS = BASE_URL + "v1/24_craftRoles/";
 
@@ -63,6 +63,8 @@ public class APIConstants
     public const string SEARCH_USER_AUDITION = BASE_URL + "v1/searchUserAudition/";
 
     public const string USER_AUDITION = BASE_URL + "v1/userAudition/";
+
+    public const string ALL_ACTIVE_AUDITIONS = BASE_URL + "v1/audition/userAuditions";
 
     public const string SEARCH_AUDITION = BASE_URL + "v1/searchAudition";
 

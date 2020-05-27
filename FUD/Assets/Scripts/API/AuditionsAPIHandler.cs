@@ -82,7 +82,7 @@ public partial class APIHandler
 
     public void SearchAuditions(Dictionary<string, object> parameters, Action<bool, string> action)
     {
-        gameManager.StartCoroutine(PostRequest(APIConstants.SEARCH_AUDITION, true, parameters, action));
+        gameManager.StartCoroutine(PostRequest(APIConstants.ALL_ACTIVE_AUDITIONS, true, parameters, action));
     }
     public void AcceptOrRejectAudition(Dictionary<string, object> parameters, Action<bool, string> action)
     {
@@ -165,7 +165,43 @@ public class JoinedAuditionsResponse
 }
 
 [Serializable]
-public class UserAudition
+public class UserAuditionMultimedia
+{
+    public int id;
+    public int source_id;
+    public string source_type;
+    public string media_type;
+    public string content_url;
+    public string status;
+    public int content_id;
+    public object related_content_id;
+    public DateTime created_date_time;
+    public DateTime updated_date_time;
+
+
+    public EMediaType GetMediaType(string _mediaType)
+    {
+        EMediaType mediaType = EMediaType.Image;
+
+        switch (_mediaType)
+        {
+            case "image":
+                mediaType = EMediaType.Image;
+                break;
+            case "audio":
+                mediaType = EMediaType.Audio;
+                break;
+            case "video":
+                mediaType = EMediaType.Video;
+                break;
+        }
+
+        return mediaType;
+    }
+}
+
+[Serializable]
+public class SearchAudition
 {
     public int id;
     public int audition_id;
@@ -173,37 +209,13 @@ public class UserAudition
     public string status;
     public DateTime created_date_time;
     public DateTime updatedAt;
-    public List<string> UserAuditionMultimedia;
-}
-
-[Serializable]
-public class SearchAudition
-{
-    public int id;
-    public object project_cast_id;
-    public string topic;
-    public int project_id;
-    public int user_id;
-    public int rate_of_pay;
-    public string status;
-    public string title;
-    public object image_url;
-    public string description;
-    public int age_from;
-    public int no_of_persons_req;
-    public int no_of_persons_joined;
-    public int age_to;
-    public string type;
-    public DateTime end_date;
-    public DateTime created_date_time;
-    public DateTime updatedAt;
-    public List<UserAudition> UserAudition;
+    public List<UserAuditionMultimedia> UserAuditionMultimedia;
 }
 
 [Serializable]
 public class SearchAuditionResponse
 {
     public string message;
-    public SearchAudition data;
+    public List<SearchAudition> data;
     public int status;
 }

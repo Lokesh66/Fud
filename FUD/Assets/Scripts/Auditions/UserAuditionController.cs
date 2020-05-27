@@ -1,39 +1,164 @@
 ﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class UserAuditionController : MonoBehaviour
 {
 
+    public enum EAuditionStatusScreen
+    { 
+        None = -1,
+        Live = 0,
+        Shortlisted = 1,
+    }
+
     public GameObject userAuditionCell;
-    public Transform content;
+
+    public Transform activeContent;
+
+    public Transform shortListedContent;
 
     public GameObject buttonsPanel;
 
-    UserAudition selectedAudition;
+    public GameObject livePanel;
+
+    public GameObject shortListedPanel;
+
+    public TextMeshProUGUI[] buttonList;
+
+
+    public Color selectedColor;
+
+    public Color disabledColor;
+
+
+    EAuditionStatusScreen currentType = EAuditionStatusScreen.None;
+
+    List<SearchAudition> activeAuditions;
+
+    List<SearchAudition> shortListedAudtions;
+
+    SearchAudition selectedAudition;
 
     AuditionController auditionController;
-    public void SetView(AuditionController auditionController, List<UserAudition> auditions)
+
+    int auditionId;
+
+    public void SetView(AuditionController auditionController, List<SearchAudition> auditions, int auditionId)
     {
         this.auditionController = auditionController;
 
+        this.activeAuditions = auditions;
+
+        this.auditionId = auditionId;
+
         gameObject.SetActive(true);
-        buttonsPanel.SetActive(false);
 
-        content.DestroyChildrens();
+        OnTabAction(0);
+    }
 
-        for (int i = 0; i < auditions.Count; i++)
+    public void OnTabAction(int tabIndex)
+    {
+        UpdateScreen(tabIndex);
+    }
+
+    void UpdateScreen(int index)
+    {
+        EAuditionStatusScreen screenSubType = (EAuditionStatusScreen)index;
+
+        if (currentType != screenSubType)
         {
-            GameObject storyObject = Instantiate(userAuditionCell, content);
+            if (currentType != EAuditionStatusScreen.None)
+            {
+                buttonList[(int)currentType].color = disabledColor;
+            }
 
-            UserAuditionCell item = storyObject.GetComponent<UserAuditionCell>();
+            //noDataObject.SetActive(false);
 
-            item.SetView(auditions[i], OnAuditionSelectAction);
+            currentType = screenSubType;
+
+            buttonList[(int)currentType].color = selectedColor;
+
+            UpdateScreen();
         }
     }
 
-    void OnAuditionSelectAction(UserAudition audition)
+    void UpdateScreen()
     {
-        Debug.Log("OnAuditionSelectAction : " + audition.user_id);
+        shortListedPanel.SetActive(currentType == EAuditionStatusScreen.Shortlisted);
+
+        livePanel.SetActive(currentType == EAuditionStatusScreen.Live);
+
+        switch (currentType)
+        {
+            case EAuditionStatusScreen.Live:
+                LoadLiveAuditions();
+                break;
+            case EAuditionStatusScreen.Shortlisted:
+                LoadShortListedAuditions();
+                break;
+        }
+    }
+
+    void LoadLiveAuditions()
+    {
+        if (activeContent.childCount > 0)
+            return;
+        
+        activeContent.DestroyChildrens();
+
+        for (int i = 0; i < activeAuditions.Count; i++)
+        {
+            GameObject storyObject = Instantiate(userAuditionCell, activeContent);
+
+            UserAuditionCell item = storyObject.GetComponent<UserAuditionCell>();
+
+            item.SetView(activeAuditions[i], OnAuditionSelectAction);
+        }
+    }
+
+    void LoadShortListedAuditions()
+    {
+        if (shortListedAudtions == null)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+            parameters.Add("id", auditionId);
+            parameters.Add("page", 0);
+            parameters.Add("limit", 20);
+            parameters.Add("status", "shortlisted");
+
+            GameManager.Instance.apiHandler.SearchAuditions(parameters, (status, response) => {
+
+                if (status)
+                {
+                    SearchAuditionResponse auditionResponse = JsonUtility.FromJson<SearchAuditionResponse>(response);
+
+                    if (auditionResponse.data.Count > 0)
+                    {
+                        shortListedAudtions = auditionResponse.data;
+
+                        UpdateShortListedView();
+                    }
+                }
+            });
+        }
+    }
+
+    void UpdateShortListedView()
+    {
+        for (int i = 0; i < shortListedAudtions.Count; i++)
+        {
+            GameObject storyObject = Instantiate(userAuditionCell, shortListedContent);
+
+            UserAuditionCell item = storyObject.GetComponent<UserAuditionCell>();
+
+            item.SetView(activeAuditions[i], OnAuditionSelectAction);
+        }
+    }
+
+    void OnAuditionSelectAction(SearchAudition audition)
+    {
         selectedAudition = audition;
         buttonsPanel.SetActive(true);
     }
@@ -82,5 +207,11 @@ public class UserAuditionController : MonoBehaviour
     public void OnBackButtonAction()
     {
         gameObject.SetActive(false);
+
+        activeAuditions = null;
+
+        shortListedAudtions = null;
+
+        currentType = EAuditionStatusScreen.None;
     }
 }
