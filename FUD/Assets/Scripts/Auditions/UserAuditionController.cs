@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -40,15 +41,15 @@ public class UserAuditionController : MonoBehaviour
 
     SearchAudition selectedAudition;
 
-    AuditionController auditionController;
+    Action<bool> OnBack;
 
     int auditionId;
 
-    public void SetView(AuditionController auditionController, List<SearchAudition> auditions, int auditionId)
+    public void SetView(List<SearchAudition> auditions, int auditionId, Action<bool> OnBack)
     {
-        this.auditionController = auditionController;
-
         this.activeAuditions = auditions;
+
+        this.OnBack = OnBack;
 
         this.auditionId = auditionId;
 
@@ -104,8 +105,7 @@ public class UserAuditionController : MonoBehaviour
     {
         if (activeContent.childCount > 0)
             return;
-        
-        activeContent.DestroyChildrens();
+       
 
         for (int i = 0; i < activeAuditions.Count; i++)
         {
@@ -165,8 +165,9 @@ public class UserAuditionController : MonoBehaviour
 
     void Reload()
     {
-        gameObject.SetActive(false);
-        auditionController.GetAuditions();
+        OnBack?.Invoke(true);
+
+        OnBackButtonAction();
     }
 
     public void AcceptButtonAction()
@@ -208,10 +209,14 @@ public class UserAuditionController : MonoBehaviour
     {
         gameObject.SetActive(false);
 
-        activeAuditions = null;
+        activeAuditions = shortListedAudtions = null;
 
-        shortListedAudtions = null;
+        OnBack = null;
 
         currentType = EAuditionStatusScreen.None;
+
+        activeContent.DestroyChildrens();
+
+        shortListedContent.DestroyChildrens();
     }
 }

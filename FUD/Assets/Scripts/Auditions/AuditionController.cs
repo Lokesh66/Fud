@@ -74,7 +74,15 @@ public class AuditionController : MonoBehaviour
 
     public void SetUserAuditions(List<SearchAudition> userAuditions, int auditionId)
     {
-        userAuditionController.SetView(this, userAuditions, auditionId);
+        userAuditionController.SetView(userAuditions, auditionId, OnClosed);
+    }
+
+    void OnClosed(bool canReload)
+    {
+        if (canReload)
+        {
+            GetAuditions();
+        }
     }
 
 

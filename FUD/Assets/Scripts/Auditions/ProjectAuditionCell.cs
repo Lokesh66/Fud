@@ -51,6 +51,7 @@ public class ProjectAuditionCell : MonoBehaviour
                     break;
 
                 case 3: //View
+                    ShowActiveAuditions();
                     break;
             }
         });
@@ -99,6 +100,30 @@ public class ProjectAuditionCell : MonoBehaviour
                 AlertModel alertModel = new AlertModel();
                 alertModel.message = "Deleting Audition Failed";
                 UIManager.Instance.ShowAlert(alertModel);
+            }
+        });
+    }
+
+    void ShowActiveAuditions()
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+        parameters.Add("id", auditionData.id);
+        parameters.Add("page", 0);
+        parameters.Add("limit", 20);
+        parameters.Add("status", "live");
+
+        GameManager.Instance.apiHandler.SearchAuditions(parameters, (status, response) => {
+
+            if (status)
+            {
+                Debug.Log(response);
+
+                SearchAuditionResponse auditionResponse = JsonUtility.FromJson<SearchAuditionResponse>(response);
+
+                if (auditionResponse.data.Count > 0)
+                {
+                    ProjectsDetailedView.Instance.userAuditionController.SetView(auditionResponse.data, auditionData.id, null);
+                }
             }
         });
     }

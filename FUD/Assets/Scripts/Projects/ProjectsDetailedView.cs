@@ -39,6 +39,9 @@ public class ProjectsDetailedView : MonoBehaviour
 
     public AuditionDetailsView auditionDetails;
 
+    public UserAuditionController userAuditionController;
+
+
     System.Action OnBackButtonClick;
 
     private Project project;
