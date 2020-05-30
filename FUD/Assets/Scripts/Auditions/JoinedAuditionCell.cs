@@ -107,6 +107,7 @@ public class JoinedAuditionCell : MonoBehaviour
             parameters.Add("id", auditionData.id);
             parameters.Add("page", 0);
             parameters.Add("limit", 20);
+            //
             parameters.Add("status", "live");
 
             GameManager.Instance.apiHandler.SearchAuditions(parameters, (status, response) => {
@@ -115,10 +116,18 @@ public class JoinedAuditionCell : MonoBehaviour
                     Debug.Log(response);
 
                     SearchAuditionResponse auditionResponse = JsonUtility.FromJson<SearchAuditionResponse>(response);
-                    
-                    if(auditionResponse.data.Count > 0)
+
+                    if (auditionResponse.data.Count > 0)
                     {
                         auditionController.SetUserAuditions(auditionResponse.data, auditionData.id);
+                    }
+                    else
+                    {
+                        AlertModel alertModel = new AlertModel();
+
+                        alertModel.message = "You have not received any audition responses";
+
+                        UIManager.Instance.ShowAlert(alertModel);
                     }
                 }
             });

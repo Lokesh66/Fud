@@ -88,7 +88,9 @@ public class CreateAuditionView : MonoBehaviour
 
         //TimeSpan timeSpan = TimeSpan.FromSeconds(audition.end_date);
 
-        previousDate = selectedDate = Convert.ToDateTime(audition.end_date);
+        DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0);
+
+        previousDate = selectedDate = dateTime.AddSeconds(audition.end_date);
 
         Debug.Log("selectedDate = " + selectedDate);
 

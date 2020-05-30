@@ -20,7 +20,7 @@ public class AuditionDetailsView : MonoBehaviour
 
         bool isAuditionOwner = DataManager.Instance.userInfo.id == audition.user_id;
 
-        editObject.SetActive(!isAuditionOwner);
+        editObject.SetActive(isAuditionOwner);
     }
 
     public void OnButtonAction(int buttonIndex)

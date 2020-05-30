@@ -110,7 +110,7 @@ public class ProjectAuditionCell : MonoBehaviour
         parameters.Add("id", auditionData.id);
         parameters.Add("page", 0);
         parameters.Add("limit", 20);
-        parameters.Add("status", "live");
+        //parameters.Add("status", "live");
 
         GameManager.Instance.apiHandler.SearchAuditions(parameters, (status, response) => {
 
@@ -123,6 +123,13 @@ public class ProjectAuditionCell : MonoBehaviour
                 if (auditionResponse.data.Count > 0)
                 {
                     ProjectsDetailedView.Instance.userAuditionController.SetView(auditionResponse.data, auditionData.id, null);
+                }
+                else {
+                    AlertModel alertModel = new AlertModel();
+
+                    alertModel.message = "You have not received any audition responses";
+
+                    UIManager.Instance.ShowAlert(alertModel);
                 }
             }
         });
