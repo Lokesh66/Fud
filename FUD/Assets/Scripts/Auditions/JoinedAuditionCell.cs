@@ -2,12 +2,14 @@
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using System.IO;
 
 public class JoinedAuditionCell : MonoBehaviour
 {
     public Image icon;
     public TMP_Text titleText;
     public TMP_Text endDate;
+    public TMP_Text entriesCountText;
     public TMP_Text statusText;
 
     public Image tagImage;
@@ -99,6 +101,10 @@ public class JoinedAuditionCell : MonoBehaviour
                     case 4:
                         WithDrawAudition();
                         break;
+
+                    case 5:
+                        RecordVideo();
+                        break;
                 }
             }, auditionData.GetAuditonStatus()) ;
         }else if (auditionType == AuditionType.Created)
@@ -132,6 +138,42 @@ public class JoinedAuditionCell : MonoBehaviour
                 }
             });
         }
+    }
+
+    void RecordVideo()
+    {
+        NativeCamera.Permission permission = NativeCamera.RecordVideo((path) =>
+        {
+            string fileName = Path.GetFileName(path);
+
+            byte[] fileBytes = File.ReadAllBytes(path);
+
+            titleText.text = fileBytes.Length.ToString();
+
+            NativeGallery.SaveVideoToGallery(fileBytes, "Videos", fileName);
+
+            GalleryManager.Instance.UploadVideoFile(path, OnVideoUploaded);
+        });
+    }
+
+    void OnVideoUploaded(bool status, List<string> videoURL)
+    {
+        if (status)
+        {
+            for (int i = 0; i < videoURL.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", videoURL[i]);
+
+                kvp.Add("media_type", "video");
+
+                uploadedDict.Add(kvp);
+            }
+        }
+        JoinAudition();
     }
 
     void Refresh()
@@ -331,7 +373,7 @@ public class JoinedAuditionCell : MonoBehaviour
 
             if (timeSpan.Days > 2)
             {
-                endDate.text = timeSpan.Days + " Days";
+                endDate.text = "Entries close in " + timeSpan.Days + "Days";
             }
             else
             {
@@ -374,7 +416,7 @@ public class JoinedAuditionCell : MonoBehaviour
             }
         }
 
-        endDate.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+        endDate.text = "Entries close in " + string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
     }
 }
 

@@ -64,8 +64,12 @@ public class DetailsScreen : MonoBehaviour
                 }
                 else
                 {
-                    //Erros message
+                    
                 }
+
+                string message = status ? "Please enter OTP that we have sent to registered mobile number" : "Something went worng, please try again";
+
+                ShowValidationMessage(message);
             });
         }
     }
@@ -73,5 +77,14 @@ public class DetailsScreen : MonoBehaviour
     public void OnClick_Back()
     {
         OnButtonAction?.Invoke(false, 0);
+    }
+
+    void ShowValidationMessage(string message)
+    {
+        AlertModel alertModel = new AlertModel();
+
+        alertModel.message = message;
+
+        UIManager.Instance.ShowAlert(alertModel);
     }
 }

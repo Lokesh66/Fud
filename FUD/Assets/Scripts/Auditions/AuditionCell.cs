@@ -67,8 +67,24 @@ public class AuditionCell : MonoBehaviour
         });
     }
 
-    void OnVideoUploaded(bool status, List<string> imagesList)
+    void OnVideoUploaded(bool status, List<string> videoURL)
     {
+        if (status)
+        {
+            for (int i = 0; i < videoURL.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", videoURL[i]);
+
+                kvp.Add("media_type", "video");
+
+                uploadedDict.Add(kvp);
+            }
+        }
+
         JoinAudition();
     }
 
@@ -116,14 +132,6 @@ public class AuditionCell : MonoBehaviour
             }
             JoinAudition();
         }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString();
-
-            UIManager.Instance.ShowAlert(alertModel);
-        }
     }
 
     void OnAudiosUploaded(bool status, List<string> audioUrls)
@@ -144,14 +152,6 @@ public class AuditionCell : MonoBehaviour
             }
             JoinAudition();
         }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString();
-
-            UIManager.Instance.ShowAlert(alertModel);
-        }
     }
 
     void OnVideosUploaded(bool status, List<string> videoUrls)
@@ -171,14 +171,6 @@ public class AuditionCell : MonoBehaviour
                 uploadedDict.Add(kvp);
             }
             JoinAudition();
-        }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString();
-
-            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 

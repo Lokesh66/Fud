@@ -300,7 +300,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateStoryPost(int story_id, int versionId, string title, string comment, int postedTo, Action<bool, string> action)
+    public void UpdateStoryPost(int story_id, int versionId, string title, int postedTo, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -312,7 +312,7 @@ public partial class APIHandler
 
         parameters.Add("posted_to", postedTo);
 
-        parameters.Add("comment", comment);
+        //parameters.Add("comment", comment);
 
         gameManager.StartCoroutine(PostRequest(APIConstants.STORY_POST, true, parameters, (status, response) => {
 

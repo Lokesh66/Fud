@@ -12,10 +12,10 @@ public class StoryShareView : MonoBehaviour
 
     public TMP_InputField searchField;
 
-    public TMP_InputField commentField;
-
 
     StoryVersion currentVersion;
+
+    UserSearchModel selectedModel = null;
 
     string keyword = string.Empty;
 
@@ -37,15 +37,42 @@ public class StoryShareView : MonoBehaviour
 
     public void OnValueChange()
     {
-        if (searchField.text.Length > 2 && !isSearchAPICalled)
+        if (selectedModel == null)
         {
-            //Call Search API
-            isSearchAPICalled = true;
+            if (searchField.text.Length > 2 && !isSearchAPICalled)
+            {
+                //Call Search API
+                isSearchAPICalled = true;
 
-            keyword = searchField.text;
+                keyword = searchField.text;
 
-            GetSearchedUsers();
+                GetSearchedUsers();
+            }
         }
+        else
+        {
+            if (!searchField.text.Equals(selectedModel.name))
+            {
+                selectedModel = null;
+            }
+        }
+    }
+
+    public void OnShareButtonAction()
+    {
+        if (!CanCallAPI())
+        {
+            return;
+        }
+
+        int userId = selectedModel.id;
+
+        string storyTitle = StoryDetailsController.Instance.GetStoryTitle();
+
+        GameManager.Instance.apiHandler.UpdateStoryPost(currentVersion.story_id, currentVersion.id, storyTitle, userId, (status, response) => {
+
+            OnAPIResponse(status);
+        });
     }
 
     void GetSearchedUsers()
@@ -77,21 +104,13 @@ public class StoryShareView : MonoBehaviour
         }
     }
 
-    void OnSelectMember(object id)
+    void OnSelectMember(object searchModel)
     {
-        if (!CanCallAPI())
-        {
-            return;
-        }
+        selectedModel = searchModel as UserSearchModel;
 
-        int userId = (int)id;
+        searchField.text = selectedModel.name;
 
-        string storyTitle = StoryDetailsController.Instance.GetStoryTitle();
-
-        GameManager.Instance.apiHandler.UpdateStoryPost(currentVersion.story_id, currentVersion.id, storyTitle, commentField.text, userId, (status, response) => {
-
-            OnAPIResponse(status);
-        });
+        searchContent.DestroyChildrens();
     }
 
     void OnAPIResponse(bool status)
@@ -123,9 +142,9 @@ public class StoryShareView : MonoBehaviour
     {
         string errorMessage = string.Empty;
 
-        if (string.IsNullOrEmpty(commentField.text))
+        if (null != selectedModel)
         {
-            errorMessage = "Comment field should not be empty";
+            errorMessage = "Please Select the member to share";
         }
 
         if (!string.IsNullOrEmpty(errorMessage))
@@ -148,7 +167,9 @@ public class StoryShareView : MonoBehaviour
 
     void Reset()
     {
-        searchField.text = commentField.text = string.Empty;
+        searchField.text = string.Empty;
+
+        selectedModel = null;
 
         searchContent.DestroyChildrens();
     }

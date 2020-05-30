@@ -82,6 +82,8 @@ public class LoginScreen : MonoBehaviour
                 {
 
                 }
+
+                
             });
         }
         else
@@ -101,6 +103,10 @@ public class LoginScreen : MonoBehaviour
             {
 
             }
+
+            string message = status ? "Login Successful" : "Something went worng, please try again";
+
+            ShowValidationMessage(message);
         });
     }
 
@@ -115,6 +121,10 @@ public class LoginScreen : MonoBehaviour
             {
                 //Erros message
             }
+
+            string message = status ? "Please enter OTP that we have sent to registered mobile number" : "Something went worng, please try again";
+
+            ShowValidationMessage(message);
         });
     }
 
@@ -134,5 +144,14 @@ public class LoginScreen : MonoBehaviour
         }).OnComplete(() => {
             errorText.gameObject.SetActive(false);
         });
+    }
+
+    void ShowValidationMessage(string message)
+    {
+        AlertModel alertModel = new AlertModel();
+
+        alertModel.message = message;
+
+        UIManager.Instance.ShowAlert(alertModel);
     }
 }

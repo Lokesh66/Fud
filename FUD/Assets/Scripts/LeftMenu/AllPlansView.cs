@@ -15,6 +15,8 @@ public class AllPlansView : MonoBehaviour
 
     public GameObject planCell;
 
+    public GameObject noDataObject;
+
     public EStoreScreenType screenType;
 
 
@@ -85,6 +87,8 @@ public class AllPlansView : MonoBehaviour
                 SubscriptionResponse responseModel = JsonUtility.FromJson<SubscriptionResponse>(response);
 
                 modelsList = responseModel.data;
+
+                noDataObject.SetActive(modelsList.Count == 0);
 
                 if (screenType == EStoreScreenType.AllPlans)
                 {

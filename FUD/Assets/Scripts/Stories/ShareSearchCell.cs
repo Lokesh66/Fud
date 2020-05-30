@@ -23,6 +23,6 @@ public class ShareSearchCell : MonoBehaviour
 
     public void OnButtonAction()
     {
-        OnButtonPressed?.Invoke(searchModel.id);
+        OnButtonPressed?.Invoke(searchModel);
     }
 }
