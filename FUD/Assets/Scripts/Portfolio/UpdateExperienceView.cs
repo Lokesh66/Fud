@@ -4,10 +4,13 @@ using System.IO;
 using System.Collections.Generic;
 using System;
 using DG.Tweening;
+using System.Xml.Linq;
 
 public class UpdateExperienceView : MonoBehaviour
 {
     public UploadedFilesHandler filesHandler;
+
+    public Transform mediaContent;
 
     public RectTransform galleryPanel;
 
@@ -23,6 +26,8 @@ public class UpdateExperienceView : MonoBehaviour
 
 
     WorkExperianceModel workModel = null;
+
+    string[] imageURls;
 
     DateTime startDate;
 
@@ -46,6 +51,10 @@ public class UpdateExperienceView : MonoBehaviour
         this.workModel = workModel;
 
         gameObject.SetActive(true);
+
+        descriptionField.text = workModel.description;
+
+        UpdateMediaView();
 
         LoadRoles();
 
@@ -366,6 +375,27 @@ public class UpdateExperienceView : MonoBehaviour
 
             UIManager.Instance.ShowAlert(alertModel);
         }
+    }
+
+    void UpdateMediaView()
+    {
+        string[] _imageURls = new string[workModel.WorkExpMedia.Count];
+
+        int totalCount = workModel.WorkExpMedia.Count;
+
+        EMediaType mediaType;
+
+        for (int i = 0; i < totalCount; i++)
+        {
+            mediaType = DataManager.Instance.GetMediaType(workModel.WorkExpMedia[i].media_type);
+
+            if (mediaType == EMediaType.Image)
+            {
+                _imageURls[i] = workModel.WorkExpMedia[i].content_url;
+            }
+        }
+
+        filesHandler.Load(_imageURls, false);
     }
 }
 

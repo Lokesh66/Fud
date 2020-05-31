@@ -103,6 +103,28 @@ public class DataManager : MonoBehaviour
 
         return featuredModels.Find(item => item.feature_id == featureId);
     }
+
+    public EMediaType GetMediaType(string _mediaType)
+    {
+        EMediaType mediaType = EMediaType.Image;
+
+        switch (_mediaType)
+        {
+            case "image":
+                mediaType = EMediaType.Image;
+                break;
+
+            case "audio":
+                mediaType = EMediaType.Audio;
+                break;
+
+            case "vedio":
+                mediaType = EMediaType.Video;
+                break;
+        }
+
+        return mediaType;
+    }
 }
 
 #region UserData

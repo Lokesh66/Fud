@@ -61,12 +61,16 @@ public class PortfolioView : BaseView
 
         gameObject.SetActive(true);
 
+        portfolioHandler.Load();
+
         //UpdateScreen();
     }
 
     public override void OnExitScreen()
     {
         base.OnExitScreen();
+
+        ResetScreen();
     }
 
     #region Button Actions
@@ -143,5 +147,10 @@ public class PortfolioView : BaseView
     public void OnDismissCreation()
     {
         createPanel.SetActive(false);
+    }
+
+    void ResetScreen()
+    {
+        portfolioHandler.infoView.OnBackButtonAction();
     }
 }

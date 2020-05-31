@@ -33,10 +33,10 @@ public partial class APIHandler
         parameters.Add("agree_terms_condition", 1);
         gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_USER, false, parameters, (bool status, string response) => {
 
-            UserDataObject loginResponse = JsonUtility.FromJson<UserDataObject>(response);
-
             if (status)
             {
+                UserDataObject loginResponse = JsonUtility.FromJson<UserDataObject>(response);
+
                 string userFilePath = APIConstants.PERSISTENT_PATH + "UserInfo";
 
                 string fileName = Path.GetDirectoryName(userFilePath);
@@ -57,6 +57,8 @@ public partial class APIHandler
             }
             else
             {
+                BaseResponse loginResponse = JsonUtility.FromJson<BaseResponse>(response);
+
                 AlertModel alertModel = new AlertModel();
 
                 alertModel.message = loginResponse.message;

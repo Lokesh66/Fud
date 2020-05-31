@@ -13,6 +13,8 @@ public class MyStoriesController : BaseView
 
     public TextMeshProUGUI[] buttonsList;
 
+    public GameObject addObject;
+
 
     public GameObject storyCreateCache;
 
@@ -85,6 +87,8 @@ public class MyStoriesController : BaseView
         buttonsList[0].color = selectedColor;
 
         buttonsList[1].color = disabledColor;
+
+        addObject.SetActive(true);
     }
 
     public void OnActivitiesTabAction()
@@ -98,6 +102,8 @@ public class MyStoriesController : BaseView
         storiesView.gameObject.SetActive(false);
 
         ShowActivitiesScreen();
+
+        addObject.SetActive(false);
     }
 
     #endregion

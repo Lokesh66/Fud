@@ -469,7 +469,7 @@ public partial class APIHandler
         else if (webRequest.isNetworkError || webRequest.isHttpError)
         {
             Debug.LogErrorFormat("<APIManager/ POST/ ({0})> Error ({1})", webRequest.downloadHandler.text, url);
-            callback?.Invoke(false, webRequest.error);
+            callback?.Invoke(false, webRequest.downloadHandler.text);
         }
         else
         {

@@ -142,7 +142,7 @@ public class StoryShareView : MonoBehaviour
     {
         string errorMessage = string.Empty;
 
-        if (null != selectedModel)
+        if (null == selectedModel)
         {
             errorMessage = "Please Select the member to share";
         }

@@ -27,6 +27,8 @@ public class PortfolioActivitiesView : MonoBehaviour
 
             PortfolioPostResponse responseModel = JsonUtility.FromJson<PortfolioPostResponse>(response);
 
+            Debug.Log("Response = " + response);
+
             if (status)
             {
                 activityModels = responseModel.data;
