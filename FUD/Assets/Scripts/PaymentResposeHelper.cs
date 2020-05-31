@@ -8,7 +8,9 @@ public class PaymentResposeHelper : MonoBehaviour
     void Start()
     {
         DontDestroyOnLoad(this.gameObject);
-        ajc = new AndroidJavaClass("phonatoto.cashfree.PaymentActivity");
+        ajc = new AndroidJavaClass("com.phonatoto.cashfree.PaymentActivity");
+        if (ajc != null)
+            Debug.Log("Hello called");
         //SendToAndroid("Hello World");
     }
     private void SendToAndroid(string message)
