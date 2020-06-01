@@ -15,8 +15,9 @@ public class PortfolioView : BaseView
 
     public enum EPortfolioTab
     {
+        Offers,
+        Altered,
         Portfolio,
-        Activities
     }
 
     public TextMeshProUGUI[] buttonList;
@@ -40,14 +41,16 @@ public class PortfolioView : BaseView
     public GameObject createWorkExperianceCache;
 
 
-    private EPortfolioTab currentTab;
+    private EPortfolioTab currentTab = EPortfolioTab.Offers;
+
+    private GameObject currentObject;
 
 
     protected override void EnableView()
     {
         base.EnableView();
 
-        OnPortfolioButtonAction();
+        UpdateCurrentView();
     }
 
     protected override void OnAddSubView(GameObject addedObject)
@@ -75,37 +78,41 @@ public class PortfolioView : BaseView
 
     #region Button Actions
 
-    public void OnPortfolioButtonAction()
+    public void OnTabAction(int tabIndex)
     {
-        currentTab = EPortfolioTab.Portfolio;
+        if (currentTab != (EPortfolioTab)tabIndex)
+        {
+            buttonList[(int)currentTab].color = disabledColor;
 
-        activitiesView.gameObject.SetActive(false);
+            buttonList[tabIndex].color = selectedColor;
 
-        portfolioHandler.Load();
+            currentObject?.SetActive(false);
 
-        buttonList[0].color = selectedColor;
-
-        buttonList[1].color = disabledColor;
-    }
-
-    public void OnActivitiesTabAction()
-    {
-        buttonList[0].color = disabledColor;
-
-        buttonList[1].color = selectedColor;
-
-        currentTab = EPortfolioTab.Activities;
-
-        portfolioHandler.gameObject.SetActive(false);
-
-        ShowActivitiesScreen();
+            UpdateCurrentView();
+        }
     }
 
     #endregion
 
-    void ShowActivitiesScreen()
+    void UpdateCurrentView()
     {
-        activitiesView.EnableView();
+        switch (currentTab)
+        {
+            case EPortfolioTab.Offers:
+                currentObject = activitiesView.gameObject;
+                activitiesView.EnableView();
+                break;
+
+            case EPortfolioTab.Altered:
+                //currentObject = alteredView.gameObject;
+                //alteredView.EnableView(this);
+                break;
+
+            case EPortfolioTab.Portfolio:
+                currentObject = portfolioHandler.gameObject;
+                portfolioHandler.Load();
+                break;
+        }
     }
 
     public void OnCreateButtonAction()

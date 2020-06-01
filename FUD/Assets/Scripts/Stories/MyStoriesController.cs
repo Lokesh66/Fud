@@ -5,11 +5,11 @@ public class MyStoriesController : BaseView
 {
     public Transform parentTrans;
 
-    public EMyStoriesTab currentTab;
+    public StoryActivitiesView activitiesView;
+
+    public MyStoriesView alteredView;
 
     public MyStoriesView storiesView;
-
-    public StoryActivitiesView activitiesView;
 
     public TextMeshProUGUI[] buttonsList;
 
@@ -26,17 +26,16 @@ public class MyStoriesController : BaseView
     public Color disabledColor;
 
 
-    public enum EMyStoriesTab
-    {
-        Stories,
-        Activities
-    }
+    private GameObject currentObject;
+
+    private EMyStoriesTab currentTab = EMyStoriesTab.Offers;
+
 
     protected override void EnableView()
     {
         base.EnableView();
 
-        OnMyStoriesTabAction();
+        UpdateCurrentView();
     }
 
     protected override void OnAddSubView(GameObject addedObject)
@@ -47,14 +46,6 @@ public class MyStoriesController : BaseView
     public override void OnRemoveLastSubView()
     {
         base.OnRemoveLastSubView();
-
-        if (currentTab == EMyStoriesTab.Stories)
-        {
-            OnMyStoriesTabAction();
-        }
-        else {
-            ShowActivitiesScreen();
-        }
     }
 
     public override void OnExitScreen()
@@ -69,48 +60,62 @@ public class MyStoriesController : BaseView
     
     }
 
-    void ShowActivitiesScreen()
+    void ShowOffersScreen()
     {
         activitiesView.EnableView();
     }
 
-    #region Button Actions
-
-    public void OnMyStoriesTabAction()
-    {
-        currentTab = EMyStoriesTab.Stories;
-
-        activitiesView.gameObject.SetActive(false);
-
-        storiesView.EnableView(this);
-
-        buttonsList[0].color = selectedColor;
-
-        buttonsList[1].color = disabledColor;
-
-        addObject.SetActive(true);
+    void ShowAlteredScreen()
+    { 
+    
     }
 
-    public void OnActivitiesTabAction()
+    #region Button Actions
+
+    public void OnTabAction(int tabIndex)
     {
-        buttonsList[0].color = disabledColor;
+        if (currentTab != (EMyStoriesTab)tabIndex)
+        {
+            buttonsList[(int)currentTab].color = disabledColor;
 
-        buttonsList[1].color = selectedColor;
+            buttonsList[tabIndex].color = selectedColor;
 
-        currentTab = EMyStoriesTab.Activities;
+            currentTab = (EMyStoriesTab)tabIndex;
 
-        storiesView.gameObject.SetActive(false);
+            addObject.SetActive(currentTab == EMyStoriesTab.MyStories);
 
-        ShowActivitiesScreen();
+            currentObject?.SetActive(false);
 
-        addObject.SetActive(false);
+            UpdateCurrentView();
+        }
     }
 
     #endregion
 
+    void UpdateCurrentView()
+    {
+        switch (currentTab)
+        {
+            case EMyStoriesTab.Offers:
+                currentObject = activitiesView.gameObject;
+                activitiesView.EnableView();
+                break;
+
+            case EMyStoriesTab.Altered:
+                currentObject = alteredView.gameObject;
+                alteredView.EnableView(this);
+                break;
+
+            case EMyStoriesTab.MyStories:
+                currentObject = storiesView.gameObject;
+                storiesView.EnableView(this);
+                break;
+        }
+    }
+
     void ResetScreenView()
     {
-        currentTab = EMyStoriesTab.Stories;
+        currentTab = EMyStoriesTab.MyStories;
 
         storiesView.ClearData();
     }
@@ -122,7 +127,7 @@ public class MyStoriesController : BaseView
 
     public void OnAddButtonAction()
     {
-        if (currentTab == EMyStoriesTab.Stories)
+        if (currentTab == EMyStoriesTab.MyStories)
         {
             ShowCreateStoryScreen();
         }
@@ -151,6 +156,13 @@ public class MyStoriesController : BaseView
     void OnStoryCreationCloseAction()
     {
         /*        OnRemoveLastSubView();*/
-        OnMyStoriesTabAction();      
+        UpdateCurrentView();      
     }
+}
+
+public enum EMyStoriesTab
+{
+    Offers,
+    Altered,
+    MyStories,
 }

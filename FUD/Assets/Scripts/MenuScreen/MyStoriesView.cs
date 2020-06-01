@@ -10,6 +10,8 @@ public class MyStoriesView : MonoBehaviour
 
     public GameObject detailsPanel;
 
+    public EMyStoriesTab storiesTab; 
+
     public NoDataView noDataView;
 
 
@@ -19,17 +21,30 @@ public class MyStoriesView : MonoBehaviour
 
     public void Load()
     {
-        gameObject.SetActive(true);
-
-        GameManager.Instance.apiHandler.GetAllStories((status, storiesList) => {
-
-            if (status)
+        if (storiesTab == EMyStoriesTab.MyStories)
+        {
+            GameManager.Instance.apiHandler.GetAllStories((status, storiesList) =>
             {
-                this.storiesList = storiesList;
 
-                SetView();
-            }
-        });
+                if (status)
+                {
+                    this.storiesList = storiesList;
+
+                    SetView();
+                }
+            });
+        }
+        else {
+            GameManager.Instance.apiHandler.GetAlteredStories((status, storiesList) =>
+            {
+                if (status)
+                {
+                    this.storiesList = storiesList;
+
+                    SetView();
+                }
+            });
+        }
     }
 
     public void EnableView(MyStoriesController storiesController)
@@ -53,13 +68,24 @@ public class MyStoriesView : MonoBehaviour
             {
                 GameObject storyObject = Instantiate(storyCell, content);
 
-                storyObject.GetComponent<StoryCell>().SetView(storiesList[i], OnStoryTapAction);
+                if (storiesTab == EMyStoriesTab.MyStories)
+                {
+                    storyObject.GetComponent<StoryCell>().SetView(storiesList[i], OnStoryTapAction);
+                }
+                else {
+                    storyObject.GetComponent<StoryCell>().SetView(storiesList[i], OnAlteredTapAction);
+                }
             }
         }
         else {
             noDataView.SetView(GetNoDataModel());
         }
         noDataView.gameObject.SetActive(storiesList?.Count == 0);
+    }
+
+    void SetAlteredStoriesView()
+    { 
+    
     }
 
     public void ClearData()
@@ -75,6 +101,12 @@ public class MyStoriesView : MonoBehaviour
     {
         StoryDetailsController.Instance.Load(storyId, OnStoryClosedAction);
     }
+
+    void OnAlteredTapAction(object storyId)
+    { 
+    
+    }
+
     void OnStoryClosedAction()
     {
 

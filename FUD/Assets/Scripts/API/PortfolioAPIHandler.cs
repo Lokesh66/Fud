@@ -219,6 +219,18 @@ public partial class APIHandler
         }));
     }
 
+    public void GetAlteredPortfolios(Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("tab_name", "altered");
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.GET_ALTERED_PORTFOLIOS, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
     public void GetPortfolioPosts(Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();

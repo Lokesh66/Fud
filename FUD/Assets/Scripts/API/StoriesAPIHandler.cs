@@ -50,6 +50,18 @@ public partial class APIHandler
         }));
     }
 
+    public void GetAlteredStories(Action<bool, List<StoryModel>> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("tab_ name", "altered");
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.GET_ALTERED_STORIES, true, parameters, (status, response) => {
+
+            //action(status, response);
+        }));
+    }
+
     public void UpdateStory(int storyId, string title, string subTitle, string description, int genreId, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -352,7 +364,7 @@ public partial class APIHandler
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        parameters.Add("status", 0);
+        parameters.Add("tab_name", "offers");
 
         gameManager.StartCoroutine(PostRequest(APIConstants.GET_STORY_POSTS, true, parameters, (status, response) => {
 

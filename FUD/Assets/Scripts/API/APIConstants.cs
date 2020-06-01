@@ -48,6 +48,8 @@ public class APIConstants
 
     public const string STORY_POST = BASE_URL + "v1/posts/";
 
+    public const string GET_ALTERED_STORIES = BASE_URL + "v1/posts/altered/";
+
     public const string SAVE_STORY_CHARACTER = BASE_URL + "v1/storyCharacters/";
 
     public const string SEARCH_STORY_CHARACTER = BASE_URL + "v1/searchStoryCharacters/";
@@ -83,6 +85,8 @@ public class APIConstants
     public const string PORTFOLIO_SHARE = BASE_URL + "v1/sharePortfolio/";
 
     public const string GET_PORTFOLIO_POSTS = BASE_URL + "v1/searchSharedPortfolio";
+
+    public const string GET_ALTERED_PORTFOLIOS = BASE_URL + "v1/portfolio/altered/";
 
     public const string CREATE_PROJECT_SCENE = BASE_URL + "v1/project/storyScene/";
 
