@@ -45,6 +45,6 @@ public class PortfolioActvityCell : MonoBehaviour
 
     public void OnTapAction()
     {
-        activityPopUp.Load(activityModel, OnPopUpClose);
+        activityPopUp?.Load(activityModel, OnPopUpClose);
     }
 }

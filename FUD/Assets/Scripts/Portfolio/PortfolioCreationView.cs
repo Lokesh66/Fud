@@ -36,7 +36,7 @@ public class PortfolioCreationView : MonoBehaviour
         switch (selectedType)
         {
             case EMediaType.Image:
-                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                GalleryManager.Instance.PickImages(OnImagesUploaded, titleField);
                 break;
             case EMediaType.Audio:
                 GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
@@ -93,6 +93,8 @@ public class PortfolioCreationView : MonoBehaviour
 
     void OnImagesUploaded(bool status, List<string> imageUrls)
     {
+        descriptionField.text = GalleryManager.Instance.GetLoadedFiles().Length.ToString();
+
         if (status)
         {
             if (DataManager.Instance.CanLoadScreen(EFeatureType.PortfolioAlbums))

@@ -36,14 +36,16 @@ public class UpdateCharacterView : MonoBehaviour
 
     string apiResponse = string.Empty;
 
-    Action<StoryCharacterModel> OnCreateCharacter;
+    Action<StoryCharacterModel> OnUpdateCharacter;
 
 
-    public void Load(StoryCharacterModel characterModel)
+    public void Load(StoryCharacterModel characterModel, Action<StoryCharacterModel> OnUpdateCharacter)
     {
         gameObject.SetActive(true);
 
         this.characterModel = characterModel;
+
+        this.OnUpdateCharacter = OnUpdateCharacter;
 
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
@@ -161,7 +163,7 @@ public class UpdateCharacterView : MonoBehaviour
 
         StoryCharacterModel characterModel = responseModel.data;
 
-        OnCreateCharacter?.Invoke(characterModel);
+        OnUpdateCharacter?.Invoke(characterModel);
 
         gameObject.SetActive(false);
 

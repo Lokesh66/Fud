@@ -59,7 +59,12 @@ public class CharacterDetailsView : MonoBehaviour
 
     void OnEditButtonAction()
     {
-        updateCharacterView.Load(characterModel);
+        updateCharacterView.Load(characterModel, OnUpdateSuccess);
+    }
+
+    void OnUpdateSuccess(StoryCharacterModel characterModel)
+    {
+        charactersView.UpdateModel(characterModel);
     }
 
     void OnDeleteButtonAction()

@@ -531,8 +531,6 @@ public partial class APIHandler
 
     IEnumerator Upload(string filePath, EMediaType mediaType, Action<bool, string> responseCallBack)
     {
-        Loader.Instance.StartLoading();
-
         byte[] img = File.ReadAllBytes(filePath);
 
         WWWForm form = new WWWForm();
@@ -553,8 +551,6 @@ public partial class APIHandler
         UnityWebRequest request = UnityWebRequest.Post(APIConstants.MEDIA_URL, form);
 
         yield return request.SendWebRequest();
-
-        Loader.Instance.StopLoading();
 
         if (request.isNetworkError || request.isHttpError)
         {

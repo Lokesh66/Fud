@@ -15,6 +15,8 @@ public class StoryCharactersView : MonoBehaviour
 
     List<StoryCharacterModel> characterModels;
 
+    StoryCharacterModel selectedModel;
+
     StoryDetailsController detailsController;
 
 
@@ -85,7 +87,20 @@ public class StoryCharactersView : MonoBehaviour
 
     public void OnCellButtonAction(StoryCharacterModel characterModel)
     {
+        selectedModel = characterModel;
+
         detailsView.Load(characterModel, this);
+    }
+
+    public void UpdateModel(StoryCharacterModel characterModel)
+    {
+        int modelIndex = characterModels.IndexOf(selectedModel);
+
+        characterModels.Remove(selectedModel);
+
+        characterModels.Insert(modelIndex, characterModel);
+
+        content.GetChild(modelIndex).GetComponent<StoryCharacterCell>().Load(characterModel, OnCellButtonAction);
     }
 
     public void OnRemoveCharacter(StoryCharacterModel characterModel)

@@ -6,20 +6,6 @@ using TMPro;
 
 public class PortfolioView : BaseView
 {
-    public enum ETabType
-    { 
-        BasicInfo,
-        Media,
-        Experiance
-    }
-
-    public enum EPortfolioTab
-    {
-        Offers,
-        Altered,
-        Portfolio,
-    }
-
     public TextMeshProUGUI[] buttonList;
 
     public RectTransform parentTrans;
@@ -33,7 +19,9 @@ public class PortfolioView : BaseView
 
     public PortfolioHandler portfolioHandler;
     
-    public PortfolioActivitiesView activitiesView;
+    public PortfolioActivitiesView offeredView;
+
+    public PortfolioActivitiesView alteredView;
 
 
     public GameObject createPortfolioCache;
@@ -41,7 +29,7 @@ public class PortfolioView : BaseView
     public GameObject createWorkExperianceCache;
 
 
-    private EPortfolioTab currentTab = EPortfolioTab.Offers;
+    private ETabType currentTab = ETabType.Offers;
 
     private GameObject currentObject;
 
@@ -80,11 +68,13 @@ public class PortfolioView : BaseView
 
     public void OnTabAction(int tabIndex)
     {
-        if (currentTab != (EPortfolioTab)tabIndex)
+        if (currentTab != (ETabType)tabIndex)
         {
             buttonList[(int)currentTab].color = disabledColor;
 
             buttonList[tabIndex].color = selectedColor;
+
+            currentTab = (ETabType)tabIndex;
 
             currentObject?.SetActive(false);
 
@@ -98,17 +88,17 @@ public class PortfolioView : BaseView
     {
         switch (currentTab)
         {
-            case EPortfolioTab.Offers:
-                currentObject = activitiesView.gameObject;
-                activitiesView.EnableView();
+            case ETabType.Offers:
+                currentObject = offeredView.gameObject;
+                offeredView.Load();
                 break;
 
-            case EPortfolioTab.Altered:
-                //currentObject = alteredView.gameObject;
-                //alteredView.EnableView(this);
+            case ETabType.Altered:
+                currentObject = alteredView.gameObject;
+                alteredView.Load();
                 break;
 
-            case EPortfolioTab.Portfolio:
+            case ETabType.Created:
                 currentObject = portfolioHandler.gameObject;
                 portfolioHandler.Load();
                 break;
@@ -159,5 +149,11 @@ public class PortfolioView : BaseView
     void ResetScreen()
     {
         portfolioHandler.infoView.OnBackButtonAction();
+
+        currentTab = ETabType.Offers;
+
+        currentObject?.SetActive(false);
+
+        currentObject = null;
     }
 }

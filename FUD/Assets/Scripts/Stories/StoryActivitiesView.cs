@@ -13,7 +13,6 @@ public class StoryActivitiesView : MonoBehaviour
     public StoryActivityPopUp activityPopUp;
 
 
-
     List<StoryActivityModel> activityModels;
 
     public void EnableView()

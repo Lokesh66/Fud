@@ -28,7 +28,7 @@ public class MyStoriesController : BaseView
 
     private GameObject currentObject;
 
-    private EMyStoriesTab currentTab = EMyStoriesTab.Offers;
+    private ETabType currentTab = ETabType.Offers;
 
 
     protected override void EnableView()
@@ -74,15 +74,15 @@ public class MyStoriesController : BaseView
 
     public void OnTabAction(int tabIndex)
     {
-        if (currentTab != (EMyStoriesTab)tabIndex)
+        if (currentTab != (ETabType)tabIndex)
         {
             buttonsList[(int)currentTab].color = disabledColor;
 
             buttonsList[tabIndex].color = selectedColor;
 
-            currentTab = (EMyStoriesTab)tabIndex;
+            currentTab = (ETabType)tabIndex;
 
-            addObject.SetActive(currentTab == EMyStoriesTab.MyStories);
+            addObject.SetActive(currentTab == ETabType.Created);
 
             currentObject?.SetActive(false);
 
@@ -96,17 +96,17 @@ public class MyStoriesController : BaseView
     {
         switch (currentTab)
         {
-            case EMyStoriesTab.Offers:
+            case ETabType.Offers:
                 currentObject = activitiesView.gameObject;
                 activitiesView.EnableView();
                 break;
 
-            case EMyStoriesTab.Altered:
+            case ETabType.Altered:
                 currentObject = alteredView.gameObject;
                 alteredView.EnableView(this);
                 break;
 
-            case EMyStoriesTab.MyStories:
+            case ETabType.Created:
                 currentObject = storiesView.gameObject;
                 storiesView.EnableView(this);
                 break;
@@ -115,9 +115,13 @@ public class MyStoriesController : BaseView
 
     void ResetScreenView()
     {
-        currentTab = EMyStoriesTab.MyStories;
+        currentTab = ETabType.Offers;
+
+        currentObject?.SetActive(false);
 
         storiesView.ClearData();
+
+        currentObject = null;
     }
 
     public void CreateSubView(GameObject createObject)
@@ -127,7 +131,7 @@ public class MyStoriesController : BaseView
 
     public void OnAddButtonAction()
     {
-        if (currentTab == EMyStoriesTab.MyStories)
+        if (currentTab == ETabType.Created)
         {
             ShowCreateStoryScreen();
         }
@@ -160,9 +164,9 @@ public class MyStoriesController : BaseView
     }
 }
 
-public enum EMyStoriesTab
+public enum ETabType
 {
     Offers,
     Altered,
-    MyStories,
+    Created,
 }

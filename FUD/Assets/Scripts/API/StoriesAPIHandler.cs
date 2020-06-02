@@ -58,7 +58,9 @@ public partial class APIHandler
 
         gameManager.StartCoroutine(PostRequest(APIConstants.GET_ALTERED_STORIES, true, parameters, (status, response) => {
 
-            //action(status, response);
+            StoriesResponse stories = JsonUtility.FromJson<StoriesResponse>(response);
+
+            action(status, stories.data);
         }));
     }
 
@@ -222,7 +224,10 @@ public partial class APIHandler
 
         parameters.Add("description", description);
 
-        parameters.Add("suitable_performer", performerId);
+        if (performerId != -1)
+        {
+            parameters.Add("suitable_performer", performerId);
+        }
 
         parameters.Add("gender", gender);
 
@@ -580,6 +585,12 @@ public class UserSearchResponse : BaseResponse
 public class UpdatedCharaterModel : BaseResponse
 {
     public StoryCharacterModel data;
+}
+
+[Serializable]
+public class UpdatedStoryModel : BaseResponse
+{
+    public StoryModel data;
 }
 
 [Serializable]

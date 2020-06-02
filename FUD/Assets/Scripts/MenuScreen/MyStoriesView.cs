@@ -10,7 +10,7 @@ public class MyStoriesView : MonoBehaviour
 
     public GameObject detailsPanel;
 
-    public EMyStoriesTab storiesTab; 
+    public ETabType storiesTab; 
 
     public NoDataView noDataView;
 
@@ -21,11 +21,10 @@ public class MyStoriesView : MonoBehaviour
 
     public void Load()
     {
-        if (storiesTab == EMyStoriesTab.MyStories)
+        if (storiesTab == ETabType.Created)
         {
             GameManager.Instance.apiHandler.GetAllStories((status, storiesList) =>
             {
-
                 if (status)
                 {
                     this.storiesList = storiesList;
@@ -60,6 +59,8 @@ public class MyStoriesView : MonoBehaviour
 
     void SetView()
     {
+        Debug.Log("SetView : Tab Type : " + storiesTab + " Count = " + storiesList.Count);
+
         content.DestroyChildrens();
 
         if (storiesList?.Count > 0) {
@@ -68,7 +69,7 @@ public class MyStoriesView : MonoBehaviour
             {
                 GameObject storyObject = Instantiate(storyCell, content);
 
-                if (storiesTab == EMyStoriesTab.MyStories)
+                if (storiesTab == ETabType.Created)
                 {
                     storyObject.GetComponent<StoryCell>().SetView(storiesList[i], OnStoryTapAction);
                 }
@@ -116,11 +117,17 @@ public class MyStoriesView : MonoBehaviour
     {
         NoDataModel noDataModel = new NoDataModel();
 
-        noDataModel.subTitle = "No Stories Right Now";
+        if (storiesTab == ETabType.Created)
+        {
+            noDataModel.subTitle = "No Stories Right Now";
 
-        noDataModel.buttonName = "Add Story";
+            noDataModel.buttonName = "Add Story";
 
-        noDataModel.buttonAction = storiesController.OnAddButtonAction;
+            noDataModel.buttonAction = storiesController.OnAddButtonAction;
+        }
+        else {
+            noDataModel.subTitle = "No Altered Stories Right Now";
+        }
 
         return noDataModel;
 

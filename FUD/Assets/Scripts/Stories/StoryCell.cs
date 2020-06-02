@@ -19,11 +19,13 @@ public class StoryCell : MonoBehaviour
 
     public GameObject readMoreObject;
 
+    public Image storyImage;
+
     public SwipeButtonsHelper swipeHelper;
 
     StoryModel storyModel;
 
-    Action<object> OnTapActon;
+    public Action<object> OnTapActon;
 
     ScrollRect scrollRect;
 
@@ -66,6 +68,6 @@ public class StoryCell : MonoBehaviour
 
         GameObject createObject = Instantiate(updateStoryCache, parent);
 
-        createObject.GetComponent<StoryUpdateView>().Load(storyModel);
+        createObject.GetComponent<StoryUpdateView>().Load(storyModel, this);
     }
 }

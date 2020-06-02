@@ -17,6 +17,34 @@ public partial class APIHandler
         }));
     }
 
+    public void GetOfferedProjects(Action<bool, ProjectsResponse> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("tab_name", "offeres");
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.GET_OFFERED_PROJECTS, true, parameters, (status, response) => {
+
+            ProjectsResponse projectsResponse = JsonUtility.FromJson<ProjectsResponse>(response);
+
+            action(status, projectsResponse);
+        }));
+    }
+
+    public void GetAlteredProjects(Action<bool, ProjectsResponse> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("tab_name", "altered");
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.GET_ALTERED_PROJECTS, true, parameters, (status, response) => {
+
+            ProjectsResponse projectsResponse = JsonUtility.FromJson<ProjectsResponse>(response);
+
+            action(status, projectsResponse);
+        }));
+    }
+
     public void GetProjectDetails(int id, Action<bool, Project> action)
     {
         string url = APIConstants.GET_PROJECT_DETAILS + id;
@@ -59,6 +87,20 @@ public partial class APIHandler
         gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_PROJECT, true, parameters, (status, response) => {
 
             action(status, response);
+        }));
+    }
+
+    public void UpdateProjectStauts(int projectId, int status, Action<bool> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("id", projectId);
+
+        parameters.Add("status", status);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_PROJECT, true, parameters, (apiStatus, response) =>
+        {
+            action(apiStatus);
         }));
     }
 

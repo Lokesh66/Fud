@@ -10,24 +10,53 @@ public class PortfolioActivitiesView : MonoBehaviour
 
     public GameObject noDataObject;
 
+    public ETabType tabType;
+
     public PortfolioActivityPopUp activityPopUp;
+
 
     List<PortfolioActivityModel> activityModels;
 
-    public void EnableView()
+
+    public void Load()
     {
-        Load();
+        if (tabType == ETabType.Offers)
+        {
+            LoadOfferedData();
+        }
+        else {
+            LoadAlteredData();
+        }
 
         gameObject.SetActive(true);
     }
 
-    void Load()
+    void LoadOfferedData()
     {
         GameManager.Instance.apiHandler.GetPortfolioPosts((status, response) => {
 
             PortfolioPostResponse responseModel = JsonUtility.FromJson<PortfolioPostResponse>(response);
 
-            Debug.Log("Response = " + response);
+            Debug.Log("LoadOfferedData : Response = " + response);
+
+            if (status)
+            {
+                activityModels = responseModel.data;
+
+                noDataObject.SetActive(activityModels.Count == 0);
+
+                SetView();
+            }
+        });
+    }
+
+    void LoadAlteredData()
+    {
+        GameManager.Instance.apiHandler.GetAlteredPortfolios((status, response) => {
+
+            PortfolioPostResponse responseModel = JsonUtility.FromJson<PortfolioPostResponse>(response);
+
+            Debug.Log("LoadAlteredData : Response = " + response);
 
             if (status)
             {
@@ -50,7 +79,13 @@ public class PortfolioActivitiesView : MonoBehaviour
         {
             GameObject cellObject = Instantiate(activityCell, content);
 
-            cellObject.GetComponent<PortfolioActvityCell>().Load(activityModels[i], activityPopUp);
+            if (tabType == ETabType.Offers)
+            {
+                cellObject.GetComponent<PortfolioActvityCell>().Load(activityModels[i], activityPopUp);
+            }
+            else {
+                cellObject.GetComponent<PortfolioActvityCell>().Load(activityModels[i], null);
+            }
         }
     }
 }

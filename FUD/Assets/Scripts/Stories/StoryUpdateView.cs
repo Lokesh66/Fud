@@ -28,13 +28,17 @@ public class StoryUpdateView : MonoBehaviour
 
     StoryModel storyModel;
 
+    StoryCell storyCell;
+
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
 
 
 
-    public void Load(StoryModel storyModel)
+    public void Load(StoryModel storyModel, StoryCell storyCell)
     {
         this.storyModel = storyModel;
+
+        this.storyCell = storyCell;
 
         SetView();
     }
@@ -126,6 +130,10 @@ public class StoryUpdateView : MonoBehaviour
 
     void OnSuccessResponse()
     {
+        UpdateStoryModel();
+
+        storyCell.SetView(storyModel, storyCell.OnTapActon);
+
         Destroy(gameObject);
 
         uploadedDict.Clear();
@@ -157,6 +165,21 @@ public class StoryUpdateView : MonoBehaviour
         }
 
         return true;
+    }
+
+    void UpdateStoryModel()
+    {
+        string selectedGenreText = dropdown.options[dropdown.value].text;
+
+        Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
+
+        storyModel.title = storyTitleField.text;
+
+        storyModel.description = descriptionField.text;
+
+        storyModel.story_line = subTitleField.text;
+
+        storyModel.genre_id = selectedGenre.id;
     }
 
     public void OnScreenShotAction()

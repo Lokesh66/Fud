@@ -36,9 +36,12 @@ public class Loader : MonoBehaviour
     
     public void StartLoading()
     {
-        loaderPanel.SetActive(true);
+        if (!loaderPanel.activeSelf)
+        {
+            loaderPanel.SetActive(true);
 
-        loaderImage.rectTransform.DOLocalRotate(new Vector3(0, 0, 360), 0.8f).SetLoops(-1);
+            loaderImage.rectTransform.DOLocalRotate(new Vector3(0, 0, 360), 0.8f).SetLoops(-1);
+        }
     }
 
     public void StopLoading()

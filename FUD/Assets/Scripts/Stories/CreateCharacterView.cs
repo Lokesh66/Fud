@@ -83,6 +83,13 @@ public class CreateCharacterView : MonoBehaviour
             return;
         }
 
+        if (selectedModel == null)
+        {
+            UserSearchModel searchModel = new UserSearchModel();
+
+            selectedModel.id = -1;
+        }
+
         GameManager.Instance.apiHandler.CreateCharacter(detailsModel.id, castField.text, descriptionField.text, genderLabel.text, selectedModel.id, (status, response) => {
 
             if (status)
@@ -130,10 +137,6 @@ public class CreateCharacterView : MonoBehaviour
         if (string.IsNullOrEmpty(castField.text))
         {
             errorMessage = "Character name should not be empty";
-        }
-        else if (string.IsNullOrEmpty(suitableField.text))
-        {
-            errorMessage = "Suitable performer should not be empty";
         }
         else if (string.IsNullOrEmpty(descriptionField.text))
         {

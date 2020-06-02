@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class GalleryManager : MonoBehaviour
@@ -60,7 +61,7 @@ public class GalleryManager : MonoBehaviour
         }, "Select a PNG image");
 
     }
-    public void PickImages(Action<bool, List<string>> OnUploaded)
+    public void PickImages(Action<bool, List<string>> OnUploaded, TMP_InputField countText = null, TMP_InputField uploadedCount = null)
     {
         NativeGallery.Permission permission = NativeGallery.GetImagesFromGallery((imagesPath) =>
         {
@@ -68,6 +69,8 @@ public class GalleryManager : MonoBehaviour
             {
                 Array.Clear(loadedFiles, 0, loadedFiles.Length);
             }
+
+            //countText.text = imagesPath.Length.ToString();
 
             if (imagesPath != null && imagesPath.Length > 0)
             {
@@ -85,7 +88,7 @@ public class GalleryManager : MonoBehaviour
 
                     for (int i = 0; i < imagesPath.Length; i++)
                     {
-                        UploadFile(imagesPath[i], EMediaType.Image);
+                        UploadFile(imagesPath[i], EMediaType.Image, uploadedCount);
                     }
                 }
             }
@@ -149,8 +152,10 @@ public class GalleryManager : MonoBehaviour
 
     #region Upload File
 
-    void UploadFile(string filePath, EMediaType mediaType)
+    void UploadFile(string filePath, EMediaType mediaType, TMP_InputField uploadedCount = null)
     {
+        Loader.Instance.StartLoading();
+
         GameManager.Instance.apiHandler.UploadFile(filePath, mediaType, (status, response) => {
 
             if (status)
@@ -158,6 +163,8 @@ public class GalleryManager : MonoBehaviour
                 FileUploadResponseModel responseModel = JsonUtility.FromJson<FileUploadResponseModel>(response);
 
                 uploadedURLs.Add(responseModel.data.s3_file_path);
+
+                //uploadedCount.text = uploadedURLs.Count.ToString();
 
                 if (uploadedURLs.Count == selectedImagesCount)
                 {
@@ -175,7 +182,9 @@ public class GalleryManager : MonoBehaviour
 
                     UIManager.Instance.ShowAlert(alertModel);
 
-                    uploadedURLs.Clear();                    
+                    uploadedURLs.Clear();
+
+                    Loader.Instance.StopLoading();
                 }
                 else {
                    /* List<string> responses = new List<string>();

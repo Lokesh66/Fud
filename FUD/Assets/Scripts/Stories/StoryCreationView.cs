@@ -168,7 +168,7 @@ public class StoryCreationView : MonoBehaviour
         switch (selectedType)
         {
             case EMediaType.Image:
-                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                GalleryManager.Instance.PickImages(OnImagesUploaded, storyTitleField, subTitleField);
                 break;
             case EMediaType.Audio:
                 GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
@@ -226,6 +226,8 @@ public class StoryCreationView : MonoBehaviour
 
     void OnImagesUploaded(bool status, List<string> imageUrls)
     {
+        //descriptionField.text = GalleryManager.Instance.GetLoadedFiles().Length.ToString();
+
         if (status)
         {
             this.imageUrls = imageUrls;
