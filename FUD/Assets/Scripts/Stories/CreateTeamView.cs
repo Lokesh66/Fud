@@ -10,6 +10,8 @@ public class CreateTeamView : MonoBehaviour
 
     public TMP_InputField teamNameField;
 
+    public TMP_InputField descriptionField;
+
     public TMP_InputField memberField;
 
     public GameObject searchCell;
@@ -91,7 +93,7 @@ public class CreateTeamView : MonoBehaviour
 
         string members = GetMemberIds(member);
 
-        GameManager.Instance.apiHandler.UpdateStoryTeam(detailsModel.id, teamNameField.text, members, (status, response) =>
+        GameManager.Instance.apiHandler.UpdateStoryTeam(detailsModel.id, teamNameField.text, descriptionField.text, members, (status, response) =>
         {
             if (status)
             {
@@ -194,15 +196,21 @@ public class CreateTeamView : MonoBehaviour
 
     string GetMemberIds(List<string> members)
     {
+        members.Remove(members[members.Count - 1]);
+
         string memberIds = string.Empty;
+
+        string appendString = string.Empty;
 
         for (int i = 0; i < members.Count; i++)
         {
             UserSearchModel addModel = addedModels.Find(searchModel => searchModel.name.Equals(members[i]));
 
+            appendString = (i + 1 != members.Count) ? "," : string.Empty;
+ 
             if (addModel != null)
             {
-                memberIds += addModel.id + ",";
+                memberIds += addModel.id + appendString;
             }
         }
 
