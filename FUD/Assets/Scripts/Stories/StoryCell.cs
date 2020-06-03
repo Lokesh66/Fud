@@ -19,6 +19,8 @@ public class StoryCell : MonoBehaviour
 
     public GameObject readMoreObject;
 
+    public GameObject editObject;
+
     public Image storyImage;
 
     public SwipeButtonsHelper swipeHelper;
@@ -32,7 +34,7 @@ public class StoryCell : MonoBehaviour
     Vector2 startPoint;
 
 
-    public void SetView(StoryModel storyModel, Action<object> tapAction = null)
+    public void SetView(StoryModel storyModel, ETabType tabType, Action<object> tapAction = null)
     {
         this.storyModel = storyModel;
 
@@ -43,6 +45,10 @@ public class StoryCell : MonoBehaviour
         titleText.text = storyModel.title;
 
         description.text = storyModel.description;
+
+        editObject.SetActive(tabType == ETabType.Created);
+
+        //SetImage();
     }
 
     public void OnButtonAction()
@@ -70,5 +76,16 @@ public class StoryCell : MonoBehaviour
         GameObject createObject = Instantiate(updateStoryCache, parent);
 
         createObject.GetComponent<StoryUpdateView>().Load(storyModel, this);
+    }
+
+    void SetImage()
+    {
+        string imagePath = string.Empty;
+
+        Texture2D texture = NativeGallery.LoadImageAtPath(imagePath, markTextureNonReadable: false);
+
+        TextureScale.ThreadedScale(texture, (int)storyImage.rectTransform.rect.width, (int)storyImage.rectTransform.rect.height, true);
+
+        storyImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
     }
 }

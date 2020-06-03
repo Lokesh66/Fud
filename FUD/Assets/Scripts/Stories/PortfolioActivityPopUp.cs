@@ -17,19 +17,24 @@ public class PortfolioActivityPopUp : MonoBehaviour
 
     PortfolioActivityModel activityModel;
 
-    string statusMessage = string.Empty;
+    int userStatus = -1;
 
-    Action<string> OnClose;
+    Action<int> OnClose;
 
     int currentUserId;
 
-    public void Load(PortfolioActivityModel activityModel, Action<string> OnClose)
+    ETabType tabType;
+
+
+    public void Load(PortfolioActivityModel activityModel, Action<int> OnClose, ETabType tabType)
     {
         gameObject.SetActive(true);
 
         this.activityModel = activityModel;
 
         this.OnClose = OnClose;
+
+        this.tabType = tabType;
 
         //titleText.text = activityModel.Portfolio.title;
 
@@ -42,20 +47,20 @@ public class PortfolioActivityPopUp : MonoBehaviour
         acceptObject.SetActive(currentUserId != activityModel.user_id);
     }
 
-    public void OnStatusButtonAction(string statusMessage)
+    public void OnStatusButtonAction(int userStatus)
     {
-        if (!string.IsNullOrEmpty(statusMessage))
+        if (userStatus != -1)
         {
-            GameManager.Instance.apiHandler.UpdatePortfolioPostStatus(activityModel.id, statusMessage, (status, response) =>
+            GameManager.Instance.apiHandler.UpdatePortfolioPostStatus(activityModel.id, userStatus, (status, response) =>
             {
-                this.statusMessage = statusMessage;
+                this.userStatus = userStatus;
 
                 CreateAlert(status);
             });
         }
         else
         {
-            OnClose?.Invoke(statusMessage);
+            OnClose?.Invoke(userStatus);
             gameObject.SetActive(false);
         }
     }
@@ -81,6 +86,6 @@ public class PortfolioActivityPopUp : MonoBehaviour
 
     void OnCloseButton()
     {
-        OnClose?.Invoke(statusMessage);
+        OnClose?.Invoke(userStatus);
     }
 }

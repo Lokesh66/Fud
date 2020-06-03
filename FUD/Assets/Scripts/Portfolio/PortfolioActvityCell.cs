@@ -37,12 +37,12 @@ public class PortfolioActvityCell : MonoBehaviour
         descriptionText.text = model.Portfolio.description;
     }
 
-    void OnPopUpClose(string updatedStatus)
+    void OnPopUpClose(int updatedStatus)
     {
         switch (updatedStatus)
         {
-            case "liked":
-            case "rejected":
+            case 1:
+            case 8:
                 Destroy(gameObject);
                 break;
         }
@@ -50,6 +50,9 @@ public class PortfolioActvityCell : MonoBehaviour
 
     public void OnTapAction()
     {
-        activityPopUp?.Load(activityModel, OnPopUpClose);
+        if (tabType == ETabType.Offers)
+        {
+            activityPopUp?.Load(activityModel, OnPopUpClose, tabType);
+        }
     }
 }

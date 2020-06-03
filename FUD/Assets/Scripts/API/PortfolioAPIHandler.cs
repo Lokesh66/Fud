@@ -5,7 +5,7 @@ using System.IO;
 
 public partial class APIHandler
 {
-    public void CreatePortfolio(string title, string description, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
+    public void CreatePortfolio(string title, string description, int accessValue, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -16,6 +16,8 @@ public partial class APIHandler
         parameters.Add("title", title);
 
         parameters.Add("description", description);
+
+        parameters.Add("access_modifier", accessValue);
 
         if (multimediaModels.Count > 0)
         {
@@ -28,7 +30,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdatePortfolio(string title, string description,  int id, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
+    public void UpdatePortfolio(string title, string description, int id, int accessValue, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -41,6 +43,8 @@ public partial class APIHandler
         parameters.Add("id", id);
 
         parameters.Add("description", description);
+
+        parameters.Add("access_modifier", accessValue);
 
         if (multimediaModels.Count > 0)
         {
@@ -243,7 +247,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdatePortfolioPostStatus(int postId, string postStatus, Action<bool, string> action)
+    public void UpdatePortfolioPostStatus(int postId, int postStatus, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -369,6 +373,7 @@ public class PortfolioModel
     public int user_id;
     public string title;
     public int status;
+    public int access_modifier;
     public string description;
     public DateTime created_date_time;
     public DateTime updatedAt;

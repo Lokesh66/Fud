@@ -10,6 +10,8 @@ public class UpdatePortfolioView : MonoBehaviour
 
     public TMP_InputField descriptionField;
 
+    public TMP_Dropdown accessDropDown;
+
     public RectTransform galleryPanel;
 
     public UploadedFilesHandler filesHandler;
@@ -41,9 +43,13 @@ public class UpdatePortfolioView : MonoBehaviour
 
         descriptionField.text = portfolioModel.description;
 
+        accessDropDown.value = portfolioModel.access_modifier;
+
         for (int i = 0; i < portfolioModel.PortfolioMedia.Count; i++)
         {
-            if (portfolioModel.PortfolioMedia[i].media_type == "image")
+            EMediaType mediaType = DataManager.Instance.GetMediaType(portfolioModel.PortfolioMedia[i].media_type);
+
+            if (mediaType == EMediaType.Image)
             {
                 GameObject mediaObject = Instantiate(mediaCell, content);
 
@@ -166,7 +172,7 @@ public class UpdatePortfolioView : MonoBehaviour
         {
             return;
         }   
-        GameManager.Instance.apiHandler.UpdatePortfolio(titleField.text, descriptionField.text, portfolioModel.id, uploadedDict, (status, response) => {
+        GameManager.Instance.apiHandler.UpdatePortfolio(titleField.text, descriptionField.text, portfolioModel.id, accessDropDown.value, uploadedDict, (status, response) => {
 
             if (status)
             {

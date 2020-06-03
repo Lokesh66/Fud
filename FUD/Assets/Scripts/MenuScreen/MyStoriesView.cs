@@ -71,10 +71,10 @@ public class MyStoriesView : MonoBehaviour
 
                 if (storiesTab == ETabType.Created)
                 {
-                    storyObject.GetComponent<StoryCell>().SetView(storiesList[i], OnStoryTapAction);
+                    storyObject.GetComponent<StoryCell>().SetView(storiesList[i], storiesTab, OnStoryTapAction);
                 }
                 else {
-                    storyObject.GetComponent<StoryCell>().SetView(storiesList[i], OnAlteredTapAction);
+                    storyObject.GetComponent<StoryCell>().SetView(storiesList[i], storiesTab, OnAlteredTapAction);
                 }
             }
         }

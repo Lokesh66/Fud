@@ -61,7 +61,7 @@ public class GalleryManager : MonoBehaviour
         }, "Select a PNG image");
 
     }
-    public void PickImages(Action<bool, List<string>> OnUploaded, TMP_InputField countText = null, TMP_InputField uploadedCount = null)
+    public void PickImages(Action<bool, List<string>> OnUploaded)
     {
         NativeGallery.Permission permission = NativeGallery.GetImagesFromGallery((imagesPath) =>
         {
@@ -69,8 +69,6 @@ public class GalleryManager : MonoBehaviour
             {
                 Array.Clear(loadedFiles, 0, loadedFiles.Length);
             }
-
-            //countText.text = imagesPath.Length.ToString();
 
             if (imagesPath != null && imagesPath.Length > 0)
             {
@@ -88,7 +86,7 @@ public class GalleryManager : MonoBehaviour
 
                     for (int i = 0; i < imagesPath.Length; i++)
                     {
-                        UploadFile(imagesPath[i], EMediaType.Image, uploadedCount);
+                        UploadFile(imagesPath[i], EMediaType.Image);
                     }
                 }
             }
@@ -152,19 +150,17 @@ public class GalleryManager : MonoBehaviour
 
     #region Upload File
 
-    void UploadFile(string filePath, EMediaType mediaType, TMP_InputField uploadedCount = null)
+    void UploadFile(string filePath, EMediaType mediaType)
     {
         Loader.Instance.StartLoading();
 
         GameManager.Instance.apiHandler.UploadFile(filePath, mediaType, (status, response) => {
 
-            if (status)
+            if (status) 
             {
                 FileUploadResponseModel responseModel = JsonUtility.FromJson<FileUploadResponseModel>(response);
 
                 uploadedURLs.Add(responseModel.data.s3_file_path);
-
-                //uploadedCount.text = uploadedURLs.Count.ToString();
 
                 if (uploadedURLs.Count == selectedImagesCount)
                 {
@@ -185,6 +181,8 @@ public class GalleryManager : MonoBehaviour
                     uploadedURLs.Clear();
 
                     Loader.Instance.StopLoading();
+
+                    OnUploaded = null;
                 }
                 else {
                    /* List<string> responses = new List<string>();
@@ -209,9 +207,9 @@ public class GalleryManager : MonoBehaviour
                 responses.Add(response);
 
                 OnUploaded?.Invoke(false, responses);
-            }
 
-            OnUploaded = null;
+                OnUploaded = null;
+            }
 
         });
     }

@@ -8,6 +8,8 @@ public class PortfolioCreationView : MonoBehaviour
 {
     public TMP_InputField titleField;
 
+    public TMP_Dropdown accessDropDown;
+
     public TMP_InputField descriptionField;
 
     public RectTransform galleryPanel;
@@ -54,7 +56,7 @@ public class PortfolioCreationView : MonoBehaviour
 
     public void CreateButtonAction()
     {
-        GameManager.Instance.apiHandler.CreatePortfolio(titleField.text, descriptionField.text, uploadedDict, (status, response) => {
+        GameManager.Instance.apiHandler.CreatePortfolio(titleField.text, descriptionField.text, accessDropDown.value, uploadedDict, (status, response) => {
 
             if (status)
             {

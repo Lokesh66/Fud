@@ -12,9 +12,7 @@ public class PortfolioActivitiesView : MonoBehaviour
 
     public ETabType tabType;
 
-    public PortfolioActivityPopUp offeredPopUp;
-
-    public PortfolioActivityPopUp alteredPopUp;
+    public PortfolioActivityPopUp activityPopUp;
 
 
     List<PortfolioActivityModel> activityModels;
@@ -81,7 +79,7 @@ public class PortfolioActivitiesView : MonoBehaviour
         {
             GameObject cellObject = Instantiate(activityCell, content);
  
-            cellObject.GetComponent<PortfolioActvityCell>().Load(activityModels[i], alteredPopUp, tabType);
+            cellObject.GetComponent<PortfolioActvityCell>().Load(activityModels[i], activityPopUp, tabType);
         }
     }
 }

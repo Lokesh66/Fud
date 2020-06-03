@@ -134,7 +134,7 @@ public class StoryUpdateView : MonoBehaviour
 
     void OnSuccessResponse()
     {
-        storyCell.SetView(storyModel, storyCell.OnTapActon);
+        storyCell.SetView(storyModel, ETabType.Created, storyCell.OnTapActon);
 
         Destroy(gameObject);
 
@@ -331,11 +331,6 @@ public class StoryUpdateView : MonoBehaviour
     }
 
     void GetScreenShot()
-    {
-
-    }
-
-    void GetGalleryVideos()
     {
 
     }
