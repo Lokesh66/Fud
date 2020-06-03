@@ -150,6 +150,10 @@ public class PortfolioView : BaseView
     {
         portfolioHandler.infoView.OnBackButtonAction();
 
+        buttonList[(int)currentTab].color = disabledColor;
+
+        buttonList[0].color = selectedColor;
+
         currentTab = ETabType.Offers;
 
         currentObject?.SetActive(false);

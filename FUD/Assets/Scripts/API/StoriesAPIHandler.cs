@@ -271,13 +271,15 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateStoryTeam(int story_id, string title, string members, Action<bool, string> action)
+    public void UpdateStoryTeam(int story_id, string title, string description, string members, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
         parameters.Add("story_id", story_id);
 
         parameters.Add("title", title);
+
+        parameters.Add("description", description);
 
         parameters.Add("members", members);
 
@@ -482,7 +484,7 @@ public class StoryDetailsModel
     public DateTime updatedAt;
     public List<StoryVersion> StoryVersions;
     public List<StoryCharacterModel> StoryCharacters;
-    public List<StoryTeamModel> TeamMembers;
+    public List<StoryTeamModel> Myteam;
     public StoryDetailsController.EScreenSubType currentTab = 0;
 
     public DetailsScreenModel screenModel;
@@ -512,12 +514,25 @@ public class StoryTeamModel
     public int id;
     public int story_id;
     public int user_id;
+    public string description;
     public string members;
     public int status;
     public DateTime created_date_time;
     public string title;
     public DateTime updatedAt;
-    public List<UserData> TeamMembersUsers;
+    public List<TeamMembersItem> TeamMembers;
+}
+
+[Serializable]
+public class TeamMembersItem
+{
+    public int id;
+    public int team_id;
+    public int user_id;
+    public int status;
+    public string created_date_time;
+    public string updatedAt;
+    public UserData users;
 }
 
 [Serializable]
@@ -588,7 +603,7 @@ public class UpdatedCharaterModel : BaseResponse
 }
 
 [Serializable]
-public class UpdatedStoryModel : BaseResponse
+public class UpdatedStoryResponse : BaseResponse
 {
     public StoryModel data;
 }

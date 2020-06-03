@@ -233,7 +233,7 @@ public class StoryDetailsController : MonoBehaviour
 
         currentObject.SetActive(false);
 
-        teamsView.Load(currentDetailsModel.TeamMembers, this);
+        teamsView.Load(currentDetailsModel.Myteam, this);
     }
 
     #endregion
@@ -302,7 +302,7 @@ public class StoryDetailsController : MonoBehaviour
 
     public void UpdateTeams(StoryTeamModel teamModel)
     {
-        currentDetailsModel.TeamMembers.Add(teamModel);
+        currentDetailsModel.Myteam.Add(teamModel);
 
         teamsView.Refresh(teamModel);
     }

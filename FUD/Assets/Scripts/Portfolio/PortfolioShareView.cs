@@ -105,7 +105,7 @@ public class PortfolioShareView : MonoBehaviour
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Story Creation Success" : "Something went wrong, please try again.";
+        alertModel.message = status ? "Album Shared Successfully" : "Something went wrong, please try again.";
 
         if (status)
         {

@@ -16,14 +16,19 @@ public class PortfolioActvityCell : MonoBehaviour
 
     PortfolioActivityModel activityModel;
 
+    ETabType tabType;
+
+
     int currentUserId;
 
 
-    public void Load(PortfolioActivityModel model, PortfolioActivityPopUp activityPopUp)
+    public void Load(PortfolioActivityModel model, PortfolioActivityPopUp activityPopUp, ETabType tabType)
     {
         this.activityModel = model;
 
         this.activityPopUp = activityPopUp;
+
+        this.tabType = tabType;
 
         titleText.text = model.Portfolio.title;
 

@@ -26,6 +26,8 @@ public class StoryTeamView : MonoBehaviour
 
         detailsController = storyDetails;
 
+        content.DestroyChildrens();
+
         if (teamModels?.Count > 0)
         {
             SetView();
@@ -41,8 +43,6 @@ public class StoryTeamView : MonoBehaviour
     void SetView()
     {
         GameObject teamObject = null;
-
-        content.DestroyChildrens();
 
         for (int i = 0; i < teamModels.Count; i++)
         {
