@@ -108,16 +108,12 @@ public class StoryUpdateView : MonoBehaviour
                 Debug.LogError("Story Updation Failed");
             }
 
-            OnAPIResponse(status, response);
+            OnAPIResponse(status);
         });
     }
 
-    void OnAPIResponse(bool status, string response)
+    void OnAPIResponse(bool status)
     {
-        UpdatedStoryResponse storyResponse = JsonUtility.FromJson<UpdatedStoryResponse>(response);
-
-        storyModel = storyResponse.data;
-
         AlertModel alertModel = new AlertModel();
 
         alertModel.message = status ? "Story Updation Success" : "Something went wrong, please try again.";
@@ -134,6 +130,8 @@ public class StoryUpdateView : MonoBehaviour
 
     void OnSuccessResponse()
     {
+        UpdateStoryModel();
+
         storyCell.SetView(storyModel, storyCell.OnTapActon);
 
         Destroy(gameObject);

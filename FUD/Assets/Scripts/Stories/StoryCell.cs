@@ -31,7 +31,6 @@ public class StoryCell : MonoBehaviour
 
     Vector2 startPoint;
 
-
     public void SetView(StoryModel storyModel, Action<object> tapAction = null)
     {
         this.storyModel = storyModel;

@@ -21,7 +21,7 @@ public class PortfolioHandler : MonoBehaviour
 
         ShowExperianceScreen();
 
-        //ShowBasicInfo();
+        ShowBasicInfo();
     }
 
     void ShowBasicInfo()

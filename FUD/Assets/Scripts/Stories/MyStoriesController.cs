@@ -115,11 +115,7 @@ public class MyStoriesController : BaseView
 
     void ResetScreenView()
     {
-        buttonsList[(int)currentTab].color = disabledColor;
-
         currentTab = ETabType.Offers;
-
-        buttonsList[0].color = selectedColor;
 
         currentObject?.SetActive(false);
 
