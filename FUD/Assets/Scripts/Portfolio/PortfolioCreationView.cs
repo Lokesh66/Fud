@@ -38,7 +38,7 @@ public class PortfolioCreationView : MonoBehaviour
         switch (selectedType)
         {
             case EMediaType.Image:
-                GalleryManager.Instance.PickImages(OnImagesUploaded, titleField);
+                GalleryManager.Instance.PickImages(OnImagesUploaded);
                 break;
             case EMediaType.Audio:
                 GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);

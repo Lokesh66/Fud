@@ -98,6 +98,7 @@ public class ProjectHandler : MonoBehaviour
         if(models != null && models.Count > 0)
         {
             noDataView.gameObject.SetActive(false);
+
             for (int i = 0; i < models.Count; i++)
             {
                 GameObject projectObject = Instantiate(projectCell, content);

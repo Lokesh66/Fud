@@ -67,6 +67,7 @@ public class ProjectCreationView : MonoBehaviour
     {
         parentPanel.gameObject.SetActive(false);
         backAction?.Invoke(isDataUpdated);
+        ClearData();
         backAction = null;
     }
 
@@ -147,5 +148,12 @@ public class ProjectCreationView : MonoBehaviour
             errorText.text = string.Empty;
             errorText.color = Color.red;
         });
+    }
+
+    void ClearData()
+    {
+        titleField.text = budgetField.text = descriptionField.text = string.Empty;
+
+        storySelectionDropdown.value = durationDropDown.value = 0;
     }
 }

@@ -87,7 +87,9 @@ public class CreateCharacterView : MonoBehaviour
         {
             UserSearchModel searchModel = new UserSearchModel();
 
-            selectedModel.id = -1;
+            searchModel.id = -1;
+
+            selectedModel = searchModel;
         }
 
         GameManager.Instance.apiHandler.CreateCharacter(detailsModel.id, castField.text, descriptionField.text, genderLabel.text, selectedModel.id, (status, response) => {

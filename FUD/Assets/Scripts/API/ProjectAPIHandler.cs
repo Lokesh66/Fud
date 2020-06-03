@@ -47,16 +47,19 @@ public partial class APIHandler
 
     public void GetProjectDetails(int id, Action<bool, Project> action)
     {
-        string url = APIConstants.GET_PROJECT_DETAILS + id;
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        gameManager.StartCoroutine(GetRequest(url, true, (status, response) =>
+        parameters.Add("project_id", id);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.GET_PROJECT_DETAILS, true, parameters, (status, response) =>
         {
             if (status)
             {
-                ProjectsResponse projectsResponse = JsonUtility.FromJson<ProjectsResponse>(response);
-                if (projectsResponse.data != null && projectsResponse.data.Count > 0)
+                ProjectDetailResponse projectsResponse = JsonUtility.FromJson<ProjectDetailResponse>(response);
+
+                if (projectsResponse.data != null)
                 {
-                    action(status, projectsResponse.data[0]);
+                    action(status, projectsResponse.data);
                 }
                 else
                 {
@@ -237,10 +240,13 @@ public class ProjectCast
     public int id;
     public int project_id;
     public int story_character_id;
-    public object selected_member;
+    public int selected_member;
     public int user_id;
     public int status;
     public int cast_status;
+    public int payment_status;
+    public int payment_type;
+    public int recurring_payment;
     public DateTime created_date_time;
     public DateTime updatedAt;
 }
@@ -255,6 +261,11 @@ public class Project
     public string title;
     public int cost_estimation;
     public int estimated_time;
+    public int crew_percentage;
+    public int audition_percentage;
+    public int status;
+    public DateTime start_date;
+    public DateTime release_date;
     public List<StoryVersion> StoryVersions;
     public List<ProjectCast> Project_cast;
     public List<Audition> Audition;
@@ -283,6 +294,13 @@ public class SceneModel
 public class ProjectsResponse : BaseResponse
 {
     public List<Project> data;
+}
+
+
+[Serializable]
+public class ProjectDetailResponse : BaseResponse
+{
+    public Project data;
 }
 
 

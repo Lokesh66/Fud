@@ -44,6 +44,8 @@ public class ProjectsView : BaseView
     public override void OnExitScreen()
     {
         base.OnExitScreen();
+
+        ResetScreen();
     }
 
     public void OnTabAction(int tabIndex)
@@ -83,5 +85,16 @@ public class ProjectsView : BaseView
                 createdProjects.Load();
                 break;
         }
+    }
+
+    void ResetScreen()
+    {
+        buttonsList[(int)currentTab].color = disabledColor;
+
+        buttonsList[0].color = selectedColor;
+
+        currentObject?.SetActive(false);
+
+        currentTab = ETabType.Offers;
     }
 }

@@ -28,6 +28,8 @@ public class StoryCharactersView : MonoBehaviour
 
         gameObject.SetActive(true);
 
+        content.DestroyChildrens();
+
         if (characterModels?.Count > 0)
         {
             SetView();
