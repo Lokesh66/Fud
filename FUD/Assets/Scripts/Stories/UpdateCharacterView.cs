@@ -114,6 +114,14 @@ public class UpdateCharacterView : MonoBehaviour
                 GetSearchedUsers();
             }
         }
+        else {
+            if (!suitableField.text.Equals(selectedModel.name))
+            {
+                selectedModel = null;
+
+                OnValueChange();
+            }
+        }
     }
 
     public void OnBackButtonAction()
@@ -129,6 +137,16 @@ public class UpdateCharacterView : MonoBehaviour
         {
             return;
         }
+
+        if (selectedModel == null)
+        {
+            UserSearchModel searchModel = new UserSearchModel();
+
+            searchModel.id = -1;
+
+            selectedModel = searchModel;
+        }
+
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
         GameManager.Instance.apiHandler.UpdateCharacter(characterModel.id, storyId, castField.text, descriptionField.text, selectedModel.id, genderLabel.text, (status, response) => {
@@ -177,10 +195,6 @@ public class UpdateCharacterView : MonoBehaviour
         if (string.IsNullOrEmpty(castField.text))
         {
             errorMessage = "Character name should not be empty";
-        }
-        else if (string.IsNullOrEmpty(suitableField.text))
-        {
-            errorMessage = "Suitable performer should not be empty";
         }
         else if (string.IsNullOrEmpty(descriptionField.text))
         {

@@ -10,14 +10,17 @@ public class PortfolioShareView : MonoBehaviour
 
     public TMP_InputField searchField;
 
-    public TMP_InputField commentField;
+    //public TMP_InputField commentField;
 
 
     PortfolioModel currentModel;
 
+    UserSearchModel selectedModel = null;
+
     string keyword = string.Empty;
 
     bool isSearchAPICalled = false;
+
 
     private void OnEnable()
     {
@@ -35,19 +38,23 @@ public class PortfolioShareView : MonoBehaviour
 
     public void OnValueChange()
     {
-        if (searchField.text.Length > 2 && !isSearchAPICalled)
+        if (selectedModel == null)
         {
-            //Call Search API
-            isSearchAPICalled = true;
-
-            keyword = searchField.text;
-
-            GetSearchedUsers();
-        }
-        else {
-            if (searchField.text.Length == 0)
+            if (searchField.text.Length > 2 && !isSearchAPICalled)
             {
-                searchContent.DestroyChildrens();
+                //Call Search API
+                isSearchAPICalled = true;
+
+                keyword = searchField.text;
+
+                GetSearchedUsers();
+            }
+        }
+        else
+        {
+            if (!searchField.text.Equals(selectedModel.name))
+            {
+                selectedModel = null;
             }
         }
     }
@@ -81,16 +88,26 @@ public class PortfolioShareView : MonoBehaviour
         }
     }
 
-    void OnSelectMember(object id)
+    void OnSelectMember(object searchModel)
+    {
+        selectedModel = searchModel as UserSearchModel;
+
+        searchField.text = selectedModel.name;
+
+        searchContent.DestroyChildrens();
+    }
+
+    
+    public void OnShareButtonAction()
     {
         if (!CanCallAPI())
         {
             return;
         }
 
-        int userId = (int)id;
+        int userId = selectedModel.id;
 
-        GameManager.Instance.apiHandler.PostPortfolio(currentModel.id, commentField.text, userId, (status, response) => {
+        GameManager.Instance.apiHandler.PostPortfolio(currentModel.id, userId, (status, response) => {
 
             if (status)
             {
@@ -128,9 +145,9 @@ public class PortfolioShareView : MonoBehaviour
     {
         string errorMessage = string.Empty;
 
-        if (string.IsNullOrEmpty(commentField.text))
+        if (string.IsNullOrEmpty(searchField.text))
         {
-            errorMessage = "Please add the comment";
+            errorMessage = "Please add members to share.";
         }
 
         if (!string.IsNullOrEmpty(errorMessage))
@@ -153,7 +170,7 @@ public class PortfolioShareView : MonoBehaviour
 
     void Reset()
     {
-        searchField.text = commentField.text = string.Empty;
+        searchField.text = string.Empty;
 
         searchContent.DestroyChildrens();
     }

@@ -107,7 +107,7 @@ public class CharacterDetailsView : MonoBehaviour
 
     void Reset()
     {
-        description.text = string.Empty;
+        //description.text = string.Empty;
 
         //userImage.sprite = null;
     }

@@ -205,15 +205,13 @@ public partial class APIHandler
         }));
     }
 
-    public void PostPortfolio(int id, string comment, int postedTo, Action<bool, string> action)
+    public void PostPortfolio(int id, int postedTo, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
         parameters.Add("portfolio_id", id);
 
         parameters.Add("shared_to", postedTo);
-
-        parameters.Add("comments", comment);
 
         parameters.Add("access_modifier", 0);
 

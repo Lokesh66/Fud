@@ -74,6 +74,15 @@ public class CreateCharacterView : MonoBehaviour
                 GetSearchedUsers();
             }
         }
+        else
+        {
+            if (!suitableField.text.Equals(selectedModel.name))
+            {
+                selectedModel = null;
+
+                OnValueChange();
+            }
+        }
     }
 
     public void OnButtonAction()

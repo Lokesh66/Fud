@@ -14,6 +14,8 @@ public class PortfolioActivityPopUp : MonoBehaviour
 
     public GameObject acceptObject;
 
+    public GameObject shortListObject;
+
 
     PortfolioActivityModel activityModel;
 
@@ -45,6 +47,8 @@ public class PortfolioActivityPopUp : MonoBehaviour
         currentUserId = DataManager.Instance.userInfo.id;
 
         acceptObject.SetActive(currentUserId != activityModel.user_id);
+
+        shortListObject.SetActive(currentUserId != activityModel.user_id);
     }
 
     public void OnStatusButtonAction(int userStatus)

@@ -201,7 +201,10 @@ public partial class APIHandler
 
         parameters.Add("description", description);
 
-        parameters.Add("suitable_performer", performerId);
+        if (performerId != -1)
+        {
+            parameters.Add("suitable_performer", performerId);
+        }
 
         parameters.Add("gender", gender);
 
