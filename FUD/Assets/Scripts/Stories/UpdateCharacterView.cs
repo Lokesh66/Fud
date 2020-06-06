@@ -113,6 +113,9 @@ public class UpdateCharacterView : MonoBehaviour
 
                 GetSearchedUsers();
             }
+            else {
+                searchContent.DestroyChildrens();
+            }
         }
         else {
             if (!suitableField.text.Equals(selectedModel.name))
@@ -142,7 +145,7 @@ public class UpdateCharacterView : MonoBehaviour
         {
             UserSearchModel searchModel = new UserSearchModel();
 
-            searchModel.id = -1;
+            searchModel.id = 0;
 
             selectedModel = searchModel;
         }

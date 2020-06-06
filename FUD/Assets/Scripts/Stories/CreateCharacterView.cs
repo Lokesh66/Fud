@@ -73,6 +73,9 @@ public class CreateCharacterView : MonoBehaviour
 
                 GetSearchedUsers();
             }
+            else {
+                searchContent.DestroyChildrens();
+            }
         }
         else
         {
@@ -96,7 +99,7 @@ public class CreateCharacterView : MonoBehaviour
         {
             UserSearchModel searchModel = new UserSearchModel();
 
-            searchModel.id = -1;
+            searchModel.id = 0;
 
             selectedModel = searchModel;
         }

@@ -41,14 +41,35 @@ public partial class APIHandler
         Debug.LogError("FetchAuditions Called");
 
         Dictionary<string, object> parameters = new Dictionary<string, object>();
-        if (type == AuditionType.Live)
-            parameters.Add("fetch_live", 1);
-        else if (type == AuditionType.Joined)
-            parameters.Add("fetch_joined", 1);
-        else if (type == AuditionType.Created)
-            parameters.Add("fetch_created", 1);
 
-        gameManager.StartCoroutine(PostRequest(APIConstants.SEARCH_USER_AUDITION, true, parameters, action));
+        string url = string.Empty;
+
+        if (type == AuditionType.Live)
+        {
+            url = APIConstants.GET_OFFERED_AUDITIONS;
+
+            url += "?page=1&limit=10&count=10";
+
+            parameters.Add("fetch_live", 1);
+        }
+        else if (type == AuditionType.Joined)
+        {
+            url = APIConstants.GET_ALTERED_AUDITIONS;
+
+            url += "?page=1&limit=10&count=10";
+
+            parameters.Add("fetch_joined", 1);
+        }
+        else if (type == AuditionType.Created)
+        {
+            url = APIConstants.GET_CREATED_AUDITIONS;
+
+            url += "?page=1&limit=10&count=10";
+
+            parameters.Add("fetch_created", 1);
+        }
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
     }
 
     public void GetHomeAuditions(Action<bool, string> action)
