@@ -173,11 +173,9 @@ public class UserAuditionController : MonoBehaviour
     public void AcceptButtonAction()
     {
         buttonsPanel.SetActive(false);
-        Dictionary<string, object> parameters = new Dictionary<string, object>();
-        parameters.Add("audition_id", selectedAudition.audition_id);
-        parameters.Add("user_audition_id", selectedAudition.id);
-        parameters.Add("status", "selected");
-        GameManager.Instance.apiHandler.AcceptOrRejectAudition(parameters, (status, response) => {
+
+        GameManager.Instance.apiHandler.AcceptOrRejectAudition(selectedAudition.audition_id, selectedAudition.id, 5, (status, response) =>
+        {
             if (status)
             {
                 Reload();
@@ -188,11 +186,9 @@ public class UserAuditionController : MonoBehaviour
     public void RejectButtonAction()
     {
         buttonsPanel.SetActive(false);
-        Dictionary<string, object> parameters = new Dictionary<string, object>();
-        parameters.Add("audition_id", selectedAudition.audition_id);
-        parameters.Add("user_audition_id", selectedAudition.id);
-        parameters.Add("status", "rejected");
-        GameManager.Instance.apiHandler.AcceptOrRejectAudition(parameters, (status, response) => {
+
+        GameManager.Instance.apiHandler.AcceptOrRejectAudition(selectedAudition.audition_id, selectedAudition.id, 8, (status, response) =>
+        {
             if (status)
             {
                 Reload();

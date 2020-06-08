@@ -51,11 +51,42 @@ public class PortfolioCreationView : MonoBehaviour
 
     public void OnUploadButtonAction()
     {
-        ShowGalleryPanel();
+        if (!isShowingGalleryPanel)
+        {
+            ShowGalleryPanel();
+        }
+    }
+
+    bool CanCallAPI()
+    {
+        string errorMessage = string.Empty;
+
+        if (string.IsNullOrEmpty(titleField.text))
+        {
+            errorMessage = "Title field not be empty";
+        }
+        else if (string.IsNullOrEmpty(descriptionField.text))
+        {
+            errorMessage = "Description should not be empty";
+        }
+
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            AlertModel alertModel = new AlertModel();
+            alertModel.message = errorMessage;
+            UIManager.Instance.ShowAlert(alertModel);
+            return false;
+        }
+
+        return true;
     }
 
     public void CreateButtonAction()
     {
+        if (!CanCallAPI())
+        {
+            return;
+        }
         GameManager.Instance.apiHandler.CreatePortfolio(titleField.text, descriptionField.text, accessDropDown.value, uploadedDict, (status, response) => {
 
             if (status)

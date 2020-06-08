@@ -37,8 +37,6 @@ public class JoinedAuditionCell : MonoBehaviour
         this.auditionController = auditionController;
         auditionType = auditionController.auditionType;
 
-        Debug.Log("auditionData.Audition.end_date = " + auditionData.Audition.end_date);
-
         if (auditionData != null)
         {
             titleText.text = auditionData.Audition.topic;
@@ -340,8 +338,10 @@ public class JoinedAuditionCell : MonoBehaviour
     void WithDrawAudition()
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("audition_id", auditionData.audition_id);
         parameters.Add("id", auditionData.id);
-        parameters.Add("status", "inactive");
+        parameters.Add("status", 8);
 
         GameManager.Instance.apiHandler.UpdateJoinedAudition(parameters, (status, response) => {
             if (status)

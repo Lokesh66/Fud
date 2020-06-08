@@ -60,7 +60,10 @@ public class UpdatePortfolioView : MonoBehaviour
 
     public void OnUploadButtonAction()
     {
-        ShowGalleryPanel();
+        if (!isShowingGalleryPanel)
+        {
+            ShowGalleryPanel();
+        }
     }
 
     public void OnMediaButtonAction(int mediaType)
@@ -171,7 +174,8 @@ public class UpdatePortfolioView : MonoBehaviour
         if (!CanCallAPI())
         {
             return;
-        }   
+        }
+
         GameManager.Instance.apiHandler.UpdatePortfolio(titleField.text, descriptionField.text, portfolioModel.id, accessDropDown.value, uploadedDict, (status, response) => {
 
             if (status)

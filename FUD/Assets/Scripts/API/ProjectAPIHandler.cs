@@ -45,6 +45,22 @@ public partial class APIHandler
         }));
     }
 
+    public void GetBrowserData(int pageNo, Action<bool, List<PortfolioAlbumModel>> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        string url = APIConstants.GET_PROJECT_BROWSER_DATA;
+
+        url += "?page=" + pageNo.ToString() + "&limit=20&count=20";
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
+
+            ProjectBrowserResponse projectsResponse = JsonUtility.FromJson<ProjectBrowserResponse>(response);
+
+            action(status, projectsResponse.data.PortfolioMedia);
+        }));
+    }
+
     public void GetProjectDetails(int id, Action<bool, Project> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -102,6 +118,22 @@ public partial class APIHandler
         parameters.Add("status", status);
 
         gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_PROJECT, true, parameters, (apiStatus, response) =>
+        {
+            action(apiStatus);
+        }));
+    }
+
+    public void UpdateProjectCastStauts(int projectId, int projectCastId, int status, Action<bool> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("project_id", projectId);
+
+        parameters.Add("project_cast_id", projectCastId);
+
+        parameters.Add("status", status);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_PROJECT_CAST_STATUS, true, parameters, (apiStatus, response) =>
         {
             action(apiStatus);
         }));
@@ -378,4 +410,10 @@ public class SceneDetailsModel
 public class SceneResponse : BaseResponse
 {
     public SceneDetailsModel data;
+}
+
+[Serializable]
+public class ProjectBrowserResponse : BaseResponse
+{
+    public PortfolioModel data;
 }

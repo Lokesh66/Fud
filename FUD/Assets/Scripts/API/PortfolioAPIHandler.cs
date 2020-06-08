@@ -371,6 +371,7 @@ public class PortfolioModel
     public int user_id;
     public string title;
     public int status;
+    public int likes;
     public int access_modifier;
     public string description;
     public DateTime created_date_time;
@@ -402,8 +403,8 @@ public class WorkExperianceModel
     public int status;
     public int industry_id;
     public DateTime date_exp;
-    public string start_date;
-    public string end_date;
+    public int start_date;
+    public int end_date;
     public DateTime created_date_time;
     public DateTime updatedAt;
     public List<WorkExpMedia> WorkExpMedia;

@@ -82,8 +82,6 @@ public class MyStoriesController : BaseView
 
             currentTab = (ETabType)tabIndex;
 
-            addObject.SetActive(currentTab == ETabType.Created);
-
             currentObject?.SetActive(false);
 
             UpdateCurrentView();
@@ -94,6 +92,8 @@ public class MyStoriesController : BaseView
 
     void UpdateCurrentView()
     {
+        addObject.SetActive(currentTab == ETabType.Created);
+
         switch (currentTab)
         {
             case ETabType.Offers:
@@ -173,4 +173,5 @@ public enum ETabType
     Offers,
     Altered,
     Created,
+    Browser,
 }

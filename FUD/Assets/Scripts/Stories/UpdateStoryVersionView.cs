@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using System;
+
 
 public class UpdateStoryVersionView : MonoBehaviour
 {
@@ -21,6 +23,8 @@ public class UpdateStoryVersionView : MonoBehaviour
 
     StoryVersion storyVersion;
 
+    StoryVersion updatedModel;
+
     VersionDetailsView detailsView;
 
     StoryVersionDetailModel storyVersionDetail;
@@ -30,6 +34,7 @@ public class UpdateStoryVersionView : MonoBehaviour
     bool isShowingGalleryPanel = false;
 
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
+
 
     public void Load(StoryVersion storyVersion, VersionDetailsView detailsView)
     {
@@ -163,6 +168,9 @@ public class UpdateStoryVersionView : MonoBehaviour
 
             if (status)
             {
+                UpdatedStoryVersionResponse versionResponse = JsonUtility.FromJson<UpdatedStoryVersionResponse>(response);
+
+                updatedModel = versionResponse.data;
                 Debug.Log("Story Uploaded Successfully");
             }
             else
@@ -215,6 +223,8 @@ public class UpdateStoryVersionView : MonoBehaviour
         OnBackButtonAction();
 
         uploadedDict.Clear();
+
+        detailsView.OnEditCallBack(storyVersion, updatedModel);
     }
 
     void Reset()

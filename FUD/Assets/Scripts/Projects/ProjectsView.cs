@@ -1,5 +1,6 @@
-﻿using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
+using TMPro;
+
 
 public class ProjectsView : BaseView
 {
@@ -8,6 +9,8 @@ public class ProjectsView : BaseView
     public ProjectHandler alteredProjects;
 
     public ProjectHandler createdProjects;
+
+    public ProjectBrowserView browserView;
 
     public GameObject addObject;
 
@@ -83,6 +86,11 @@ public class ProjectsView : BaseView
             case ETabType.Created:
                 currentObject = createdProjects.gameObject;
                 createdProjects.Load();
+                break;
+
+            case ETabType.Browser:
+                currentObject = browserView.gameObject;
+                browserView.Load();
                 break;
         }
     }

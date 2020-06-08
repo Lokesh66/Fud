@@ -693,6 +693,12 @@ public class CreatedStoryVerionModel : StoryVersion
 }
 
 [Serializable]
+public class UpdatedStoryVersionResponse : BaseResponse
+{
+    public StoryVersion data;
+}
+
+[Serializable]
 public class CreatedStoryVersionResponse : BaseResponse
 {
     public CreatedStoryVerionModel data;

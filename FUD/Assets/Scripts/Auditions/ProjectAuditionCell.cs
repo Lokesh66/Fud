@@ -84,7 +84,8 @@ public class ProjectAuditionCell : MonoBehaviour
             parameters.Add("end_date", endDate);
         parameters.Add("rate_of_pay", auditionData.rate_of_pay);*/
 
-        parameters.Add("status","inactive");
+        parameters.Add("status",8);
+
         GameManager.Instance.apiHandler.ModifyAudition(parameters, (status, response) => {
             Debug.Log("DeleteAudition : " + response);
             if (status)

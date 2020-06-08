@@ -12,6 +12,8 @@ public class PortfolioView : BaseView
 
     public GameObject createPanel;
 
+    public GameObject createButtonObject;
+
     public Color selectedColor;
 
     public Color disabledColor;
@@ -86,6 +88,8 @@ public class PortfolioView : BaseView
 
     void UpdateCurrentView()
     {
+        createButtonObject.SetActive(currentTab == ETabType.Created);
+
         switch (currentTab)
         {
             case ETabType.Offers:

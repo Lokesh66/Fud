@@ -105,11 +105,16 @@ public partial class APIHandler
     {
         gameManager.StartCoroutine(PostRequest(APIConstants.ALL_ACTIVE_AUDITIONS, true, parameters, action));
     }
-    public void AcceptOrRejectAudition(Dictionary<string, object> parameters, Action<bool, string> action)
+    public void AcceptOrRejectAudition(int auditionId, int userAuditionId, int status, Action<bool, string> action)
     {
-        //"audition_id": 13,
-        //"user_audition_id": 13,
-        //"status": “selected“ or “rejected”
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("audition_id", auditionId);
+
+        parameters.Add("user_audition_id", userAuditionId);
+
+        parameters.Add("status", status);
+
         gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_AUDITION_STATUS, true, parameters, action));
     }
 }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class ProjectCastCell : MonoBehaviour
 {
@@ -9,12 +10,15 @@ public class ProjectCastCell : MonoBehaviour
     public TMP_Text ageText;
     public TMP_Text descriptionText;
 
+    Action<ProjectCast> OnTapAction;
+
     ProjectCast castData;
     int index = 0;
 
-    public void SetView(int index, ProjectCast cast)
+    public void SetView(int index, ProjectCast cast, Action<ProjectCast> OnTapAction)
     {
         castData = cast;
+        this.OnTapAction = OnTapAction;
         this.index = index;
         if (castData != null)
         {
@@ -25,6 +29,6 @@ public class ProjectCastCell : MonoBehaviour
 
     public void OnClickAction()
     {
-        Debug.Log("OnClickAction ");
+        OnTapAction?.Invoke(castData);
     }
 }

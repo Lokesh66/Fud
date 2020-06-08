@@ -105,6 +105,8 @@ public partial class APIHandler
         }
         return map;
 #endif
+        return null;
+
     }
 }
 

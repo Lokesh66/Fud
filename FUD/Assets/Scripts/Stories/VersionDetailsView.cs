@@ -128,8 +128,8 @@ public class VersionDetailsView : MonoBehaviour
         //userImage.sprite = null;
     }
 
-    public void OnEditCallBack(StoryVersion storyVersion)
+    public void OnEditCallBack(StoryVersion storyVersion, StoryVersion updatedModel)
     {
-        versionsView.UpdateStoryVersion(storyVersion);
+        versionsView.UpdateStoryVersion(storyVersion, updatedModel);
     }
 }

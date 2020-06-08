@@ -54,6 +54,22 @@ public class UpdateExperienceView : MonoBehaviour
 
         descriptionField.text = workModel.description;
 
+        DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0);
+
+        startDate = dateTime.AddSeconds(workModel.start_date);
+
+        endDate = dateTime.AddSeconds(workModel.end_date);
+
+        if (startDate != DateTime.MinValue || startDate != DateTime.MaxValue)
+        {
+            startDateText.text = DatePicker.Instance.GetDateString(startDate);
+        }
+
+        if (endDate != DateTime.MinValue || endDate != DateTime.MaxValue)
+        {
+            endDateText.text = DatePicker.Instance.GetDateString(endDate);
+        }
+
         UpdateMediaView();
 
         LoadRoles();

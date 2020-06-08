@@ -25,7 +25,8 @@ public class StoryVersionsView : MonoBehaviour
         {
            
         }
-        else {
+        else
+        {
             storyVersionList = versionsList;
 
             SetView();
@@ -86,10 +87,10 @@ public class StoryVersionsView : MonoBehaviour
         storyObject.GetComponent<StoryVersionCell>().SetView(storyVersion, this);
     }
 
-    public void UpdateStoryVersion(StoryVersion storyVersion)
+    public void UpdateStoryVersion(StoryVersion storyVersion, StoryVersion updatedModel)
     {
         int versionIndex = storyVersionList.IndexOf(storyVersion);
 
-        content.GetChild(versionIndex).GetComponent<StoryVersionCell>().SetView(storyVersion, this);
+        content.GetChild(versionIndex).GetComponent<StoryVersionCell>().SetView(updatedModel, this);
     }
 }

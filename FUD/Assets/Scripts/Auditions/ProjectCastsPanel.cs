@@ -8,6 +8,8 @@ public class ProjectCastsPanel : MonoBehaviour
     public GameObject addNewButton;
     public NoDataView noData;
 
+    public ProjectActivityPopUp statusPopUp;
+
     int projectId;
     List<ProjectCast> casts = new List<ProjectCast>();
     List<ProjectCharacter> characters = new List<ProjectCharacter>();
@@ -16,10 +18,12 @@ public class ProjectCastsPanel : MonoBehaviour
     {
         addNewButton.gameObject.SetActive(characters.Count > casts.Count);
     }
+
     private void OnDisable()
     {
         addNewButton.gameObject.SetActive(false);
     }
+
     public void SetData(int projectId, List<ProjectCast> casts)
     {
         this.projectId = projectId;
@@ -39,7 +43,7 @@ public class ProjectCastsPanel : MonoBehaviour
             {
                 GameObject auditionObject = Instantiate(castCell, parentContent);
 
-                auditionObject.GetComponent<ProjectCastCell>().SetView(i, casts[i]);
+                auditionObject.GetComponent<ProjectCastCell>().SetView(i, casts[i], OnCellTapAction);
             }
         }
         else
@@ -63,6 +67,8 @@ public class ProjectCastsPanel : MonoBehaviour
         });
 
     }
+
+
     public void CreateCast()
     {
         if (characters.Count > 0)
@@ -77,11 +83,27 @@ public class ProjectCastsPanel : MonoBehaviour
         }
     }
 
+    void OnCellTapAction(ProjectCast projectCast)
+    {
+        statusPopUp.Load(projectCast, this);
+    }
+
+    public void OnStatusApplied(ProjectCast projectCast)
+    {
+        int modelIndex = casts.IndexOf(projectCast);
+
+        Destroy(parentContent.GetChild(modelIndex).gameObject);
+
+        casts.Remove(projectCast);
+    }
+
     void EnableNodata()
     {
         noData.gameObject.SetActive(true);
         noData.SetView(GetNoDataModel());
     }
+
+
     NoDataModel GetNoDataModel()
     {
         NoDataModel model = new NoDataModel();
