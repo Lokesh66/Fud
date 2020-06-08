@@ -145,7 +145,7 @@ public class AllPlansView : MonoBehaviour
         };
         Debug.Log("CashFree button action");
         GameManager.Instance.apiHandler.CashFreeRequest(DataManager.Instance.userInfo.phone.ToString(),
-            DataManager.Instance.userInfo.email_id, planIdInfo, OnResponse: OnResponse);
+            DataManager.Instance.userInfo.email_id, planIdInfo);//, OnResponse: OnResponse);
     }
 
     void OnResponse(bool status, string orderId)
