@@ -71,7 +71,7 @@ public partial class APIHandler
                 AndroidJavaClass paymentActivity = new AndroidJavaClass ("com.phonatoto.cashfree.PaymentActivity");
                 paymentActivity.CallStatic ("doPayment", currentActivity, paramObj, response.token, response.stage);
 
-                OnResponse(status, response.orderId);
+                //OnResponse(status, response.orderId);
 
 #else
         //TODO: iOS is pending
