@@ -11,7 +11,7 @@ public class UserAuditionCell : MonoBehaviour
 
     SearchAudition auditionData;
 
-    UserAuditionMultimedia auditionMultimedia;
+    MultimediaModel auditionMultimedia;
 
     Action<SearchAudition> OnSelect;
 

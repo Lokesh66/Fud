@@ -38,8 +38,6 @@ public partial class APIHandler
 
     public void FetchAuditions(AuditionType type, Action<bool, string> action)
     {
-        Debug.LogError("FetchAuditions Called");
-
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
         string url = string.Empty;
@@ -191,39 +189,9 @@ public class JoinedAuditionsResponse
 }
 
 [Serializable]
-public class UserAuditionMultimedia
-{
-    public int id;
-    public int source_id;
-    public string source_type;
-    public string media_type;
-    public string content_url;
-    public string status;
-    public int content_id;
-    public object related_content_id;
-    public DateTime created_date_time;
-    public DateTime updated_date_time;
-
-
-    public EMediaType GetMediaType(string _mediaType)
-    {
-        EMediaType mediaType = EMediaType.Image;
-
-        switch (_mediaType)
-        {
-            case "image":
-                mediaType = EMediaType.Image;
-                break;
-            case "audio":
-                mediaType = EMediaType.Audio;
-                break;
-            case "video":
-                mediaType = EMediaType.Video;
-                break;
-        }
-
-        return mediaType;
-    }
+public class UserAuditionMultimedia : MultimediaModel
+{   
+    
 }
 
 [Serializable]
@@ -235,7 +203,7 @@ public class SearchAudition
     public string status;
     public DateTime created_date_time;
     public DateTime updatedAt;
-    public List<UserAuditionMultimedia> UserAuditionMultimedia;
+    public List<MultimediaModel> UserAuditionMultimedia;
 }
 
 [Serializable]

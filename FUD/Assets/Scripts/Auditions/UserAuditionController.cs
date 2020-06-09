@@ -160,6 +160,22 @@ public class UserAuditionController : MonoBehaviour
     void OnAuditionSelectAction(SearchAudition audition)
     {
         selectedAudition = audition;
+
+        MultimediaModel model = selectedAudition.UserAuditionMultimedia[0];
+
+        EMediaType mediaType = model.GetMediaType(model.media_type);
+
+        if (mediaType == EMediaType.Video)
+        {
+            VideoStreamer.Instance.StreamVideo(model.content_url, OnVideoComplete);
+        }
+        else {
+            buttonsPanel.SetActive(true);
+        }
+    }
+
+    void OnVideoComplete()
+    {
         buttonsPanel.SetActive(true);
     }
 

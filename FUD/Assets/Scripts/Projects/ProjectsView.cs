@@ -103,6 +103,6 @@ public class ProjectsView : BaseView
 
         currentObject?.SetActive(false);
 
-        currentTab = ETabType.Offers;
+        currentTab = ETabType.Offers; 
     }
 }

@@ -394,6 +394,7 @@ public class StoryModel
     public string description;
     public int type_id;
     public int genre_id;
+    public string story_poster;
     public int is_featured;
     public string status;
     public object created_date_time;
@@ -565,6 +566,27 @@ public class MultimediaModel
     public int related_content_id;
     public DateTime created_date_time;
     public DateTime updated_date_time;
+
+
+    public EMediaType GetMediaType(string _mediaType)
+    {
+        EMediaType mediaType = EMediaType.Image;
+
+        switch (_mediaType)
+        {
+            case "image":
+                mediaType = EMediaType.Image;
+                break;
+            case "audio":
+                mediaType = EMediaType.Audio;
+                break;
+            case "video":
+                mediaType = EMediaType.Video;
+                break;
+        }
+
+        return mediaType;
+    }
 }
 
 [Serializable]

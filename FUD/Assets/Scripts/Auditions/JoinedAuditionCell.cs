@@ -112,7 +112,6 @@ public class JoinedAuditionCell : MonoBehaviour
             parameters.Add("page", 0);
             parameters.Add("limit", 20);
             //
-            parameters.Add("status", "live");
 
             GameManager.Instance.apiHandler.SearchAuditions(parameters, (status, response) => {
                 if (status)

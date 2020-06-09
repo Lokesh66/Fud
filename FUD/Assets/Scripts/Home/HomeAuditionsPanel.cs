@@ -33,10 +33,7 @@ public class HomeAuditionsPanel : MonoBehaviour
 
     void SetView()
     {
-        foreach (Transform child in parentContent)
-        {
-            GameObject.Destroy(child.gameObject);
-        }
+        parentContent.DestroyChildrens();
 
         if (auditionsList == null)
         {
@@ -49,7 +46,7 @@ public class HomeAuditionsPanel : MonoBehaviour
 
             HomeCell homeItem = storyObject.GetComponent<HomeCell>();
 
-            homeItem.SetView(HomeCellType.AUDITION, i, auditionsList[i].title, OnAuditionSelectAction);
+            homeItem.SetView(HomeCellType.AUDITION, i, auditionsList[i].title, auditionsList[i].image_url, OnAuditionSelectAction);
         }
     }
 

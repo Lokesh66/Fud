@@ -21,7 +21,7 @@ public class HomeCell : MonoBehaviour
 
     System.Action<int> OnClick;
 
-    public void SetView(HomeCellType type, int index, string title, System.Action<int> onClick)
+    public void SetView(HomeCellType type, int index, string title, string url, System.Action<int> onClick)
     {
         this.index = index;
         OnClick = onClick;
@@ -42,8 +42,17 @@ public class HomeCell : MonoBehaviour
                 break;
             case HomeCellType.AUDITION:
                 addNewContent.SetActive(false);
+                UpdateImage(url);
                 titleText.text = title;
                 break;
+        }
+    }
+
+    void UpdateImage(string url)
+    {
+        if (!string.IsNullOrEmpty(url))
+        {
+
         }
     }
 

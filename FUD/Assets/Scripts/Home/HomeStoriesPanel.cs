@@ -43,11 +43,11 @@ public class HomeStoriesPanel : MonoBehaviour
 
             if (i == 0)
             {
-                homeItem.SetView(HomeCellType.DEFAULT, i - 1, "", OnStorySelectAction);
+                homeItem.SetView(HomeCellType.DEFAULT, i - 1, "", storiesList[i].story_poster, OnStorySelectAction);
             }
             else
             {
-                homeItem.SetView(HomeCellType.STORY, i - 1, storiesList[i - 1].title, OnStorySelectAction);
+                homeItem.SetView(HomeCellType.STORY, i - 1, storiesList[i - 1].title, storiesList[i - 1].story_poster, OnStorySelectAction);
             }
         }
     }

@@ -19,6 +19,8 @@ public class AuditionController : MonoBehaviour
     public AuditionType auditionType;
 
     public UserAuditionController userAuditionController;
+
+
     private void OnEnable()
     {
         GetAuditions();
