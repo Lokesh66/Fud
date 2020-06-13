@@ -30,6 +30,8 @@ public class CreateStoryVersion : MonoBehaviour
 
     public void Load(StoryVersionsView versionsView)
     {
+        Debug.Log("CreateStoryVersion : Load Called");
+
         gameObject.SetActive(true);
 
         this.versionsView = versionsView;
