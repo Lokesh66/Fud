@@ -103,6 +103,7 @@ public partial class APIHandler
     {
         gameManager.StartCoroutine(PostRequest(APIConstants.ALL_ACTIVE_AUDITIONS, true, parameters, action));
     }
+
     public void AcceptOrRejectAudition(int auditionId, int userAuditionId, int status, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -154,7 +155,10 @@ public class JoinedAudition
     public int id;
     public int audition_id;
     public int user_id;
-    public string status;
+    public int creater_id;
+    public int sender_status;
+    public int reciever_status;
+    public int status;
     public DateTime created_date_time;
     public DateTime updatedAt;
     public Audition Audition;
@@ -163,15 +167,21 @@ public class JoinedAudition
     {
         EAuditionStatus auditionStatus = EAuditionStatus.Review;
 
-        switch (status.ToLower())
+        bool isOwnAudition = DataManager.Instance.userInfo.id == creater_id;
+
+        int requiredStatus = isOwnAudition ? sender_status : reciever_status;
+
+        switch (requiredStatus)
         {
-            case "joined":
+            case 0:
+            case 2:
                 auditionStatus = EAuditionStatus.Review;
                 break;
-            case "selected":
+            case 3:
+            case 5:
                 auditionStatus = EAuditionStatus.ShortListed;
                 break;
-            case "rejected":
+            case 8:
                 auditionStatus = EAuditionStatus.Rejected;
                 break;
         }

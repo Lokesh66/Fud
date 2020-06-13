@@ -49,13 +49,8 @@ public class JoinedAuditionCell : MonoBehaviour
         }
     }
 
-    void SetStatus(string status)
+    void SetStatus(int status)
     {
-        if (string.IsNullOrEmpty(status))
-        {
-            tagImage.gameObject.SetActive(false);
-            return;
-        }
         tagImage.gameObject.SetActive(true);
 
         tagImage.sprite = GetStatusSprite(auditionData.GetAuditonStatus());
@@ -83,6 +78,7 @@ public class JoinedAuditionCell : MonoBehaviour
 
         return sprite;
     }
+
     public void OnClickAction()
     {
         AlertMessage.Instance.SetText("OnClickAction : "+auditionData.id, false);
@@ -93,47 +89,25 @@ public class JoinedAuditionCell : MonoBehaviour
             {
                 switch (index)
                 {
+                    case 8:
                     case 3:
-                        GalleryButtonsPanel.Instance.Load(MediaButtonAction);
-                        break;
-                    case 4:
-                        WithDrawAudition();
+                    case 5:
+                        UpdateAuditionStatus(index);
                         break;
 
-                    case 5:
+                    case 9://View
+                        auditionController.LoadAuditionDetails(auditionData.Audition);
+                        break;
+
+                    case 10:
+                        GalleryButtonsPanel.Instance.Load(MediaButtonAction);
+                        break;
+
+                    case 6:
                         RecordVideo();
                         break;
                 }
             }, auditionData.GetAuditonStatus()) ;
-        }else if (auditionType == AuditionType.Created)
-        {
-            Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("id", auditionData.id);
-            parameters.Add("page", 0);
-            parameters.Add("limit", 20);
-            //
-
-            GameManager.Instance.apiHandler.SearchAuditions(parameters, (status, response) => {
-                if (status)
-                {
-                    Debug.Log(response);
-
-                    SearchAuditionResponse auditionResponse = JsonUtility.FromJson<SearchAuditionResponse>(response);
-
-                    if (auditionResponse.data.Count > 0)
-                    {
-                        auditionController.SetUserAuditions(auditionResponse.data, auditionData.id);
-                    }
-                    else
-                    {
-                        AlertModel alertModel = new AlertModel();
-
-                        alertModel.message = "You have not received any audition responses";
-
-                        UIManager.Instance.ShowAlert(alertModel);
-                    }
-                }
-            });
         }
     }
 
@@ -416,6 +390,34 @@ public class JoinedAuditionCell : MonoBehaviour
         }
 
         endDate.text = "Entries close in " + string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+    }
+
+    void UpdateAuditionStatus(int statusIndex)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("id", auditionData.id);
+
+        parameters.Add("audition_id", auditionData.audition_id);
+
+        parameters.Add("status", statusIndex);
+
+        GameManager.Instance.apiHandler.UpdateJoinedAudition(parameters, (status, response) => {
+            if (status)
+            {
+                AlertModel alertModel = new AlertModel();
+                alertModel.message = "Audition Status updation success";
+                alertModel.okayButtonAction = Refresh;
+                alertModel.canEnableTick = true;
+                UIManager.Instance.ShowAlert(alertModel);
+            }
+            else
+            {
+                AlertModel alertModel = new AlertModel();
+                alertModel.message = "Audition Status updation failed";
+                UIManager.Instance.ShowAlert(alertModel);
+            }
+        });
     }
 }
 

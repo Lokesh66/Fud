@@ -134,7 +134,7 @@ public class StoryUpdateView : MonoBehaviour
 
     void OnSuccessResponse()
     {
-        storyCell.SetView(storyModel, ETabType.Created, storyCell.OnTapActon);
+        storyCell.SetView(storyModel, storyCell.OnTapActon);
 
         Destroy(gameObject);
 
@@ -167,21 +167,6 @@ public class StoryUpdateView : MonoBehaviour
         }
 
         return true;
-    }
-
-    void UpdateStoryModel()
-    {
-        string selectedGenreText = dropdown.options[dropdown.value].text;
-
-        Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
-
-        storyModel.title = storyTitleField.text;
-
-        storyModel.description = descriptionField.text;
-
-        storyModel.story_line = subTitleField.text;
-
-        storyModel.genre_id = selectedGenre.id;
     }
 
     public void OnScreenShotAction()

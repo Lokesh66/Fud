@@ -6,10 +6,6 @@ public class ProjectActivityPopUp : MonoBehaviour
 {
     //public Image storyImage;
 
-    public TextMeshProUGUI descriptionText;
-
-    public GameObject acceptObject;
-
     public GameObject rejectObject;
 
 
@@ -30,13 +26,7 @@ public class ProjectActivityPopUp : MonoBehaviour
 
         this.castPanel = castsPanel;
 
-        //descriptionText.text = activityModel.comment;
-
         currentUserId = DataManager.Instance.userInfo.id;
-
-        acceptObject.SetActive(currentUserId != activityModel.user_id);
-
-        rejectObject.SetActive(activityModel.cast_status != 8);
     }
 
     public void OnStatusUpdate(int statusIndex)
@@ -47,6 +37,7 @@ public class ProjectActivityPopUp : MonoBehaviour
             {
                 if (status)
                 {
+                    activityModel.cast_status = statusIndex;
                     castPanel.OnStatusApplied(activityModel);
                     gameObject.SetActive(false);
                 }
@@ -55,5 +46,12 @@ public class ProjectActivityPopUp : MonoBehaviour
         else {
             gameObject.SetActive(false);
         }
-    } 
+    }
+
+    public void OnGoToAuditionAction()
+    {
+        gameObject.SetActive(false);
+
+        ProjectsDetailedView.Instance.LoadAuditions();
+    }
 }

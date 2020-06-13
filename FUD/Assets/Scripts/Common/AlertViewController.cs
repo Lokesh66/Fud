@@ -1,12 +1,15 @@
-﻿using System;
-using UnityEngine;
-using TMPro;
+﻿using System.Collections.Generic;
 using UnityEngine.UI;
-using System.Collections.Generic;
+using UnityEngine;
+using System;
+using TMPro;
+
 
 public class AlertViewController : MonoBehaviour
 {
     public TextMeshProUGUI messageText;
+
+    public GameObject cancelButtonObject;
 
     public GameObject tickObject;
 
@@ -24,6 +27,8 @@ public class AlertViewController : MonoBehaviour
         tickObject.SetActive(alertModel.canEnableTick);
 
         gameObject.SetActive(true);
+
+        cancelButtonObject.SetActive(alertModel.canEnableCancelButton);
 
        // okayClick.onClick.AddListener(delegate { alertModel.okayButtonAction?.Invoke(); });
     }
@@ -48,6 +53,8 @@ public class AlertModel
     public string message;
 
     public bool canEnableTick = false;
+
+    public bool canEnableCancelButton = false;
 
     public List<string> buttonTitles;
 

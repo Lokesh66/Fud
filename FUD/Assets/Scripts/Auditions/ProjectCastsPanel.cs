@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+
 public class ProjectCastsPanel : MonoBehaviour
 {
     public Transform parentContent;
@@ -13,6 +14,7 @@ public class ProjectCastsPanel : MonoBehaviour
     int projectId;
     List<ProjectCast> casts = new List<ProjectCast>();
     List<ProjectCharacter> characters = new List<ProjectCharacter>();
+
 
     private void OnEnable()
     {
@@ -30,10 +32,7 @@ public class ProjectCastsPanel : MonoBehaviour
 
         this.casts = casts;
 
-        foreach(Transform t in parentContent)
-        {
-           GameObject.Destroy(t.gameObject);
-        }
+        parentContent.DestroyChildrens();
 
         if (casts != null && casts.Count > 0)
         {
@@ -92,9 +91,7 @@ public class ProjectCastsPanel : MonoBehaviour
     {
         int modelIndex = casts.IndexOf(projectCast);
 
-        Destroy(parentContent.GetChild(modelIndex).gameObject);
-
-        casts.Remove(projectCast);
+        parentContent.GetChild(modelIndex).GetComponent<ProjectCastCell>().SetView(modelIndex, projectCast, OnCellTapAction);
     }
 
     void EnableNodata()

@@ -1,11 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
 using UnityEngine.UI;
-using TMPro;
+using UnityEngine;
 using System;
+using TMPro;
+
 
 public class UserAuditionCell : MonoBehaviour
 {
-    public Image icon;
+    public RawImage icon;
     public TMP_Text titleText;
     public TMP_Text ageText;
 
@@ -14,6 +16,7 @@ public class UserAuditionCell : MonoBehaviour
     MultimediaModel auditionMultimedia;
 
     Action<SearchAudition> OnSelect;
+
 
     public void SetView(SearchAudition audition, Action<SearchAudition> action)
     {
@@ -29,18 +32,37 @@ public class UserAuditionCell : MonoBehaviour
 
             if (auditionData.UserAuditionMultimedia != null && auditionData.UserAuditionMultimedia.Count > 0)
             {
-                if (auditionMultimedia.GetMediaType(auditionMultimedia.media_type) == EMediaType.Image)
+                EMediaType mediaType = DataManager.Instance.GetMediaType(auditionMultimedia.media_type);
+
+                if (mediaType == EMediaType.Image)
                 {
                     GameManager.Instance.downLoadManager.DownloadImage(auditionData.UserAuditionMultimedia[0].content_url, (sprite) =>
                     {
-                        icon.sprite = sprite;
+                        //icon.texture = sprite;
                     });
                 }
-                else if (auditionMultimedia.GetMediaType(auditionMultimedia.media_type) == EMediaType.Video)
-                { 
-                    //Show the first frame of a video
-                }
             }
+        }
+    }
+
+    public void SetVideoThumbnail(Action OnNext)
+    {
+        EMediaType mediaType = DataManager.Instance.GetMediaType(auditionMultimedia.media_type);
+
+        if (mediaType == EMediaType.Video)
+        {
+            VideoStreamer.Instance.GetThumbnailImage(auditionData.UserAuditionMultimedia[0].content_url, (texture) =>
+            {
+                if (this != null)
+                {
+                    icon.texture = texture;
+
+                    OnNext?.Invoke();
+                }
+            });
+        }
+        else {
+            OnNext?.Invoke();
         }
     }
 

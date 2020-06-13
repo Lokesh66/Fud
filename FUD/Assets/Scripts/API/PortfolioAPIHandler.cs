@@ -350,18 +350,9 @@ public class PortMultimediaModels
 
 
 [Serializable]
-public class PortfolioAlbumModel
+public class PortfolioAlbumModel : MultimediaModel
 {
-    public int id;
     public int port_album_id;
-    public string source_type;
-    public string media_type;
-    public string content_url;
-    public string status;
-    public int content_id;
-    public object related_content_id;
-    public DateTime created_date_time;
-    public DateTime updated_date_time;
 }
 
 [Serializable]

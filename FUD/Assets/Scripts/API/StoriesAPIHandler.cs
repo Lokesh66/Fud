@@ -50,7 +50,7 @@ public partial class APIHandler
         }));
     }
 
-    public void GetAlteredStories(Action<bool, List<StoryModel>> action)
+    public void GetAlteredStories(Action<bool, List<StoryAlteredModel>> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -58,7 +58,7 @@ public partial class APIHandler
 
         gameManager.StartCoroutine(PostRequest(APIConstants.GET_ALTERED_STORIES, true, parameters, (status, response) => {
 
-            StoriesResponse stories = JsonUtility.FromJson<StoriesResponse>(response);
+            StoriesAlteredResponse stories = JsonUtility.FromJson<StoriesAlteredResponse>(response);
 
             action(status, stories.data);
         }));
@@ -679,6 +679,8 @@ public class StoryVersions
     public int project_id;
     public DateTime created_date_time;
     public DateTime updated_date_time;
+
+    public List<MultimediaModel> Multimedia;
 }
 
 [Serializable]
@@ -763,4 +765,29 @@ public class FileUploadModel
 public class FileUploadResponseModel : BaseResponse
 {
     public FileUploadModel data;
+}
+
+[Serializable]
+public class StoryAlteredModel
+{
+    public int id;
+    public string title;
+    public int posted_to;
+    public int story_id;
+    public int story_version_id;
+    public int source_id;
+    public string source_type;
+    public int user_id;
+    public object comment;
+    public int sender_status;
+    public int reciever_status;
+    public DateTime created_date_time;
+    public DateTime updatedAt;
+    public StoryVersion StoryVersions;
+}
+
+[Serializable]
+public class StoriesAlteredResponse : BaseResponse
+{
+    public List<StoryAlteredModel> data;
 }

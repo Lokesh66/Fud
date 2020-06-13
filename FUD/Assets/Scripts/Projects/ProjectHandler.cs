@@ -14,6 +14,7 @@ public class ProjectHandler : MonoBehaviour
 
     List<Project> projectModels;
 
+
     public void Load()
     {
         gameObject.SetActive(true);
@@ -145,6 +146,7 @@ public class ProjectHandler : MonoBehaviour
                     Debug.Log("OnAddButtonAction : " + response);
 
                     ProjectStoriesResponse stories = JsonUtility.FromJson<ProjectStoriesResponse>(response);
+
                     if (stories.data != null && stories.data.Count > 0)
                     {
                         ProjectCreationView.Instance.SetView(stories.data, (isProjectAdded) =>
@@ -154,6 +156,13 @@ public class ProjectHandler : MonoBehaviour
                                 GetAllProjects();
                             }
                         });
+                    }
+                    else {
+                        AlertModel alertModel = new AlertModel();
+
+                        alertModel.message = "You don't have enough stories to create a project.";
+
+                        UIManager.Instance.ShowAlert(alertModel);
                     }
                 }
             });

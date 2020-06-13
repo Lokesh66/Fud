@@ -170,4 +170,60 @@ public class VideoStreamer : MonoBehaviour
 
         sequence.Play();
     }
+
+    Action<Texture> OnFirstFrameReady;
+
+    public void GetThumbnailImage(string videoURL, Action<Texture> action)
+    {
+        if (videoPlayer == null)
+        {
+            Init();
+        }
+
+        videoPlayer.sendFrameReadyEvents = true;
+
+        videoPlayer.frameReady += OnFirstFrame;
+
+        this.OnFirstFrameReady = action;
+
+        videoPlayer.url = videoURL;
+
+        videoPlayer.time = 0;
+
+        videoPlayer.Play();
+
+        videoPlayer.frame = 0;
+    }
+
+    Texture2D videoFrame;
+
+    void OnFirstFrame(VideoPlayer source, long frameIdx)
+    {
+        Debug.Log("OnFirstFrame Called");
+
+        videoFrame = new Texture2D(2, 2);
+
+        RenderTexture renderTexture = source.texture as RenderTexture;
+
+        if (videoFrame.width != renderTexture.width || videoFrame.height != renderTexture.height)
+        {
+            videoFrame.Resize(renderTexture.width, renderTexture.height);
+        }
+
+        RenderTexture.active = renderTexture;
+
+        videoFrame.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+
+        videoFrame.Apply();
+
+        source.frameReady -= OnFirstFrame;
+
+        source.sendFrameReadyEvents = false;
+
+        StopVideo();
+
+        RenderTexture.active = null;
+
+        OnFirstFrameReady?.Invoke(videoFrame);
+    }
 }

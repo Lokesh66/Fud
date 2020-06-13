@@ -58,7 +58,7 @@ public class ProjectBrowserView : MonoBehaviour
             {
                 GameObject mediaObject = Instantiate(mediaCell, content);
 
-                mediaObject.GetComponent<CreatedPortfolioMediaCell>().SetView(albumModels[i].content_url);
+                mediaObject.GetComponent<CreatedPortfolioMediaCell>().SetView(albumModels[i], null);
             }
         }
     }

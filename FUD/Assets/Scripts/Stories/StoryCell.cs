@@ -9,8 +9,6 @@ public class StoryCell : MonoBehaviour
 {
     public RectTransform rectTransform;
 
-    public RectTransform editStoryTrans;
-
     public TextMeshProUGUI titleText;
 
     public TextMeshProUGUI description;
@@ -21,32 +19,31 @@ public class StoryCell : MonoBehaviour
 
     public GameObject editObject;
 
+    public GameObject statusTag;
+
     public Image storyImage;
 
-    public SwipeButtonsHelper swipeHelper;
 
     StoryModel storyModel;
 
-    public Action<object> OnTapActon;
-
     ScrollRect scrollRect;
+
+    public Action<int> OnTapActon;
 
     Vector2 startPoint;
 
 
-    public void SetView(StoryModel storyModel, ETabType tabType, Action<object> tapAction = null)
+    public void SetView(StoryModel storyModel, Action<int> tapAction = null)
     {
         this.storyModel = storyModel;
 
         this.OnTapActon = tapAction;
 
-        swipeHelper.cellButtonAction = OnButtonAction;
-
         titleText.text = storyModel.title;
 
         description.text = storyModel.description;
 
-        editObject.SetActive(tabType == ETabType.Created);
+        editObject.SetActive(true);
 
         //SetImage();
     }

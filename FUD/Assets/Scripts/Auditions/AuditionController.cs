@@ -18,6 +18,8 @@ public class AuditionController : MonoBehaviour
 
     public AuditionType auditionType;
 
+    public AuditionDetailView detailView;
+
     public UserAuditionController userAuditionController;
 
 
@@ -28,10 +30,8 @@ public class AuditionController : MonoBehaviour
 
     public void Load(List<Audition> auditions)
     {
-        foreach (Transform child in content)
-        {
-            GameObject.Destroy(child.gameObject);
-        }
+        content.DestroyChildrens();
+
         if (auditions != null && auditions.Count > 0)
         {
             noDataView.gameObject.SetActive(false);
@@ -52,10 +52,8 @@ public class AuditionController : MonoBehaviour
 
     public void Load(List<JoinedAudition> auditions)
     {
-        foreach (Transform child in content)
-        {
-            GameObject.Destroy(child.gameObject);
-        }
+        content.DestroyChildrens();
+
         if (auditions != null && auditions.Count > 0)
         {
             noDataView.gameObject.SetActive(false);
@@ -98,7 +96,7 @@ public class AuditionController : MonoBehaviour
 
             if (status)
             {
-                if (auditionType == AuditionType.Live)
+                if (auditionType == AuditionType.Live || auditionType == AuditionType.Created)
                 {
                     AuditionsResponse auditionsResponse = JsonUtility.FromJson<AuditionsResponse>(response);
                     Load(auditionsResponse.data);
@@ -159,6 +157,11 @@ public class AuditionController : MonoBehaviour
         }
 
         return noDataModel;
+    }
+
+    public void LoadAuditionDetails(Audition auditionModel)
+    {
+        detailView.Load(auditionModel);
     }
 }
 

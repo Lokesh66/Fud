@@ -16,6 +16,10 @@ public class UpdateStoryVersionView : MonoBehaviour
 
     public RectTransform galleryPanel;
 
+    public GameObject mediaCell;
+
+    public RectTransform mediaContent;
+
 
     List<Genre> genres;
 
@@ -29,9 +33,11 @@ public class UpdateStoryVersionView : MonoBehaviour
 
     StoryVersionDetailModel storyVersionDetail;
 
-    List<MultimediaModel> mediaList;
+    List<MultimediaModel> mediaList = new List<MultimediaModel>();
 
     bool isShowingGalleryPanel = false;
+
+    List<UpdateVersionMediaCell> mediaCells = new List<UpdateVersionMediaCell>();
 
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
 
@@ -69,7 +75,7 @@ public class UpdateStoryVersionView : MonoBehaviour
 
         PopulateDropdown();
 
-        SetMediaView();
+        LoadMedia();
     }
 
     void PopulateDropdown()
@@ -94,28 +100,100 @@ public class UpdateStoryVersionView : MonoBehaviour
         roledropDown.value = roledropDown.options.FindIndex(option => options.Equals(selectedGenre.name));
     }
 
-    void SetMediaView()
+    void LoadMedia()
     {
-        if (mediaList != null && mediaList.Count > 0)
+        mediaContent.DestroyChildrens();
+
+        UpdateVersionMediaCell _mediaCell = null;
+
+        mediaCells.Clear();
+
+        for (int i = 0; i < mediaList.Count; i++)
         {
-            string[] imageURLs = new string[mediaList.Count];
+            GameObject mediaObject = Instantiate(mediaCell, mediaContent);
 
-            int imageIndex = 0;
+            _mediaCell = mediaObject.GetComponent<UpdateVersionMediaCell>();
 
-            for (int i = 0; i < mediaList.Count; i++)
-            {
-                if (mediaList[i].media_type == "image")
-                {
-                    imageURLs[imageIndex] = mediaList[i].content_url;
+            _mediaCell.SetView(mediaList[i], OnDeleteMediaAction);
 
-                    imageIndex++;
-                }
-            }
+            UpdateMediaDict(mediaList[i]);
 
-            filesHandler.Load(imageURLs, true);
+            mediaCells.Add(_mediaCell);
+        }
+
+        if (mediaList.Count > 0)
+        {
+            SetVideoThumbnails(0);
         }
     }
 
+    void SetVideoThumbnails(int index)
+    {
+        mediaCells[index].SetVideoThumbnail(() => {
+
+            index++;
+
+            if (index >= mediaList.Count)
+            {
+                return;
+            }
+
+            SetVideoThumbnails(index);
+        });
+    }
+
+    void UpdateMediaDict(MultimediaModel model)
+    {
+        Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+        kvp.Add("content_id", 1);
+
+        kvp.Add("content_url", model.content_url);
+
+        kvp.Add("media_type", model.media_type);
+
+        uploadedDict.Add(kvp);
+    }
+
+    void OnDeleteMediaAction(MultimediaModel multimediaModel)
+    {
+        string url = string.Empty;
+
+        bool isItemRemoved = false;
+
+        int modelIndex = mediaList.IndexOf(multimediaModel);
+
+        Destroy(mediaContent.GetChild(modelIndex).gameObject);
+
+        foreach (var item in uploadedDict)
+        {
+            Dictionary<string, object> mediaItem = item as Dictionary<string, object>;
+
+            foreach (var kvp in mediaItem)
+            {
+                if (kvp.Key.Equals("content_url"))
+                {
+                    url = kvp.Value as string;
+
+                    if (url.Equals(multimediaModel.content_url))
+                    {
+                        uploadedDict.Remove(mediaItem);
+
+                        isItemRemoved = true;
+
+                        break;
+                    }
+                }
+            }
+
+            if (isItemRemoved)
+            {
+                break;
+            }
+        }
+
+        mediaList.Remove(multimediaModel);
+    }
 
     public void OnMediaButtonAction(int mediaType)
     {
@@ -240,17 +318,27 @@ public class UpdateStoryVersionView : MonoBehaviour
         {
             this.imageUrls = imageUrls;
 
+            MultimediaModel model = null;
+
             filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
 
             for (int i = 0; i < imageUrls.Count; i++)
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();
 
+                model = new MultimediaModel();
+
                 kvp.Add("content_id", 1);
 
                 kvp.Add("content_url", imageUrls[i]);
 
                 kvp.Add("media_type", "image");
+
+                model.media_type = "image";
+
+                model.content_url = imageUrls[i];
+
+                mediaList.Add(model);
 
                 uploadedDict.Add(kvp);
             }
@@ -269,17 +357,29 @@ public class UpdateStoryVersionView : MonoBehaviour
     {
         if (status)
         {
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Audio);
+
+            MultimediaModel model = null;
+
             this.imageUrls = audioUrls;
 
             for (int i = 0; i < audioUrls.Count; i++)
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();
 
+                model = new MultimediaModel();
+
                 kvp.Add("content_id", 1);
 
                 kvp.Add("content_url", audioUrls[i]);
 
                 kvp.Add("media_type", "audio");
+
+                model.media_type = "audio";
+
+                model.content_url = audioUrls[i];
+
+                mediaList.Add(model);
 
                 uploadedDict.Add(kvp);
             }
@@ -298,17 +398,29 @@ public class UpdateStoryVersionView : MonoBehaviour
     {
         if (status)
         {
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Video);
+
+            MultimediaModel model = null;
+
             this.imageUrls = videoUrls;
 
             for (int i = 0; i < videoUrls.Count; i++)
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();
 
+                model = new MultimediaModel();
+
                 kvp.Add("content_id", 1);
 
                 kvp.Add("content_url", videoUrls[i]);
 
                 kvp.Add("media_type", "video");
+
+                model.media_type = "video";
+
+                model.content_url = videoUrls[i];
+
+                mediaList.Add(model);
 
                 uploadedDict.Add(kvp);
             }

@@ -82,7 +82,7 @@ public class StoryDetailsController : MonoBehaviour
 
     System.Action BackAction;
 
-    public void Load(object storyId, System.Action onBackAction)
+    public void Load(int storyId, System.Action onBackAction)
     {
         tabScrollRect.horizontalNormalizedPosition = 0.0f;
 
@@ -112,8 +112,6 @@ public class StoryDetailsController : MonoBehaviour
                 onBackAction?.Invoke();
             }
         });
-
-
     }
 
     public void EnableView(StoryDetailsModel detailsModel)
@@ -203,7 +201,6 @@ public class StoryDetailsController : MonoBehaviour
 
     void GetStoryDetails()
     {
-        Debug.Log("GetStoryDetails Called");
         currentDetailsModel.SetDetailsScreenModel();
 
         currentObject = storyDetailsView.gameObject;
@@ -215,7 +212,7 @@ public class StoryDetailsController : MonoBehaviour
     {
         currentObject = versionsView.gameObject;
 
-        versionsView.EnableView(currentDetailsModel.StoryVersions);
+        versionsView.EnableView(currentDetailsModel.StoryVersions, this);
     }
 
     void ShowCharactersScreen()

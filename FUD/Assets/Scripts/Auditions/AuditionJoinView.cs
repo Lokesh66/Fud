@@ -28,19 +28,17 @@ public class AuditionJoinView : MonoBehaviour
 
     public GameObject parentPanel;
 
-    public TextMeshProUGUI title;
-
-    public TextMeshProUGUI description;
-
-    public Image statusImage;
-
-    public Image icon;
-
     public GameObject joinButton;
+
+    public GameObject acceptObject;
+
+    public GameObject shortListObject;
 
     public TMP_Text joinButtonText;
 
     public GameObject withdrawButton;
+
+    public GameObject recordObject;
 
     public Sprite reviewSprite;
 
@@ -50,6 +48,8 @@ public class AuditionJoinView : MonoBehaviour
 
 
     System.Action<int> buttonAction;
+
+
     public void Load(Audition audition,bool isJoined, System.Action<int> action, EAuditionStatus auditionStatus = EAuditionStatus.None)
     {
         Debug.LogError("Audition Detail Page Loaded");
@@ -58,21 +58,9 @@ public class AuditionJoinView : MonoBehaviour
         //joinButton.SetActive(!isJoined);
         joinButtonText.text = isJoined ? "Update" : "Join";
         withdrawButton.SetActive(isJoined);
-        statusImage.gameObject.SetActive(isJoined);
-        title.text = audition.title;
-        description.text = audition.description;
-
-        if (isJoined)
-        {
-            statusImage.sprite = GetStatusSprite(auditionStatus);
-        }
-
-        GameManager.Instance.downLoadManager.DownloadImage(audition.image_url, (sprite) => {
-            if (sprite != null)
-            {
-                icon.sprite = sprite;
-            }
-        });
+        recordObject.SetActive(!isJoined);
+        acceptObject.SetActive(isJoined);
+        shortListObject.SetActive(isJoined);
         buttonAction = action;
     }
 

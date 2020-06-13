@@ -281,6 +281,7 @@ public class ProjectCast
     public int recurring_payment;
     public DateTime created_date_time;
     public DateTime updatedAt;
+    public ProjectCharacterModel StoryCharacters;
 }
 
 [Serializable]
@@ -416,4 +417,15 @@ public class SceneResponse : BaseResponse
 public class ProjectBrowserResponse : BaseResponse
 {
     public PortfolioModel data;
+}
+
+[Serializable]
+public class ProjectCharacterModel : StoryCharacterModel
+{
+    public object project_cast_id;
+    public int project_id;
+    public object estimated_working_days;
+    public int project_status;
+    public string status;
+    public int story_version_id;
 }

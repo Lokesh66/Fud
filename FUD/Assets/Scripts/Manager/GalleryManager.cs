@@ -108,6 +108,8 @@ public class GalleryManager : MonoBehaviour
 
                 selectedImagesCount = audiosPaths.Length;
 
+                loadedFiles = audiosPaths;
+
                 for (int i = 0; i < audiosPaths.Length; i++)
                 {
                     UploadFile(audiosPaths[i], EMediaType.Audio);
@@ -125,6 +127,8 @@ public class GalleryManager : MonoBehaviour
                 this.OnUploaded = OnUploaded;
 
                 selectedImagesCount = videoPaths.Length;
+
+                loadedFiles = videoPaths;
 
                 for (int i = 0; i < videoPaths.Length; i++)
                 {

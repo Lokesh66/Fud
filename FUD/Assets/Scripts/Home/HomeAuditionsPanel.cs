@@ -62,7 +62,7 @@ public class HomeAuditionsPanel : MonoBehaviour
         {
             switch (_index)
             {
-                case 3:
+                case 10:
                     GalleryButtonsPanel.Instance.Load(MediaButtonAction);
                     break;
             }

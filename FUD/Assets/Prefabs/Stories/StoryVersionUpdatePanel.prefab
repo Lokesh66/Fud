@@ -1881,6 +1881,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5318918863534824087}
   - component: {fileID: 5699231361868029522}
+  - component: {fileID: 4126947870729904103}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -1932,6 +1933,20 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
+--- !u!114 &4126947870729904103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5174727872806949649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 2
+  m_VerticalFit: 0
 --- !u!1 &5499095115320114081
 GameObject:
   m_ObjectHideFlags: 0
@@ -2944,7 +2959,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1256075314835979681
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3020,6 +3035,9 @@ MonoBehaviour:
   roledropDown: {fileID: 7571150520842658006}
   descriptionField: {fileID: 287457214859415932}
   galleryPanel: {fileID: 6663704549478432951}
+  mediaCell: {fileID: 5539595678095660358, guid: 255f9efb7a0874c96aac44e3734d5a27,
+    type: 3}
+  mediaContent: {fileID: 5318918863534824087}
 --- !u!1 &8192974703114388439
 GameObject:
   m_ObjectHideFlags: 0
@@ -3608,11 +3626,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5509101816997158580, guid: 8e0a1324c7ff6de45b858aad67c96a56,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1722225883252065989}
     - target: {fileID: 5217018323505178821, guid: 8e0a1324c7ff6de45b858aad67c96a56,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -3628,6 +3641,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5509101816997158580, guid: 8e0a1324c7ff6de45b858aad67c96a56,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1722225883252065989}
     - target: {fileID: 7808532153612490291, guid: 8e0a1324c7ff6de45b858aad67c96a56,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

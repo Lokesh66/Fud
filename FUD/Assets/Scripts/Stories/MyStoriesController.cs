@@ -7,7 +7,7 @@ public class MyStoriesController : BaseView
 
     public StoryActivitiesView activitiesView;
 
-    public MyStoriesView alteredView;
+    public StoriesAlteredView alteredView;
 
     public MyStoriesView storiesView;
 
@@ -103,7 +103,7 @@ public class MyStoriesController : BaseView
 
             case ETabType.Altered:
                 currentObject = alteredView.gameObject;
-                alteredView.EnableView(this);
+                alteredView.EnableView();
                 break;
 
             case ETabType.Created:

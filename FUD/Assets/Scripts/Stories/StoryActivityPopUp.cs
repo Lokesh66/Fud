@@ -12,6 +12,8 @@ public class StoryActivityPopUp : MonoBehaviour
 
     public StoryActivitiesView activitiesView;
 
+    public VersionMultimediaView multimediaView;
+
 
     StoryActivityModel activityModel;
 
@@ -54,5 +56,16 @@ public class StoryActivityPopUp : MonoBehaviour
             OnClose?.Invoke(statusIndex);
             gameObject.SetActive(false);
         }
-    } 
+    }
+
+    public void OnViewButtonAction()
+    {
+        gameObject.SetActive(false);
+
+        StoryVersion storyVersion = new StoryVersion();
+
+        storyVersion.id = activityModel.id;
+
+        multimediaView.Load(storyVersion);
+    }
 }

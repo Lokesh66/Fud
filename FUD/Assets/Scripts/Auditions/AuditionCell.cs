@@ -9,6 +9,7 @@ public class AuditionCell : MonoBehaviour
     public Image icon;
     public TMP_Text titleText;
     public TMP_Text ageText;
+    public TMP_Text rateOfPayText;
 
     Audition auditionData;
     AuditionController auditionController;
@@ -21,10 +22,14 @@ public class AuditionCell : MonoBehaviour
         auditionData = audition;
         this.auditionController = auditionController;
         auditionType = auditionController.auditionType;
+
         if (auditionData != null)
         {
             titleText.text = auditionData.topic;
-            ageText.text = auditionData.age_to.ToString();
+
+            ageText.text = "Age : " + auditionData.age_to.ToString();
+
+            rateOfPayText.text = "Budget : " + auditionData.rate_of_pay;
 
             GameManager.Instance.downLoadManager.DownloadImage(auditionData.image_url, (sprite) => {
                 icon.sprite = sprite;
@@ -34,21 +39,63 @@ public class AuditionCell : MonoBehaviour
 
     public void OnClickAction()
     {
-        Debug.Log("OnClickAction ");
-        AuditionJoinView.Instance.Load(auditionData, false, (index) => {
-            switch (index)
+        if (auditionType == AuditionType.Created)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("id", auditionData.id);
+            parameters.Add("page", 0);
+            parameters.Add("limit", 20);
+
+            GameManager.Instance.apiHandler.SearchAuditions(parameters, (status, response) =>
             {
-                case 3:
-                    GalleryButtonsPanel.Instance.Load(MediaButtonAction);
-                    break;
-                case 4:
-                    WithDrawAudition();
-                    break;
-                case 5:
-                    RecordVideo();
-                    break;
-            }
-        });
+
+                if (status)
+                {
+                    Debug.Log(response);
+
+                    SearchAuditionResponse auditionResponse = JsonUtility.FromJson<SearchAuditionResponse>(response);
+
+                    if (auditionResponse.data.Count > 0)
+                    {
+                        auditionController.SetUserAuditions(auditionResponse.data, auditionData.id);
+                    }
+                    else
+                    {
+                        AlertModel alertModel = new AlertModel();
+
+                        alertModel.message = "You have not received any audition responses";
+
+                        UIManager.Instance.ShowAlert(alertModel);
+                    }
+                }
+            });
+        }
+        else
+        {
+            AuditionJoinView.Instance.Load(auditionData, false, (index) =>
+            {
+                switch (index)
+                {
+                    case 8:
+                    case 3:
+                    case 5:
+                        UpdateAuditionStatus(index);
+                        break;
+
+                    case 9://View
+                        auditionController.LoadAuditionDetails(auditionData);
+                        break;
+
+                    case 10:
+                        GalleryButtonsPanel.Instance.Load(MediaButtonAction);
+                        break;
+
+                    case 11:
+                        RecordVideo();
+                        break;
+                }
+            });
+        }
     }
 
     void RecordVideo()
@@ -206,7 +253,7 @@ public class AuditionCell : MonoBehaviour
         //parameters.Add("audition_id", auditionData.id);
         parameters.Add("id", auditionData.project_id);
         //parameters.Add("user_id", DataManager.Instance.userInfo.id);
-        parameters.Add("port_album_media", uploadedDict);
+        parameters.Add("pro_multi_media", uploadedDict);
 
         GameManager.Instance.apiHandler.UpdateJoinedAudition(parameters, (status, response) => {
 
@@ -229,19 +276,19 @@ public class AuditionCell : MonoBehaviour
         });
     }
 
-    void WithDrawAudition()
+    void UpdateAuditionStatus(int statusIndex)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
-        //parameters.Add("audition_id", auditionData.id);
+
         parameters.Add("id", auditionData.project_id);
-        //parameters.Add("user_id", DataManager.Instance.userInfo.id);
-        parameters.Add("status", "inactive");
+
+        parameters.Add("status", statusIndex);
 
         GameManager.Instance.apiHandler.UpdateJoinedAudition(parameters, (status, response) => {
             if (status)
             {
                 AlertModel alertModel = new AlertModel();
-                alertModel.message = "Audition Deleted Successfully";
+                alertModel.message = "Audition Status updation success";
                 alertModel.okayButtonAction = Refresh;
                 alertModel.canEnableTick = true;
                 UIManager.Instance.ShowAlert(alertModel);
@@ -249,7 +296,7 @@ public class AuditionCell : MonoBehaviour
             else
             {
                 AlertModel alertModel = new AlertModel();
-                alertModel.message = "Deleting Audition Failed";
+                alertModel.message = "Audition Status updation failed";
                 UIManager.Instance.ShowAlert(alertModel);
             }
         });

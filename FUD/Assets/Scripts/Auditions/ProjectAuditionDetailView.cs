@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 
-public class AuditionDetailsView : MonoBehaviour
+public class ProjectAuditionDetailView : MonoBehaviour
 {
     public TextMeshProUGUI description;
 

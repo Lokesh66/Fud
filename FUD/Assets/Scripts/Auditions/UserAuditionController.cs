@@ -43,6 +43,12 @@ public class UserAuditionController : MonoBehaviour
 
     Action<bool> OnBack;
 
+    List<string> videoURLs = new List<string>();
+
+    List<UserAuditionCell> liveCellsList = new List<UserAuditionCell>();
+
+    List<UserAuditionCell> shortListedCellsList = new List<UserAuditionCell>();
+
     int auditionId;
 
     public void SetView(List<SearchAudition> auditions, int auditionId, Action<bool> OnBack)
@@ -105,7 +111,8 @@ public class UserAuditionController : MonoBehaviour
     {
         if (activeContent.childCount > 0)
             return;
-       
+
+        liveCellsList.Clear();
 
         for (int i = 0; i < activeAuditions.Count; i++)
         {
@@ -114,7 +121,29 @@ public class UserAuditionController : MonoBehaviour
             UserAuditionCell item = storyObject.GetComponent<UserAuditionCell>();
 
             item.SetView(activeAuditions[i], OnAuditionSelectAction);
+
+            liveCellsList.Add(item);
         }
+
+        if (activeAuditions.Count > 0)
+        {
+            SetLiveVideoThumbnails(0);
+        }
+    }
+
+    void SetLiveVideoThumbnails(int index)
+    {
+        liveCellsList[index].SetVideoThumbnail(() => {
+
+            index++;
+
+            if (index >= activeAuditions.Count)
+            {
+                return;
+            }
+
+            SetLiveVideoThumbnails(index);
+        });
     }
 
     void LoadShortListedAuditions()
@@ -145,15 +174,39 @@ public class UserAuditionController : MonoBehaviour
         }
     }
 
+    void SetShortListedVideoThumbnails(int index)
+    {
+        shortListedCellsList[index].SetVideoThumbnail(() => {
+
+            index++;
+
+            if (index >= shortListedAudtions.Count)
+            {
+                return;
+            }
+
+            SetShortListedVideoThumbnails(index);
+        });
+    }
+
     void UpdateShortListedView()
     {
+        shortListedCellsList.Clear();
+
         for (int i = 0; i < shortListedAudtions.Count; i++)
         {
             GameObject storyObject = Instantiate(userAuditionCell, shortListedContent);
 
             UserAuditionCell item = storyObject.GetComponent<UserAuditionCell>();
 
-            item.SetView(activeAuditions[i], OnAuditionSelectAction);
+            item.SetView(shortListedAudtions[i], OnAuditionSelectAction);
+
+            shortListedCellsList.Add(item);
+        }
+
+        if (shortListedAudtions.Count > 0)
+        {
+            SetShortListedVideoThumbnails(0);
         }
     }
 
@@ -169,7 +222,12 @@ public class UserAuditionController : MonoBehaviour
         {
             VideoStreamer.Instance.StreamVideo(model.content_url, OnVideoComplete);
         }
-        else {
+        if (mediaType == EMediaType.Audio)
+        {
+            AudioStreamer.Instance.AudioStream(model.content_url, OnVideoComplete);
+        }
+        else
+        {
             buttonsPanel.SetActive(true);
         }
     }

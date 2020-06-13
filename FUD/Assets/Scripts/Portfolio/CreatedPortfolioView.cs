@@ -25,11 +25,13 @@ public class CreatedPortfolioView : MonoBehaviour
 
         for (int i = 0; i < portfolioModel.PortfolioMedia.Count; i++)
         {
-            if (portfolioModel.PortfolioMedia[i].media_type == "image")
+            EMediaType mediaType = DataManager.Instance.GetMediaType(portfolioModel.PortfolioMedia[i].media_type);
+
+            if (mediaType == EMediaType.Image)
             {
                 GameObject mediaObject = Instantiate(mediaCell, content);
 
-                mediaObject.GetComponent<CreatedPortfolioMediaCell>().SetView(portfolioModel.PortfolioMedia[i].content_url);
+                mediaObject.GetComponent<CreatedPortfolioMediaCell>().SetView(portfolioModel.PortfolioMedia[i], OnDeleteAction);
             }
         }
     }
@@ -37,5 +39,10 @@ public class CreatedPortfolioView : MonoBehaviour
     public void OnBackAction()
     {
         gameObject.SetActive(false);
+    }
+
+    void OnDeleteAction(PortfolioAlbumModel albumModel)
+    {
+
     }
 }

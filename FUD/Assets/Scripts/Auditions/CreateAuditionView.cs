@@ -156,6 +156,7 @@ public class CreateAuditionView : MonoBehaviour
         parentPanel.gameObject.SetActive(false);
         backAction?.Invoke(isNewAuditionCreated);
         backAction = null;
+        ClearData();
     }
 
     public void UploadImageAction()
@@ -374,6 +375,7 @@ public class CreateAuditionView : MonoBehaviour
             UIManager.Instance.ShowAlert(alertModel);
             return;
         }
+
         GameManager.Instance.apiHandler.ModifyAudition(parameters, (status, response) =>
         {
             Debug.Log("ModifyAudition : " + response);
@@ -393,5 +395,16 @@ public class CreateAuditionView : MonoBehaviour
                 UIManager.Instance.ShowAlert(alertModel);
             }
         });
+    }
+
+    void ClearData()
+    {
+        typeDropdown.value = 0;
+
+        payAmountText.text = titleText.text = topicText.text = membersText.text = string.Empty;
+
+        ageFromText.text = ageToText.text = string.Empty;
+
+        endDateText.text = descriptionText.text = string.Empty;
     }
 }

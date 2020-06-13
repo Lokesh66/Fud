@@ -37,9 +37,11 @@ public class ProjectsDetailedView : MonoBehaviour
     public ProjectAuditionsPanel auditionsPanel;
     public ProjectScenesPanel scenesPanel;
 
-    public AuditionDetailsView auditionDetails;
+    public ProjectAuditionDetailView auditionDetails;
 
     public UserAuditionController userAuditionController;
+
+    public List<Toggle> tabToggles;
 
 
     System.Action OnBackButtonClick;
@@ -64,8 +66,8 @@ public class ProjectsDetailedView : MonoBehaviour
         castsPanel.SetData(project.id, project.Project_cast);
         auditionsPanel.SetData(project.id, project.Audition);
         scenesPanel.SetData(project, project.StoryScenes);
-
     }
+
     public void Reload()
     {
         GameManager.Instance.apiHandler.GetProjectDetails(project.id, (status, project) =>
@@ -99,5 +101,10 @@ public class ProjectsDetailedView : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         tabsLayoutGroup.enabled = true;
+    }
+
+    public void LoadAuditions()
+    {
+        tabToggles[3].isOn = true;
     }
 }

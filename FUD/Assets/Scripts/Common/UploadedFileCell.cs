@@ -13,8 +13,13 @@ public class UploadedFileCell : MonoBehaviour
     public TextMeshProUGUI size2Text;
 
 
-    public void Load(string imagePath, bool isDownloadedImage)
+    public GameObject pauseObject;
+
+
+    public void Load(string imagePath, bool isDownloadedImage, EMediaType mediaType)
     {
+        pauseObject.SetActive(mediaType == EMediaType.Video);
+
         if (isDownloadedImage)
         {
             GameManager.Instance.downLoadManager.DownloadImage(imagePath, (sprite) => {
@@ -23,11 +28,14 @@ public class UploadedFileCell : MonoBehaviour
             });
         }
         else {
-            Texture2D texture = NativeGallery.LoadImageAtPath(imagePath, markTextureNonReadable: false);
+            if (mediaType == EMediaType.Image)
+            {
+                Texture2D texture = NativeGallery.LoadImageAtPath(imagePath, markTextureNonReadable: false);
 
-            TextureScale.ThreadedScale(texture, 300, 400, true);
+                TextureScale.ThreadedScale(texture, 300, 400, true);
 
-            selectedImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                selectedImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            }
         }
     }
 }

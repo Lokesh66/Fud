@@ -33,17 +33,6 @@ public class MyStoriesView : MonoBehaviour
                 }
             });
         }
-        else {
-            GameManager.Instance.apiHandler.GetAlteredStories((status, storiesList) =>
-            {
-                if (status)
-                {
-                    this.storiesList = storiesList;
-
-                    SetView();
-                }
-            });
-        }
     }
 
     public void EnableView(MyStoriesController storiesController)
@@ -69,13 +58,7 @@ public class MyStoriesView : MonoBehaviour
             {
                 GameObject storyObject = Instantiate(storyCell, content);
 
-                if (storiesTab == ETabType.Created)
-                {
-                    storyObject.GetComponent<StoryCell>().SetView(storiesList[i], storiesTab, OnStoryTapAction);
-                }
-                else {
-                    storyObject.GetComponent<StoryCell>().SetView(storiesList[i], storiesTab, OnAlteredTapAction);
-                }
+                storyObject.GetComponent<StoryCell>().SetView(storiesList[i], OnStoryTapAction); 
             }
         }
         else {
@@ -84,10 +67,6 @@ public class MyStoriesView : MonoBehaviour
         noDataView.gameObject.SetActive(storiesList?.Count == 0);
     }
 
-    void SetAlteredStoriesView()
-    { 
-    
-    }
 
     public void ClearData()
     {
@@ -98,14 +77,9 @@ public class MyStoriesView : MonoBehaviour
         storiesList.Clear();
     }
 
-    void OnStoryTapAction(object storyId)
+    void OnStoryTapAction(int storyId)
     {
         StoryDetailsController.Instance.Load(storyId, OnStoryClosedAction);
-    }
-
-    void OnAlteredTapAction(object storyId)
-    { 
-    
     }
 
     void OnStoryClosedAction()

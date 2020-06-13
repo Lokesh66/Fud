@@ -8,18 +8,25 @@ public class StoryVersionsView : MonoBehaviour
 
     public GameObject storyCell;
 
+    public NoDataView noDataView;
+
     public StoryShareView shareView;
 
     public VersionDetailsView versionDetailsView;
 
     public VersionMultimediaView multimediaView;
 
+
     List<StoryVersion> storyVersionList = new List<StoryVersion>();
 
+    StoryDetailsController detailsController;
 
-    public void EnableView(List<StoryVersion> versionsList)
+
+    public void EnableView(List<StoryVersion> versionsList, StoryDetailsController detailsController)
     {
         gameObject.SetActive(true);
+
+        this.detailsController = detailsController;
 
         if (storyVersionList?.Count > 0)
         {
@@ -35,6 +42,10 @@ public class StoryVersionsView : MonoBehaviour
 
     void SetView()
     {
+        noDataView.gameObject.SetActive(storyVersionList?.Count == 0);
+
+        noDataView.SetView(GetNoDataModel());
+
         for (int i = 0; i < storyVersionList.Count; i++)
         {
             GameObject storyObject = Instantiate(storyCell, content);
@@ -92,5 +103,18 @@ public class StoryVersionsView : MonoBehaviour
         int versionIndex = storyVersionList.IndexOf(storyVersion);
 
         content.GetChild(versionIndex).GetComponent<StoryVersionCell>().SetView(updatedModel, this);
+    }
+
+    NoDataModel GetNoDataModel()
+    {
+        NoDataModel noDataModel = new NoDataModel();
+
+        noDataModel.subTitle = "No Story Versions Right Now";
+
+        noDataModel.buttonName = "Add Story Version";
+
+        noDataModel.buttonAction = detailsController.OnAddButtonAction;
+
+        return noDataModel;
     }
 }

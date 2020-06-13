@@ -118,7 +118,7 @@ public class DataManager : MonoBehaviour
                 mediaType = EMediaType.Audio;
                 break;
 
-            case "vedio":
+            case "video":
                 mediaType = EMediaType.Video;
                 break;
         }
