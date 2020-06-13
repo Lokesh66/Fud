@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System;
 
 
-public class VersionMediaCell : MonoBehaviour
+public class  VersionMediaCell : MonoBehaviour
 {
     public Image albumImage;
 

@@ -463,6 +463,8 @@ public class StoryVersion
     public object privacy_policy;
     public DateTime created_date_time;
     public DateTime updated_date_time;
+
+    public List<MultimediaModel> Multimedia;
 }
 
 [Serializable]
@@ -644,11 +646,13 @@ public class StoryActivityModel
     public int source_id;
     public string source_type;
     public int user_id;
+    public int sender_status;
+    public int reciever_status;
     public string comment;
     public DateTime created_date_time;
     public DateTime updatedAt;
 
-    public StoryModel Stories;
+    public StoryVersion StoryVersions;
 }
 
 

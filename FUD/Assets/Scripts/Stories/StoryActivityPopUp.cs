@@ -64,7 +64,7 @@ public class StoryActivityPopUp : MonoBehaviour
 
         StoryVersion storyVersion = new StoryVersion();
 
-        storyVersion.id = activityModel.id;
+        storyVersion.id = activityModel.StoryVersions.id;
 
         multimediaView.Load(storyVersion);
     }
