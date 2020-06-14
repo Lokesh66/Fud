@@ -117,6 +117,8 @@ public class LoginHandler : MonoBehaviour
                 {
                     if (apiStatus)
                     {
+                        isNewUser = false;
+
                         SetView(ELoginFlow.Login);
                     }
                 });

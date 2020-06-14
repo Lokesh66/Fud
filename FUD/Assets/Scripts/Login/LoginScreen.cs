@@ -19,6 +19,7 @@ public class LoginScreen : MonoBehaviour
     bool updateTimer;
 
     System.Action<bool, UserData> LoginAction;
+
     public void SetView(string userName, long number,int roleId ,bool isNewUser, System.Action<bool, UserData> action)
     {
         gameObject.SetActive(true);
@@ -95,6 +96,7 @@ public class LoginScreen : MonoBehaviour
     void Login()
     {
         GameManager.Instance.apiHandler.Login(number, long.Parse(otpInputField.text), (bool status, UserData userData) => {
+
             if (status)
             {
                 LoginAction?.Invoke(true, userData);

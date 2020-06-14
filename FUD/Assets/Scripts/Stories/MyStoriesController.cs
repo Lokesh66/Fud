@@ -175,3 +175,11 @@ public enum ETabType
     Created,
     Browser,
 }
+
+public enum EStatusType
+{
+    Waiting = 0,
+    Accepted = 3,
+    ShortListed = 5,
+    Rejected = 8,
+}

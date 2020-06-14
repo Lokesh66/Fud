@@ -10,9 +10,9 @@ public class StoryAlteredCell : MonoBehaviour
 
     public TextMeshProUGUI titleText;
 
-    public GameObject readMoreObject;
-
     public Image statusTag;
+
+    public TextMeshProUGUI statusText;
 
     public Image storyImage;
 
@@ -58,18 +58,27 @@ public class StoryAlteredCell : MonoBehaviour
     {
         int statusValue = isOwnStory ? alteredModel.sender_status : alteredModel.reciever_status;
 
-        switch (statusValue)
-        {
-            case 0:
-                statusTag.sprite = reviewTag;
-                break;
-            case 3:
-            case 5:
-                statusTag.sprite = shortListTag;
-                break;            
-            case 8:
-                statusTag.sprite = reviewTag;
-                break;
-        }
+        EStatusType statusType = (EStatusType)statusValue;
+
+        statusTag.sprite = Resources.Load<Sprite>("Images/StatusTags/" + statusType);
+
+        statusText.text = statusType.ToString();
+
+        //switch (statusValue)
+        //{
+        //    case 0:
+        //        statusText.text = "Waiting"
+        //        break;
+        //    case 3:
+
+        //        break;
+        //    case 5:
+        //        statusTag.sprite = shortListTag;
+        //        break;
+        //    case 8:
+        //        statusTag.sprite = reviewTag;
+        //        break;
+        //        //}
+        //}
     }
 }
