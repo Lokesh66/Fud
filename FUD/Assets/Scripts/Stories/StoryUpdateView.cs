@@ -73,7 +73,7 @@ public class StoryUpdateView : MonoBehaviour
 
         dropdown.AddOptions(options);
 
-        dropdown.value = dropdown.options.FindIndex(option => options.Equals(selectedGenre.name));
+        dropdown.value = genres.IndexOf(selectedGenre);
     }
 
     public void OnUploadAction()

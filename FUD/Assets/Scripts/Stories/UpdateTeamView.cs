@@ -17,13 +17,11 @@ public class UpdateTeamView : MonoBehaviour
     public GameObject searchCell;
 
 
-    StoryDetailsModel detailsModel;
-
     UserSearchModel selectedModel;
 
     List<UserSearchModel> addedModels = new List<UserSearchModel>();
 
-    Action<StoryTeamModel> OnAddedTeam;
+    Action<StoryTeamModel> OnTeamUpdated;
 
     bool isSearchAPICalled = false;
 
@@ -39,11 +37,13 @@ public class UpdateTeamView : MonoBehaviour
     StoryTeamView teamView;
 
 
-    public void Load(StoryTeamModel teamModel)
+    public void Load(StoryTeamModel teamModel, Action<StoryTeamModel> OnUpdation)
     {
         gameObject.SetActive(true);
 
         this.teamModel = teamModel;
+
+        this.OnTeamUpdated = OnUpdation;
 
         SetView();
     }
@@ -53,6 +53,15 @@ public class UpdateTeamView : MonoBehaviour
         teamNameField.text = teamModel.title;
 
         descriptionField.text = teamModel.description;
+
+        List<TeamMembersItem> membersItem = teamModel.TeamMembers.FindAll(item => item.users.id == 0);
+
+        foreach (var item in membersItem)
+        {
+            teamModel.TeamMembers.Remove(item);
+        }
+
+        Debug.Log("TeamMembers Count = " + teamModel.TeamMembers.Count);
 
         for (int i = 0; i < teamModel.TeamMembers.Count; i++)
         {
@@ -118,13 +127,16 @@ public class UpdateTeamView : MonoBehaviour
         {
             return;
         }
+
         string[] membersList = memberField.text.Split(',');
 
         List<string> member = new List<string>(membersList);
 
         string members = GetMemberIds(member);
 
-        GameManager.Instance.apiHandler.UpdateStoryTeam(detailsModel.id, detailsModel.title, descriptionField.text, members, (status, response) =>
+        string title = StoryDetailsController.Instance.GetStoryTitle();
+
+        GameManager.Instance.apiHandler.UpdateStoryTeam(teamModel.story_id, title, teamModel.id, descriptionField.text, members, (status, response) =>
         {
             if (status)
             {
@@ -139,7 +151,7 @@ public class UpdateTeamView : MonoBehaviour
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Story Team Creation Success" : "Something went wrong, please try again.";
+        alertModel.message = status ? "Story Team Updation Success" : "Something went wrong, please try again.";
 
         if (status)
         {
@@ -157,7 +169,9 @@ public class UpdateTeamView : MonoBehaviour
 
         StoryTeamModel teamModel = responseModel.data;
 
-        OnAddedTeam?.Invoke(teamModel);
+        OnTeamUpdated?.Invoke(teamModel);
+
+        OnTeamUpdated = null;
 
         Destroy(gameObject);
 

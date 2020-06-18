@@ -12,6 +12,8 @@ public class JoinedAuditionCell : MonoBehaviour
     public TMP_Text entriesCountText;
     public TMP_Text statusText;
 
+    public Sprite defaultSprite;
+
     public Image tagImage;
 
 
@@ -41,7 +43,8 @@ public class JoinedAuditionCell : MonoBehaviour
         {
             titleText.text = auditionData.Audition.topic;
             GameManager.Instance.downLoadManager.DownloadImage(auditionData.Audition.image_url, (sprite) => {
-                icon.sprite = sprite;
+
+                icon.sprite = sprite ?? defaultSprite;
             });
             SetStatus(auditionData.status);
 

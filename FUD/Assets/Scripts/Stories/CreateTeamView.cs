@@ -93,7 +93,7 @@ public class CreateTeamView : MonoBehaviour
 
         string members = GetMemberIds(member);
 
-        GameManager.Instance.apiHandler.UpdateStoryTeam(detailsModel.id, teamNameField.text, descriptionField.text, members, (status, response) =>
+        GameManager.Instance.apiHandler.CreateStoryTeam(detailsModel.id, teamNameField.text, descriptionField.text, members, (status, response) =>
         {
             if (status)
             {

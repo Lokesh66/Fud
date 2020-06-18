@@ -154,6 +154,10 @@ public class VideoStreamer : MonoBehaviour
 
     private void StopVideo()
     {
+        videoPlayer.sendFrameReadyEvents = false;
+
+        videoPlayer.frameReady -= OnFirstFrame;
+
         videoPlayer.Stop();
 
         Sequence sequence = DOTween.Sequence();
@@ -199,8 +203,6 @@ public class VideoStreamer : MonoBehaviour
 
     void OnFirstFrame(VideoPlayer source, long frameIdx)
     {
-        Debug.Log("OnFirstFrame Called");
-
         videoFrame = new Texture2D(2, 2);
 
         RenderTexture renderTexture = source.texture as RenderTexture;

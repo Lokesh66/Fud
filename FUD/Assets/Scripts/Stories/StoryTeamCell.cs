@@ -13,6 +13,8 @@ public class StoryTeamCell : MonoBehaviour
 
     Action<StoryTeamModel> OnButtonAction;
 
+
+
     public void Load(StoryTeamModel teamModel, Action<StoryTeamModel> OnButtonAction)
     {
         this.teamModel = teamModel;
@@ -22,9 +24,16 @@ public class StoryTeamCell : MonoBehaviour
         SetView();
     }
 
+    public Action<StoryTeamModel> GetButtonAction()
+    {
+        return OnButtonAction;
+    }
+
     void SetView()
     {
         titleText.text = teamModel.title;
+
+        membersText.text = string.Empty;
 
         for (int i = 0; i < teamModel.TeamMembers.Count; i++)
         {

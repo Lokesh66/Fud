@@ -57,6 +57,9 @@ public class StoryDetailsController : MonoBehaviour
     public GameObject updateStoryCache;
 
 
+    public GameObject addButtonObject;
+
+
     public GameObject noDataObject;
 
     public ScrollRect tabScrollRect;
@@ -154,6 +157,8 @@ public class StoryDetailsController : MonoBehaviour
             currentObject?.SetActive(false);
 
             UpdateScreen();
+
+            addButtonObject.SetActive(currentType != EScreenSubType.Details);
         }
     }
 
@@ -322,5 +327,7 @@ public class StoryDetailsController : MonoBehaviour
         buttonList[(int)currentType].color = disabledColor;
 
         currentType = EScreenSubType.Details;
+
+        addButtonObject.SetActive(currentType != EScreenSubType.Details);
     }
 }

@@ -268,7 +268,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateStoryTeam(int story_id, string title, string description, string members, Action<bool, string> action)
+    public void CreateStoryTeam(int story_id, string title, string description, string members, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -281,6 +281,26 @@ public partial class APIHandler
         parameters.Add("members", members);
 
         gameManager.StartCoroutine(PostRequest(APIConstants.UPDATE_STORY_TEAM, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void UpdateStoryTeam(int story_id, string title, int teamId, string description, string members, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("story_id", story_id);
+
+        parameters.Add("id", teamId);
+
+        parameters.Add("title", title);
+
+        parameters.Add("description", description);
+
+        parameters.Add("members", members);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_STORY_TEAM, true, parameters, (status, response) => {
 
             action(status, response);
         }));

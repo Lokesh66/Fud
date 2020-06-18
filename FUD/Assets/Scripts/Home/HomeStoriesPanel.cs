@@ -35,7 +35,7 @@ public class HomeStoriesPanel : MonoBehaviour
             storiesList = new List<StoryModel>();
         }
 
-        for(int i = 0; i < storiesList.Count; i++)
+        for(int i = 0; i <= storiesList.Count; i++)
         {
             GameObject storyObject = Instantiate(homeCell, parentContent);
 

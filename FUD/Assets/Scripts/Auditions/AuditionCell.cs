@@ -11,6 +11,8 @@ public class AuditionCell : MonoBehaviour
     public TMP_Text ageText;
     public TMP_Text rateOfPayText;
 
+    public Sprite defaultSprite;
+
     Audition auditionData;
     AuditionController auditionController;
     AuditionType auditionType;
@@ -32,7 +34,8 @@ public class AuditionCell : MonoBehaviour
             rateOfPayText.text = "Budget : " + auditionData.rate_of_pay;
 
             GameManager.Instance.downLoadManager.DownloadImage(auditionData.image_url, (sprite) => {
-                icon.sprite = sprite;
+
+                icon.sprite = sprite ?? defaultSprite;
             });
         }
     }

@@ -73,11 +73,6 @@ public class CharacterDetailsView : MonoBehaviour
 
         GameManager.Instance.apiHandler.RemoveCharacter(characterModel.id, storyId, 8, (status) => {
 
-            if (status)
-            {
-                charactersView.OnRemoveCharacter(characterModel);
-            }
-
             OnAPIResponse(status);
         });
     }

@@ -76,8 +76,6 @@ public class StoryCharactersView : MonoBehaviour
 
     public void Refresh(StoryCharacterModel characterModel)
     {
-        characterModels.Add(characterModel);
-
         gameObject.SetActive(true);
 
         GameObject characterObject = Instantiate(cellCache, content);

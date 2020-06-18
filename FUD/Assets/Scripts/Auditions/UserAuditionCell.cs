@@ -7,7 +7,7 @@ using TMPro;
 
 public class UserAuditionCell : MonoBehaviour
 {
-    public RawImage icon;
+    public Image icon;
     public TMP_Text titleText;
     public TMP_Text ageText;
 
@@ -38,7 +38,7 @@ public class UserAuditionCell : MonoBehaviour
                 {
                     GameManager.Instance.downLoadManager.DownloadImage(auditionData.UserAuditionMultimedia[0].content_url, (sprite) =>
                     {
-                        //icon.texture = sprite;
+                        icon.sprite = sprite;
                     });
                 }
             }
@@ -55,7 +55,11 @@ public class UserAuditionCell : MonoBehaviour
             {
                 if (this != null)
                 {
-                    icon.texture = texture;
+                    Rect rect = new Rect(0, 0, icon.rectTransform.rect.width, icon.rectTransform.rect.height);
+
+                    Sprite sprite = Sprite.Create(texture.ToTexture2D(), rect, new Vector2(0.5f, 0.5f));
+
+                    icon.sprite = sprite;
 
                     OnNext?.Invoke();
                 }

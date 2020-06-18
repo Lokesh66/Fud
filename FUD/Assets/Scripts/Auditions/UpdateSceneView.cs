@@ -58,9 +58,9 @@ public class UpdateSceneView : MonoBehaviour
 
         descriptionText.text = detailsModel.description;
 
-        shootTimeDropdown.value = shootTimeDropdown.options.FindIndex(option => shootTimeDropdown.options.Equals(detailsModel.shoot_time));
+        shootTimeDropdown.value = shootTimeDropdown.options.FindIndex(option => option.text.Equals(detailsModel.shoot_time));
 
-        placeDropdown.value = placeDropdown.options.FindIndex(option => placeDropdown.options.Equals(detailsModel.place_type));
+        placeDropdown.value = placeDropdown.options.FindIndex(option => option.text.Equals(detailsModel.place_type));
     }
 
     public void OnDateSelectAction()

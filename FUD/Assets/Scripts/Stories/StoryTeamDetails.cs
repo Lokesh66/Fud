@@ -57,7 +57,7 @@ public class StoryTeamDetails : MonoBehaviour
 
     void OnEditButtonAction()
     {
-        updateTeamView.Load(teamModel);
+        updateTeamView.Load(teamModel, OnTeamUpdated);
     }
 
     void OnDeleteButtonAction()
@@ -98,5 +98,10 @@ public class StoryTeamDetails : MonoBehaviour
     void Reset()
     {
         //titleText.text = string.Empty;
+    }
+
+    void OnTeamUpdated(StoryTeamModel teamModel)
+    {
+        teamsView.UpdateTeam(teamModel);
     }
 }

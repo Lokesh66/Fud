@@ -81,6 +81,7 @@ public class CreateScenesView : MonoBehaviour
     {
         parentPanel.gameObject.SetActive(false);
         backAction?.Invoke(isNewSceneCreated);
+        ClearData();
         backAction = null;
     }
 
@@ -184,6 +185,17 @@ public class CreateScenesView : MonoBehaviour
     void ShowDialougesPanel()
     {
         dialoguesView.EnableView();
+    }
+
+    void ClearData()
+    {
+        placeDropdown.value = shootTimeDropdown.value = 0;
+
+        sceneOrderText.text = locationText.text = descriptionText.text = string.Empty;
+
+        errorText.text = startDateText.text = string.Empty;
+
+        buttonText.text = "Next";
     }
 
     public void OnSaveDialogues(List<Dictionary<string, object>> dialogues)
