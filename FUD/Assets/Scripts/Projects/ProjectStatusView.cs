@@ -4,12 +4,15 @@ using UnityEngine;
 public class ProjectStatusView : MonoBehaviour
 {
 
-    Project selectedProject;
+    public ProjectDetailView detailView;
+
+
+    ProjectOfferedModel selectedProject;
 
     ProjectHandler projectHandler;
 
 
-    public void Load(Project selectedProject, ProjectHandler projectHandler)
+    public void Load(ProjectOfferedModel selectedProject, ProjectHandler projectHandler)
     {
         this.selectedProject = selectedProject;
 
@@ -32,9 +35,6 @@ public class ProjectStatusView : MonoBehaviour
             case 1://Reject
                 status = 8;
                 break;
-            case 2://Shortlisted
-                status = 5;
-                break;
         }
 
         UpdateProjectStatus(status);
@@ -43,6 +43,13 @@ public class ProjectStatusView : MonoBehaviour
     public void OnCancelButtonAction()
     {
         gameObject.SetActive(false);    
+    }
+
+    public void OnViewButtonAction()
+    {
+        gameObject.SetActive(false);
+
+        detailView.Load(selectedProject);
     }
 
     void UpdateProjectStatus(int status)

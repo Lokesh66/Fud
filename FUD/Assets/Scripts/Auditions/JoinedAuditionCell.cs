@@ -41,7 +41,7 @@ public class JoinedAuditionCell : MonoBehaviour
 
         if (auditionData != null)
         {
-            titleText.text = auditionData.Audition.topic;
+            titleText.text = auditionData.Audition.title;
             GameManager.Instance.downLoadManager.DownloadImage(auditionData.Audition.image_url, (sprite) => {
 
                 icon.sprite = sprite ?? defaultSprite;

@@ -179,6 +179,8 @@ public class VideoStreamer : MonoBehaviour
 
     public void GetThumbnailImage(string videoURL, Action<Texture> action)
     {
+        Debug.Log("GetThumbnailImage Called");
+
         if (videoPlayer == null)
         {
             Init();

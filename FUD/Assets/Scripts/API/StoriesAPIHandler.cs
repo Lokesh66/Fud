@@ -511,7 +511,7 @@ public class StoryDetailsModel
 
     public void SetDetailsScreenModel()
     {
-        screenModel = new DetailsScreenModel(description, 4.2f);
+        screenModel = new DetailsScreenModel(this);
     }
 }
 
@@ -559,12 +559,13 @@ public class TeamMembersItem
 public class DetailsScreenModel
 {
     public string description;
-    public float rating;
+    public int genreId;
 
-    public DetailsScreenModel(string description, float rating)
+    public DetailsScreenModel(StoryDetailsModel detailsModel)
     {
-        this.description = description;
-        this.rating = rating;
+        description = detailsModel.description;
+
+        genreId = detailsModel.genre_id;
     }
 }
 

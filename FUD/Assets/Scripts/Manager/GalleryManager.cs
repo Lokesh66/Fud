@@ -12,7 +12,7 @@ public class GalleryManager : MonoBehaviour
 
     private List<string> uploadedURLs = new List<string>();
 
-    string[] loadedFiles;
+    string[] loadedFiles = new string[10];
 
     private int selectedImagesCount;
 
@@ -61,8 +61,10 @@ public class GalleryManager : MonoBehaviour
         }, "Select a PNG image");
 
     }
+
     public void PickImages(Action<bool, List<string>> OnUploaded)
     {
+#if UNITY_ANDROID
         NativeGallery.Permission permission = NativeGallery.GetImagesFromGallery((imagesPath) =>
         {
             if (loadedFiles != null && loadedFiles.Length > 0)
@@ -96,6 +98,9 @@ public class GalleryManager : MonoBehaviour
         }, "Select a PNG image");
         AlertMessage.Instance.SetText("Permission result: " + permission);
         Debug.Log("Permission result: " + permission);
+#elif UNITY_IOS
+        PickImage(OnUploaded);
+#endif
     }
 
     public void GetAudiosFromGallery(Action<bool, List<string>> OnUploaded)
@@ -152,7 +157,7 @@ public class GalleryManager : MonoBehaviour
     
     }
 
-    #region Upload File
+#region Upload File
 
     void UploadFile(string filePath, EMediaType mediaType)
     {
@@ -184,8 +189,6 @@ public class GalleryManager : MonoBehaviour
 
                     uploadedURLs.Clear();
 
-                    Loader.Instance.StopLoading();
-
                     OnUploaded = null;
                 }
                 else {
@@ -214,6 +217,8 @@ public class GalleryManager : MonoBehaviour
 
                 OnUploaded = null;
             }
+
+            Loader.Instance.StopLoading();
 
         });
     }
@@ -259,6 +264,28 @@ public class GalleryManager : MonoBehaviour
     public string[] GetLoadedFiles()
     {
         return loadedFiles;
+    }
+
+    private void PickImage(Action<bool, List<string>> OnUploaded)
+    {
+        NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((imagePath) =>
+        {
+            if (imagePath != null)
+            {
+                uploadedURLs.Clear();
+
+                loadedFiles[0] = imagePath;
+
+                this.OnUploaded = OnUploaded;
+
+                if (imagePath != null)
+                {
+                    selectedImagesCount = 1;
+
+                    UploadFile(imagePath, EMediaType.Image);
+                }
+            }
+        });
     }
 
     #endregion

@@ -89,19 +89,17 @@ public class PortfolioCreationView : MonoBehaviour
         }
         GameManager.Instance.apiHandler.CreatePortfolio(titleField.text, descriptionField.text, accessDropDown.value, uploadedDict, (status, response) => {
 
-            if (status)
-            {
-                
-            }
-            OnAPIResponse(status);
+            OnAPIResponse(status, response);
         });
     }
 
-    void OnAPIResponse(bool status)
+    void OnAPIResponse(bool status, string response)
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Portfolio Creation Success" : "Something went wrong, please try again.";
+        BaseResponse baseResponse = JsonUtility.FromJson<BaseResponse>(response);
+
+        alertModel.message = status ? "Portfolio Creation Success" : baseResponse.message;
 
         if (status)
         {

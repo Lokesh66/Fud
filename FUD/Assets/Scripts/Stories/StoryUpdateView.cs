@@ -58,6 +58,8 @@ public class StoryUpdateView : MonoBehaviour
     {
         genres = DataManager.Instance.genres;
 
+        Debug.Log("genre_id = " + storyModel.genre_id);
+
         Genre requiredGenre = genres.Find(genre => genre.id == storyModel.genre_id);
 
         Genre selectedGenre = genres.Find(genre => genre.name.Equals(requiredGenre.name));

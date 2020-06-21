@@ -22,6 +22,8 @@ public class ProjectCell : MonoBehaviour
         OnClickAction = OnProjectSelected;
 
         titleText.text = projectModel.title;
+
+
     }
 
     public void OnButtonAction()

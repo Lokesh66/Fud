@@ -56,15 +56,23 @@ public class AudioStreamer : MonoBehaviour
 
     IEnumerator StartStreaming(string audioURL)
     {
-        WWW _www = new WWW("https://geekanddummy.com/wp-content/uploads/2014/02/ambient-noise-server-room.mp3");
+        UnityWebRequest music = UnityWebRequestMultimedia.GetAudioClip(audioURL, AudioType.UNKNOWN);
 
-        yield return _www;
+        yield return music.SendWebRequest();
 
-        
-        audioSource.clip = _www.GetAudioClip(false, true, AudioType.MPEG);
+        if (music.isNetworkError)
+        {
+            Debug.Log(music.error);
+        }
+        else
+        {
+            AudioClip clip = DownloadHandlerAudioClip.GetContent(music);
 
-        //_m1SongTime = musicOne.clip.length + Time.time;
-
-        audioSource.Play();
+            if (clip)
+            {
+                audioSource.clip = clip;
+                audioSource.Play();
+            }
+        }
     }
 }

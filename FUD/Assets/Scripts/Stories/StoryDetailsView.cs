@@ -1,7 +1,7 @@
-﻿using UnityEngine.UI;
+﻿using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
-
 
 public class StoryDetailsView : MonoBehaviour
 {
@@ -9,10 +9,8 @@ public class StoryDetailsView : MonoBehaviour
 
     public TextMeshProUGUI ratingText;
 
-    public TextMeshProUGUI reviewsNoText;
+    public TextMeshProUGUI genreText;
 
-
-    public MyStoriesView storiesView;
 
 
 
@@ -20,8 +18,12 @@ public class StoryDetailsView : MonoBehaviour
     {
         gameObject.SetActive(true);
 
+        List<Genre> genres = DataManager.Instance.genres;
+
+        Genre selectedGenre = genres.Find(item => item.id == screenModel.genreId);
+
         descriptionText.text = screenModel.description;
 
-        ratingText.text = screenModel.rating.ToString();
+        genreText.text = selectedGenre.name;
     }
 }

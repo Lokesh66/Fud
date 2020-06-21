@@ -82,6 +82,6 @@ public class  VersionMediaCell : MonoBehaviour
 
     void PlayAudio()
     {
-
+        AudioStreamer.Instance.AudioStream(albumModel.content_url, null);
     }
 }

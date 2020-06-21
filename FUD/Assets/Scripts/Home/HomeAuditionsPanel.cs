@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class HomeAuditionsPanel : MonoBehaviour
 {
     public GameObject homeCell;
     public Transform parentContent;
+
+    public AuditionDetailView detailView;
+
     List<Audition> auditionsList = new List<Audition>();
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
 
@@ -62,6 +66,14 @@ public class HomeAuditionsPanel : MonoBehaviour
         {
             switch (_index)
             {
+                case 6:
+                    RecordVideo();
+                    break;
+
+                case 9://View
+                    detailView.Load(auditionData);
+                    break;
+
                 case 10:
                     GalleryButtonsPanel.Instance.Load(MediaButtonAction);
                     break;
@@ -87,6 +99,20 @@ public class HomeAuditionsPanel : MonoBehaviour
                 GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
                 break;
         }
+    }
+
+    void RecordVideo()
+    {
+        NativeCamera.Permission permission = NativeCamera.RecordVideo((path) =>
+        {
+            string fileName = Path.GetFileName(path);
+
+            byte[] fileBytes = File.ReadAllBytes(path);
+
+            NativeGallery.SaveVideoToGallery(fileBytes, "Videos", fileName);
+
+            GalleryManager.Instance.UploadVideoFile(path, OnVideosUploaded);
+        });
     }
 
     void OnImagesUploaded(bool status, List<string> imageUrls)

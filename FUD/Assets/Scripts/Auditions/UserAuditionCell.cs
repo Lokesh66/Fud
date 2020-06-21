@@ -55,13 +55,13 @@ public class UserAuditionCell : MonoBehaviour
             {
                 if (this != null)
                 {
-                    Rect rect = new Rect(0, 0, icon.rectTransform.rect.width, icon.rectTransform.rect.height);
+                     Rect rect = new Rect(0, 0, icon.rectTransform.rect.width, icon.rectTransform.rect.height);
 
-                    Sprite sprite = Sprite.Create(texture.ToTexture2D(), rect, new Vector2(0.5f, 0.5f));
+                     Sprite sprite = Sprite.Create(texture.ToTexture2D(), rect, new Vector2(0.5f, 0.5f));
 
-                    icon.sprite = sprite;
+                     icon.sprite = sprite;
 
-                    OnNext?.Invoke();
+                     OnNext?.Invoke();
                 }
             });
         }

@@ -12,26 +12,6 @@ enum ELoginFlow
 
 public class LoginHandler : MonoBehaviour
 {
-    /*#region Singleton
-    private static LoginHandler instance = null;
-
-    private LoginHandler()
-    {
-
-    }
-
-    public static LoginHandler Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = FindObjectOfType<LoginHandler>();
-            }
-            return instance;
-        }
-    }
-    #endregion*/
 
     public LaunchScreen launchScreen;
     public RoleSelectionScreen roleSelectionScreen;

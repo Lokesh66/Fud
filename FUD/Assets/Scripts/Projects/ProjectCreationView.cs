@@ -1,7 +1,9 @@
-﻿using UnityEngine;
-using TMPro;
-using DG.Tweening;
+﻿using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using DG.Tweening;
+using UnityEngine;
+using System;
+using TMPro;
 
 public class ProjectCreationView : MonoBehaviour
 {
@@ -37,11 +39,17 @@ public class ProjectCreationView : MonoBehaviour
     
     public TMP_Dropdown storySelectionDropdown;
 
-    public TMP_Dropdown durationDropDown;
+    public TMP_Text startDateText;
+
+    public TMP_Text releaseDateText;
 
     public TMP_Text errorText;
 
+
+
     System.Action<bool> backAction;
+
+    string defaultDateText = "Select Date";
 
     bool isDataUpdated = false;
 
@@ -63,6 +71,24 @@ public class ProjectCreationView : MonoBehaviour
         isDataUpdated = false;
     }
 
+    public void OnStartDateAction()
+    {
+        DatePicker.Instance.GetDate(DateTime.Now, DateTime.Now, DateTime.MaxValue, (date, dateString) =>
+        {
+            if (!string.IsNullOrEmpty(dateString))
+                startDateText.text = dateString;
+        });
+    }
+
+    public void OnReleaseDateAction()
+    {
+        DatePicker.Instance.GetDate(DateTime.Now, DateTime.Now, DateTime.MaxValue, (date, dateString) =>
+        {
+            if (!string.IsNullOrEmpty(dateString))
+                releaseDateText.text = dateString;
+        });
+    }
+
     public void BackButtonAction()
     {
         parentPanel.gameObject.SetActive(false);
@@ -73,27 +99,8 @@ public class ProjectCreationView : MonoBehaviour
 
     public void OnSubmitProject()
     {
-        string errorMessage = string.Empty;
-        if (string.IsNullOrEmpty(titleField.text))
+        if (!CanCallAPI())
         {
-            errorMessage = "Name your project, should not be empty";
-            //ShowErrorMessage("Name your project, should not be empty");
-        }
-        else if (string.IsNullOrEmpty(storySelectionDropdown.captionText.text))
-        {
-            errorMessage = "Select Stroy for your story";
-            //ShowErrorMessage("Select Stroy for your story");
-        }
-        else if (string.IsNullOrEmpty(budgetField.text))
-        {
-            errorMessage = "Select budjet for your story";
-            //ShowErrorMessage("Select budjet for your story");
-        }
-        if (!string.IsNullOrEmpty(errorMessage))
-        {
-            AlertModel alertModel = new AlertModel();
-            alertModel.message = errorMessage;
-            UIManager.Instance.ShowAlert(alertModel);
             return;
         }
 
@@ -109,7 +116,11 @@ public class ProjectCreationView : MonoBehaviour
 
         parameters.Add("cost_estimation", long.Parse(budgetField.text));
 
-        parameters.Add("estimated_time", 1609818627);// long.Parse(durationDropDown.captionText.text));
+        parameters.Add("start_date", startDateText.text);
+
+        parameters.Add("release_date", releaseDateText.text);
+
+        parameters.Add("description", descriptionField.text);
 
         GameManager.Instance.apiHandler.CreateProject(parameters, (status, response) => {
 
@@ -134,26 +145,46 @@ public class ProjectCreationView : MonoBehaviour
         });
     }
 
-    void ShowErrorMessage(string message)
+    bool CanCallAPI()
     {
-        errorText.text = message;
-        if (IsInvoking("DisableErrorMessage"))
-            CancelInvoke("DisableErrorMessage");
-        Invoke("DisableErrorMessage", 2.0f);
-    }
+        string errorMessage = string.Empty;
 
-    void DisableErrorMessage()
-    {
-        errorText.DOFade(0f, 0.5f).OnComplete(() => {
-            errorText.text = string.Empty;
-            errorText.color = Color.red;
-        });
+        if (string.IsNullOrEmpty(titleField.text))
+        {
+            errorMessage = "Name your project, should not be empty";
+        }
+        else if (string.IsNullOrEmpty(storySelectionDropdown.captionText.text))
+        {
+            errorMessage = "Select Stroy for your story";
+        }
+        else if (string.IsNullOrEmpty(budgetField.text))
+        {
+            errorMessage = "Select budjet for your story";
+        }
+        else if (string.IsNullOrEmpty(releaseDateText.text) || startDateText.text.Equals(defaultDateText))
+        {
+            errorMessage = "Please select respective dates";
+            //ShowErrorMessage("Audition date should not be empty");
+        }
+        else if (string.IsNullOrEmpty(descriptionField.text))
+        {
+            errorMessage = "Add description for your Project";
+        }
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            AlertModel alertModel = new AlertModel();
+            alertModel.message = errorMessage;
+            UIManager.Instance.ShowAlert(alertModel);
+            return false;
+        }
+
+        return true;
     }
 
     void ClearData()
     {
         titleField.text = budgetField.text = descriptionField.text = string.Empty;
 
-        storySelectionDropdown.value = durationDropDown.value = 0;
+        storySelectionDropdown.value = 0;
     }
 }

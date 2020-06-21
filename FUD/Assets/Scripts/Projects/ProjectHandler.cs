@@ -9,10 +9,16 @@ public class ProjectHandler : MonoBehaviour
 
     public GameObject projectCell;
 
+    public GameObject projectOfferedCell;
+
     public NoDataView noDataView;
+
+    public ProjectStatusView offeredDetailsView;
 
 
     List<Project> projectModels;
+
+    List<ProjectOfferedModel> offeredModels;
 
 
     public void Load()
@@ -115,6 +121,30 @@ public class ProjectHandler : MonoBehaviour
         
     }
 
+    void Load(List<ProjectOfferedModel> models)
+    {
+        content.DestroyChildrens();
+
+        offeredModels = models;
+
+        if (models != null && models.Count > 0)
+        {
+            noDataView.gameObject.SetActive(false);
+
+            for (int i = 0; i < models.Count; i++)
+            {
+                GameObject projectObject = Instantiate(projectOfferedCell, content);
+
+                projectObject.GetComponent<ProjectOfferedCell>().SetView(offeredModels[i], OnOfferedProjectAction);
+            }
+        }
+        else
+        {
+            noDataView.gameObject.SetActive(true);
+            noDataView.SetView(GetNoDataModel());
+        }
+    }
+
     void OnProjectClickAction(Project project)
     {
         if (tabType == ETabType.Created)
@@ -129,10 +159,11 @@ public class ProjectHandler : MonoBehaviour
                 }
             });
         }
-        else if(tabType == ETabType.Offers)
-        {
+    }
 
-        }
+    void OnOfferedProjectAction(ProjectOfferedModel offeredModel)
+    {
+        offeredDetailsView.Load(offeredModel, this);
     }
 
     public void OnAddButtonAction()
@@ -143,8 +174,6 @@ public class ProjectHandler : MonoBehaviour
             {
                 if (status)
                 {
-                    Debug.Log("OnAddButtonAction : " + response);
-
                     ProjectStoriesResponse stories = JsonUtility.FromJson<ProjectStoriesResponse>(response);
 
                     if (stories.data != null && stories.data.Count > 0)
@@ -172,13 +201,13 @@ public class ProjectHandler : MonoBehaviour
         }
     }
 
-    public void RemoveProject(Project selectedProject)
+    public void RemoveProject(ProjectOfferedModel selectedProject)
     {
-        int projectIndex = projectModels.IndexOf(selectedProject);
+        int projectIndex = offeredModels.IndexOf(selectedProject);
 
         Destroy(content.GetChild(projectIndex).gameObject);
 
-        projectModels.Remove(selectedProject);
+        offeredModels.Remove(selectedProject);
     }
 
     public void OnBackButtonAction()

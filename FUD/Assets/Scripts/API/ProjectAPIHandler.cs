@@ -17,7 +17,7 @@ public partial class APIHandler
         }));
     }
 
-    public void GetOfferedProjects(Action<bool, ProjectsResponse> action)
+    public void GetOfferedProjects(Action<bool, ProjectOfferedResponse> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -25,13 +25,15 @@ public partial class APIHandler
 
         gameManager.StartCoroutine(PostRequest(APIConstants.GET_OFFERED_PROJECTS, true, parameters, (status, response) => {
 
-            ProjectsResponse projectsResponse = JsonUtility.FromJson<ProjectsResponse>(response);
+            Debug.Log("response = " + response);
+
+            ProjectOfferedResponse projectsResponse = JsonUtility.FromJson<ProjectOfferedResponse>(response);
 
             action(status, projectsResponse);
         }));
     }
 
-    public void GetAlteredProjects(Action<bool, ProjectsResponse> action)
+    public void GetAlteredProjects(Action<bool, ProjectOfferedResponse> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -39,7 +41,7 @@ public partial class APIHandler
 
         gameManager.StartCoroutine(PostRequest(APIConstants.GET_ALTERED_PROJECTS, true, parameters, (status, response) => {
 
-            ProjectsResponse projectsResponse = JsonUtility.FromJson<ProjectsResponse>(response);
+            ProjectOfferedResponse projectsResponse = JsonUtility.FromJson<ProjectOfferedResponse>(response);
 
             action(status, projectsResponse);
         }));
@@ -117,7 +119,7 @@ public partial class APIHandler
 
         parameters.Add("status", status);
 
-        gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_PROJECT, true, parameters, (apiStatus, response) =>
+        gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_OFFERED_PROJECT_STATUS, true, parameters, (apiStatus, response) =>
         {
             action(apiStatus);
         }));
@@ -292,13 +294,14 @@ public class Project
     public int story_version_id;
     public int user_id;
     public string title;
+    public string description;
     public int cost_estimation;
     public int estimated_time;
     public int crew_percentage;
     public int audition_percentage;
     public int status;
-    public DateTime start_date;
-    public DateTime release_date;
+    public int start_date;
+    public int release_date;
     public List<StoryVersion> StoryVersions;
     public List<ProjectCast> Project_cast;
     public List<Audition> Audition;
@@ -327,6 +330,30 @@ public class SceneModel
 public class ProjectsResponse : BaseResponse
 {
     public List<Project> data;
+}
+
+[Serializable]
+public class ProjectOfferedModel
+{
+    public int id;
+    public int project_cast_id;
+    public int user_id;
+    public int project_id;
+    public string description;
+    public int role;
+    public int payment_recieved;
+    public int status;
+    public DateTime created_date_time;
+    public DateTime updatedAt;
+    public Project Projects;
+}
+
+[Serializable]
+public class ProjectOfferedResponse
+{
+    public string message;
+    public List<ProjectOfferedModel> data;
+    public int status;
 }
 
 
