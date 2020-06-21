@@ -33,6 +33,9 @@ public class DataManager : MonoBehaviour
 
     public List<FeaturedModel> featuredModels;
 
+
+    private string currentPurchaseOrderId = string.Empty;
+
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -125,6 +128,25 @@ public class DataManager : MonoBehaviour
 
         return mediaType;
     }
+
+    #region IAP Order Id
+
+    public void SetPurchaseOrderId(string orderId)
+    {
+        currentPurchaseOrderId = orderId;
+    }
+
+    public string GetPurchaseOrderId()
+    {
+        return currentPurchaseOrderId;
+    }
+
+    public void ClearPurchaseOrderId()
+    {
+        currentPurchaseOrderId = string.Empty;
+    }
+
+    #endregion
 }
 
 #region UserData

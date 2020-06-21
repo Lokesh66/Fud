@@ -17,6 +17,9 @@ public partial class APIHandler
 
     public const string APP_ID = "1362262b24f262b46ab91599e22631";
 
+
+    private string currentOrderId = string.Empty;
+
     public void Example()
     {
         Dictionary<string, object> planIdInfo = new Dictionary<string, object>
@@ -56,6 +59,7 @@ public partial class APIHandler
 
                 AndroidJavaObject paramObj = CreateJavaMapFromDictainary (parameters);
 
+                DataManager.Instance.SetPurchaseOrderId(response.orderId);
 
                 if (string.IsNullOrEmpty (response.token))
                 { 
@@ -69,7 +73,8 @@ public partial class APIHandler
                 AndroidJavaObject currentActivity = new AndroidJavaClass ("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject> ("currentActivity");
 
                 AndroidJavaClass paymentActivity = new AndroidJavaClass ("com.phonatoto.cashfree.PaymentActivity");
-                paymentActivity.CallStatic ("doPayment", currentActivity, paramObj, response.token, response.stage);
+
+                paymentActivity.CallStatic ("doPayment", currentActivity, paramObj, response.token, response.stage, new AndroidIAPCallBack());
 
                 //OnResponse(status, response.orderId);
 
@@ -77,9 +82,11 @@ public partial class APIHandler
         //TODO: iOS is pending
         Debug.Log("iOS Cash free implementation is pending");
 #endif
-            }
+    }
         }));
     }
+
+
 
     string GetCFPToken()
     {
@@ -149,5 +156,47 @@ public class CFPToken
             data.Add (key, value);
         }
     }
+}
+
+class AndroidIAPCallBack : AndroidJavaProxy
+{
+    public AndroidIAPCallBack() : base("com.phonatoto.cashfree.PaymentResponseCallBack") { }
+
+    public void onSuccess(string message)
+    {
+        string orderId = DataManager.Instance.GetPurchaseOrderId();
+
+        GameManager.Instance.apiHandler.VerifyPurchsedOrderId(orderId, (apiStatus) =>
+        {
+            if (apiStatus)
+            {
+                AlertModel alertModel = new AlertModel();
+
+                alertModel.message = "Order Verified Success";
+
+                UIManager.Instance.ShowAlert(alertModel);
+
+                DataManager.Instance.ClearPurchaseOrderId();
+            }
+            else
+            {
+                AlertModel alertModel = new AlertModel();
+
+                alertModel.message = "Order verification Failed";
+
+                UIManager.Instance.ShowAlert(alertModel);
+            }
+        });
+    }
+    public void onFailure(string errorMessage)
+    {
+        DataManager.Instance.ClearPurchaseOrderId();
+    }
+}
+
+public interface PaymentResponseCallBack
+{
+    void onSuccess(String transactionRefId);
+    void onFailure(String transactionRefId);
 }
 
