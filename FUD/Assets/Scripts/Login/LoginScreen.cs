@@ -31,7 +31,7 @@ public class LoginScreen : MonoBehaviour
         LoginAction = action;
         toggle.gameObject.SetActive(isNewUser);
         toggle.isOn = false;
-        signInText.text = isSignIn ? "SignIn" : "Login";
+        signInText.text = isSignIn ? "Sign In" : "Login";
 
         StartTimer();
     }
@@ -67,30 +67,7 @@ public class LoginScreen : MonoBehaviour
     }
     public void OnClick_Login()
     {
-        if (isSignIn)
-        {
-            if (isSignIn && !toggle.isOn)
-            {
-                ShowErrorText();
-                return;
-            }
-            GameManager.Instance.apiHandler.SignIn(userName, number, roleId, (bool status, UserData userData) => {
-                if (status)
-                {
-                    Login();
-                }
-                else
-                {
-
-                }
-
-                
-            });
-        }
-        else
-        {
-            Login();
-        }
+        Login();
     }
 
     void Login()
@@ -105,10 +82,6 @@ public class LoginScreen : MonoBehaviour
             {
 
             }
-
-            string message = status ? "Login Successful" : "Something went worng, please try again";
-
-            ShowValidationMessage(message);
         });
     }
 
@@ -118,10 +91,6 @@ public class LoginScreen : MonoBehaviour
             if (status)
             {
                 StartTimer();
-            }
-            else
-            {
-                //Erros message
             }
 
             string message = status ? "Please enter OTP that we have sent to registered mobile number" : "Something went worng, please try again";
@@ -133,19 +102,6 @@ public class LoginScreen : MonoBehaviour
     public void OnClick_Back()
     {
         LoginAction?.Invoke(false, null);
-    }
-
-    void ShowErrorText()
-    {
-        Sequence sequence = DOTween.Sequence();
-        sequence.SetDelay(2f);
-        sequence.SetEase(Ease.OutBounce);
-        sequence.Append(errorText.DOFade(0.0f, 1f)).OnStart(() => {
-            errorText.gameObject.SetActive(true);
-            errorText.color = Color.red;
-        }).OnComplete(() => {
-            errorText.gameObject.SetActive(false);
-        });
     }
 
     void ShowValidationMessage(string message)

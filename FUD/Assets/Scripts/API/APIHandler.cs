@@ -59,7 +59,7 @@ public partial class APIHandler
                 CraftsResponse data = JsonUtility.FromJson<CraftsResponse>(response);
                 DataManager.Instance.UpdateCrafts(data.data);
             }
-        }));
+        }, false));
     }
     #endregion
 
@@ -79,7 +79,7 @@ public partial class APIHandler
                 GenreResponse data = JsonUtility.FromJson<GenreResponse>(response);
                 DataManager.Instance.UpdateGenres(data.data);
             }
-        }));
+        }, false));
     }
     #endregion
 
@@ -392,9 +392,13 @@ public partial class APIHandler
     }
     #endregion
 
-    IEnumerator GetRequest(string url, bool isAuth, Action<bool, string> OnResponse)
+    IEnumerator GetRequest(string url, bool isAuth, Action<bool, string> OnResponse, bool canShowLoader = true)
     {
-        Loader.Instance.StartLoading();
+        if (canShowLoader)
+        {
+            Loader.Instance.StartLoading();
+        }
+
         UnityWebRequest webRequest = UnityWebRequest.Get(url);
 
         if (isAuth)

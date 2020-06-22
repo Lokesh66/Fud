@@ -81,8 +81,6 @@ public class LoginHandler : MonoBehaviour
 
     void OnDetailsScreen_CallBack(bool status, object body)
     {
-        detailsScreen.gameObject.SetActive(false);
-
         if (status)
         {
             Dictionary<string, string> _body = body as Dictionary<string, string>;
@@ -97,7 +95,7 @@ public class LoginHandler : MonoBehaviour
                 {
                     if (apiStatus)
                     {
-                        isNewUser = false;
+                        detailsScreen.gameObject.SetActive(false);
 
                         SetView(ELoginFlow.Login);
                     }
@@ -111,6 +109,8 @@ public class LoginHandler : MonoBehaviour
         }
         else
         {
+            detailsScreen.gameObject.SetActive(false);
+
             if (isNewUser)
             {
                 SetView(ELoginFlow.RoleSelection);
@@ -130,6 +130,8 @@ public class LoginHandler : MonoBehaviour
         {
             if(user != null)
             {
+                isNewUser = false;
+
                 this.user = user;
 
                 DataManager.Instance.UpdateUserInfo(user);

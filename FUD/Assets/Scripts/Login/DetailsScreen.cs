@@ -25,7 +25,7 @@ public class DetailsScreen : MonoBehaviour
 
         this.isNewUser = isNewUser;
 
-        signInText.text = isNewUser ? "SignIn" : "Login";
+        signInText.text = isNewUser ? "Sign In" : "Login";
     }
 
     public void OnClick_SendOTP()
