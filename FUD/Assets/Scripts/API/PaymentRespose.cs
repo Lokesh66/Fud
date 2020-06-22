@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class PaymentRespose : MonoBehaviour
 {
-    public void onPaymentResponseRecieved(string status, string orderId)
+    public void onPaymentResponseRecieved(string status)
     {
-        Debug.Log ("onPaymentResponseRecieved = " + status + " -- " + orderId);
-        AlertMessage.Instance.SetText("onPaymentResponseRecieved : "+ status + " -- " + orderId, false);
+        Debug.Log ("onPaymentResponseRecieved = " + status);
+        AlertMessage.Instance.SetText("onPaymentResponseRecieved : "+ status, false);
 
         
-        switch (status)
+        /*switch (status)
         {
             case "success":
                 Loader.Instance.StartLoading();
@@ -37,7 +37,7 @@ public class PaymentRespose : MonoBehaviour
                 break;
             default:
                 break;
-        }
+        }*/
         
     }
 }
