@@ -39,6 +39,11 @@ public class LeftMenu : MonoBehaviour
         profilePanel.SetView();
     }
 
+    public void OnBasicInfoButtonAction()
+    { 
+    
+    }
+
     public void OnSubscrptionButtonAction()
     {
         subscriptionController.EnableView();
