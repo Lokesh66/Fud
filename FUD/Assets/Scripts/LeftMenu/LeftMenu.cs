@@ -17,6 +17,9 @@ public class LeftMenu : MonoBehaviour
     public void SetView(System.Action OnClose)
     {
         gameObject.SetActive(true);
+
+        nameText.text = DataManager.Instance.userInfo.name;
+
         OnCloseAction = OnClose;
     }
     public void BackButtonAction()

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class MyProfilePanel : MonoBehaviour
 {
@@ -17,13 +18,18 @@ public class MyProfilePanel : MonoBehaviour
     public void SetView()
     {
         UserData data = DataManager.Instance.userInfo;
+
+        List<Genre> genres = DataManager.Instance.genres;
+
+        Genre selectedGenre = genres.Find(item => item.id == data.role_id);
+
         if (data != null)
         {
             nameText.text = data.name;
             ageText.text = data.dob;
             emailText.text = data.email_id;
             contactText.text = data.phone.ToString();
-            roleText.text = data.role_id.ToString();
+            roleText.text = selectedGenre.name;
             primarySkillsText.text = "";
             secondarySkillsText.text = "";
         }
