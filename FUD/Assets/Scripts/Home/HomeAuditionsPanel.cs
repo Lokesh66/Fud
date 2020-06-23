@@ -7,6 +7,8 @@ public class HomeAuditionsPanel : MonoBehaviour
     public GameObject homeCell;
     public Transform parentContent;
 
+    public GameObject noDataObject;
+
     public AuditionDetailView detailView;
 
     List<Audition> auditionsList = new List<Audition>();
@@ -38,6 +40,8 @@ public class HomeAuditionsPanel : MonoBehaviour
     void SetView()
     {
         parentContent.DestroyChildrens();
+
+        noDataObject.SetActive(auditionsList.Count == 0);
 
         if (auditionsList == null)
         {
