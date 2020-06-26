@@ -47,7 +47,7 @@ public partial class APIHandler
         }));
     }
 
-    public void GetBrowserData(int pageNo, Action<bool, List<PortfolioAlbumModel>> action)
+    public void GetBrowserData(int pageNo, Action<bool, List<PortfolioModel>> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -59,7 +59,7 @@ public partial class APIHandler
 
             ProjectBrowserResponse projectsResponse = JsonUtility.FromJson<ProjectBrowserResponse>(response);
 
-            action(status, projectsResponse.data.PortfolioMedia);
+            action(status, projectsResponse.data);
         }));
     }
 
@@ -259,6 +259,35 @@ public partial class APIHandler
             action(apiStatus);
         }));
     }
+
+    public void ApplyBrowseFilter(string ageFrom, string ageTo, string gender, int roleId, Action<bool, List<PortfolioModel>> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("age_from", ageFrom);
+
+        parameters.Add("age_to", ageTo);
+
+        parameters.Add("role_id", roleId);
+
+        parameters.Add("gender", gender);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.GET_PROJECT_BROWSER_DATA, true, parameters, (apiStatus, response) =>
+        {
+            ProjectBrowserResponse projectsResponse = JsonUtility.FromJson<ProjectBrowserResponse>(response);
+
+            action(apiStatus, projectsResponse.data);
+
+        }));
+    }
+
+    public void UpdateShortListedAlbums(Dictionary<string, object> parameters, Action<bool> action)
+    {
+        gameManager.StartCoroutine(PostRequest(APIConstants.UPDATE_SHORTLISTED_ALBUMS, true, parameters, (status, response) => {
+
+            action(status);
+        }));
+    }
 }
 
 [Serializable]
@@ -443,7 +472,7 @@ public class SceneResponse : BaseResponse
 [Serializable]
 public class ProjectBrowserResponse : BaseResponse
 {
-    public PortfolioModel data;
+    public List<PortfolioModel> data;
 }
 
 [Serializable]

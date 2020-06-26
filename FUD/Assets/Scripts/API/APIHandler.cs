@@ -552,6 +552,8 @@ public partial class APIHandler
             form.AddBinaryData("file", img, filePath, "video/*");
         }
 
+        form.AddField("fromsignup", "true");
+
         UnityWebRequest request = UnityWebRequest.Post(APIConstants.MEDIA_URL, form);
 
         yield return request.SendWebRequest();

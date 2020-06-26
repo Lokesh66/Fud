@@ -1031,7 +1031,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 734.74, y: 0}
+  m_AnchoredPosition: {x: 734.7383, y: 0}
   m_SizeDelta: {x: 214.19, y: 60}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &49391230323895263
@@ -3426,7 +3426,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Share
+  m_text: ShortList
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4150,7 +4150,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 394.27002, y: 0}
+  m_AnchoredPosition: {x: 394.26953, y: 0}
   m_SizeDelta: {x: 190.47, y: 60}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &3420655589086275031
@@ -7316,8 +7316,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8050621283276261429}
-  - component: {fileID: 2727828187897831980}
-  - component: {fileID: 6954645792994709893}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -7344,45 +7342,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &2727828187897831980
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6302799445604655239}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 20
-  m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
---- !u!114 &6954645792994709893
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6302799445604655239}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 0
-  m_VerticalFit: 2
 --- !u!1 &6348424005699580431
 GameObject:
   m_ObjectHideFlags: 0
@@ -8644,13 +8603,14 @@ GameObject:
   - component: {fileID: 2295490759761948169}
   - component: {fileID: 4216152341652516666}
   - component: {fileID: 3889280154722628129}
+  - component: {fileID: 556007220}
   m_Layer: 5
   m_Name: StoriesScroll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6011795806632059591
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8737,6 +8697,49 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &556007220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7551247863912696857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f1133be024134495add4faccfb2c57b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Params:
+    recycleBinCapacity: -1
+    updateMode: 0
+    loopItems: 0
+    viewport: {fileID: 7926337985977471868}
+    contentPadding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    contentGravity: 1
+    contentSpacing: 30
+    galleryEffectAmount: 0
+    galleryEffectViewportPivot: 0.5
+    _DefaultItemSize: 400
+    cellPrefab: {fileID: 330625098523666556, guid: e2eacb5b54f13234fa38e51fa7146734,
+      type: 3}
+    numCellsPerGroup: 1
+    alignmentOfCellsInGroup: 3
+    groupPadding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    cellWidthForceExpandInGroup: 0
+    cellHeightForceExpandInGroup: 0
+  OnItemsUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  adataObject: {fileID: 6597908638138918304}
+  tableType: 0
 --- !u!1 &7662973309977031470
 GameObject:
   m_ObjectHideFlags: 0
@@ -8879,6 +8882,8 @@ MonoBehaviour:
     type: 3}
   noDataObject: {fileID: 7276383908918183679}
   activityPopUp: {fileID: 8059073911618767650}
+  tableView: {fileID: 556007220}
+  activityModels: []
 --- !u!1 &7802961886673804011
 GameObject:
   m_ObjectHideFlags: 0
@@ -10179,11 +10184,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7536055301183706023, guid: 7dadbe9a48c70bc4e997681ada22fc57,
-        type: 3}
-      propertyPath: m_text
-      value: No Stories Posted Right now.
-      objectReference: {fileID: 0}
     - target: {fileID: 9003080657758114759, guid: 7dadbe9a48c70bc4e997681ada22fc57,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10288,6 +10288,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7536055301183706023, guid: 7dadbe9a48c70bc4e997681ada22fc57,
+        type: 3}
+      propertyPath: m_text
+      value: No Stories Posted Right now.
       objectReference: {fileID: 0}
     - target: {fileID: 7363239655147916306, guid: 7dadbe9a48c70bc4e997681ada22fc57,
         type: 3}

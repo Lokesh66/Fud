@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
 
 public class APIConstants 
 {
@@ -42,7 +41,9 @@ public class APIConstants
 
     public const string CREATE_PROJECT_CAST = BASE_URL + "v1/projectCast/";
 
-    public const string GET_PROJECT_BROWSER_DATA = BASE_URL + "v1/browse/portfolio";
+    public const string GET_PROJECT_BROWSER_DATA = BASE_URL + "v1/browse/portfolio/";
+
+    public const string UPDATE_SHORTLISTED_ALBUMS = BASE_URL + "v1/user/shortlistPortfolio/";
 
     public const string GET_PROJECT_CHARACTERS = BASE_URL + "v1/getStoryCharactersByProject";
 

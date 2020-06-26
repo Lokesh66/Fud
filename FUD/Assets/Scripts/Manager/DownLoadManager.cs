@@ -92,5 +92,30 @@ public class DownLoadManager : MonoBehaviour
         CallBack(ProfilePic);
     }
 
+    public Texture2D GetLocalTexture(string imageurl)
+    {
+        if (string.IsNullOrEmpty(imageurl))
+        {
+            return null;
+        }
+
+        Texture2D texture = null;
+
+        var m = Regex.Match(imageurl, ".+(/.+)$");
+        string imageName = m.Groups[1].Value.Remove(0, 1);
+        string path = Application.persistentDataPath + "/" + imageName;
+
+        if (File.Exists(path))
+        {
+            byte[] fileData = File.ReadAllBytes(path);
+
+            texture = new Texture2D(1024, 1024, TextureFormat.DXT1, false);
+
+            texture.LoadImage(fileData);
+        }
+
+        return texture;
+    }
+
     #endregion
 }

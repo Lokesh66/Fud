@@ -50,13 +50,17 @@ public partial class APIHandler
         }));
     }
 
-    public void GetAlteredStories(Action<bool, List<StoryAlteredModel>> action)
+    public void GetAlteredStories(int pageNo, Action<bool, List<StoryAlteredModel>> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
+        string url = APIConstants.GET_ALTERED_STORIES;
+
+        url += "?page=" + pageNo + "&limit=50&count=50";
+
         parameters.Add("tab_ name", "altered");
 
-        gameManager.StartCoroutine(PostRequest(APIConstants.GET_ALTERED_STORIES, true, parameters, (status, response) => {
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
 
             StoriesAlteredResponse stories = JsonUtility.FromJson<StoriesAlteredResponse>(response);
 
@@ -384,13 +388,17 @@ public partial class APIHandler
         }));
     }
 
-    public void GetStoryPosts(Action<bool, string> action)
+    public void GetStoryPosts(int pageNo, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
+        string url = APIConstants.GET_STORY_POSTS;
+
+        url += "?page="+ pageNo + "&limit=50&count=50";
+
         parameters.Add("tab_name", "offers");
 
-        gameManager.StartCoroutine(PostRequest(APIConstants.GET_STORY_POSTS, true, parameters, (status, response) => {
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
 
             action(status, response);
         }));

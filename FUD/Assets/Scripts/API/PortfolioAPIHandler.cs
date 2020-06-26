@@ -368,6 +368,8 @@ public class PortfolioModel
     public DateTime created_date_time;
     public DateTime updatedAt;
     public List<PortfolioAlbumModel> PortfolioMedia;
+
+    public PortfolioAlbumModel onScreenModel;
 }
 
 

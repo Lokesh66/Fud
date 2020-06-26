@@ -49,8 +49,6 @@ public class StoryAlteredCell : MonoBehaviour
 
     public void OnButtonAction()
     {
-        Debug.Log("OnButtonAction : OnTapActon = " + OnTapActon);
-
         OnTapActon?.Invoke(alteredModel);
     }
 
@@ -63,22 +61,5 @@ public class StoryAlteredCell : MonoBehaviour
         statusTag.sprite = Resources.Load<Sprite>("Images/StatusTags/" + statusType);
 
         statusText.text = statusType.ToString();
-
-        //switch (statusValue)
-        //{
-        //    case 0:
-        //        statusText.text = "Waiting"
-        //        break;
-        //    case 3:
-
-        //        break;
-        //    case 5:
-        //        statusTag.sprite = shortListTag;
-        //        break;
-        //    case 8:
-        //        statusTag.sprite = reviewTag;
-        //        break;
-        //        //}
-        //}
     }
 }

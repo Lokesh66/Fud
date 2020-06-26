@@ -14,6 +14,8 @@ public class ProjectsView : BaseView
 
     public GameObject addObject;
 
+    public GameObject filterObject;
+
     public TextMeshProUGUI[] buttonsList;
 
 
@@ -63,6 +65,8 @@ public class ProjectsView : BaseView
 
             addObject.SetActive(currentTab == ETabType.Created);
 
+            filterObject.SetActive(currentTab == ETabType.Browser);
+
             currentObject?.SetActive(false);
 
             UpdateCurrentView();
@@ -103,6 +107,8 @@ public class ProjectsView : BaseView
 
         currentObject?.SetActive(false);
 
-        currentTab = ETabType.Offers; 
+        currentTab = ETabType.Offers;
+
+        filterObject.SetActive(false);
     }
 }

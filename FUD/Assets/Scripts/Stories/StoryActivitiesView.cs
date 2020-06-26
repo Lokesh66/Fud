@@ -1,6 +1,7 @@
-﻿using System.Collections;
+﻿using frame8.ScrollRectItemsAdapter.GridExample;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 public class StoryActivitiesView : MonoBehaviour
 {
@@ -12,19 +13,33 @@ public class StoryActivitiesView : MonoBehaviour
 
     public StoryActivityPopUp activityPopUp;
 
+    public StoryOfferedTableView tableView;
 
-    List<StoryActivityModel> activityModels;
+
+    public List<StoryActivityModel> activityModels;
+
+
+    bool isPagingOver = false;
+
+    int pageNo = 1;
+
+    int MAX_PAGE_STORIES = 50;
+
 
     public void EnableView()
     {
+        pageNo = 1;
+
         Load();
 
         gameObject.SetActive(true);
     }
 
     void Load()
-    { 
-        GameManager.Instance.apiHandler.GetStoryPosts((status, response) => {
+    {
+        tableView.gameObject.SetActive(false);
+
+        GameManager.Instance.apiHandler.GetStoryPosts(pageNo, (status, response) => {
 
             StoryActivityResponseModel responseModel = JsonUtility.FromJson<StoryActivityResponseModel>(response);
 
@@ -32,25 +47,20 @@ public class StoryActivitiesView : MonoBehaviour
             {
                 activityModels = responseModel.data;
 
-                noDataObject.SetActive(activityModels.Count == 0);
+                pageNo++;
 
-                SetView();
+                if (activityModels.Count < MAX_PAGE_STORIES)
+                {
+                    isPagingOver = true;
+
+                    pageNo = 1;
+                }
+
+                tableView.gameObject.SetActive(true);
+
+                noDataObject.SetActive(activityModels.Count == 0);
             }
         });
-    }
-
-    void SetView()
-    {
-        int totalCount = activityModels.Count;
-
-        content.DestroyChildrens();
-
-        for (int i = 0; i < totalCount; i++)
-        {
-            GameObject cellObject = Instantiate(activityCell, content);
-
-            cellObject.GetComponent<StoryActivityCell>().Load(activityModels[i], activityPopUp);
-        }
     }
 
     public void OnStatusApplied(StoryActivityModel activityModel)
@@ -59,4 +69,46 @@ public class StoryActivitiesView : MonoBehaviour
 
         noDataObject.SetActive(activityModels.Count == 0);
     }
+
+    public void OnAPICall()
+    {
+        if (isPagingOver)
+            return;
+
+        GetNextPageData();
+    }
+
+    void GetNextPageData()
+    {
+        GameManager.Instance.apiHandler.GetStoryPosts(pageNo, (status, response) => {
+
+            StoryActivityResponseModel responseModel = JsonUtility.FromJson<StoryActivityResponseModel>(response);
+
+            if (status)
+            {
+                activityModels = responseModel.data;
+
+                pageNo++;
+
+                if (activityModels.Count < MAX_PAGE_STORIES)
+                {
+                    isPagingOver = true;
+
+                    pageNo = 1;
+                }
+                else {
+                    isPagingOver = false;
+
+                    pageNo++;
+                }
+
+                tableView.Data.Clear();
+
+                tableView.Data.Add(activityModels.Count);
+
+                tableView.Refresh();
+            }
+        });
+    }
+
 }

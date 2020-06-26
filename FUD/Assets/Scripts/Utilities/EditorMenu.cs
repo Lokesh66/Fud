@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
@@ -13,6 +14,12 @@ public class EditorMenu : MonoBehaviour
     static void ClearData()
     {
         Directory.Delete(APIConstants.PERSISTENT_PATH, true);
+    }
+
+    [MenuItem("Tools/SwitchToHomeScene")]
+    static void SwitchToHomeScene()
+    {
+        //UnityEditor.SceneManagement.EditorSceneManager.SetActiveScene();
     }
 }
 

@@ -1,6 +1,7 @@
-﻿using System.Collections;
+﻿using frame8.ScrollRectItemsAdapter.GridExample;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 public class StoriesAlteredView : MonoBehaviour
 {
@@ -12,10 +13,18 @@ public class StoriesAlteredView : MonoBehaviour
 
     public StoriesAlteredPopUpView alteredPopUpView;
 
+    public StoryAlteredTableView tableView;
+
     public NoDataView noDataView;
 
 
-    List<StoryAlteredModel> modelsList;
+    public List<StoryAlteredModel> modelsList;
+
+    bool isPagingOver = false;
+
+    int pageNo = 1;
+
+    int MAX_ALTERED_STORIES = 50;
 
 
     public void EnableView()
@@ -29,37 +38,29 @@ public class StoriesAlteredView : MonoBehaviour
 
     void Load()
     {
-        GameManager.Instance.apiHandler.GetAlteredStories((status, modelsList) =>
+        GameManager.Instance.apiHandler.GetAlteredStories(pageNo, (status, modelsList) =>
         {
             if (status)
             {
                 this.modelsList = modelsList;
 
-                SetView();
+                pageNo++;
+
+                if (modelsList.Count < MAX_ALTERED_STORIES)
+                {
+                    isPagingOver = true;
+
+                    pageNo = 1;
+                }
+
+                if (modelsList.Count == 0)
+                {
+                    noDataView.SetView(GetNoDataModel());
+                }
+
+                noDataView.gameObject.SetActive(modelsList?.Count == 0);
             }
         });
-    }
-
-    void SetView()
-    {
-        content.DestroyChildrens();
-
-        Debug.Log("modelsList Count = " + modelsList.Count);
-
-        if (modelsList?.Count > 0)
-        {
-            for (int i = 0; i < modelsList.Count; i++)
-            {
-                GameObject storyObject = Instantiate(alteredCell, content);
-
-                storyObject.GetComponent<StoryAlteredCell>().SetAlteredView(modelsList[i], OnAlteredTapAction);
-            }
-        }
-        else
-        {
-            noDataView.SetView(GetNoDataModel());
-        }
-        noDataView.gameObject.SetActive(modelsList?.Count == 0);
     }
 
     public void ClearData()
@@ -69,9 +70,13 @@ public class StoriesAlteredView : MonoBehaviour
         gameObject.SetActive(false);
 
         modelsList?.Clear();
+
+        pageNo = 1;
+
+        isPagingOver = false;
     }
 
-    void OnAlteredTapAction(StoryAlteredModel alteredModel)
+    public void OnAlteredTapAction(StoryAlteredModel alteredModel)
     {
         alteredPopUpView.Load(alteredModel);
     }
@@ -83,5 +88,45 @@ public class StoriesAlteredView : MonoBehaviour
         noDataModel.subTitle = "No Altered Stories Right Now";
 
         return noDataModel;
+    }
+
+    public void OnAPICall()
+    {
+        if (isPagingOver)
+            return;
+
+        GetNextPageData();
+    }
+
+    void GetNextPageData()
+    {
+        GameManager.Instance.apiHandler.GetAlteredStories(pageNo, (status, modelsList) =>
+        { 
+            if (status)
+            {
+                this.modelsList = modelsList;
+
+                pageNo++;
+
+                if (modelsList.Count < MAX_ALTERED_STORIES)
+                {
+                    isPagingOver = true;
+
+                    pageNo = 0;
+                }
+                else
+                {
+                    isPagingOver = false;
+
+                    pageNo++;
+                }
+
+                tableView.Data.Clear();
+
+                tableView.Data.Add(modelsList.Count);
+
+                tableView.Refresh();
+            }
+        });
     }
 }

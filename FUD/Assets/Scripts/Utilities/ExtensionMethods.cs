@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public static class ExtensionMethods
@@ -66,5 +67,44 @@ public static class ExtensionMethods
             TextureFormat.RGB24,
             false, false,
             texture.GetNativeTexturePtr());
+    }
+
+    public static Color Alpha(this Color color, float alpha)
+    {
+        color.a = Mathf.Clamp01(alpha);
+
+        return color;
+    }
+
+    public static Image SetAlpha(this Image color, float alpha)
+    {
+        color.color = new Color(color.color.r, color.color.g, color.color.b, alpha);
+
+        return color;
+    }
+
+    public static bool IsNOTNullOrEmpty(this string str)
+    {
+        return !string.IsNullOrEmpty(str);
+    }
+
+    public static string Md5Sum(string strToEncrypt)
+    {
+        System.Text.UTF8Encoding ue = new System.Text.UTF8Encoding();
+        byte[] bytes = ue.GetBytes(strToEncrypt);
+
+        // encrypt bytes
+        System.Security.Cryptography.MD5CryptoServiceProvider md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+        byte[] hashBytes = md5.ComputeHash(bytes);
+
+        // Convert the encrypted bytes back to a string (base 16)
+        string hashString = "";
+
+        for (int i = 0; i < hashBytes.Length; i++)
+        {
+            hashString += System.Convert.ToString(hashBytes[i], 16).PadLeft(2, '0');
+        }
+
+        return hashString.PadLeft(32, '0');
     }
 }

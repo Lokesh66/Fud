@@ -55,7 +55,6 @@ public class StoryCreationView : MonoBehaviour
 
     System.Action OnClose;
 
-    string errorMessage;
 
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
 

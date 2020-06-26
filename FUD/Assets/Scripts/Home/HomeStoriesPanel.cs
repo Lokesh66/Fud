@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+
 public class HomeStoriesPanel : MonoBehaviour
 {
     public GameObject homeCell;
@@ -49,6 +50,15 @@ public class HomeStoriesPanel : MonoBehaviour
             {
                 homeItem.SetView(HomeCellType.STORY, i - 1, storiesList[i - 1].title, storiesList[i - 1].story_poster, OnStorySelectAction);
             }
+        }
+
+        if (storiesList.Count == 0)
+        {
+            GameObject storyObject = Instantiate(homeCell, parentContent);
+
+            HomeCell homeItem = storyObject.GetComponent<HomeCell>();
+
+            homeItem.SetView(HomeCellType.DEFAULT, -1, string.Empty, string.Empty, OnStorySelectAction);
         }
     }
 
