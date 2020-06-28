@@ -4,8 +4,6 @@ using System;
 
 public class PortfolioMediaCell : MonoBehaviour
 {
-    public Image albumImage;
-
 
     PortfolioModel albumModel;
 
@@ -19,10 +17,12 @@ public class PortfolioMediaCell : MonoBehaviour
 
         if (model.PortfolioMedia.Count > 0)
         {
-            GameManager.Instance.downLoadManager.DownloadImage(model.PortfolioMedia[0].content_url, (sprite) =>
+            PortfolioAlbumModel albumModel = model.PortfolioMedia.Find(item => item.GetMediaType(item.media_type) == EMediaType.Image);
+
+            if (albumModel != null)
             {
-                albumImage.sprite = sprite;
-            });
+                model.onScreenModel = albumModel;
+            }
         }
     }
 

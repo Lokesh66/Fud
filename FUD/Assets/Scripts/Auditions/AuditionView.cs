@@ -1,12 +1,35 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using TMPro;
+
 
 public class AuditionView : BaseView
 {
+    public TextMeshProUGUI[] buttonsList;
+
+    public AuditionOfferedView offeredView;
+
+    public AuditionAlteredView alteredView;
+
+    public AuditionCreatedView createdView;
+
+    public GameObject addObject;
+
+
+    public Color selectedColor;
+
+    public Color disabledColor;
+
+
+    private GameObject currentObject;
+
+    private ETabType currentTab = ETabType.Offers;
+
+
     protected override void EnableView()
     {
         base.EnableView();
+
+        UpdateCurrentView();
     }
 
     protected override void OnAddSubView(GameObject addedObject)
@@ -22,6 +45,47 @@ public class AuditionView : BaseView
     public override void OnExitScreen()
     {
         base.OnExitScreen();
+    }
+
+    #region Button Actions
+
+    public void OnTabAction(int tabIndex)
+    {
+        if (currentTab != (ETabType)tabIndex)
+        {
+            buttonsList[(int)currentTab].color = disabledColor;
+
+            buttonsList[tabIndex].color = selectedColor;
+
+            currentTab = (ETabType)tabIndex;
+
+            currentObject?.SetActive(false);
+
+            UpdateCurrentView();
+        }
+    }
+
+    void UpdateCurrentView()
+    {
+        addObject.SetActive(currentTab == ETabType.Created);
+
+        switch (currentTab)
+        {
+            case ETabType.Offers:
+                currentObject = offeredView.gameObject;
+                offeredView.Load();
+                break;
+
+            case ETabType.Altered:
+                currentObject = alteredView.gameObject;
+                alteredView.Load();
+                break;
+
+            case ETabType.Created:
+                currentObject = createdView.gameObject;
+                createdView.Load();
+                break;
+        }
     }
 
     public void OnAddButtonAction()
@@ -41,4 +105,6 @@ public class AuditionView : BaseView
             UIManager.Instance.CreateUnAvaiableAlert(EFeatureType.AuditionCreation);
         }
     }
+
+    #endregion
 }

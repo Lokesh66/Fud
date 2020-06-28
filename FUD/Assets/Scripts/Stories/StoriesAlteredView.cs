@@ -38,6 +38,8 @@ public class StoriesAlteredView : MonoBehaviour
 
     void Load()
     {
+        tableView.gameObject.SetActive(false);
+
         GameManager.Instance.apiHandler.GetAlteredStories(pageNo, (status, modelsList) =>
         {
             if (status)
@@ -53,6 +55,8 @@ public class StoriesAlteredView : MonoBehaviour
                     pageNo = 1;
                 }
 
+                tableView.gameObject.SetActive(true);
+
                 if (modelsList.Count == 0)
                 {
                     noDataView.SetView(GetNoDataModel());
@@ -65,8 +69,6 @@ public class StoriesAlteredView : MonoBehaviour
 
     public void ClearData()
     {
-        content.DestroyChildrens();
-
         gameObject.SetActive(false);
 
         modelsList?.Clear();

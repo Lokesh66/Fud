@@ -2165,8 +2165,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7486478678723175099}
-  - component: {fileID: 7508663203135652110}
-  - component: {fileID: 3538312134203733963}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -2193,45 +2191,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &7508663203135652110
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2371668120723798728}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 20
-  m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 1
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
---- !u!114 &3538312134203733963
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2371668120723798728}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 0
-  m_VerticalFit: 2
 --- !u!1 &2545875446513304415
 GameObject:
   m_ObjectHideFlags: 0
@@ -3029,7 +2988,9 @@ MonoBehaviour:
     type: 3}
   storiesTab: 1
   alteredPopUpView: {fileID: 8255886446665616631}
+  tableView: {fileID: 1995256332051368803}
   noDataView: {fileID: 2625620296940481861}
+  modelsList: []
 --- !u!1 &3346391380542639551
 GameObject:
   m_ObjectHideFlags: 0
@@ -3530,13 +3491,14 @@ GameObject:
   - component: {fileID: 3930945897067835301}
   - component: {fileID: 449782815855842980}
   - component: {fileID: 6903180713137055443}
+  - component: {fileID: 1995256332051368803}
   m_Layer: 5
   m_Name: StoriesScroll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3195603257221700119
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3623,6 +3585,48 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1995256332051368803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3681423050825602996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0755fe4a7ada4b04ba9ebf5cce37a83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Params:
+    recycleBinCapacity: -1
+    updateMode: 0
+    loopItems: 0
+    viewport: {fileID: 2670033060047625383}
+    contentPadding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    contentGravity: 1
+    contentSpacing: 30
+    galleryEffectAmount: 0
+    galleryEffectViewportPivot: 0.5
+    _DefaultItemSize: 400
+    cellPrefab: {fileID: 330625098523666556, guid: 9a130881695e04fc480727ab539cf51b,
+      type: 3}
+    numCellsPerGroup: 1
+    alignmentOfCellsInGroup: 4
+    groupPadding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    cellWidthForceExpandInGroup: 1
+    cellHeightForceExpandInGroup: 1
+  OnItemsUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  adataObject: {fileID: 3645711528714027591}
 --- !u!1 &3793525017240273480
 GameObject:
   m_ObjectHideFlags: 0
@@ -3635,13 +3639,14 @@ GameObject:
   - component: {fileID: 6914526639156507811}
   - component: {fileID: 5887470076361991009}
   - component: {fileID: 3055369309525160177}
+  - component: {fileID: 286853013748924210}
   m_Layer: 5
   m_Name: StoriesScroll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7974040728147458545
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3728,6 +3733,48 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &286853013748924210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3793525017240273480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab8e659938aa046aa8c311afdc32a983, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Params:
+    recycleBinCapacity: -1
+    updateMode: 0
+    loopItems: 0
+    viewport: {fileID: 4400280595647539080}
+    contentPadding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    contentGravity: 1
+    contentSpacing: 30
+    galleryEffectAmount: 0
+    galleryEffectViewportPivot: 0.5
+    _DefaultItemSize: 400
+    cellPrefab: {fileID: 330625098523666556, guid: f5ff5654a09bf774fbe092fc347ba66d,
+      type: 3}
+    numCellsPerGroup: 1
+    alignmentOfCellsInGroup: 4
+    groupPadding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    cellWidthForceExpandInGroup: 1
+    cellHeightForceExpandInGroup: 1
+  OnItemsUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+  adataObject: {fileID: 8068333539981536756}
 --- !u!1 &4019997902705190451
 GameObject:
   m_ObjectHideFlags: 0
@@ -3892,8 +3939,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3114379986558972791}
-  - component: {fileID: 7477874611717762202}
-  - component: {fileID: 7858240981678073620}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -3920,45 +3965,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &7477874611717762202
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4053444926771737984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 20
-  m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 1
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
---- !u!114 &7858240981678073620
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4053444926771737984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 0
-  m_VerticalFit: 2
 --- !u!1 &4225662670182289930
 GameObject:
   m_ObjectHideFlags: 0
@@ -7307,6 +7313,8 @@ MonoBehaviour:
     type: 3}
   storiesTab: 2
   noDataView: {fileID: 4326382091925132403}
+  tableView: {fileID: 286853013748924210}
+  storiesList: []
 --- !u!1 &6302799445604655239
 GameObject:
   m_ObjectHideFlags: 0

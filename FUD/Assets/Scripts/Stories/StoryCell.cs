@@ -30,8 +30,6 @@ public class StoryCell : MonoBehaviour
 
     public Action<int> OnTapActon;
 
-    Vector2 startPoint;
-
 
     public void SetView(StoryModel storyModel, Action<int> tapAction = null)
     {

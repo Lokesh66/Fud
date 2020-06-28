@@ -4,9 +4,13 @@ using System;
 
 public partial class APIHandler
 {
-    public void GetProjects(Action<bool, ProjectsResponse> action)
+    public void GetProjects(int pageNo, Action<bool, ProjectsResponse> action)
     {
-        gameManager.StartCoroutine(GetRequest(APIConstants.CREATE_PROJECT, true, (status, response) => {
+        string url = APIConstants.CREATE_PROJECT;
+
+        url += "?page=" + pageNo + "&limit=50&count=50";
+
+        gameManager.StartCoroutine(GetRequest(url, true, (status, response) => {
 
             if (status)
             {
@@ -17,13 +21,17 @@ public partial class APIHandler
         }));
     }
 
-    public void GetOfferedProjects(Action<bool, ProjectOfferedResponse> action)
+    public void GetOfferedProjects(int pageNo, Action<bool, ProjectOfferedResponse> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
+        string url = APIConstants.GET_OFFERED_PROJECTS;
+
+        url += "?page=" + pageNo + "&limit=50&count=50";
+
         parameters.Add("tab_name", "offeres");
 
-        gameManager.StartCoroutine(PostRequest(APIConstants.GET_OFFERED_PROJECTS, true, parameters, (status, response) => {
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
 
             Debug.Log("response = " + response);
 
@@ -33,13 +41,17 @@ public partial class APIHandler
         }));
     }
 
-    public void GetAlteredProjects(Action<bool, ProjectOfferedResponse> action)
+    public void GetAlteredProjects(int pageNo, Action<bool, ProjectOfferedResponse> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
+        string url = APIConstants.GET_ALTERED_PROJECTS;
+
+        url += "?page=" + pageNo + "&limit=50&count=50";
+
         parameters.Add("tab_name", "altered");
 
-        gameManager.StartCoroutine(PostRequest(APIConstants.GET_ALTERED_PROJECTS, true, parameters, (status, response) => {
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
 
             ProjectOfferedResponse projectsResponse = JsonUtility.FromJson<ProjectOfferedResponse>(response);
 
@@ -53,7 +65,7 @@ public partial class APIHandler
 
         string url = APIConstants.GET_PROJECT_BROWSER_DATA;
 
-        url += "?page=" + pageNo.ToString() + "&limit=20&count=20";
+        url += "?page=" + pageNo + "&limit=50&count=50";
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using frame8.ScrollRectItemsAdapter.GridExample;
+using System.Collections.Generic;
 using UnityEngine;
 using System;
 
@@ -24,17 +25,24 @@ public class ProjectBrowserView : MonoBehaviour
     public GameObject shortListButton;
 
 
-    List<PortfolioModel> albumModels;
+    public ProjectBrowseTableView tableView;
+
+    [HideInInspector]
+    public List<PortfolioModel> albumModels;
 
     List<PortfolioModel> selectedAlbums = new List<PortfolioModel>();
 
+
     int pageNo = 1;
+
+    bool isPagingOver = false;
+
+    int MAX_ALBUMS = 50;
+
 
     public void Load()
     {
         gameObject.SetActive(true);
-
-        content.DestroyChildrens();
 
         GetBrowserData();
     }
@@ -102,7 +110,24 @@ public class ProjectBrowserView : MonoBehaviour
             {
                 this.albumModels = albums;
 
-                SetView();
+                pageNo++;
+
+                if (albumModels.Count < MAX_ALBUMS)
+                {
+                    isPagingOver = true;
+
+                    pageNo = 1;
+                }
+
+                tableView.gameObject.SetActive(true);
+
+
+                if (albumModels.Count == 0)
+                {
+                    noDataView.SetView(GetNoDataModel());
+                }
+
+                noDataView.gameObject.SetActive(albumModels?.Count == 0);
             }
         });
     }
@@ -147,7 +172,7 @@ public class ProjectBrowserView : MonoBehaviour
         selectedAlbums.Clear();
     }
 
-    void OnAlbumSelection(bool isAlbumAction, PortfolioModel albumModel)
+    public void OnAlbumSelection(bool isAlbumAction, PortfolioModel albumModel)
     {
         if (isAlbumAction)
         {
@@ -186,5 +211,45 @@ public class ProjectBrowserView : MonoBehaviour
         albumModels = portfolioModels;
 
         LoadData();
+    }
+
+    public void OnAPICall()
+    {
+        if (isPagingOver)
+            return;
+
+        GetNextPageData();
+    }
+
+    void GetNextPageData()
+    {
+        GameManager.Instance.apiHandler.GetBrowserData(pageNo, (status, albums) =>
+        {
+            if (status)
+            {
+                this.albumModels = albums;
+
+                pageNo++;
+
+                if (albumModels.Count < MAX_ALBUMS)
+                {
+                    isPagingOver = true;
+
+                    pageNo = 0;
+                }
+                else
+                {
+                    isPagingOver = false;
+
+                    pageNo++;
+                }
+
+                tableView.Data.Clear();
+
+                tableView.Data.Add(albumModels.Count);
+
+                tableView.Refresh();
+            }
+        });
     }
 }

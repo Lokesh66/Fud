@@ -15,6 +15,10 @@ public class MyProfilePanel : MonoBehaviour
     public TMP_Text primarySkillsText;
     public TMP_Text secondarySkillsText;
 
+
+    public ProfileInfoView infoView;
+
+
     public void SetView()
     {
         UserData data = DataManager.Instance.userInfo;
@@ -38,5 +42,18 @@ public class MyProfilePanel : MonoBehaviour
     public void OnBackButtonAction()
     {
         gameObject.SetActive(false);
+    }
+
+    public void OnEditButtonAction()
+    {
+        infoView.Load(OnCloseAction);
+    }
+
+    void OnCloseAction(bool isDataUpdated)
+    {
+        if (isDataUpdated)
+        {
+            SetView();
+        }
     }
 }

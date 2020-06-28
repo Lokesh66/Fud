@@ -16,10 +16,16 @@ public class EditorMenu : MonoBehaviour
         Directory.Delete(APIConstants.PERSISTENT_PATH, true);
     }
 
-    [MenuItem("Tools/SwitchToHomeScene")]
+    [MenuItem("Scenes/SwitchToHomeScene")]
     static void SwitchToHomeScene()
     {
-        //UnityEditor.SceneManagement.EditorSceneManager.SetActiveScene();
+        UnityEditor.SceneManagement.EditorSceneManager.OpenScene("Assets/Scenes/HomeScene.unity");
+    }
+
+    [MenuItem("Scenes/SwitchToDefaultScene")]
+    static void SwitchToDefaultScene()
+    {
+        UnityEditor.SceneManagement.EditorSceneManager.OpenScene("Assets/Scenes/SplashScreen.unity");
     }
 }
 

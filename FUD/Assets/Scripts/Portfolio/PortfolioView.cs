@@ -21,9 +21,9 @@ public class PortfolioView : BaseView
 
     public PortfolioHandler portfolioHandler;
     
-    public PortfolioActivitiesView offeredView;
+    public PortfolioOfferedView offeredView;
 
-    public PortfolioActivitiesView alteredView;
+    public PortfolioAlteredView alteredView;
 
 
     public GameObject createPortfolioCache;

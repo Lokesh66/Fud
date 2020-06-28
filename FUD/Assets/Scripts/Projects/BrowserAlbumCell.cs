@@ -4,7 +4,7 @@ using System;
 
 public class BrowserAlbumCell : MonoBehaviour
 {
-    public Image albumImage;
+    public RawImage albumImage;
 
     public GameObject selectObject;
 
@@ -21,29 +21,15 @@ public class BrowserAlbumCell : MonoBehaviour
         this.portfolioModel = portfolioModel;
 
         this.OnSelectAction = OnSelectAction;
+        
+        //PortfolioAlbumModel _albumModel = portfolioModel.PortfolioMedia.Find(item => DataManager.Instance.GetMediaType(item.media_type) == EMediaType.Video);
 
-        PortfolioAlbumModel albumModel = portfolioModel.PortfolioMedia.Find(item => DataManager.Instance.GetMediaType(item.media_type) == EMediaType.Image);
+        //if (_albumModel != null)
+        //{
+        //    portfolioModel.onScreenModel = albumModel;
 
-        if (albumModel != null)
-        {
-            portfolioModel.onScreenModel = albumModel;
-
-            GameManager.Instance.downLoadManager.DownloadImage(albumModel.content_url, (sprite) =>
-            {
-                albumImage.sprite = sprite;
-            });
-        }
-        else
-        {
-            PortfolioAlbumModel _albumModel = portfolioModel.PortfolioMedia.Find(item => DataManager.Instance.GetMediaType(item.media_type) == EMediaType.Video);
-
-            if (_albumModel != null)
-            {
-                portfolioModel.onScreenModel = albumModel;
-
-                SetVideoThumbnail(null);
-            }
-        }
+        //    SetVideoThumbnail(null);
+        //}
     }
 
     public void SetVideoThumbnail(PortfolioAlbumModel portfolioModel)
@@ -52,11 +38,11 @@ public class BrowserAlbumCell : MonoBehaviour
         {
             VideoStreamer.Instance.GetThumbnailImage(portfolioModel.content_url, (texture) =>
             {
-                Rect rect = new Rect(0, 0, albumImage.rectTransform.rect.width, albumImage.rectTransform.rect.height);
+                //Rect rect = new Rect(0, 0, albumImage.rectTransform.rect.width, albumImage.rectTransform.rect.height);
 
-                Sprite sprite = Sprite.Create(texture.ToTexture2D(), rect, new Vector2(0.5f, 0.5f));
+                //Sprite sprite = Sprite.Create(texture.ToTexture2D(), rect, new Vector2(0.5f, 0.5f));
 
-                albumImage.sprite = sprite;
+                albumImage.texture = texture;
             });
         }
     }

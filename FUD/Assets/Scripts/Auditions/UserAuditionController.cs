@@ -157,7 +157,7 @@ public class UserAuditionController : MonoBehaviour
             parameters.Add("limit", 20);
             parameters.Add("status", "shortlisted");
 
-            GameManager.Instance.apiHandler.SearchAuditions(parameters, (status, response) => {
+            GameManager.Instance.apiHandler.SearchAuditions(1, parameters, (status, response) => {
 
                 if (status)
                 {

@@ -8,6 +8,8 @@ public class HomeStoriesPanel : MonoBehaviour
     public Transform parentContent;
     List<StoryModel> storiesList = new List<StoryModel>();
 
+    int pageNo = 0;
+
     private void OnEnable()
     {
         GetStories();
@@ -16,7 +18,8 @@ public class HomeStoriesPanel : MonoBehaviour
     void GetStories()
     {
         storiesList = new List<StoryModel>();
-        GameManager.Instance.apiHandler.GetAllStories((status, storiesList) => {
+
+        GameManager.Instance.apiHandler.GetAllStories(pageNo, (status, storiesList) => {
 
             if (status)
             {

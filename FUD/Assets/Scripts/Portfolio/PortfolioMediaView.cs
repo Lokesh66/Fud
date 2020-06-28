@@ -1,44 +1,55 @@
-﻿using System.Collections;
+﻿using frame8.ScrollRectItemsAdapter.GridExample;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 public class PortfolioMediaView : MonoBehaviour
 {
     public RectTransform content;
-
-    public GameObject cellCache;
 
 
     public PortfolioMediaDetails mediaDetailsView;
 
     public PortfolioShareView shareView;
 
+    public PortfolioMediaTableView tableView;
+
     PortfolioModel selectedModel;
 
-    List<PortfolioModel> portfolioModels;
+
+    [HideInInspector]
+    public List<PortfolioModel> portfolioModels;
+
+
+    bool isPagingOver = false;
+
+    int pageNo = 1;
+
+    int MAX_PORTFOLIO_ALBUMS = 50;
+
+
     public void Load()
-    { 
-        GameManager.Instance.apiHandler.GetAllAlbums((status, models) =>
+    {
+        tableView.gameObject.SetActive(false);
+
+        GameManager.Instance.apiHandler.GetAllAlbums(pageNo, (status, models) =>
         {
             portfolioModels = models;
 
-            SetView();
+            pageNo++;
+
+            if (portfolioModels.Count < MAX_PORTFOLIO_ALBUMS)
+            {
+                isPagingOver = true;
+
+                pageNo = 1;
+            }
+
+            tableView.gameObject.SetActive(true);
         });
     }
 
-    void SetView()
-    {
-        content.DestroyChildrens();
-
-        for (int i = 0; i < portfolioModels.Count; i++)
-        {
-            GameObject cellObject = Instantiate(cellCache, content);
-
-            cellObject.GetComponent<PortfolioMediaCell>().SetView(portfolioModels[i], OnCellButtonAction);
-        }
-    }
-
-    void OnCellButtonAction(PortfolioModel portfolioModel)
+    public void OnCellButtonAction(PortfolioModel portfolioModel)
     {
         mediaDetailsView.Load(portfolioModel, this);
     }
@@ -50,10 +61,52 @@ public class PortfolioMediaView : MonoBehaviour
 
     public void RemovePortfolio(PortfolioModel portfolioModel)
     {
-        int modelIndex = portfolioModels.IndexOf(portfolioModel);
-
-        Destroy(content.GetChild(modelIndex).gameObject);
-
         portfolioModels.Remove(portfolioModel);
+
+        tableView.Data.Clear();
+
+        tableView.Data.Add(portfolioModels.Count);
+
+        tableView.Refresh();
+    }
+
+    public void OnAPICall()
+    {
+        if (isPagingOver)
+            return;
+
+        GetNextPageData();
+    }
+
+    void GetNextPageData()
+    {
+        GameManager.Instance.apiHandler.GetAllAlbums(pageNo, (status, models) =>
+        {
+            if (status)
+            {
+                this.portfolioModels = models;
+
+                pageNo++;
+
+                if (portfolioModels.Count < MAX_PORTFOLIO_ALBUMS)
+                {
+                    isPagingOver = true;
+
+                    pageNo = 0;
+                }
+                else
+                {
+                    isPagingOver = false;
+
+                    pageNo++;
+                }
+
+                tableView.Data.Clear();
+
+                tableView.Data.Add(portfolioModels.Count);
+
+                tableView.Refresh();
+            }
+        });
     }
 }

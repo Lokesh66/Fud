@@ -113,7 +113,7 @@ public class ProjectAuditionCell : MonoBehaviour
         parameters.Add("limit", 20);
         //parameters.Add("status", "live");
 
-        GameManager.Instance.apiHandler.SearchAuditions(parameters, (status, response) => {
+        GameManager.Instance.apiHandler.SearchAuditions(1, parameters, (status, response) => {
 
             if (status)
             {

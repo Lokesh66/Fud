@@ -36,36 +36,41 @@ public partial class APIHandler
         }));
     }
 
-    public void FetchAuditions(AuditionType type, Action<bool, string> action)
+    public void GetOfferedAuditions(int pageNo, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        string url = string.Empty;
+        string url = APIConstants.GET_OFFERED_AUDITIONS;
 
-        if (type == AuditionType.Live)
-        {
-            url = APIConstants.GET_OFFERED_AUDITIONS;
+        url += "?page=" + pageNo +  "&limit=50&count=50";
 
-            url += "?page=1&limit=10&count=10";
+        parameters.Add("fetch_live", 1);
 
-            parameters.Add("fetch_live", 1);
-        }
-        else if (type == AuditionType.Joined)
-        {
-            url = APIConstants.GET_ALTERED_AUDITIONS;
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
+    }
 
-            url += "?page=1&limit=10&count=10";
+    public void GetAlteredAuditions(int pageNo, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-            parameters.Add("fetch_joined", 1);
-        }
-        else if (type == AuditionType.Created)
-        {
-            url = APIConstants.GET_CREATED_AUDITIONS;
+        string url = APIConstants.GET_ALTERED_AUDITIONS;
 
-            url += "?page=1&limit=10&count=10";
+        url += "?page=" + pageNo + "&limit=50&count=50";
 
-            parameters.Add("fetch_created", 1);
-        }
+        parameters.Add("fetch_joined", 1);
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
+    }
+
+    public void GetCreatedAuditions(int pageNo, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        string url = APIConstants.GET_CREATED_AUDITIONS;
+
+        url += "?page=" + pageNo + "&limit=50&count=50";
+
+        parameters.Add("fetch_created", 1);
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
     }
@@ -99,9 +104,13 @@ public partial class APIHandler
     }
 
 
-    public void SearchAuditions(Dictionary<string, object> parameters, Action<bool, string> action)
+    public void SearchAuditions(int pageNo, Dictionary<string, object> parameters, Action<bool, string> action)
     {
-        gameManager.StartCoroutine(PostRequest(APIConstants.ALL_ACTIVE_AUDITIONS, true, parameters, action));
+        string url = APIConstants.ALL_ACTIVE_AUDITIONS;
+
+        url += "?page=" + pageNo + "&limit=50&count=50";
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
     }
 
     public void AcceptOrRejectAudition(int auditionId, int userAuditionId, int status, Action<bool, string> action)

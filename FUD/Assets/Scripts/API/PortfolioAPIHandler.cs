@@ -149,9 +149,13 @@ public partial class APIHandler
         }));
     }
 
-    public void GetAllAlbums(Action<bool, List<PortfolioModel>> action)
+    public void GetAllAlbums(int pageNo, Action<bool, List<PortfolioModel>> action)
     {
-        gameManager.StartCoroutine(GetRequest(APIConstants.USER_PORTFOLIO, true, (bool status, string response) => {
+        string url = APIConstants.USER_PORTFOLIO;
+
+        url += "?page=" + pageNo + "&limit=50&count=50";
+
+        gameManager.StartCoroutine(GetRequest(url, true, (bool status, string response) => {
 
             if (status)
             {
@@ -221,25 +225,33 @@ public partial class APIHandler
         }));
     }
 
-    public void GetAlteredPortfolios(Action<bool, string> action)
+    public void GetAlteredPortfolios(int pageNo, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
+        string url = APIConstants.GET_ALTERED_PORTFOLIOS;
+
+        url += "?page=" + pageNo + "&limit=50&count=50";
+
         parameters.Add("tab_name", "altered");
 
-        gameManager.StartCoroutine(PostRequest(APIConstants.GET_ALTERED_PORTFOLIOS, true, parameters, (status, response) => {
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
 
             action(status, response);
         }));
     }
 
-    public void GetPortfolioPosts(Action<bool, string> action)
+    public void GetPortfolioPosts(int pageNo, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
+        string url = APIConstants.GET_PORTFOLIO_POSTS;
+
+        url += "?page=" + pageNo + "&limit=50&count=50";
+
         parameters.Add("status", 0);
 
-        gameManager.StartCoroutine(PostRequest(APIConstants.GET_PORTFOLIO_POSTS, true, parameters, (status, response) => {
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
 
             action(status, response);
         }));
@@ -259,7 +271,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateProfileInfo(ProfileInfoModel infoModel, Action<bool, UserData> action)
+    public void UpdateProfileInfo(ProfileInfoModel infoModel, List<Dictionary<string, object>> idProof, List<Dictionary<string, object>> frontAddressProof, List<Dictionary<string, object>> backAddressProof, Action<bool, UserData> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -281,12 +293,29 @@ public partial class APIHandler
             parameters.Add("name", infoModel.name);
         if (infoModel.dob != user.dob)
             parameters.Add("dob", infoModel.dob);
-        if (!infoModel.memberId.Equals(user.maa_membership_id))
-            parameters.Add("maa_membership_id", infoModel.memberId);
-        if (!infoModel.currentLocation.Equals(user.current_location))
+        if (!infoModel.contactNumber.Equals(user.current_location))
             parameters.Add("current_location", infoModel.currentLocation);
         if (!infoModel.nativeLocation.Equals(user.native_location))
             parameters.Add("native_location", infoModel.nativeLocation);
+        if (!infoModel.contactNumber.Equals(user.phone))
+            parameters.Add("phone", infoModel.contactNumber);
+
+        parameters.Add("role_id", infoModel.roleId);
+
+        if (idProof.Count > 0)
+        {
+            parameters.Add("id_proof", idProof);
+        }
+
+        if (frontAddressProof.Count > 0)
+        {
+            parameters.Add("add_proof_front", frontAddressProof[0]);
+        }
+
+        if (backAddressProof.Count > 0)
+        {
+            parameters.Add("add_proof_back", backAddressProof[0]);
+        }
 
         gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_USER_PROFILE, true, parameters, (bool status, string response) =>
         {
@@ -447,7 +476,9 @@ public class ProfileInfoModel
     public string mail;
     public string memberId;
     public string currentLocation;
+    public string contactNumber;
     public string nativeLocation;
+    public int roleId;
 }
 
 [Serializable]

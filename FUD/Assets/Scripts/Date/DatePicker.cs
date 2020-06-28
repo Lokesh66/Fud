@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 using System;
+using System.Collections;
 
 public class DatePicker : MonoBehaviour
 {
@@ -27,13 +29,24 @@ public class DatePicker : MonoBehaviour
     }
     #endregion
 
+    public enum EYearsType
+    {
+        DOBYears,
+        ProjectYears,
+    }
+
     #region variables
     public GameObject parentPanel;
     public GameObject leftButton;
     public GameObject rightButton;
-    public TMP_Text dateText;
+    public TMP_Text monthText;
+    public TMP_Text yearText;
     public GameObject frame;
-    
+
+    public TMP_Dropdown monthDropDown;
+
+    public TMP_Dropdown yearDropDown;
+
     public List<DateCell> dateCells;
 
     #endregion
@@ -41,16 +54,35 @@ public class DatePicker : MonoBehaviour
     private DateTime currentDate;
     private DateTime selectedDate;
     private DateTime startDate;
+    private EYearsType yearType;
+
+    List<int> years = null;
+
     public DateTime endDate;
 
-    System.Action<DateTime, string> OnSelectDate;
+    List<int> dobYears = new List<int> { 1940, 1941, 1942, 1943, 1944, 1945, 1946, 1947, 1948, 1949, 1950, 1951, 1952, 1953, 1954, 1955,
+
+        1956, 1957, 1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977,
+
+        1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+
+        2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2020
+
+    };
+
+    List<int> projectYears = new List<int> {
+
+        2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030
+    };
+
+    Action<DateTime, string> OnSelectDate;
 
     private void Awake()
     {
         DontDestroyOnLoad(this);
     }
 
-    public void GetDate(DateTime _selectedDate, DateTime _startDate, DateTime _endDate, System.Action<DateTime, string> action)
+    public void GetDate(DateTime _selectedDate, DateTime _startDate, DateTime _endDate, Action<DateTime, string> action)
     {
         OnSelectDate = action;
         startDate = _startDate;
@@ -60,6 +92,17 @@ public class DatePicker : MonoBehaviour
         selectedDate = currentDate;
         _dateTime = currentDate;
         CreateCalendar();
+
+        if (endDate.Equals(DateTime.Now))
+        {
+            yearType = EYearsType.DOBYears;
+        }
+        else if (startDate.Equals(DateTime.Now))
+        {
+            yearType = EYearsType.ProjectYears;
+        }
+
+        PopulateYearsDropDown();
     }
 
     public void OnSelectAction(DateTime date, Transform cell)
@@ -67,7 +110,7 @@ public class DatePicker : MonoBehaviour
         if (!IsValidDate(date))
             return;
         selectedDate = date;
-        if(selectedDate.Month != _dateTime.Month)
+        if (selectedDate.Month != _dateTime.Month)
         {
             if (selectedDate.Year != _dateTime.Year)
             {
@@ -100,7 +143,7 @@ public class DatePicker : MonoBehaviour
             (selectedDate.Year == startDate.Year && selectedDate.Month > startDate.Month) ||
             (selectedDate.Month == startDate.Month && selectedDate.Date >= startDate.Date))
         {
-            if(selectedDate.Year < endDate.Year ||
+            if (selectedDate.Year < endDate.Year ||
                 (selectedDate.Year == endDate.Year && selectedDate.Month < endDate.Month) ||
                 (selectedDate.Month == endDate.Month && selectedDate.Day <= endDate.Day))
             {
@@ -136,7 +179,7 @@ public class DatePicker : MonoBehaviour
 
     public string GetDateString(DateTime dateTime)
     {
-        if(dateTime == DateTime.MinValue || dateTime == DateTime.MaxValue)
+        if (dateTime == DateTime.MinValue || dateTime == DateTime.MaxValue)
         {
             return string.Empty;
         }
@@ -145,7 +188,7 @@ public class DatePicker : MonoBehaviour
     }
 
     public void OkButtonAction()
-    {        
+    {
         ClosePanel(GetDateString(selectedDate));
     }
 
@@ -162,7 +205,7 @@ public class DatePicker : MonoBehaviour
 
     private DateTime _dateTime;
 
-    
+
     void CreateCalendar()
     {
         UpdateFramePosition();
@@ -172,22 +215,24 @@ public class DatePicker : MonoBehaviour
         int date = 0;
         for (int i = 0; i < dateCells.Count; i++)
         {
-            DateTime thatDay = firstDay.AddDays(i - index >= 0 ? date : i-index);
+            DateTime thatDay = firstDay.AddDays(i - index >= 0 ? date : i - index);
 
             dateCells[i].SetData(thatDay, firstDay, IsValidDate(thatDay), OnSelectAction);
-            
-            if (i- index >= 0) { date++; }
+
+            if (i - index >= 0) { date++; }
 
             if (selectedDate.Year == thatDay.Year && selectedDate.Month == thatDay.Month && selectedDate.Day == thatDay.Day)
             {
                 UpdateFramePosition(dateCells[i].transform);
             }
         }
-        
+
         leftButton.SetActive(IsValidDate(firstDay.AddDays(-1)));
         rightButton.SetActive(IsValidDate(firstDay.AddMonths(1)));
 
-        dateText.text = _dateTime.ToString("MMMM")+" "+_dateTime.Year.ToString();
+        monthText.text = _dateTime.ToString("MMMM");
+
+        yearText.text = _dateTime.Year.ToString();
     }
 
     int GetDays(DayOfWeek day)
@@ -228,4 +273,61 @@ public class DatePicker : MonoBehaviour
         _dateTime = _dateTime.AddMonths(1);
         CreateCalendar();
     }
+
+    public void OnMonthValueChanged()
+    {
+        Debug.LogError("OnMonthValueChanged : monthDropDown.value = " + monthDropDown.value);
+
+        int monthDifference = Mathf.Abs(monthDropDown.value + 1 - _dateTime.Month);
+
+        int dropDownValue = monthDropDown.value + 1;
+
+        if (dropDownValue != _dateTime.Month)
+        {
+            _dateTime = dropDownValue < _dateTime.Month ? _dateTime.AddMonths(-monthDifference) : _dateTime.AddMonths(monthDifference);
+
+            CreateCalendar();
+        }
+    }
+
+    public void OnYearDropDownValueChanged()
+    {
+        int selectedYear = int.Parse(yearDropDown.captionText.text);
+
+        int yearDifference = Mathf.Abs(selectedYear - _dateTime.Year);
+
+        if (selectedYear != _dateTime.Year)
+        {
+            _dateTime = selectedYear < _dateTime.Year ? _dateTime.AddYears(-yearDifference) : _dateTime.AddYears(yearDifference);
+
+            CreateCalendar();
+        }
+    }
+
+    void PopulateYearsDropDown()
+    {
+        List<string> options = new List<string>();
+
+        switch (yearType)
+        {
+            case EYearsType.DOBYears:
+                years = dobYears;
+                break;
+
+            case EYearsType.ProjectYears:
+                years = projectYears;
+                break;
+        }
+
+        foreach (var option in years)
+        {
+            options.Add(option.ToString());
+        }
+
+        yearDropDown.ClearOptions();
+        yearDropDown.AddOptions(options);
+    }
 }
+
+
+

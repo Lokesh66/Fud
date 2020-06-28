@@ -8,12 +8,15 @@ using TMPro;
 
 public partial class APIHandler
 {
-    public void GetAllStories( Action<bool, List<StoryModel>> action)
+    public void GetAllStories(int pageNo, Action<bool, List<StoryModel>> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-/*        parameters.Add("phone", phoneNumber);*/
-        gameManager.StartCoroutine(GetRequest(APIConstants.CREATE_STORY, true, (bool status, string response) => {
+        string url = APIConstants.CREATE_STORY;
+
+        url += "?page=" + pageNo + "&limit=50&count=50";
+
+        gameManager.StartCoroutine(GetRequest(url, true, (bool status, string response) => {
             if (status)
             {
                 StoriesResponse stories = JsonUtility.FromJson<StoriesResponse>(response);

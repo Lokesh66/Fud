@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using frame8.ScrollRectItemsAdapter.GridExample;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+
 
 public class MyStoriesView : MonoBehaviour
 {
@@ -14,22 +15,50 @@ public class MyStoriesView : MonoBehaviour
 
     public NoDataView noDataView;
 
+    public MyStoriesTableView tableView;
 
-    List<StoryModel> storiesList = new List<StoryModel>();
+
+    public List<StoryModel> storiesList;
 
     MyStoriesController storiesController;
 
+    bool isPagingOver = false;
+
+    int pageNo = 1;
+
+    int MAX_CREATED_STORIES = 50;
+
+
     public void Load()
     {
+        tableView.gameObject.SetActive(false);
+
         if (storiesTab == ETabType.Created)
         {
-            GameManager.Instance.apiHandler.GetAllStories((status, storiesList) =>
+            GameManager.Instance.apiHandler.GetAllStories(pageNo, (status, storiesList) =>
             {
                 if (status)
                 {
                     this.storiesList = storiesList;
 
-                    SetView();
+                    pageNo++;
+
+                    if (storiesList.Count < MAX_CREATED_STORIES)
+                    {
+                        isPagingOver = true;
+
+                        pageNo = 1;
+                    }
+
+                    tableView.gameObject.SetActive(true);
+
+
+                    if (storiesList.Count == 0)
+                    {
+                        noDataView.SetView(GetNoDataModel());
+                    }
+
+                    noDataView.gameObject.SetActive(storiesList?.Count == 0);
                 }
             });
         }
@@ -46,38 +75,15 @@ public class MyStoriesView : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    void SetView()
-    {
-        Debug.Log("SetView : Tab Type : " + storiesTab + " Count = " + storiesList.Count);
-
-        content.DestroyChildrens();
-
-        if (storiesList?.Count > 0) {
-
-            for (int i = 0; i < storiesList.Count; i++)
-            {
-                GameObject storyObject = Instantiate(storyCell, content);
-
-                storyObject.GetComponent<StoryCell>().SetView(storiesList[i], OnStoryTapAction); 
-            }
-        }
-        else {
-            noDataView.SetView(GetNoDataModel());
-        }
-        noDataView.gameObject.SetActive(storiesList?.Count == 0);
-    }
-
 
     public void ClearData()
     {
-        content.DestroyChildrens();
-
         gameObject.SetActive(false);
 
         storiesList.Clear();
     }
 
-    void OnStoryTapAction(int storyId)
+    public void OnStoryTapAction(int storyId)
     {
         StoryDetailsController.Instance.Load(storyId, OnStoryClosedAction);
     }
@@ -105,5 +111,45 @@ public class MyStoriesView : MonoBehaviour
 
         return noDataModel;
 
+    }
+
+    public void OnAPICall()
+    {
+        if (isPagingOver)
+            return;
+
+        GetNextPageData();
+    }
+
+    void GetNextPageData()
+    {
+        GameManager.Instance.apiHandler.GetAllStories(pageNo, (status, modelsList) =>
+        {
+            if (status)
+            {
+                this.storiesList = modelsList;
+
+                pageNo++;
+
+                if (modelsList.Count < MAX_CREATED_STORIES)
+                {
+                    isPagingOver = true;
+
+                    pageNo = 0;
+                }
+                else
+                {
+                    isPagingOver = false;
+
+                    pageNo++;
+                }
+
+                tableView.Data.Clear();
+
+                tableView.Data.Add(modelsList.Count);
+
+                tableView.Refresh();
+            }
+        });
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using frame8.ScrollRectItemsAdapter.GridExample;
+using System.Collections.Generic;
 using UnityEngine;
+
 
 public class ProjectHandler : MonoBehaviour
 {
@@ -16,13 +18,29 @@ public class ProjectHandler : MonoBehaviour
     public ProjectStatusView offeredDetailsView;
 
 
-    List<Project> projectModels;
+    public ProjectOfferedTableView offeredTableView;
 
-    List<ProjectOfferedModel> offeredModels;
+    public ProjectCreatedTableView createdTableView;
+
+
+    [HideInInspector]
+    public List<Project> projectModels;
+
+    [HideInInspector]
+    public List<ProjectOfferedModel> offeredModels;
+
+
+    bool isPagingOver = false;
+
+    int pageNo = 1;
+
+    int MAX_PROJECTS = 50;
 
 
     public void Load()
     {
+        ClearData();
+
         gameObject.SetActive(true);
 
         SetView();
@@ -48,11 +66,31 @@ public class ProjectHandler : MonoBehaviour
 
     void GetOfferedProjects()
     {
-        GameManager.Instance.apiHandler.GetOfferedProjects((status, projectsResponse) => {
+        offeredTableView.gameObject.SetActive(false);
+
+        GameManager.Instance.apiHandler.GetOfferedProjects(pageNo, (status, projectsResponse) => {
 
             if (status && projectsResponse != null)
             {
-                Load(projectsResponse.data);
+                offeredModels = projectsResponse.data;
+
+                pageNo++;
+
+                if (offeredModels.Count < MAX_PROJECTS)
+                {
+                    isPagingOver = true;
+
+                    pageNo = 1;
+                }
+
+                offeredTableView.gameObject.SetActive(true);
+
+                if (offeredModels.Count == 0)
+                {
+                    noDataView.SetView(GetNoDataModel());
+                }
+
+                noDataView.gameObject.SetActive(offeredModels?.Count == 0);
             }
             else
             {
@@ -64,11 +102,31 @@ public class ProjectHandler : MonoBehaviour
 
     void GetAlteredProjects()
     {
-        GameManager.Instance.apiHandler.GetAlteredProjects((status, projectsResponse) => {
+        offeredTableView.gameObject.SetActive(false);
 
-            if (status)
+        GameManager.Instance.apiHandler.GetAlteredProjects(pageNo, (status, projectsResponse) => {
+
+            if (status && projectsResponse != null)
             {
-                Load(projectsResponse.data);
+                offeredModels = projectsResponse.data;
+
+                pageNo++;
+
+                if (offeredModels.Count < MAX_PROJECTS)
+                {
+                    isPagingOver = true;
+
+                    pageNo = 1;
+                }
+
+                offeredTableView.gameObject.SetActive(true);
+
+                if (offeredModels.Count == 0)
+                {
+                    noDataView.SetView(GetNoDataModel());
+                }
+
+                noDataView.gameObject.SetActive(offeredModels?.Count == 0);
             }
             else
             {
@@ -82,11 +140,31 @@ public class ProjectHandler : MonoBehaviour
     {
         noDataView.gameObject.SetActive(false);
 
-        GameManager.Instance.apiHandler.GetProjects((status, projectsResponse) => {
+        createdTableView.gameObject.SetActive(false);
 
-            if (status)
+        GameManager.Instance.apiHandler.GetProjects(pageNo, (status, projectsResponse) => {
+
+            if (status && projectsResponse != null)
             {
-                Load(projectsResponse.data);
+                projectModels = projectsResponse.data;
+
+                pageNo++;
+
+                if (projectModels.Count < MAX_PROJECTS)
+                {
+                    isPagingOver = true;
+
+                    pageNo = 1;
+                }
+
+                createdTableView.gameObject.SetActive(true);
+
+                if (projectModels.Count == 0)
+                {
+                    noDataView.SetView(GetNoDataModel());
+                }
+
+                noDataView.gameObject.SetActive(projectModels?.Count == 0);
             }
             else
             {
@@ -96,56 +174,7 @@ public class ProjectHandler : MonoBehaviour
         });
     }
 
-    void Load(List<Project> models)
-    {
-        content.DestroyChildrens();
-
-        projectModels = models;
-
-        if(models != null && models.Count > 0)
-        {
-            noDataView.gameObject.SetActive(false);
-
-            for (int i = 0; i < models.Count; i++)
-            {
-                GameObject projectObject = Instantiate(projectCell, content);
-
-                projectObject.GetComponent<ProjectCell>().SetView(models[i], OnProjectClickAction);
-            }
-        }
-        else
-        {
-            noDataView.gameObject.SetActive(true);
-            noDataView.SetView(GetNoDataModel());
-        }
-        
-    }
-
-    void Load(List<ProjectOfferedModel> models)
-    {
-        content.DestroyChildrens();
-
-        offeredModels = models;
-
-        if (models != null && models.Count > 0)
-        {
-            noDataView.gameObject.SetActive(false);
-
-            for (int i = 0; i < models.Count; i++)
-            {
-                GameObject projectObject = Instantiate(projectOfferedCell, content);
-
-                projectObject.GetComponent<ProjectOfferedCell>().SetView(offeredModels[i], OnOfferedProjectAction);
-            }
-        }
-        else
-        {
-            noDataView.gameObject.SetActive(true);
-            noDataView.SetView(GetNoDataModel());
-        }
-    }
-
-    void OnProjectClickAction(Project project)
+    public void OnProjectClickAction(Project project)
     {
         if (tabType == ETabType.Created)
         {
@@ -161,7 +190,7 @@ public class ProjectHandler : MonoBehaviour
         }
     }
 
-    void OnOfferedProjectAction(ProjectOfferedModel offeredModel)
+    public void OnOfferedProjectAction(ProjectOfferedModel offeredModel)
     {
         offeredDetailsView.Load(offeredModel, this);
     }
@@ -219,7 +248,7 @@ public class ProjectHandler : MonoBehaviour
     {
         NoDataModel noDataModel = new NoDataModel();
 
-        switch (tabType) 
+        switch (tabType)
         {
             case ETabType.Offers:
                 noDataModel.subTitle = "No offered Projects Right Now";
@@ -239,5 +268,129 @@ public class ProjectHandler : MonoBehaviour
         }
 
         return noDataModel;
+    }
+
+    public void OnAPICall()
+    {
+        if (isPagingOver)
+            return;
+
+        GetNextPageData(tabType);
+    }
+
+    void GetNextPageData(ETabType tabType)
+    {
+        switch (tabType)
+        {
+            case ETabType.Altered:
+            case ETabType.Created:
+                break;
+
+            case ETabType.Offers:
+                break;
+        }
+    }
+
+    void GetOfferedNextData()
+    {
+        GameManager.Instance.apiHandler.GetOfferedProjects(pageNo, (status, projectsResponse) =>
+        {
+            if (status)
+            {
+                this.offeredModels = projectsResponse.data;
+
+                pageNo++;
+
+                if (offeredModels.Count < MAX_PROJECTS)
+                {
+                    isPagingOver = true;
+
+                    pageNo = 0;
+                }
+                else
+                {
+                    isPagingOver = false;
+
+                    pageNo++;
+                }
+
+                offeredTableView.Data.Clear();
+
+                offeredTableView.Data.Add(offeredModels.Count);
+
+                offeredTableView.Refresh();
+            }
+        });
+    }
+
+    void GetAlteredNextData()
+    {
+        GameManager.Instance.apiHandler.GetAlteredProjects(pageNo, (status, projectsResponse) =>
+        {
+            if (status)
+            {
+                this.offeredModels = projectsResponse.data;
+
+                pageNo++;
+
+                if (offeredModels.Count < MAX_PROJECTS)
+                {
+                    isPagingOver = true;
+
+                    pageNo = 0;
+                }
+                else
+                {
+                    isPagingOver = false;
+
+                    pageNo++;
+                }
+
+                offeredTableView.Data.Clear();
+
+                offeredTableView.Data.Add(offeredModels.Count);
+
+                offeredTableView.Refresh();
+            }
+        });
+    } 
+
+    void GetCreatedNextData()
+    {
+        GameManager.Instance.apiHandler.GetProjects(pageNo, (status, projectsResponse) =>
+        {
+            if (status)
+            {
+                this.projectModels = projectsResponse.data;
+
+                pageNo++;
+
+                if (offeredModels.Count < MAX_PROJECTS)
+                {
+                    isPagingOver = true;
+
+                    pageNo = 0;
+                }
+                else
+                {
+                    isPagingOver = false;
+
+                    pageNo++;
+                }
+
+                createdTableView.Data.Clear();
+
+                createdTableView.Data.Add(projectModels.Count);
+
+                createdTableView.Refresh();
+            }
+        });
+    }
+
+    void ClearData()
+    {
+        isPagingOver = false;
+
+        pageNo = 1;
     }
 }

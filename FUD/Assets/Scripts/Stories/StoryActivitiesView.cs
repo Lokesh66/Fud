@@ -28,7 +28,7 @@ public class StoryActivitiesView : MonoBehaviour
 
     public void EnableView()
     {
-        pageNo = 1;
+        ClearData();
 
         Load();
 
@@ -111,4 +111,10 @@ public class StoryActivitiesView : MonoBehaviour
         });
     }
 
+    void ClearData()
+    {
+        pageNo = 1;
+
+        isPagingOver = false;
+    }
 }

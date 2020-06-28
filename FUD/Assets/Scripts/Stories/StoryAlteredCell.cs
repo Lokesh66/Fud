@@ -14,8 +14,6 @@ public class StoryAlteredCell : MonoBehaviour
 
     public TextMeshProUGUI statusText;
 
-    public Image storyImage;
-
     [Space]
 
     public Sprite reviewTag;

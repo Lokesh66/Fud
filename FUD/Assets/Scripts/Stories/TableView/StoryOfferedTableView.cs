@@ -111,16 +111,7 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 			}
 		}
 
-		bool IsRequestStillValid (int itemIndex, int itemIdexAtRequest, string imageURLAtRequest)
-		{
-			return
-				_CellsCount > itemIndex// be sure the index still points to a valid model
-				&& itemIdexAtRequest == itemIndex;// be sure the view's associated model index is the same (i.e. the viewsHolder wasn't re-used)
-		}
-
 		#endregion
-
-
 	}
 
 	/// <summary>All views holders used with GridAdapter should inherit from <see cref="CellViewsHolder"/></summary>

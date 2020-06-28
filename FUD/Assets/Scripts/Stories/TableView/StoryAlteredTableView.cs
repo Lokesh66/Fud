@@ -125,9 +125,13 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 	/// <summary>All views holders used with GridAdapter should inherit from <see cref="CellViewsHolder"/></summary>
 	public class StoryAlteredCellViewHolder : CellViewsHolder
 	{
+		public RemoteImageBehaviour remoteImageBehaviour;
+
 		public override void CollectViews ()
 		{
 			base.CollectViews ();
+
+			views.GetComponentAtPath("LeftImage", out remoteImageBehaviour);
 		}
 
 		protected override RectTransform GetViews ()

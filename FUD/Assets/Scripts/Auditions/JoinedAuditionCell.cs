@@ -24,8 +24,9 @@ public class JoinedAuditionCell : MonoBehaviour
     public Sprite rejectedSprite;
 
     JoinedAudition auditionData;
-    AuditionController auditionController;
-    AuditionType auditionType;
+    AuditionAlteredView auditionController;
+
+    ETabType auditionType;
 
     int seconds;
     int minutes;
@@ -33,19 +34,16 @@ public class JoinedAuditionCell : MonoBehaviour
 
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
 
-    public void SetView(AuditionController auditionController, JoinedAudition audition)
+    public void SetView(AuditionAlteredView auditionController, JoinedAudition audition)
     {
         auditionData = audition;
         this.auditionController = auditionController;
-        auditionType = auditionController.auditionType;
+        auditionType = auditionController.tabType;
 
         if (auditionData != null)
         {
             titleText.text = auditionData.Audition.title;
-            GameManager.Instance.downLoadManager.DownloadImage(auditionData.Audition.image_url, (sprite) => {
 
-                icon.sprite = sprite ?? defaultSprite;
-            });
             SetStatus(auditionData.status);
 
             StartCountDown();
@@ -84,34 +82,32 @@ public class JoinedAuditionCell : MonoBehaviour
 
     public void OnClickAction()
     {
-        AlertMessage.Instance.SetText("OnClickAction : "+auditionData.id, false);
+        AlertMessage.Instance.SetText("OnClickAction : " + auditionData.id, false);
         Debug.Log("OnClickAction ");
-        if (auditionType == AuditionType.Joined)
+
+        AuditionJoinView.Instance.Load(auditionData.Audition, true, (index) =>
         {
-            AuditionJoinView.Instance.Load(auditionData.Audition, true, (index) =>
+            switch (index)
             {
-                switch (index)
-                {
-                    case 8:
-                    case 3:
-                    case 5:
-                        UpdateAuditionStatus(index);
-                        break;
+                case 8:
+                case 3:
+                case 5:
+                    UpdateAuditionStatus(index);
+                    break;
 
-                    case 9://View
-                        auditionController.LoadAuditionDetails(auditionData.Audition);
-                        break;
+                case 9://View
+                    auditionController.LoadAuditionDetails(auditionData.Audition);
+                    break;
 
-                    case 10:
-                        GalleryButtonsPanel.Instance.Load(MediaButtonAction);
-                        break;
+                case 10:
+                    GalleryButtonsPanel.Instance.Load(MediaButtonAction);
+                    break;
 
-                    case 6:
-                        RecordVideo();
-                        break;
-                }
-            }, auditionData.GetAuditonStatus()) ;
-        }
+                case 6:
+                    RecordVideo();
+                    break;
+            }
+        }, auditionData.GetAuditonStatus());
     }
 
     void RecordVideo()
@@ -158,12 +154,12 @@ public class JoinedAuditionCell : MonoBehaviour
     void MediaButtonAction(int index)
     {
         EMediaType selectedType = (EMediaType)index;
-        AlertMessage.Instance.SetText(index+"  "+selectedType);
+        AlertMessage.Instance.SetText(index + "  " + selectedType);
         uploadedDict = new List<Dictionary<string, object>>();
 
         switch (selectedType)
         {
-            case EMediaType.Image: 
+            case EMediaType.Image:
                 GalleryManager.Instance.PickImages(OnImagesUploaded);
                 break;
             case EMediaType.Video:
@@ -177,7 +173,7 @@ public class JoinedAuditionCell : MonoBehaviour
 
     void OnImagesUploaded(bool status, List<string> imageUrls)
     {
-        AlertMessage.Instance.SetText("OnImagesUploaded/"+status);
+        AlertMessage.Instance.SetText("OnImagesUploaded/" + status);
         if (status)
         {
             for (int i = 0; i < imageUrls.Count; i++)
@@ -265,7 +261,8 @@ public class JoinedAuditionCell : MonoBehaviour
         Dictionary<string, object> parameters = new Dictionary<string, object>();
         parameters.Add("audition_id", auditionData.id);
         parameters.Add("port_album_media", uploadedDict);
-        GameManager.Instance.apiHandler.JoinAudition(parameters, (status, response) => {
+        GameManager.Instance.apiHandler.JoinAudition(parameters, (status, response) =>
+        {
             if (status)
             {
                 AlertModel alertModel = new AlertModel();
@@ -290,9 +287,10 @@ public class JoinedAuditionCell : MonoBehaviour
         parameters.Add("id", auditionData.id);
         parameters.Add("port_album_media", uploadedDict);
 
-        GameManager.Instance.apiHandler.UpdateJoinedAudition(parameters, (status, response) => {
+        GameManager.Instance.apiHandler.UpdateJoinedAudition(parameters, (status, response) =>
+        {
 
-            AlertMessage.Instance.SetText(status+"=="+response);
+            AlertMessage.Instance.SetText(status + "==" + response);
 
             if (status)
             {
@@ -307,7 +305,7 @@ public class JoinedAuditionCell : MonoBehaviour
                 AlertModel alertModel = new AlertModel();
                 alertModel.message = "Updating Audition Failed";
                 UIManager.Instance.ShowAlert(alertModel);
-            }        
+            }
         });
     }
 
@@ -319,7 +317,8 @@ public class JoinedAuditionCell : MonoBehaviour
         parameters.Add("id", auditionData.id);
         parameters.Add("status", 8);
 
-        GameManager.Instance.apiHandler.UpdateJoinedAudition(parameters, (status, response) => {
+        GameManager.Instance.apiHandler.UpdateJoinedAudition(parameters, (status, response) =>
+        {
             if (status)
             {
                 AlertModel alertModel = new AlertModel();
@@ -372,13 +371,15 @@ public class JoinedAuditionCell : MonoBehaviour
         {
 
         }
-        else {
+        else
+        {
             if (minutes > 0)
             {
                 minutes--;
                 seconds = 59;
             }
-            else {
+            else
+            {
                 if (hours > 0)
                 {
                     hours--;
@@ -405,7 +406,8 @@ public class JoinedAuditionCell : MonoBehaviour
 
         parameters.Add("status", statusIndex);
 
-        GameManager.Instance.apiHandler.UpdateJoinedAudition(parameters, (status, response) => {
+        GameManager.Instance.apiHandler.UpdateJoinedAudition(parameters, (status, response) =>
+        {
             if (status)
             {
                 AlertModel alertModel = new AlertModel();
