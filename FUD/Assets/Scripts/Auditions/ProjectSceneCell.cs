@@ -10,9 +10,10 @@ public class ProjectSceneCell : MonoBehaviour
     public TMP_Text locationText;
 
     SceneModel sceneModel;
-    int index = 0;
 
-    Action<SceneModel> OnCellButtonAction;
+    public int index = 0;
+
+    public Action<SceneModel> OnCellButtonAction;
 
     public void SetView(int index, SceneModel sceneModel, Action<SceneModel> OnCellButtonAction)
     {

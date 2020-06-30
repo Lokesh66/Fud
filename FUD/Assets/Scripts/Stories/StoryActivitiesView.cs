@@ -15,8 +15,12 @@ public class StoryActivitiesView : MonoBehaviour
 
     public StoryOfferedTableView tableView;
 
+    public StoryOfferedFilterView filterView;
+
 
     public List<StoryActivityModel> activityModels;
+
+    bool isTableViewInitialised = false;
 
 
     bool isPagingOver = false;
@@ -37,8 +41,6 @@ public class StoryActivitiesView : MonoBehaviour
 
     void Load()
     {
-        tableView.gameObject.SetActive(false);
-
         GameManager.Instance.apiHandler.GetStoryPosts(pageNo, (status, response) => {
 
             StoryActivityResponseModel responseModel = JsonUtility.FromJson<StoryActivityResponseModel>(response);
@@ -56,7 +58,19 @@ public class StoryActivitiesView : MonoBehaviour
                     pageNo = 1;
                 }
 
-                tableView.gameObject.SetActive(true);
+                if (!isTableViewInitialised)
+                {
+                    tableView.gameObject.SetActive(true);
+
+                    isTableViewInitialised = true;
+                }
+                else {
+                    tableView.Data.Clear();
+
+                    tableView.Data.Add(activityModels.Count);
+
+                    tableView.Refresh();
+                }
 
                 noDataObject.SetActive(activityModels.Count == 0);
             }
@@ -116,5 +130,23 @@ public class StoryActivitiesView : MonoBehaviour
         pageNo = 1;
 
         isPagingOver = false;
+    }
+
+    public void OnFilterButtonAction()
+    {
+        filterView.Load(OnFilterAction);
+    }
+
+    void OnFilterAction(object data)
+    {
+        activityModels = data as List<StoryActivityModel>;
+
+        tableView.Data.Clear();
+
+        tableView.Data.Add(activityModels.Count);
+
+        tableView.Refresh();
+
+        noDataObject.SetActive(activityModels.Count == 0);
     }
 }

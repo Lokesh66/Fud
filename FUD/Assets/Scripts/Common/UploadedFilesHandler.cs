@@ -12,17 +12,21 @@ public class UploadedFilesHandler : MonoBehaviour
     EMediaType mediaType;
 
 
-    public void Load(string[] urls, bool isDownloadedFile, EMediaType mediaType = EMediaType.Image)
+    public void Load(string[] paths, bool isDownloadedFile, EMediaType mediaType = EMediaType.Image)
     {
         //content.DestroyChildrens();
 
         this.mediaType = mediaType;
 
-        for (int i = 0; i < urls.Length; i++)
+        UploadedFileCell fileCell = null;
+
+        for (int i = 0; i < paths.Length; i++)
         {
             GameObject cellObject = Instantiate(cellCache, content);
 
-            cellObject.GetComponent<UploadedFileCell>().Load(urls[i], isDownloadedFile, mediaType);
+            fileCell = cellObject.GetComponent<UploadedFileCell>();
+
+            fileCell.Load(paths[i], isDownloadedFile, mediaType);
         }
     }
 

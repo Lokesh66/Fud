@@ -13,6 +13,8 @@ public class ProfileInfoView : MonoBehaviour
         BackAddress,
     }
 
+    public Image profileImage;
+
     public TMP_InputField nameField;
 
     public TMP_Text dobText;
@@ -44,11 +46,13 @@ public class ProfileInfoView : MonoBehaviour
 
     EProofType idProofType;
 
-    List<Dictionary<string, object>> idProofDict = new List<Dictionary<string, object>>();
+    string idProofURL = string.Empty;
 
-    List<Dictionary<string, object>> frontAddressDict = new List<Dictionary<string, object>>();
+    string frontProofURL = string.Empty;
 
-    List<Dictionary<string, object>> backAddressDict = new List<Dictionary<string, object>>();
+    string backProofURL = string.Empty;
+
+    string profileImageURL = string.Empty;
 
     bool isUserDataUpdated = false;
 
@@ -118,7 +122,12 @@ public class ProfileInfoView : MonoBehaviour
     {
         this.idProofType = (EProofType)isIdProof;
 
-        GalleryManager.Instance.PickImages(OnImagesUploaded);
+        GalleryManager.Instance.PickImage(OnImagesUploaded);
+    }
+
+    public void OnProfileImageAction()
+    {
+        GalleryManager.Instance.PickImage(OnProfileImageUploaded);
     }
 
     public void DateOfBirthButtonAction()
@@ -176,8 +185,10 @@ public class ProfileInfoView : MonoBehaviour
         infoModel.currentLocation = data.current_location;
         infoModel.nativeLocation = data.native_location;
         infoModel.roleId = selectedGenre.id;
+        infoModel.profile_image = profileImageURL;
 
-        GameManager.Instance.apiHandler.UpdateProfileInfo(infoModel, idProofDict, frontAddressDict, backAddressDict, (status, model) => {
+
+        GameManager.Instance.apiHandler.UpdateProfileInfo(infoModel, idProofURL, frontProofURL, backProofURL, (status, model) => {
             AlertModel alertModel = new AlertModel();
             if (status)
             {
@@ -201,8 +212,7 @@ public class ProfileInfoView : MonoBehaviour
     public void OnBackButtonAction()
     {
         gameObject.SetActive(false);
-        idProofDict.Clear();
-        frontAddressDict.Clear();
+        idProofURL = frontProofURL = backProofURL = string.Empty;
         OnCloseAction?.Invoke(isUserDataUpdated);
     }
 
@@ -212,35 +222,20 @@ public class ProfileInfoView : MonoBehaviour
         {
             string[] imagePaths = GalleryManager.Instance.GetLoadedFiles();
 
-            List<Dictionary<string, object>> proofDict = null;
-
             switch (idProofType)
             {
                 case EProofType.IdProof:
-                    proofDict = idProofDict; 
+                    idProofURL = imageUrls[0];
                     break;
                 case EProofType.FrontAddress:
-                    proofDict = frontAddressDict;
+                    frontProofURL = imageUrls[0];
                     break;
                 case EProofType.BackAddress:
-                    proofDict = backAddressDict;
+                    backProofURL = imageUrls[0];
                     break;
             }
 
             UpdateProofImage(idProofType, imagePaths[0]);
-
-            for (int i = 0; i < imageUrls.Count; i++)
-            {
-                Dictionary<string, object> kvp = new Dictionary<string, object>();
-
-                kvp.Add("content_id", 1);
-
-                kvp.Add("content_url", imageUrls[i]);
-
-                kvp.Add("media_type", "image");
-
-                proofDict.Add(kvp);
-            }
         }
         else
         {
@@ -250,6 +245,35 @@ public class ProfileInfoView : MonoBehaviour
 
             UIManager.Instance.ShowAlert(alertModel);
         }
+    }
+
+    void OnProfileImageUploaded(bool status, List<string> imageUrls)
+    {
+        if (status)
+        {
+            string[] imagePaths = GalleryManager.Instance.GetLoadedFiles();
+
+            profileImageURL = imageUrls[0];
+
+            UpdateProfileImage(imagePaths[0]);
+        }
+        else
+        {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = status.ToString() + imageUrls[0];
+
+            UIManager.Instance.ShowAlert(alertModel);
+        }
+    }
+
+    void UpdateProfileImage(string imagePath)
+    {
+        Texture2D texture = NativeGallery.LoadImageAtPath(imagePath, markTextureNonReadable: false);
+
+        TextureScale.ThreadedScale(texture, 250, 250, true);
+
+        profileImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
     }
 
     void UpdateProofImage(EProofType proofType, string imagePath)

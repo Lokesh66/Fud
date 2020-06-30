@@ -15,6 +15,9 @@ public class PortfolioOfferedView : MonoBehaviour
 
     public PortfolioOfferedTableView tableView;
 
+    public PortfolioOfferedFilterView filterView;
+
+
     [HideInInspector]
     public List<PortfolioActivityModel> activityModels;
 
@@ -103,5 +106,23 @@ public class PortfolioOfferedView : MonoBehaviour
                 tableView.Refresh();
             }
         });
+    }
+
+    public void OnFilterButtonAction()
+    {
+        filterView.Load(OnFilterAction);
+    }
+
+    void OnFilterAction(object data)
+    {
+        activityModels = data as List<PortfolioActivityModel>;
+
+        tableView.Data.Clear();
+
+        tableView.Data.Add(activityModels.Count);
+
+        tableView.Refresh();
+
+        noDataObject.SetActive(activityModels.Count == 0);
     }
 }

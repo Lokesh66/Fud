@@ -124,8 +124,6 @@ public class PortfolioCreationView : MonoBehaviour
 
     void OnImagesUploaded(bool status, List<string> imageUrls)
     {
-        descriptionField.text = GalleryManager.Instance.GetLoadedFiles().Length.ToString();
-
         if (status)
         {
             if (DataManager.Instance.CanLoadScreen(EFeatureType.PortfolioAlbums))
@@ -190,6 +188,8 @@ public class PortfolioCreationView : MonoBehaviour
     {
         if (status)
         {
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+
             for (int i = 0; i < videoUrls.Count; i++)
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();

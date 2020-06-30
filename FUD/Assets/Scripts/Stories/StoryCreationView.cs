@@ -60,6 +60,7 @@ public class StoryCreationView : MonoBehaviour
 
     private bool isShowingGalleryPanel = false;
 
+
     public void Load(System.Action onClose)
     {
         parentPanel.gameObject.SetActive(true);
@@ -286,6 +287,8 @@ public class StoryCreationView : MonoBehaviour
     {
         if (status)
         {
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+
             this.imageUrls = videoUrls;
 
             for (int i = 0; i < videoUrls.Count; i++)

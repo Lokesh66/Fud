@@ -28,10 +28,10 @@ public class UserAuditionCell : MonoBehaviour
             titleText.text = auditionData.status;
             ageText.text = auditionData.user_id.ToString();
 
-            auditionMultimedia = auditionData.UserAuditionMultimedia[0];
-
             if (auditionData.UserAuditionMultimedia != null && auditionData.UserAuditionMultimedia.Count > 0)
             {
+                auditionMultimedia = auditionData.UserAuditionMultimedia[0];
+
                 EMediaType mediaType = DataManager.Instance.GetMediaType(auditionMultimedia.media_type);
 
                 if (mediaType == EMediaType.Image)

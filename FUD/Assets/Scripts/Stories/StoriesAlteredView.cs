@@ -17,6 +17,8 @@ public class StoriesAlteredView : MonoBehaviour
 
     public NoDataView noDataView;
 
+    public StoryAlteredFilterView filterView;
+
 
     public List<StoryAlteredModel> modelsList;
 
@@ -25,6 +27,8 @@ public class StoriesAlteredView : MonoBehaviour
     int pageNo = 1;
 
     int MAX_ALTERED_STORIES = 50;
+
+    bool isTableViewInitialised = false;
 
 
     public void EnableView()
@@ -38,8 +42,6 @@ public class StoriesAlteredView : MonoBehaviour
 
     void Load()
     {
-        tableView.gameObject.SetActive(false);
-
         GameManager.Instance.apiHandler.GetAlteredStories(pageNo, (status, modelsList) =>
         {
             if (status)
@@ -55,7 +57,20 @@ public class StoriesAlteredView : MonoBehaviour
                     pageNo = 1;
                 }
 
-                tableView.gameObject.SetActive(true);
+                if (!isTableViewInitialised)
+                {
+                    tableView.gameObject.SetActive(true);
+
+                    isTableViewInitialised = true;
+                }
+                else
+                {
+                    tableView.Data.Clear();
+
+                    tableView.Data.Add(modelsList.Count);
+
+                    tableView.Refresh();
+                }
 
                 if (modelsList.Count == 0)
                 {
@@ -130,5 +145,23 @@ public class StoriesAlteredView : MonoBehaviour
                 tableView.Refresh();
             }
         });
+    }
+
+    public void OnFilterButtonAction()
+    {
+        filterView.Load(OnFilterAction);
+    }
+
+    void OnFilterAction(object data)
+    {
+        modelsList = data as List<StoryAlteredModel>;
+
+        tableView.Data.Clear();
+
+        tableView.Data.Add(modelsList.Count);
+
+        tableView.Refresh();
+
+        noDataView.gameObject.SetActive(modelsList.Count == 0);
     }
 }

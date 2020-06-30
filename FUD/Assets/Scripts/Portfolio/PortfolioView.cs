@@ -31,6 +31,9 @@ public class PortfolioView : BaseView
     public GameObject createWorkExperianceCache;
 
 
+    public GameObject filterObject;
+
+
     private ETabType currentTab = ETabType.Offers;
 
     private GameObject currentObject;
@@ -89,6 +92,8 @@ public class PortfolioView : BaseView
     void UpdateCurrentView()
     {
         createButtonObject.SetActive(currentTab == ETabType.Created);
+
+        filterObject.SetActive(currentTab != ETabType.Created);
 
         switch (currentTab)
         {
@@ -163,5 +168,17 @@ public class PortfolioView : BaseView
         currentObject?.SetActive(false);
 
         currentObject = null;
+    }
+
+    public void OnFilterButtonAction()
+    {
+        if (currentTab == ETabType.Offers)
+        {
+            offeredView.OnFilterButtonAction();
+        }
+        else
+        {
+            alteredView.OnFilterButtonAction();
+        }
     }
 }

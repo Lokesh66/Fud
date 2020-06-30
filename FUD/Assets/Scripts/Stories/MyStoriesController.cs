@@ -16,6 +16,8 @@ public class MyStoriesController : BaseView
 
     public GameObject addObject;
 
+    public GameObject filterObject;
+
 
     public GameObject storyCreateCache;
 
@@ -95,6 +97,8 @@ public class MyStoriesController : BaseView
     {
         addObject.SetActive(currentTab == ETabType.Created);
 
+        filterObject.SetActive(currentTab != ETabType.Created);
+
         switch (currentTab)
         {
             case ETabType.Offers:
@@ -145,12 +149,19 @@ public class MyStoriesController : BaseView
         }
     }
 
+    public void OnFilterButtonAction()
+    {
+        if (currentTab == ETabType.Offers)
+        {
+            activitiesView.OnFilterButtonAction();
+        }
+        else {
+            alteredView.OnFilterButtonAction();
+        }
+    }
+
     void ShowCreateStoryScreen()
     {
-        /*GameObject createObject = Instantiate(storyCreateCache, parentTrans);
-
-        OnAddSubView(createObject);*/
-
         Debug.LogError("CanLoadScreen : " + DataManager.Instance.CanLoadScreen(EFeatureType.StoryCreation));
 
         if (DataManager.Instance.CanLoadScreen(EFeatureType.StoryCreation))
@@ -164,7 +175,6 @@ public class MyStoriesController : BaseView
 
     void OnStoryCreationCloseAction()
     {
-        /*        OnRemoveLastSubView();*/
         UpdateCurrentView();      
     }
 }

@@ -81,7 +81,7 @@ public class HomeStoriesPanel : MonoBehaviour
         else
         {
             //Open story of storieslist[index]
-            StoryDetailsController.Instance.Load(storiesList[0].id, OnStoryScreenClosed);
+            StoryDetailsController.Instance.Load(storiesList[index].id, OnStoryScreenClosed);
         }
     }
 

@@ -14,6 +14,8 @@ public class AuditionView : BaseView
 
     public GameObject addObject;
 
+    public GameObject filterObject;
+
 
     public Color selectedColor;
 
@@ -69,6 +71,8 @@ public class AuditionView : BaseView
     {
         addObject.SetActive(currentTab == ETabType.Created);
 
+        filterObject.SetActive(currentTab != ETabType.Created);
+
         switch (currentTab)
         {
             case ETabType.Offers:
@@ -107,4 +111,16 @@ public class AuditionView : BaseView
     }
 
     #endregion
+
+    public void OnFilterButtonAction()
+    {
+        if (currentTab == ETabType.Offers)
+        {
+            offeredView.OnFilterButtonAction();
+        }
+        else
+        {
+            alteredView.OnFilterButtonAction();
+        }
+    }
 }

@@ -102,6 +102,15 @@ public class ProjectScenesPanel : MonoBehaviour
         updateSceneView.Load(sceneModel, this);
     }
 
+    public void OnUpdateButtonAction(SceneModel oldModel, SceneModel updatedModel)
+    {
+        int modelIndex = sceneModels.IndexOf(oldModel);
+
+        ProjectSceneCell sceneCell = parentContent.GetChild(modelIndex).GetComponent<ProjectSceneCell>();
+
+        sceneCell.SetView(sceneCell.index, updatedModel, sceneCell.OnCellButtonAction);
+    }
+
     public void OnViewButtonAction(SceneModel sceneModel)
     {
         sceneView.Load(sceneModel, this);

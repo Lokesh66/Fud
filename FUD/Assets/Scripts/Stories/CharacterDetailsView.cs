@@ -10,6 +10,8 @@ public class CharacterDetailsView : MonoBehaviour
 
     public UpdateCharacterView updateCharacterView;
 
+    public CharacterView characterView;
+
 
     StoryCharacterModel characterModel;
 
@@ -47,7 +49,15 @@ public class CharacterDetailsView : MonoBehaviour
             case 2:
                 OnCancelButtonAction();
                 break;
+            case 3:
+                OnViewButtonAction();
+                break;
         }
+    }
+
+    void OnViewButtonAction()
+    {
+        characterView.Load(characterModel);
     }
 
     void OnCancelButtonAction()

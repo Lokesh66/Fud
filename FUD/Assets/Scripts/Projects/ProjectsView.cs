@@ -65,8 +65,6 @@ public class ProjectsView : BaseView
 
             addObject.SetActive(currentTab == ETabType.Created);
 
-            filterObject.SetActive(currentTab == ETabType.Browser);
-
             currentObject?.SetActive(false);
 
             UpdateCurrentView();
@@ -75,6 +73,10 @@ public class ProjectsView : BaseView
 
     void UpdateCurrentView()
     {
+        filterObject.SetActive(currentTab != ETabType.Created);
+
+        addObject.SetActive(currentTab == ETabType.Created);
+
         switch (currentTab)
         {
             case ETabType.Offers:
@@ -110,5 +112,21 @@ public class ProjectsView : BaseView
         currentTab = ETabType.Offers;
 
         filterObject.SetActive(false);
+    }
+
+    public void OnFilterButtonAction()
+    {
+        if (currentTab == ETabType.Offers)
+        {
+            offeredProjects.OnFilterButtonAction();
+        }
+        else if(currentTab == ETabType.Altered)
+        {
+            alteredProjects.OnFilterButtonAction();
+        }
+        else
+        {
+            browserView.OnFilterButtonAction();
+        }
     }
 }

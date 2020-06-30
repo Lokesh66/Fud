@@ -62,6 +62,36 @@ public partial class APIHandler
         gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
     }
 
+    public void ApplyAudtionOfferedFilter(int statusId, int roleId, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        string url = APIConstants.GET_OFFERED_AUDITIONS;
+
+        url += "?page=" + 1 + "&limit=50&count=50";
+
+        parameters.Add("role_id", roleId);
+
+        parameters.Add("status", statusId);
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
+    }
+
+    public void ApplyAudtionAlteredFilter(int statusId, int roleId, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        string url = APIConstants.GET_ALTERED_AUDITIONS;
+
+        url += "?page=" + 1 + "&limit=50&count=50";
+
+        parameters.Add("role_id", roleId);
+
+        parameters.Add("status", statusId);
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
+    }
+
     public void GetCreatedAuditions(int pageNo, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -176,7 +206,7 @@ public class JoinedAudition
     {
         EAuditionStatus auditionStatus = EAuditionStatus.Review;
 
-        bool isOwnAudition = DataManager.Instance.userInfo.id == creater_id;
+        bool isOwnAudition = DataManager.Instance.userInfo.id == user_id;
 
         int requiredStatus = isOwnAudition ? sender_status : reciever_status;
 

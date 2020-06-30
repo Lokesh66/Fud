@@ -257,6 +257,42 @@ public partial class APIHandler
         }));
     }
 
+    public void ApplyPortfolioAlteredFilter(int statusId, int roleId, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        string url = APIConstants.GET_ALTERED_PORTFOLIOS;
+
+        url += "?page=" + 1 + "&limit=50&count=50";
+
+        parameters.Add("role_id", roleId);
+
+        parameters.Add("status", statusId);
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void ApplyPortfolioOfferedFilter(int statusId, int roleId, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        string url = APIConstants.GET_PORTFOLIO_POSTS;
+
+        url += "?page=" + 1 + "&limit=50&count=50";
+
+        parameters.Add("role_id", roleId);
+
+        parameters.Add("status", statusId);
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
     public void UpdatePortfolioPostStatus(int postId, int postStatus, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -271,7 +307,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateProfileInfo(ProfileInfoModel infoModel, List<Dictionary<string, object>> idProof, List<Dictionary<string, object>> frontAddressProof, List<Dictionary<string, object>> backAddressProof, Action<bool, UserData> action)
+    public void UpdateProfileInfo(ProfileInfoModel infoModel, string idProof, string frontAddressProof, string backAddressProof, Action<bool, UserData> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -302,19 +338,24 @@ public partial class APIHandler
 
         parameters.Add("role_id", infoModel.roleId);
 
-        if (idProof.Count > 0)
+        if (idProof.IsNOTNullOrEmpty())
         {
             parameters.Add("id_proof", idProof);
         }
 
-        if (frontAddressProof.Count > 0)
+        if (frontAddressProof.IsNOTNullOrEmpty())
         {
-            parameters.Add("add_proof_front", frontAddressProof[0]);
+            parameters.Add("add_proof_front", frontAddressProof);
         }
 
-        if (backAddressProof.Count > 0)
+        if (backAddressProof.IsNOTNullOrEmpty())
         {
-            parameters.Add("add_proof_back", backAddressProof[0]);
+            parameters.Add("add_proof_back", backAddressProof);
+        }
+
+        if (infoModel.profile_image.IsNOTNullOrEmpty())
+        {
+            parameters.Add("profile_image", infoModel.profile_image);
         }
 
         gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_USER_PROFILE, true, parameters, (bool status, string response) =>
@@ -479,6 +520,7 @@ public class ProfileInfoModel
     public string contactNumber;
     public string nativeLocation;
     public int roleId;
+    public string profile_image;
 }
 
 [Serializable]

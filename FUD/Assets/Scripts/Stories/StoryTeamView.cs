@@ -101,15 +101,15 @@ public class StoryTeamView : MonoBehaviour
         noDataView.gameObject.SetActive(teamModels?.Count == 0);
     }
 
-    public void UpdateTeam(StoryTeamModel teamModel)
+    public void UpdateTeam(StoryTeamModel oldModel, StoryTeamModel updatedModel)
     {
         gameObject.SetActive(true);
 
-        int modelIndex = teamModels.IndexOf(teamModel);
+        int modelIndex = teamModels.IndexOf(oldModel);
 
         StoryTeamCell teamCell = content.GetChild(modelIndex).GetComponent<StoryTeamCell>();
 
-        teamCell.Load(teamModel, teamCell.GetButtonAction());
+        teamCell.Load(updatedModel, teamCell.GetButtonAction());
 
     }
 }

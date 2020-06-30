@@ -266,7 +266,7 @@ public class GalleryManager : MonoBehaviour
         return loadedFiles;
     }
 
-    private void PickImage(Action<bool, List<string>> OnUploaded)
+    public void PickImage(Action<bool, List<string>> OnUploaded)
     {
         NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((imagePath) =>
         {

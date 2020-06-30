@@ -16,6 +16,9 @@ public class AuditionOfferedView : MonoBehaviour
     public AuditionsOfferedTableView tableView;
 
 
+    public AuditionOfferedFilterView filterView;
+
+
     public List<Audition> offeredAuditions;
 
     bool isPagingOver = false;
@@ -170,6 +173,24 @@ public class AuditionOfferedView : MonoBehaviour
         pageNo = 1;
 
         isPagingOver = false;
+    }
+
+    public void OnFilterButtonAction()
+    {
+        filterView.Load(OnFilterAction);
+    }
+
+    void OnFilterAction(object data)
+    {
+        offeredAuditions = data as List<Audition>;
+
+        tableView.Data.Clear();
+
+        tableView.Data.Add(offeredAuditions.Count);
+
+        tableView.Refresh();
+
+        noDataView.gameObject.SetActive(offeredAuditions.Count == 0);
     }
 }
 

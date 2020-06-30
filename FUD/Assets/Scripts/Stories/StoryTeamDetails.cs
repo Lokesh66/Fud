@@ -100,8 +100,8 @@ public class StoryTeamDetails : MonoBehaviour
         //titleText.text = string.Empty;
     }
 
-    void OnTeamUpdated(StoryTeamModel teamModel)
+    void OnTeamUpdated(StoryTeamModel updatedModel)
     {
-        teamsView.UpdateTeam(teamModel);
+        teamsView.UpdateTeam(teamModel, updatedModel);
     }
 }

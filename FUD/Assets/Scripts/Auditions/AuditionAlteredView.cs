@@ -15,6 +15,9 @@ public class AuditionAlteredView : MonoBehaviour
 
     public AuditionsAlteredTableView tableView;
 
+    public AuditionAlteredFilterView filterView;
+
+
     [HideInInspector]
     public List<JoinedAudition> joinedAuditions;
 
@@ -164,6 +167,24 @@ public class AuditionAlteredView : MonoBehaviour
         pageNo = 1;
 
         isPagingOver = false;
+    }
+
+    public void OnFilterButtonAction()
+    {
+        filterView.Load(OnFilterAction);
+    }
+
+    void OnFilterAction(object data)
+    {
+        joinedAuditions = data as List<JoinedAudition>;
+
+        tableView.Data.Clear();
+
+        tableView.Data.Add(joinedAuditions.Count);
+
+        tableView.Refresh();
+
+        noDataView.gameObject.SetActive(joinedAuditions.Count == 0);
     }
 }
 

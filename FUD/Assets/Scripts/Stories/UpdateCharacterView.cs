@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 using System;
 using TMPro;
 
@@ -9,7 +10,9 @@ public class UpdateCharacterView : MonoBehaviour
 
     public TMP_InputField castField;
 
-    public TextMeshProUGUI genderLabel;
+    public TMP_InputField titleField;
+
+    public TMP_Dropdown genderDropdown;
 
     public TMP_InputField suitableField;
 
@@ -18,6 +21,14 @@ public class UpdateCharacterView : MonoBehaviour
     public GameObject searchCell;
 
     public GameObject scrollObject;
+
+    public UploadedFilesHandler filesHandler;
+
+    public GameObject mediaCell;
+
+    public RectTransform galleryPanel;
+
+    public RectTransform content;
 
 
     StoryDetailsModel detailsModel;
@@ -35,6 +46,8 @@ public class UpdateCharacterView : MonoBehaviour
     string suitable_performer = string.Empty;
 
     string apiResponse = string.Empty;
+
+    bool isShowingGalleryPanel = false;
 
     Action<StoryCharacterModel> OnUpdateCharacter;
 
@@ -74,9 +87,11 @@ public class UpdateCharacterView : MonoBehaviour
 
     public void SetView()
     {
-        castField.text = characterModel.title;
+        castField.text = characterModel.cast_name;
 
-        genderLabel.text = characterModel.gender;
+        titleField.text = characterModel.title;
+
+        genderDropdown.captionText.text = characterModel.gender;
 
         descriptionField.text = characterModel.description;
     }
@@ -127,6 +142,31 @@ public class UpdateCharacterView : MonoBehaviour
         }
     }
 
+    public void OnCastButtonAction()
+    {
+        castField.Select();
+    }
+
+    public void OnTitleButtonAction()
+    {
+        titleField.Select();
+    }
+
+    public void OnGenderButtonAction()
+    {
+        genderDropdown.Select();
+    }
+
+    public void OnCharacterButtonAction()
+    {
+        suitableField.Select();
+    }
+
+    public void OnDescriptionButtonAction()
+    {
+        descriptionField.Select();
+    }
+
     public void OnBackButtonAction()
     {
         gameObject.SetActive(false);
@@ -152,7 +192,7 @@ public class UpdateCharacterView : MonoBehaviour
 
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
-        GameManager.Instance.apiHandler.UpdateCharacter(characterModel.id, storyId, castField.text, descriptionField.text, selectedModel.id, genderLabel.text, (status, response) => {
+        GameManager.Instance.apiHandler.UpdateCharacter(characterModel.id, storyId, titleField.text, castField.text, descriptionField.text, selectedModel.id, genderDropdown.captionText.text, (status, response) => {
 
             if (status)
             {
@@ -249,8 +289,31 @@ public class UpdateCharacterView : MonoBehaviour
 
         descriptionField.text = string.Empty;
 
-        castField.text = genderLabel.text = keyword = string.Empty;
+        castField.text = keyword = string.Empty;
+
+        genderDropdown.value = 0;
 
         isSearchAPICalled = false;
+    }
+
+    public void OnUploadAction()
+    {
+        ShowGalleryPanel();
+    }
+
+    void ShowGalleryPanel()
+    {
+        SlideGalleryView(true);
+    }
+
+    void SlideGalleryView(bool canShow)
+    {
+        isShowingGalleryPanel = canShow;
+
+        float panelPosition = galleryPanel.anchoredPosition.y;
+
+        float targetPostion = panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
+
+        galleryPanel.DOAnchorPosY(targetPostion, 0.4f);
     }
 }

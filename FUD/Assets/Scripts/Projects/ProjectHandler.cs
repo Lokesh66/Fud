@@ -23,6 +23,11 @@ public class ProjectHandler : MonoBehaviour
     public ProjectCreatedTableView createdTableView;
 
 
+    public ProjectAlteredFilterView alteredFilterView;
+
+    public ProjectOfferedFilterView offeredFilterView;
+
+
     [HideInInspector]
     public List<Project> projectModels;
 
@@ -283,10 +288,14 @@ public class ProjectHandler : MonoBehaviour
         switch (tabType)
         {
             case ETabType.Altered:
+                GetAlteredNextData();
+                break;
             case ETabType.Created:
+                GetCreatedNextData();
                 break;
 
             case ETabType.Offers:
+                GetOfferedNextData();
                 break;
         }
     }
@@ -392,5 +401,42 @@ public class ProjectHandler : MonoBehaviour
         isPagingOver = false;
 
         pageNo = 1;
+    }
+
+    public void OnFilterButtonAction()
+    {
+        if (tabType == ETabType.Offers)
+        {
+            offeredFilterView.Load(OnOfferedFilterApplied);
+        }
+        else {
+            alteredFilterView.Load(OnAlteredFilterApplied);
+        }
+    }
+
+    void OnOfferedFilterApplied(object data)
+    {
+        offeredModels = data as List<ProjectOfferedModel>;
+
+        offeredTableView.Data.Clear();
+
+        offeredTableView.Data.Add(offeredModels.Count);
+
+        offeredTableView.Refresh();
+
+        noDataView.gameObject.SetActive(offeredModels.Count == 0);
+    }
+
+    void OnAlteredFilterApplied(object data)
+    {
+        projectModels = data as List<Project>;
+
+        createdTableView.Data.Clear();
+
+        createdTableView.Data.Add(projectModels.Count);
+
+        createdTableView.Refresh();
+
+        noDataView.gameObject.SetActive(projectModels.Count == 0);
     }
 }

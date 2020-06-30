@@ -36,11 +36,11 @@ public class StoriesAlteredPopUpView : MonoBehaviour
     {
         int statusValue = isOwnStory ? alteredModel.sender_status : alteredModel.reciever_status;
 
-        shortListObject.SetActive(!isOwnStory);
-
         rejectObject.SetActive(!isOwnStory);
 
         acceptObject.SetActive(!isOwnStory && (EStatusType)statusValue != EStatusType.Accepted);
+
+        shortListObject.SetActive(!isOwnStory && (EStatusType)statusValue != EStatusType.ShortListed);
     }
 
 

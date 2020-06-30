@@ -196,7 +196,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateCharacter(int characterId, int storyId, string title, string description, int performerId, string gender, Action<bool, string> action)
+    public void UpdateCharacter(int characterId, int storyId, string title, string castName, string description, int performerId, string gender, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -205,6 +205,8 @@ public partial class APIHandler
         parameters.Add("story_id", storyId);
 
         parameters.Add("title", title);
+
+        parameters.Add("cast_name", castName);
 
         parameters.Add("description", description);
 
@@ -221,7 +223,7 @@ public partial class APIHandler
         }));
     }
 
-    public void CreateCharacter(int story_id,  string title, string description, string gender, int performerId, Action<bool, string> action)
+    public void CreateCharacter(int story_id,  string title, string castName, string description, string gender, int performerId, List<Dictionary<string, object>> multimedia, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -229,11 +231,18 @@ public partial class APIHandler
 
         parameters.Add("title", title);
 
+        parameters.Add("cast_name", castName);
+
         parameters.Add("description", description);
 
         parameters.Add("suitable_performer", performerId);
 
         parameters.Add("gender", gender);
+
+        if (multimedia.Count > 0)
+        {
+            parameters.Add("character_multi_media", multimedia);
+        }
 
         gameManager.StartCoroutine(PostRequest(APIConstants.SAVE_STORY_CHARACTER, true, parameters, (status, response) => {
 
@@ -407,6 +416,46 @@ public partial class APIHandler
         }));
     }
 
+    public void ApplyStoryOfferedFilter(int statusId, int roleId, Action<bool, List<StoryActivityModel>> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("role_id", roleId);
+
+        parameters.Add("status", statusId);
+
+        string url = APIConstants.GET_STORY_POSTS;
+
+        url += "?page=" + 1 + "&limit=50&count=50";
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (apiStatus, response) =>
+        {
+            StoryActivityResponseModel responseModel = JsonUtility.FromJson<StoryActivityResponseModel>(response);
+
+            action(apiStatus, responseModel.data);
+        }));
+    }
+
+    public void ApplyStoryAlteredFilter(int statusId, int roleId, Action<bool, List<StoryAlteredModel>> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("role_id", roleId);
+
+        parameters.Add("status", statusId);
+
+        string url = APIConstants.GET_ALTERED_STORIES;
+
+        url += "?page=" + 1 + "&limit=50&count=50";
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (apiStatus, response) =>
+        {
+            StoriesAlteredResponse stories = JsonUtility.FromJson<StoriesAlteredResponse>(response);
+
+            action(apiStatus, stories.data);
+        }));
+    }
+
     public void UploadFile(string filePath, EMediaType mediaType, Action<bool, string> OnResposne)
     {
         gameManager.StartCoroutine(Upload(filePath, mediaType, ((status, response) => {
@@ -531,6 +580,7 @@ public class StoryCharacterModel
 {
     public int id;
     public int story_id;
+    public string cast_name;
     public string title;
     public string description;
     public string suitable_performer;

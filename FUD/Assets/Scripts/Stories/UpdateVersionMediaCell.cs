@@ -44,13 +44,16 @@ public class UpdateVersionMediaCell : MonoBehaviour
         {
             VideoStreamer.Instance.GetThumbnailImage(albumModel.content_url, (texture) =>
             {
-                Rect rect = new Rect(0, 0, albumImage.rectTransform.rect.width, albumImage.rectTransform.rect.height);
+                if (this != null)
+                {
+                    Rect rect = new Rect(0, 0, albumImage.rectTransform.rect.width, albumImage.rectTransform.rect.height);
 
-                Sprite sprite = Sprite.Create(texture.ToTexture2D(), rect, new Vector2(0.5f, 0.5f));
+                    Sprite sprite = Sprite.Create(texture.ToTexture2D(), rect, new Vector2(0.5f, 0.5f));
 
-                albumImage.sprite = sprite;
+                    albumImage.sprite = sprite;
 
-                OnNext?.Invoke();
+                    OnNext?.Invoke();
+                }
             });
         }
         else

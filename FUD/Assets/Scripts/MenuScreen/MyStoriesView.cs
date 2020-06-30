@@ -22,6 +22,8 @@ public class MyStoriesView : MonoBehaviour
 
     MyStoriesController storiesController;
 
+    bool isInitialized = false;
+
     bool isPagingOver = false;
 
     int pageNo = 1;
@@ -31,8 +33,6 @@ public class MyStoriesView : MonoBehaviour
 
     public void Load()
     {
-        tableView.gameObject.SetActive(false);
-
         if (storiesTab == ETabType.Created)
         {
             GameManager.Instance.apiHandler.GetAllStories(pageNo, (status, storiesList) =>
@@ -50,8 +50,19 @@ public class MyStoriesView : MonoBehaviour
                         pageNo = 1;
                     }
 
-                    tableView.gameObject.SetActive(true);
+                    if (!isInitialized)
+                    {
+                        tableView.gameObject.SetActive(true);
 
+                        isInitialized = true;
+                    }
+                    else {
+                        tableView.Data.Clear();
+
+                        tableView.Data.Add(storiesList.Count);
+
+                        tableView.Refresh();
+                    }
 
                     if (storiesList.Count == 0)
                     {

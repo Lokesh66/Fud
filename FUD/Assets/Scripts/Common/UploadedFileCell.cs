@@ -15,10 +15,14 @@ public class UploadedFileCell : MonoBehaviour
 
     public GameObject pauseObject;
 
+    EMediaType mediaType;
+
 
     public void Load(string imagePath, bool isDownloadedImage, EMediaType mediaType)
     {
         pauseObject.SetActive(mediaType == EMediaType.Video);
+
+        this.mediaType = mediaType;
 
         if (isDownloadedImage)
         {

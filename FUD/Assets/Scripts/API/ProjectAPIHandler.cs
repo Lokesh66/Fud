@@ -59,6 +59,48 @@ public partial class APIHandler
         }));
     }
 
+    public void ApplyOfferedProjectsFilter(int statusId, int roleId, Action<bool, ProjectOfferedResponse> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        string url = APIConstants.GET_OFFERED_PROJECTS;
+
+        url += "?page=" + 1 + "&limit=50&count=50";
+
+        parameters.Add("role_id", roleId);
+
+        parameters.Add("status", statusId);
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
+
+            Debug.Log("response = " + response);
+
+            ProjectOfferedResponse projectsResponse = JsonUtility.FromJson<ProjectOfferedResponse>(response);
+
+            action(status, projectsResponse);
+        }));
+    }
+
+    public void ApplyAlteredProjectsFilter(int statusId, int roleId, Action<bool, ProjectOfferedResponse> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        string url = APIConstants.GET_ALTERED_PROJECTS;
+
+        url += "?page=" + 1 + "&limit=50&count=50";
+
+        parameters.Add("role_id", roleId);
+
+        parameters.Add("status", statusId);
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
+
+            ProjectOfferedResponse projectsResponse = JsonUtility.FromJson<ProjectOfferedResponse>(response);
+
+            action(status, projectsResponse);
+        }));
+    }
+
     public void GetBrowserData(int pageNo, Action<bool, List<PortfolioModel>> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
