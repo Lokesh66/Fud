@@ -42,7 +42,7 @@ public partial class APIHandler
 
         string url = APIConstants.GET_OFFERED_AUDITIONS;
 
-        url += "?page=" + pageNo +  "&limit=50&count=50";
+        url += "?page=" + pageNo +  "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         parameters.Add("fetch_live", 1);
 
@@ -55,7 +55,7 @@ public partial class APIHandler
 
         string url = APIConstants.GET_ALTERED_AUDITIONS;
 
-        url += "?page=" + pageNo + "&limit=50&count=50";
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         parameters.Add("fetch_joined", 1);
 
@@ -68,7 +68,7 @@ public partial class APIHandler
 
         string url = APIConstants.GET_OFFERED_AUDITIONS;
 
-        url += "?page=" + 1 + "&limit=50&count=50";
+        url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         parameters.Add("role_id", roleId);
 
@@ -83,7 +83,7 @@ public partial class APIHandler
 
         string url = APIConstants.GET_ALTERED_AUDITIONS;
 
-        url += "?page=" + 1 + "&limit=50&count=50";
+        url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         parameters.Add("role_id", roleId);
 
@@ -98,7 +98,7 @@ public partial class APIHandler
 
         string url = APIConstants.GET_CREATED_AUDITIONS;
 
-        url += "?page=" + pageNo + "&limit=50&count=50";
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         parameters.Add("fetch_created", 1);
 
@@ -138,7 +138,7 @@ public partial class APIHandler
     {
         string url = APIConstants.ALL_ACTIVE_AUDITIONS;
 
-        url += "?page=" + pageNo + "&limit=50&count=50";
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
     }
@@ -253,6 +253,8 @@ public class SearchAudition
     public DateTime created_date_time;
     public DateTime updatedAt;
     public List<MultimediaModel> UserAuditionMultimedia;
+
+    public MultimediaModel onScreenModel = null;
 }
 
 [Serializable]

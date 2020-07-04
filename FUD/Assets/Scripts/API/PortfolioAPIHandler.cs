@@ -34,10 +34,6 @@ public partial class APIHandler
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        /*List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
-
-        string jsonData = JsonUtility.ToJson(portMultimedias);*/
-
         parameters.Add("title", title);
 
         parameters.Add("id", id);
@@ -60,8 +56,6 @@ public partial class APIHandler
     public void RemovePortfolio(int id, int status, Action<bool> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
-
-        //parameters.Add("port_album_id", albumId);
 
         parameters.Add("id", id);
 
@@ -137,8 +131,6 @@ public partial class APIHandler
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        //parameters.Add("port_album_id", albumId);
-
         parameters.Add("id", id);
 
         parameters.Add("status", status);
@@ -153,7 +145,7 @@ public partial class APIHandler
     {
         string url = APIConstants.USER_PORTFOLIO;
 
-        url += "?page=" + pageNo + "&limit=50&count=50";
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         gameManager.StartCoroutine(GetRequest(url, true, (bool status, string response) => {
 
@@ -231,7 +223,7 @@ public partial class APIHandler
 
         string url = APIConstants.GET_ALTERED_PORTFOLIOS;
 
-        url += "?page=" + pageNo + "&limit=50&count=50";
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         parameters.Add("tab_name", "altered");
 
@@ -247,7 +239,7 @@ public partial class APIHandler
 
         string url = APIConstants.GET_PORTFOLIO_POSTS;
 
-        url += "?page=" + pageNo + "&limit=50&count=50";
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         parameters.Add("status", 0);
 
@@ -263,7 +255,7 @@ public partial class APIHandler
 
         string url = APIConstants.GET_ALTERED_PORTFOLIOS;
 
-        url += "?page=" + 1 + "&limit=50&count=50";
+        url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         parameters.Add("role_id", roleId);
 
@@ -281,7 +273,7 @@ public partial class APIHandler
 
         string url = APIConstants.GET_PORTFOLIO_POSTS;
 
-        url += "?page=" + 1 + "&limit=50&count=50";
+        url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         parameters.Add("role_id", roleId);
 
@@ -314,10 +306,6 @@ public partial class APIHandler
         List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
 
         string jsonData = JsonUtility.ToJson(portMultimedias);
-
-        //parameters.Add("phone", infoModel.number);
-
-        //parameters.Add("role_id", infoModel.actor);
 
         UserData user = DataManager.Instance.userInfo;
 
@@ -356,6 +344,11 @@ public partial class APIHandler
         if (infoModel.profile_image.IsNOTNullOrEmpty())
         {
             parameters.Add("profile_image", infoModel.profile_image);
+        }
+
+        if (infoModel.aadherNumber.IsNOTNullOrEmpty())
+        {
+            parameters.Add("add_proof_identity", infoModel.aadherNumber);
         }
 
         gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_USER_PROFILE, true, parameters, (bool status, string response) =>
@@ -521,6 +514,7 @@ public class ProfileInfoModel
     public string nativeLocation;
     public int roleId;
     public string profile_image;
+    public string aadherNumber;
 }
 
 [Serializable]

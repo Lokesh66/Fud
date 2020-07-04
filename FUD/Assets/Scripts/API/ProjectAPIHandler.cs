@@ -8,7 +8,7 @@ public partial class APIHandler
     {
         string url = APIConstants.CREATE_PROJECT;
 
-        url += "?page=" + pageNo + "&limit=50&count=50";
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         gameManager.StartCoroutine(GetRequest(url, true, (status, response) => {
 
@@ -27,13 +27,11 @@ public partial class APIHandler
 
         string url = APIConstants.GET_OFFERED_PROJECTS;
 
-        url += "?page=" + pageNo + "&limit=50&count=50";
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         parameters.Add("tab_name", "offeres");
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
-
-            Debug.Log("response = " + response);
 
             ProjectOfferedResponse projectsResponse = JsonUtility.FromJson<ProjectOfferedResponse>(response);
 
@@ -47,7 +45,7 @@ public partial class APIHandler
 
         string url = APIConstants.GET_ALTERED_PROJECTS;
 
-        url += "?page=" + pageNo + "&limit=50&count=50";
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         parameters.Add("tab_name", "altered");
 
@@ -65,7 +63,7 @@ public partial class APIHandler
 
         string url = APIConstants.GET_OFFERED_PROJECTS;
 
-        url += "?page=" + 1 + "&limit=50&count=50";
+        url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         parameters.Add("role_id", roleId);
 
@@ -87,7 +85,7 @@ public partial class APIHandler
 
         string url = APIConstants.GET_ALTERED_PROJECTS;
 
-        url += "?page=" + 1 + "&limit=50&count=50";
+        url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         parameters.Add("role_id", roleId);
 
@@ -107,7 +105,7 @@ public partial class APIHandler
 
         string url = APIConstants.GET_PROJECT_BROWSER_DATA;
 
-        url += "?page=" + pageNo + "&limit=50&count=50";
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
 
@@ -147,18 +145,6 @@ public partial class APIHandler
 
     public void CreateProject(Dictionary<string, object> parameters, Action<bool, string> action)
     {
-        /*Dictionary<string, object> parameters = new Dictionary<string, object>();
-
-        parameters.Add("title", title);
-
-        parameters.Add("story_id", 1);
-
-        parameters.Add("story_version_id", 1);
-
-        parameters.Add("cost_estimation", long.Parse(budget));
-
-        parameters.Add("estimated_time",  long.Parse(duration));*/
-
         gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_PROJECT, true, parameters, (status, response) => {
 
             action(status, response);

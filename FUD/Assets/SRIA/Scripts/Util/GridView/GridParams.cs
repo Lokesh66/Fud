@@ -46,6 +46,7 @@ namespace frame8.ScrollRectItemsAdapter.Util.GridView
 		internal override void InitIfNeeded (ISRIA sria)
 		{
 			base.InitIfNeeded (sria);
+			
 			_DefaultItemSize = scrollRect.horizontal ? cellPrefab.rect.width : cellPrefab.rect.height;
 
 			// Hotfix 12.10.2017 14:45: There's a bug in Unity on some versions: creating a new GameObject at runtime and adding it a RectTransform cannot be done in Awake() or OnEnabled().
@@ -89,6 +90,7 @@ namespace frame8.ScrollRectItemsAdapter.Util.GridView
 
 		protected void CreateCellGroupPrefab ()
 		{
+			Debug.LogError("CreateCellGroupPrefab Called");
 
 			var go = new GameObject (scrollRect.name + "_CellGroupPrefab", typeof(RectTransform));
 

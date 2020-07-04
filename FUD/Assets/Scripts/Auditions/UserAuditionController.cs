@@ -15,11 +15,11 @@ public class UserAuditionController : MonoBehaviour
 
     public GameObject userAuditionCell;
 
-    public Transform activeContent;
-
-    public Transform shortListedContent;
-
     public GameObject buttonsPanel;
+
+    public AuditionResponsesView liveAuditionResponsesView;
+
+    public ShortListedAuditionView shortListedAuditionView;
 
     public GameObject livePanel;
 
@@ -37,17 +37,12 @@ public class UserAuditionController : MonoBehaviour
 
     List<SearchAudition> activeAuditions;
 
-    List<SearchAudition> shortListedAudtions;
-
     SearchAudition selectedAudition;
 
     Action<bool> OnBack;
 
     List<string> videoURLs = new List<string>();
 
-    List<UserAuditionCell> liveCellsList = new List<UserAuditionCell>();
-
-    List<UserAuditionCell> shortListedCellsList = new List<UserAuditionCell>();
 
     int auditionId;
 
@@ -99,118 +94,30 @@ public class UserAuditionController : MonoBehaviour
         switch (currentType)
         {
             case EAuditionStatusScreen.Live:
-                LoadLiveAuditions();
+                liveAuditionResponsesView.Load(activeAuditions, auditionId);
                 break;
             case EAuditionStatusScreen.Shortlisted:
-                LoadShortListedAuditions();
+                shortListedAuditionView.Load(auditionId);
                 break;
-        }
-    }
-
-    void LoadLiveAuditions()
-    {
-        if (activeContent.childCount > 0)
-            return;
-
-        liveCellsList.Clear();
-
-        for (int i = 0; i < activeAuditions.Count; i++)
-        {
-            GameObject storyObject = Instantiate(userAuditionCell, activeContent);
-
-            UserAuditionCell item = storyObject.GetComponent<UserAuditionCell>();
-
-            item.SetView(activeAuditions[i], OnAuditionSelectAction);
-
-            liveCellsList.Add(item);
-        }
-
-        if (activeAuditions.Count > 0)
-        {
-            SetLiveVideoThumbnails(0);
-        }
-    }
-
-    void SetLiveVideoThumbnails(int index)
-    {
-        liveCellsList[index].SetVideoThumbnail(() => {
-
-            index++;
-
-            if (index >= activeAuditions.Count)
-            {
-                return;
-            }
-
-            SetLiveVideoThumbnails(index);
-        });
-    }
-
-    void LoadShortListedAuditions()
-    {
-        if (shortListedAudtions == null)
-        {
-            Dictionary<string, object> parameters = new Dictionary<string, object>();
-
-            parameters.Add("id", auditionId);
-            parameters.Add("page", 0);
-            parameters.Add("limit", 20);
-            parameters.Add("status", "shortlisted");
-
-            GameManager.Instance.apiHandler.SearchAuditions(1, parameters, (status, response) => {
-
-                if (status)
-                {
-                    SearchAuditionResponse auditionResponse = JsonUtility.FromJson<SearchAuditionResponse>(response);
-
-                    if (auditionResponse.data.Count > 0)
-                    {
-                        shortListedAudtions = auditionResponse.data;
-
-                        UpdateShortListedView();
-                    }
-                }
-            });
         }
     }
 
     void SetShortListedVideoThumbnails(int index)
     {
-        shortListedCellsList[index].SetVideoThumbnail(() => {
+        //shortListedCellsList[index].SetVideoThumbnail(() => {
 
-            index++;
+        //    index++;
 
-            if (index >= shortListedAudtions.Count)
-            {
-                return;
-            }
+        //    if (index >= shortListedAudtions.Count)
+        //    {
+        //        return;
+        //    }
 
-            SetShortListedVideoThumbnails(index);
-        });
+        //    SetShortListedVideoThumbnails(index);
+        //});
     }
 
-    void UpdateShortListedView()
-    {
-        shortListedCellsList.Clear();
-
-        for (int i = 0; i < shortListedAudtions.Count; i++)
-        {
-            GameObject storyObject = Instantiate(userAuditionCell, shortListedContent);
-
-            UserAuditionCell item = storyObject.GetComponent<UserAuditionCell>();
-
-            item.SetView(shortListedAudtions[i], OnAuditionSelectAction);
-
-            shortListedCellsList.Add(item);
-        }
-
-        if (shortListedAudtions.Count > 0)
-        {
-            SetShortListedVideoThumbnails(0);
-        }
-    }
-
-    void OnAuditionSelectAction(SearchAudition audition)
+    public void OnAuditionSelectAction(SearchAudition audition)
     {
         selectedAudition = audition;
 
@@ -279,14 +186,10 @@ public class UserAuditionController : MonoBehaviour
     {
         gameObject.SetActive(false);
 
-        activeAuditions = shortListedAudtions = null;
+        activeAuditions = null;
 
         OnBack = null;
 
         currentType = EAuditionStatusScreen.None;
-
-        activeContent.DestroyChildrens();
-
-        shortListedContent.DestroyChildrens();
     }
 }

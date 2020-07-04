@@ -14,7 +14,7 @@ public partial class APIHandler
 
         string url = APIConstants.CREATE_STORY;
 
-        url += "?page=" + pageNo + "&limit=50&count=50";
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         gameManager.StartCoroutine(GetRequest(url, true, (bool status, string response) => {
             if (status)
@@ -59,7 +59,7 @@ public partial class APIHandler
 
         string url = APIConstants.GET_ALTERED_STORIES;
 
-        url += "?page=" + pageNo + "&limit=50&count=50";
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         parameters.Add("tab_ name", "altered");
 
@@ -406,7 +406,7 @@ public partial class APIHandler
 
         string url = APIConstants.GET_STORY_POSTS;
 
-        url += "?page="+ pageNo + "&limit=50&count=50";
+        url += "?page="+ pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         parameters.Add("tab_name", "offers");
 
@@ -426,7 +426,7 @@ public partial class APIHandler
 
         string url = APIConstants.GET_STORY_POSTS;
 
-        url += "?page=" + 1 + "&limit=50&count=50";
+        url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT +"&count=" + APIConstants.API_ITEM_LIMIT;
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, (apiStatus, response) =>
         {
@@ -446,7 +446,7 @@ public partial class APIHandler
 
         string url = APIConstants.GET_ALTERED_STORIES;
 
-        url += "?page=" + 1 + "&limit=50&count=50";
+        url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, (apiStatus, response) =>
         {

@@ -8,6 +8,7 @@ public class UploadedFilesHandler : MonoBehaviour
 
     public GameObject cellCache;
 
+    public RectTransform mediaButtonTrans;
 
     EMediaType mediaType;
 
@@ -28,6 +29,8 @@ public class UploadedFilesHandler : MonoBehaviour
 
             fileCell.Load(paths[i], isDownloadedFile, mediaType);
         }
+
+        mediaButtonTrans?.SetAsLastSibling();
     }
 
     private void OnDisable()

@@ -580,6 +580,8 @@ namespace frame8.Logic.Misc.Visual.UI.ScrollRectItemsAdapter
 		{
 			//float viewportSizeBefore = _InternalState.viewportSize;
 
+			return;
+
 			MarkViewsHoldersForRebuild (_VisibleItems);
 			//MarkViewsHoldersForRebuild(_RecyclableItems);
 			ClearCachedRecyclableItems ();

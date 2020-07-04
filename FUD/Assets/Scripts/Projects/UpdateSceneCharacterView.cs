@@ -34,8 +34,6 @@ public class UpdateSceneCharacterView : MonoBehaviour
 
     List<Dictionary<string, object>> dialogues = new List<Dictionary<string, object>>();
 
-    List<DialogueCell> dialogueCells = new List<DialogueCell>();
-
     string keyword = string.Empty;
 
     float searchScrollMaxHeight = 400.0f;
@@ -207,7 +205,7 @@ public class UpdateSceneCharacterView : MonoBehaviour
 
                 DialogueCell _dialogueCell = dialogueObject.GetComponent<DialogueCell>();
 
-                _dialogueCell.SetView(fieldMessage, isLeftAlign, searchModel, OnCellButtonAction, sceneCharacters[i].id);
+                _dialogueCell.SetView(fieldMessage, isLeftAlign, searchModel, OnCellButtonAction, OnDeleteDialogueAction, sceneCharacters[i].id);
 
                 //dialogueCells.Add(_dialogueCell);
 
@@ -254,14 +252,14 @@ public class UpdateSceneCharacterView : MonoBehaviour
                     dialogues.Add(characterBody);
                 }
 
-                editedDialogueCell.SetView(dialogueField.text, editedDialogueCell.isLeftAlign, editedDialogueCell.userSearchModel, OnCellButtonAction, editedDialogueCell.dialogueId);
+                editedDialogueCell.SetView(dialogueField.text, editedDialogueCell.isLeftAlign, editedDialogueCell.userSearchModel, OnCellButtonAction, OnDeleteDialogueAction, editedDialogueCell.dialogueId);
             }
             else {
                 int index = dialogues.IndexOf(editedDialogueCell.dialogueModel);
 
                 dialogues.RemoveAt(index);
 
-                editedDialogueCell.SetView(dialogueField.text, editedDialogueCell.isLeftAlign, editedDialogueCell.userSearchModel, OnCellButtonAction, editedDialogueCell.dialogueId);
+                editedDialogueCell.SetView(dialogueField.text, editedDialogueCell.isLeftAlign, editedDialogueCell.userSearchModel, OnCellButtonAction, OnDeleteDialogueAction, editedDialogueCell.dialogueId);
 
                 dialogues.Insert(index, editedDialogueCell.dialogueModel);
             }
@@ -301,9 +299,7 @@ public class UpdateSceneCharacterView : MonoBehaviour
 
             DialogueCell _dialogueCell = dialogueObj.GetComponent<DialogueCell>();
 
-            _dialogueCell.SetView(dialogueField.text, isLeftAlign, selectedModel, OnCellButtonAction);
-
-            dialogueCells.Add(_dialogueCell);
+            _dialogueCell.SetView(dialogueField.text, isLeftAlign, selectedModel, OnCellButtonAction, OnDeleteDialogueAction);
 
            /* Dictionary<string, object> sceneCharacter = new Dictionary<string, object>();
 
@@ -364,6 +360,20 @@ public class UpdateSceneCharacterView : MonoBehaviour
         scrollRect.verticalNormalizedPosition = 0.0f;
 
         keyword = dialogueField.text = string.Empty;
+    }
+
+    void OnDeleteDialogueAction(DialogueCell dialogueCell)
+    {
+        int cellIndex = dialogueCell.transform.GetSiblingIndex();
+
+        Destroy(scrollRect.content.GetChild(cellIndex).gameObject);
+
+        if (dialogues.Contains(dialogueCell.dialogueModel))
+        {
+            dialogues.Remove(dialogues[cellIndex]);
+        }
+
+        ClearFieldData();
     }
 
     int GetKeyboardHeight(bool includeInput)

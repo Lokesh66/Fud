@@ -31,6 +31,7 @@ public class DatePicker : MonoBehaviour
 
     public enum EYearsType
     {
+        None,
         DOBYears,
         ProjectYears,
     }
@@ -72,7 +73,7 @@ public class DatePicker : MonoBehaviour
 
     List<int> projectYears = new List<int> {
 
-        2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030
+        2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2040, 2041, 2042, 2043, 2044, 2045, 2045, 2046, 2047, 2048, 2049, 2050
     };
 
     Action<DateTime, string> OnSelectDate;
@@ -93,14 +94,22 @@ public class DatePicker : MonoBehaviour
         _dateTime = currentDate;
         CreateCalendar();
 
-        if (endDate.Equals(DateTime.Now))
+        Debug.Log("Compare with Current Date = " + endDate.CompareTo(DateTime.Now));
+
+        if (endDate.CompareTo(DateTime.Now) == -1)
         {
+            Debug.LogError("If Condition");
             yearType = EYearsType.DOBYears;
         }
-        else if (startDate.Equals(DateTime.Now))
+        else if (endDate.Equals(DateTime.MaxValue))
         {
+            Debug.LogError("Else If Condition");
             yearType = EYearsType.ProjectYears;
         }
+        //else if (startDate.Equals(DateTime.Now))
+        //{
+        //    yearType = EYearsType.ProjectYears;
+        //}
 
         PopulateYearsDropDown();
     }

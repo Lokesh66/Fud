@@ -196,7 +196,7 @@ public class CreateDialoguesView : MonoBehaviour
         {
             int index = dialogueCells.IndexOf(editedDialogueCell);
 
-            editedDialogueCell.SetView(dialogueField.text, editedDialogueCell.isLeftAlign, editedDialogueCell.userSearchModel, OnButtonAction);
+            editedDialogueCell.SetView(dialogueField.text, editedDialogueCell.isLeftAlign, editedDialogueCell.userSearchModel, OnButtonAction, OnDeleteDialogueAction);
 
             Dictionary<string, object> characterBody = dialogues.ElementAt(index);
 
@@ -214,7 +214,7 @@ public class CreateDialoguesView : MonoBehaviour
         {
             GameObject dialogueObj = Instantiate(dialogueCell, scrollRect.content);
 
-            dialogueObj.GetComponent<DialogueCell>().SetView(dialogueField.text, isLeftAlign, selectedModel, OnButtonAction);
+            dialogueObj.GetComponent<DialogueCell>().SetView(dialogueField.text, isLeftAlign, selectedModel, OnButtonAction, OnDeleteDialogueAction);
 
             dialogueCells.Add(dialogueObj.GetComponent<DialogueCell>());
 
@@ -281,6 +281,17 @@ public class CreateDialoguesView : MonoBehaviour
         searchContent.DestroyChildrens();
 
         scrollRect.content.DestroyChildrens();
+    }
+
+    void OnDeleteDialogueAction(DialogueCell dialogueCell)
+    {
+        int cellIndex = dialogueCell.transform.GetSiblingIndex();
+
+        Destroy(scrollRect.content.GetChild(cellIndex).gameObject);
+
+        dialogues.Remove(dialogues[cellIndex]);
+
+        ClearFieldData();
     }
 
     int GetKeyboardHeight(bool includeInput)

@@ -39,15 +39,19 @@ public class HomeStoriesPanel : MonoBehaviour
             storiesList = new List<StoryModel>();
         }
 
-        for(int i = 0; i <= storiesList.Count; i++)
+        Debug.Log("storiesList Count = " + storiesList.Count);
+
+        for(int i = 0; i < storiesList.Count; i++)
         {
             GameObject storyObject = Instantiate(homeCell, parentContent);
 
             HomeCell homeItem = storyObject.GetComponent<HomeCell>();
 
+            Debug.Log("i Value = " + i);
+
             if (i == 0)
             {
-                homeItem.SetView(HomeCellType.DEFAULT, i - 1, "", storiesList[i].story_poster, OnStorySelectAction);
+                homeItem.SetView(HomeCellType.DEFAULT, i - 1, "", string.Empty, OnStorySelectAction);
             }
             else
             {

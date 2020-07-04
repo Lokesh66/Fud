@@ -24,11 +24,18 @@ public class DownLoadManager : MonoBehaviour
         var m = Regex.Match(imageurl, ".+(/.+)$");
         string imageName = m.Groups[1].Value.Remove(0, 1);
         string path = Application.persistentDataPath + "/" + imageName;
+
+
+        Debug.Log("Path Esissts = " + File.Exists(path));
+
         //path = "file://" + path;
         if (File.Exists(path))
         {
             //path = "file://" + path;
             //StartCoroutine(GetImage(path, CallBack));
+
+            Debug.Log("Loading from Local");
+
             LoadPNG(path, CallBack);
         }
         else
@@ -59,6 +66,9 @@ public class DownLoadManager : MonoBehaviour
                 string imageName = m.Groups[1].Value.Remove(0, 1);
 
                 string path = Application.persistentDataPath + "/" + imageName;
+
+                Debug.Log("Downloaded : imageName = " + path);
+
                 Sprite profileSprite = Sprite.Create(www.texture, new Rect(0f, 0f, www.texture.width, www.texture.height), new Vector2(0.5f, 0.5f));//creates sprite from the texture of the image
                 CallBack(profileSprite);
                 byte[] texByte = www.texture.EncodeToPNG();//to convert texture to png
@@ -104,6 +114,8 @@ public class DownLoadManager : MonoBehaviour
         var m = Regex.Match(imageurl, ".+(/.+)$");
         string imageName = m.Groups[1].Value.Remove(0, 1);
         string path = Application.persistentDataPath + "/" + imageName;
+
+        Debug.Log("Reading Data Path = " + path);
 
         if (File.Exists(path))
         {

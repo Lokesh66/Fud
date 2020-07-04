@@ -38,7 +38,23 @@ public class MyProfilePanel : MonoBehaviour
             secondarySkillsText.text = "";
         }
         gameObject.SetActive(true);
+
+        SetImage();
     }
+
+    void SetImage()
+    {
+        UserData data = DataManager.Instance.userInfo;
+
+        if (data.profile_image.IsNOTNullOrEmpty())
+        {
+            GameManager.Instance.downLoadManager.DownloadImage(data.profile_image, sprite => {
+
+                profileIcon.sprite = sprite;
+            });
+        }
+    }
+
     public void OnBackButtonAction()
     {
         gameObject.SetActive(false);

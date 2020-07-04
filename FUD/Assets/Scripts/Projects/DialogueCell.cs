@@ -13,6 +13,8 @@ public class DialogueCell : MonoBehaviour
 
     public TextMeshProUGUI dialogueText;
 
+    public RectTransform deleteButtonTrans;
+
     public Button cellButton;
 
     [HideInInspector]
@@ -20,6 +22,7 @@ public class DialogueCell : MonoBehaviour
 
     [HideInInspector]
     public Dictionary<string, object> dialogueModel = new Dictionary<string, object>();
+
 
     [HideInInspector]
     public bool isLeftAlign;
@@ -34,9 +37,16 @@ public class DialogueCell : MonoBehaviour
 
     float padding = 40.0f;
 
+    float xLeftdeleteButtonPos = 650f;
+
+    float xRightdeleteButtonPos = 300f;
+
     Action<DialogueCell> OnCellButtonAction;
 
-    public void SetView(string message, bool isLeftAlign, UserSearchModel userSearchModel, Action<DialogueCell> OnCellButtonAction, int dialogueId = -1)
+    Action<DialogueCell> OnDeleteAction;
+
+
+    public void SetView(string message, bool isLeftAlign, UserSearchModel userSearchModel, Action<DialogueCell> OnCellButtonAction, Action<DialogueCell> OnDeleteButtonAction, int dialogueId = -1)
     {
         dialogueText.text = message;
 
@@ -44,20 +54,29 @@ public class DialogueCell : MonoBehaviour
 
         this.OnCellButtonAction = OnCellButtonAction;
 
+        this.OnDeleteAction = OnDeleteButtonAction;
+
         this.userSearchModel = userSearchModel;
 
         this.dialogueId = dialogueId; 
 
         cellButton.enabled = OnCellButtonAction != null;
 
-        if (dialogueId != -1)
+        if (OnCellButtonAction != null)
         {
-            dialogueModel["id"] = dialogueId;
+            if (dialogueId != -1)
+            {
+                dialogueModel["id"] = dialogueId;
+            }
+
+            dialogueModel["character_id"] = userSearchModel.id;
+
+            dialogueModel["dailogue"] = message;
+
+            SetDeleteButtonPosition();
         }
 
-        dialogueModel["character_id"] = userSearchModel.id;
-
-        dialogueModel["dailogue"] = message;
+        deleteButtonTrans.gameObject.SetActive(OnCellButtonAction != null);
 
         StartCoroutine(UpdateBackGround(isLeftAlign)); 
     }
@@ -81,8 +100,20 @@ public class DialogueCell : MonoBehaviour
         backGroundTrans.pivot = anchorPoint;
     }
 
+    void SetDeleteButtonPosition()
+    {
+        float xTargetValue = isLeftAlign ? xLeftdeleteButtonPos : xRightdeleteButtonPos;
+
+        deleteButtonTrans.anchoredPosition = new Vector2(xTargetValue, 0);
+    }
+
     public void OnButtonAction()
     {
         OnCellButtonAction?.Invoke(this);
+    }
+
+    public void OnDeleteButtonAction()
+    {
+        OnDeleteAction?.Invoke(this);
     }
 }

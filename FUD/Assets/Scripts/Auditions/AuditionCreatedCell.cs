@@ -38,8 +38,8 @@ public class AuditionCreatedCell : MonoBehaviour
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
         parameters.Add("id", auditionData.id);
-        parameters.Add("page", 0);
-        parameters.Add("limit", 20);
+        //parameters.Add("page", 0);
+        //parameters.Add("limit", 20);
 
         GameManager.Instance.apiHandler.SearchAuditions(1, parameters, (status, response) =>
         {

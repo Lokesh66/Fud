@@ -156,6 +156,7 @@ public class UserData
     public int id;
     public string name;
     public string token;
+    public string profile_image;
     public long phone;
     public int role_id;
     public object plan_id;
@@ -226,7 +227,6 @@ public class UserLoginbject
 
 #region CRAFTS
 [Serializable]
-
 public class CraftsResponse
 {
     public string message;
@@ -240,7 +240,7 @@ public class Craft
     public int id;
     public string name;
     public int status;
-    public object image_url;
+    public string image_url;
     public DateTime created_date_time;
     public DateTime updatedAt;
 }

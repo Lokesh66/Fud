@@ -18,16 +18,16 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 	/// Implementation demonstrating the usage of a <see cref="GridAdapter{TParams, TCellVH}"/> for a simple gallery of remote images downloaded with a <see cref="SimpleImageDownloader"/>.
 	/// It implements  <see cref="ILazyListSimpleDataManager{TItem}"/> to access the default interface implementations for common data manipulation functionality
 	/// </summary>
-	public class AuditionsOfferedTableView : GridAdapter<GridParams, AuditionOfferedCellHolder>, ILazyListSimpleDataManager<Audition>
+	public class AuditionResponsesTableView : GridAdapter<GridParams, AuditionResponseViewCellHolder>, ILazyListSimpleDataManager<SearchAudition>
 	{
 
 		public UnityEngine.Events.UnityEvent OnItemsUpdated;
 
-		private LazyList<Audition> _Data;
+		private LazyList<SearchAudition> _Data;
 
-		public LazyList<Audition> Data { get { return _Data; } private set { _Data = value; } }
+		public LazyList<SearchAudition> Data { get { return _Data; } private set { _Data = value; } }
 
-		public AuditionOfferedView adataObject;
+		public AuditionResponsesView adataObject;
 
 
 		#region GridAdapter implementation
@@ -45,9 +45,7 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 
 		public void OnEnable ()
 		{
-			Debug.Log("Offered On Enable Called");
-
-			Data = new LazyList<Audition> (CreateNewModel, adataObject.offeredAuditions.Count);
+			Data = new LazyList<SearchAudition> (CreateNewModel, adataObject.auditionResponses.Count);
 		}
 
 		/// <inheritdoc/>
@@ -74,9 +72,9 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 			onDone ();
 		}
 
-		Audition CreateNewModel (int index)
+		SearchAudition CreateNewModel (int index)
 		{
-			return adataObject.offeredAuditions [index];
+			return adataObject.auditionResponses [index];
 		}
 
 		/// <inheritdoc/>
@@ -97,23 +95,32 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 
 		/// <summary> Called when a cell becomes visible </summary>
 		/// <param name="viewsHolder"> use viewsHolder.ItemIndexto find your corresponding model and feed data into its views</param>
-		protected override void UpdateCellViewsHolder (AuditionOfferedCellHolder viewsHolder)
+		protected override void UpdateCellViewsHolder (AuditionResponseViewCellHolder viewsHolder)
 		{
 			var model = Data [viewsHolder.ItemIndex];
 
-			viewsHolder.views.gameObject.transform.parent.GetComponent<AuditionOfferedCell> ().SetView (adataObject, model);
+			viewsHolder.views.gameObject.transform.parent.GetComponent<UserAuditionCell> ().SetView (model, adataObject.OnAuditionSelectAction);
 
-			var imageURLAtRequest = model.image_url;
+			Debug.Log("model.onScreenModel = " + model.onScreenModel);
 
-			int itemIndexAtRequest = viewsHolder.ItemIndex;
+			if (model.onScreenModel != null)
+			{
+				var imageURLAtRequest = model.onScreenModel.content_url;
 
-			viewsHolder.remoteImageBehaviour.Load(imageURLAtRequest, true, (fromCache, success) => {
-				if (success)
+				Debug.Log("content_url = " + model.onScreenModel.content_url);
+
+				int itemIndexAtRequest = viewsHolder.ItemIndex;
+
+				viewsHolder.remoteImageBehaviour.Load(imageURLAtRequest, true, (fromCache, success) =>
 				{
-					if (!IsRequestStillValid(viewsHolder.ItemIndex, itemIndexAtRequest, imageURLAtRequest))
-						return;
-				}
-			});
+					if (success)
+					{
+						if (!IsRequestStillValid(viewsHolder.ItemIndex, itemIndexAtRequest, imageURLAtRequest))
+							return;
+					}
+				});
+			}
+            else { }
 
 			if ((viewsHolder.ItemIndex != 0 && viewsHolder.ItemIndex == Data.Count - 12 && _ScrollRect.velocity.y > 10) ||(Data.Count < 12 && viewsHolder.ItemIndex == Data.Count - 1))
 			{
@@ -129,14 +136,14 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 			return
 				_CellsCount > itemIndex// be sure the index still points to a valid model
 				&& itemIdexAtRequest == itemIndex// be sure the view's associated model index is the same (i.e. the viewsHolder wasn't re-used)
-				&& imageURLAtRequest == Data[itemIndex].image_url; // be sure the model at that index is the same (could have changed if ChangeItemCountTo would've been called meanwhile)
+				&& imageURLAtRequest == Data[itemIndex].onScreenModel.content_url; // be sure the model at that index is the same (could have changed if ChangeItemCountTo would've been called meanwhile)
 		}
 
 		#endregion
 	}
 
 	/// <summary>All views holders used with GridAdapter should inherit from <see cref="CellViewsHolder"/></summary>
-	public class AuditionOfferedCellHolder : CellViewsHolder
+	public class AuditionResponseViewCellHolder : CellViewsHolder
 	{
 		public RemoteImageBehaviour remoteImageBehaviour;
 
@@ -144,7 +151,7 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 		{
 			base.CollectViews ();
 
-			views.GetComponentAtPath("LeftImage", out remoteImageBehaviour);
+			views.GetComponentAtPath("AlbumImage", out remoteImageBehaviour);
 		}
 
 		protected override RectTransform GetViews ()

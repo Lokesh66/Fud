@@ -44,40 +44,25 @@ public class JoinedAuditionCell : MonoBehaviour
         {
             titleText.text = auditionData.Audition.title;
 
-            SetStatus(auditionData.status);
+            UpdateStatusTag();
 
             StartCountDown();
         }
     }
 
-    void SetStatus(int status)
+    void UpdateStatusTag()
     {
         tagImage.gameObject.SetActive(true);
 
-        tagImage.sprite = GetStatusSprite(auditionData.GetAuditonStatus());
-        //statusText.text = status;
-    }
+        bool isOwnAudition = DataManager.Instance.userInfo.id == auditionData.user_id;
 
-    Sprite GetStatusSprite(EAuditionStatus auditionStatus)
-    {
-        Sprite sprite = null;
+        int statusValue = isOwnAudition ? auditionData.sender_status : auditionData.reciever_status;
 
-        switch (auditionStatus)
-        {
-            case EAuditionStatus.Review:
-                sprite = reviewSprite;
-                break;
+        EStatusType statusType = (EStatusType)statusValue;
 
-            case EAuditionStatus.ShortListed:
-                sprite = shortlistedSprite;
-                break;
+        tagImage.sprite = Resources.Load<Sprite>("Images/StatusTags/" + statusType);
 
-            case EAuditionStatus.Rejected:
-                sprite = rejectedSprite;
-                break;
-        }
-
-        return sprite;
+        statusText.text = statusType.ToString();
     }
 
     public void OnClickAction()

@@ -20,9 +20,9 @@ public class SceneCharacterView : MonoBehaviour
         {
             GameObject dialogueObject = Instantiate(dialogueCell, content);
 
-            string fieldMessage = sceneCharacters[i].Users.name + " : " + sceneCharacters[i].dailogue;
+            string fieldMessage = sceneCharacters[i].dailogue;
 
-            dialogueObject.GetComponent<DialogueCell>().SetView(fieldMessage, isLeftAlign, null, null);
+            dialogueObject.GetComponent<DialogueCell>().SetView(fieldMessage, isLeftAlign, null, null, null);
 
             isLeftAlign = !isLeftAlign;
         }

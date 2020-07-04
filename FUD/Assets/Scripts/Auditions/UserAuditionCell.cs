@@ -4,12 +4,14 @@ using UnityEngine;
 using System;
 using TMPro;
 
-
 public class UserAuditionCell : MonoBehaviour
 {
-    public Image icon;
+    public RawImage icon;
+
     public TMP_Text titleText;
     public TMP_Text ageText;
+
+    public Texture2D defaultTexture;
 
     SearchAudition auditionData;
 
@@ -28,18 +30,27 @@ public class UserAuditionCell : MonoBehaviour
             titleText.text = auditionData.status;
             ageText.text = auditionData.user_id.ToString();
 
-            if (auditionData.UserAuditionMultimedia != null && auditionData.UserAuditionMultimedia.Count > 0)
+            List<MultimediaModel> modelsList = auditionData.UserAuditionMultimedia;
+
+            if (modelsList != null && modelsList.Count > 0)
             {
-                auditionMultimedia = auditionData.UserAuditionMultimedia[0];
+                MultimediaModel model = modelsList.Find(item => item.GetMediaType(item.media_type) == EMediaType.Image);
 
-                EMediaType mediaType = DataManager.Instance.GetMediaType(auditionMultimedia.media_type);
+                Debug.Log("model = " + model);
 
-                if (mediaType == EMediaType.Image)
+                if (model != null)
                 {
-                    GameManager.Instance.downLoadManager.DownloadImage(auditionData.UserAuditionMultimedia[0].content_url, (sprite) =>
+                    auditionData.onScreenModel = model;
+                }
+                else {
+                    EMediaType mediaType = modelsList[0].GetMediaType(modelsList[0].media_type);
+
+                    Debug.Log("mediaType = " + mediaType);
+
+                    if (mediaType == EMediaType.Video)
                     {
-                        icon.sprite = sprite;
-                    });
+                        icon.texture = defaultTexture;
+                    }
                 }
             }
         }
@@ -59,7 +70,7 @@ public class UserAuditionCell : MonoBehaviour
 
                      Sprite sprite = Sprite.Create(texture.ToTexture2D(), rect, new Vector2(0.5f, 0.5f));
 
-                     icon.sprite = sprite;
+                     //icon.sprite = sprite;
 
                      OnNext?.Invoke();
                 }

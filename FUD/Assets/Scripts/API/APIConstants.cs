@@ -114,4 +114,8 @@ public class APIConstants
     public const string VERIFY_ORDER_ID = SUBSCRIPTION_BASE_URL + "v1/order/payment/verify";
 
     public const string ACCOUNT_LOGOUT = BASE_URL + "V1/user/logout/";
+
+
+
+    public const int API_ITEM_LIMIT = 50;
 }

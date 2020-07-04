@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,8 @@ public class ProfileInfoView : MonoBehaviour
 
     public Image profileImage;
 
+    public TMP_Text aadherNumberText;
+
     public TMP_InputField nameField;
 
     public TMP_Text dobText;
@@ -22,6 +25,8 @@ public class ProfileInfoView : MonoBehaviour
     public TMP_InputField mailField;
 
     public TMP_InputField contactField;
+
+    public TMP_InputField aadherField;
 
     public TMP_Dropdown roleDropDown;
 
@@ -46,6 +51,8 @@ public class ProfileInfoView : MonoBehaviour
 
     EProofType idProofType;
 
+    int currentAadherCount = 0;
+
     string idProofURL = string.Empty;
 
     string frontProofURL = string.Empty;
@@ -53,6 +60,8 @@ public class ProfileInfoView : MonoBehaviour
     string backProofURL = string.Empty;
 
     string profileImageURL = string.Empty;
+
+    string aadherString = string.Empty;
 
     bool isUserDataUpdated = false;
 
@@ -95,6 +104,8 @@ public class ProfileInfoView : MonoBehaviour
             }
 
             PopulateDropdown();
+
+            SetImage();
         }
     }
 
@@ -118,6 +129,17 @@ public class ProfileInfoView : MonoBehaviour
         roleDropDown.value = genres.IndexOf(requiredGenre);
     }
 
+    void SetImage()
+    {
+        if (data.profile_image.IsNOTNullOrEmpty())
+        {
+            GameManager.Instance.downLoadManager.DownloadImage(data.profile_image, sprite => {
+
+                profileImage.sprite = sprite;
+            });
+        }
+    }
+
     public void OnProofButtonAction(int isIdProof)
     {
         this.idProofType = (EProofType)isIdProof;
@@ -128,6 +150,44 @@ public class ProfileInfoView : MonoBehaviour
     public void OnProfileImageAction()
     {
         GalleryManager.Instance.PickImage(OnProfileImageUploaded);
+    }
+
+    public void OnAadherEndEdit()
+    {
+        if (aadherString.Length <= 0 && aadherField.text.Length <= 0)
+        {
+            return;
+        }
+
+        if (currentAadherCount > aadherField.text.Length)
+        {
+            int remainderValue = aadherField.text.Length % 4;
+
+            string appendstring = remainderValue == 3 ? aadherString.Substring(aadherString.Length - 2) : aadherString[aadherString.Length - 1].ToString();
+
+            aadherString = aadherString.Remove(aadherString.Length - appendstring.Length);
+        }
+        else {
+
+            int remainderValue = aadherField.text.Length % 4;
+
+            string appendstring = remainderValue == 0 ? " " : string.Empty;
+
+            if (remainderValue == 0)
+            {
+                aadherString += aadherField.text[aadherField.text.Length - 1] + appendstring;
+            }
+            else
+            {
+                int spaceCount = aadherString.Count(ch => ch == ' ');
+
+                aadherString += aadherField.text.Substring(aadherString.Length - spaceCount);
+            }
+        }
+
+        currentAadherCount = aadherField.text.Length;
+
+        aadherNumberText.text = aadherString;
     }
 
     public void DateOfBirthButtonAction()
@@ -186,6 +246,7 @@ public class ProfileInfoView : MonoBehaviour
         infoModel.nativeLocation = data.native_location;
         infoModel.roleId = selectedGenre.id;
         infoModel.profile_image = profileImageURL;
+        infoModel.aadherNumber = aadherField.text.Replace(" ", string.Empty);
 
 
         GameManager.Instance.apiHandler.UpdateProfileInfo(infoModel, idProofURL, frontProofURL, backProofURL, (status, model) => {

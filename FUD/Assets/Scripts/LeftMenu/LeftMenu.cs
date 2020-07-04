@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
+using System.IO;
 
 public class LeftMenu : MonoBehaviour
 {
@@ -14,14 +16,40 @@ public class LeftMenu : MonoBehaviour
     public TMP_Text nameText;
 
     System.Action OnCloseAction;
+
+    UserData userData;
+
     public void SetView(System.Action OnClose)
     {
         gameObject.SetActive(true);
 
-        nameText.text = DataManager.Instance.userInfo.name;
+        userData = DataManager.Instance.userInfo;
+
+        nameText.text = userData.name;
+
+        SetProfileIcon();
 
         OnCloseAction = OnClose;
     }
+
+    void SetProfileIcon()
+    {
+        if (userData.profile_image.IsNOTNullOrEmpty())
+        {
+            DownLoadManager downLoadManager = GameManager.Instance.downLoadManager;
+
+            Texture2D texture = downLoadManager.GetLocalTexture(userData.profile_image);
+
+            if (texture == null)
+            {
+                downLoadManager.DownloadImage(userData.profile_image, sprite => {
+
+                    profileIcon.sprite = sprite;
+                });
+            }
+        }
+    }
+
     public void BackButtonAction()
     {
         gameObject.SetActive(false);
