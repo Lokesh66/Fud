@@ -35,6 +35,11 @@ public class UploadedFilesHandler : MonoBehaviour
 
     private void OnDisable()
     {
-        content.DestroyChildrens();
+        Debug.Log("OnDisable : mediaButtonTrans = " + mediaButtonTrans);
+
+        if (mediaButtonTrans != null)
+        {
+            content.DestroyChildrens(mediaButtonTrans?.gameObject);
+        }
     }
 }

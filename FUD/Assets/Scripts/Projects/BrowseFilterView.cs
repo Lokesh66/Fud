@@ -54,6 +54,8 @@ public class BrowseFilterView : MonoBehaviour
         roleDropdown.AddOptions(options);
     }
 
+
+
     public void OnAgeSliderValueChange()
     {
         ageValueText.text = minAgeValue + "-" + ageSlider.value + " Yrs";

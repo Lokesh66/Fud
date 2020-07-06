@@ -39,15 +39,11 @@ public class HomeStoriesPanel : MonoBehaviour
             storiesList = new List<StoryModel>();
         }
 
-        Debug.Log("storiesList Count = " + storiesList.Count);
-
         for(int i = 0; i < storiesList.Count; i++)
         {
             GameObject storyObject = Instantiate(homeCell, parentContent);
 
             HomeCell homeItem = storyObject.GetComponent<HomeCell>();
-
-            Debug.Log("i Value = " + i);
 
             if (i == 0)
             {
@@ -85,12 +81,18 @@ public class HomeStoriesPanel : MonoBehaviour
         else
         {
             //Open story of storieslist[index]
-            StoryDetailsController.Instance.Load(storiesList[index].id, OnStoryScreenClosed);
+            StoryDetailsController.Instance.Load(storiesList[index].id, null);
         }
     }
 
-    void OnStoryScreenClosed()
+    void OnStoryScreenClosed(StoryModel createModel)
     {
+        storiesList.Add(createModel);
 
+        GameObject storyObject = Instantiate(homeCell, parentContent);
+
+        HomeCell homeItem = storyObject.GetComponent<HomeCell>();
+
+        homeItem.SetView(HomeCellType.STORY, storiesList.Count - 1, createModel.title, createModel.story_poster, OnStorySelectAction);
     }
 }

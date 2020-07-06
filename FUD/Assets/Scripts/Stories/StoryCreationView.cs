@@ -49,11 +49,13 @@ public class StoryCreationView : MonoBehaviour
 
     MyStoriesController storiesController;
 
+    StoryModel createdModel;
+
     List<Genre> genres;
 
     List<string> imageUrls;
 
-    System.Action OnClose;
+    System.Action<StoryModel> OnClose;
 
 
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
@@ -61,7 +63,7 @@ public class StoryCreationView : MonoBehaviour
     private bool isShowingGalleryPanel = false;
 
 
-    public void Load(System.Action onClose)
+    public void Load(System.Action<StoryModel> onClose)
     {
         parentPanel.gameObject.SetActive(true);
 
@@ -94,8 +96,11 @@ public class StoryCreationView : MonoBehaviour
 
         parentPanel.gameObject.SetActive(false);
 
-        OnClose?.Invoke();
+        OnClose?.Invoke(createdModel);
+
         OnClose = null;
+
+        createdModel = null;
     }
 
     public void OnUploadAction()
@@ -120,6 +125,8 @@ public class StoryCreationView : MonoBehaviour
 
                 if (status)
                 {
+                    createdModel = JsonUtility.FromJson<UpdatedStoryResponse>(response).data;
+
                     Debug.Log("Story Uploaded Successfully");
                 }
                 else

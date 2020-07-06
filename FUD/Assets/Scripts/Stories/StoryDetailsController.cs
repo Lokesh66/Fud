@@ -103,6 +103,8 @@ public class StoryDetailsController : MonoBehaviour
 
                     currentDetailsModel = responseModel.data[0];
 
+                    titeText.text = currentDetailsModel.title;
+
                     UpdateScreen();
                 }
                 else
@@ -151,8 +153,6 @@ public class StoryDetailsController : MonoBehaviour
             noDataObject.SetActive(false);
 
             currentType = screenSubType;
-
-            titeText.text = currentDetailsModel.title;
 
             currentObject?.SetActive(false);
 

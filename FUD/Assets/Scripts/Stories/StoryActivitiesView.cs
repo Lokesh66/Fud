@@ -45,7 +45,7 @@ public class StoryActivitiesView : MonoBehaviour
 
             StoryActivityResponseModel responseModel = JsonUtility.FromJson<StoryActivityResponseModel>(response);
 
-            if (status)
+            if (status && responseModel != null)
             {
                 activityModels = responseModel.data;
 

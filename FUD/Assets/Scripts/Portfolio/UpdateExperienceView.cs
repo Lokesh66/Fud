@@ -411,7 +411,7 @@ public class UpdateExperienceView : MonoBehaviour
             }
         }
 
-        filesHandler.Load(_imageURls, false);
+        filesHandler.Load(_imageURls, true);
     }
 }
 

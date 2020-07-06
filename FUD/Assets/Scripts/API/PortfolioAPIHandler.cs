@@ -538,7 +538,8 @@ public class PortfolioActivityModel
     public int user_id;
     public int shared_to;
     public string status;
-    public string reciever_status;
+    public int sender_status;
+    public int reciever_status;
     public int portfolio_id;
     public int access_modifier;
     public string comments;

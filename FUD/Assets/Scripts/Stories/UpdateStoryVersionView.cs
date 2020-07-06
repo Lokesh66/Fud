@@ -116,7 +116,7 @@ public class UpdateStoryVersionView : MonoBehaviour
 
             _mediaCell.SetView(mediaList[i], OnDeleteMediaAction);
 
-            UpdateMediaDict(mediaList[i]);
+            //UpdateMediaDict(mediaList[i]);
 
             mediaCells.Add(_mediaCell);
         }
@@ -227,6 +227,8 @@ public class UpdateStoryVersionView : MonoBehaviour
             SlideGalleryView(false);
         }
 
+        uploadedDict.Clear();
+
         Reset();
     }
 
@@ -249,7 +251,6 @@ public class UpdateStoryVersionView : MonoBehaviour
                 UpdatedStoryVersionResponse versionResponse = JsonUtility.FromJson<UpdatedStoryVersionResponse>(response);
 
                 updatedModel = versionResponse.data;
-                Debug.Log("Story Uploaded Successfully");
             }
             else
             {
@@ -299,8 +300,6 @@ public class UpdateStoryVersionView : MonoBehaviour
     void OnSuccessResponse()
     {
         OnBackButtonAction();
-
-        uploadedDict.Clear();
 
         detailsView.OnEditCallBack(storyVersion, updatedModel);
     }

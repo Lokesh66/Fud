@@ -48,6 +48,8 @@ public class StoryCell : MonoBehaviour
 
     public void OnButtonAction()
     {
+        Debug.Log("Title = " + titleText.text + " Id = " + storyModel.id);
+
         OnTapActon?.Invoke(storyModel.id);
     }
 

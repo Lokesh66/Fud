@@ -30,8 +30,6 @@ public class CreateStoryVersion : MonoBehaviour
 
     public void Load(StoryVersionsView versionsView)
     {
-        Debug.Log("CreateStoryVersion : Load Called");
-
         gameObject.SetActive(true);
 
         this.versionsView = versionsView;
@@ -87,6 +85,8 @@ public class CreateStoryVersion : MonoBehaviour
         {
             SlideGalleryView(false);
         }
+
+        uploadedDict.Clear();
 
         Reset();
     }
@@ -168,8 +168,6 @@ public class CreateStoryVersion : MonoBehaviour
 
         OnBackButtonAction();
 
-        uploadedDict.Clear();
-
         apiResponse = string.Empty;
     }
 
@@ -245,6 +243,8 @@ public class CreateStoryVersion : MonoBehaviour
         if (status)
         {
             this.imageUrls = videoUrls;
+
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Video);
 
             for (int i = 0; i < videoUrls.Count; i++)
             {

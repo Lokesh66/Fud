@@ -69,6 +69,10 @@ public class PortfolioCreationView : MonoBehaviour
         {
             errorMessage = "Description should not be empty";
         }
+        else if (uploadedDict.Count <= 0)
+        {
+            errorMessage = "Media Should not be empty";
+        }
 
         if (!string.IsNullOrEmpty(errorMessage))
         {
@@ -220,7 +224,7 @@ public class PortfolioCreationView : MonoBehaviour
             SlideGalleryView(false);
         }
 
-        portfolioView.OnRemoveLastSubView();
+        portfolioView.EnableCurrentScreen();
 
         Destroy(gameObject);
     }

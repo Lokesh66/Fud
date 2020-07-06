@@ -1,11 +1,17 @@
-﻿using UnityEngine;
+﻿using UnityEngine.UI;
+using UnityEngine;
 using TMPro;
+
 
 public class PortfolioActvityCell : MonoBehaviour
 {
     public TextMeshProUGUI titleText;
 
     public TextMeshProUGUI descriptionText;
+
+    public Image statusTag;
+
+    public TextMeshProUGUI statusText;
 
     //public Image storyImage;
 
@@ -18,6 +24,8 @@ public class PortfolioActvityCell : MonoBehaviour
 
     ETabType tabType;
 
+
+    bool isOwnAlbum = false;
 
     int currentUserId;
 
@@ -35,6 +43,13 @@ public class PortfolioActvityCell : MonoBehaviour
         commentText.text = model.comments;
 
         descriptionText.text = model.Portfolio.description;
+
+        statusTag.gameObject.SetActive(tabType == ETabType.Altered);
+
+        if (tabType == ETabType.Altered)
+        {
+            UpdateStatusTag();
+        }
     }
 
     void OnPopUpClose(int updatedStatus)
@@ -54,5 +69,16 @@ public class PortfolioActvityCell : MonoBehaviour
         {
             activityPopUp?.Load(activityModel, OnPopUpClose, tabType);
         }
+    }
+
+    void UpdateStatusTag()
+    {
+        int statusValue = isOwnAlbum ? activityModel.sender_status : activityModel.reciever_status;
+
+        EStatusType statusType = (EStatusType)statusValue;
+
+        statusTag.sprite = Resources.Load<Sprite>("Images/StatusTags/" + statusType);
+
+        statusText.text = statusType.ToString();
     }
 }

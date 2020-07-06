@@ -55,8 +55,6 @@ public class PortfolioView : BaseView
     {
         base.OnRemoveLastSubView();
 
-        gameObject.SetActive(true);
-
         portfolioHandler.Load();
 
         //UpdateScreen();
@@ -180,5 +178,12 @@ public class PortfolioView : BaseView
         {
             alteredView.OnFilterButtonAction();
         }
+    }
+
+    public void EnableCurrentScreen()
+    {
+        gameObject.SetActive(true);
+
+        UpdateCurrentView();
     }
 }

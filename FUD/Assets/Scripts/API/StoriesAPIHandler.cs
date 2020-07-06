@@ -676,7 +676,7 @@ public class MultimediaModel
 [Serializable]
 public class StoryVersionDetailModel : StoryVersion
 {
-    public List<MultimediaModel> Multimedia;
+
 }
 
 [Serializable]

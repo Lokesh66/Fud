@@ -4,6 +4,7 @@ using TMPro;
 using System.Collections.Generic;
 using System.IO;
 
+
 public class JoinedAuditionCell : MonoBehaviour
 {
     public Image icon;

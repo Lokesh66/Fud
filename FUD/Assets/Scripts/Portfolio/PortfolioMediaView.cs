@@ -14,6 +14,7 @@ public class PortfolioMediaView : MonoBehaviour
 
     public PortfolioMediaTableView tableView;
 
+
     PortfolioModel selectedModel;
 
 

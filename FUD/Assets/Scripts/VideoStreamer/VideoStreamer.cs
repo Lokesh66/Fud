@@ -40,6 +40,8 @@ public class VideoStreamer : MonoBehaviour
 
     public GameObject backGroundGameObject;
 
+    public GameObject closeObject;
+
     private CanvasGroup canvasGroup = null;
 
     private RenderTexture renderTexture = null;
@@ -119,6 +121,11 @@ public class VideoStreamer : MonoBehaviour
         OnComplete = onComplete;
     }
 
+    public void OnCloseButtonAction()
+    {
+        StopVideo();
+    }
+
     private void PrepareCompleted(VideoPlayer source)
     {
         source.controlledAudioTrackCount = source.audioTrackCount;
@@ -150,6 +157,8 @@ public class VideoStreamer : MonoBehaviour
     private void EnableBackground(bool enable)
     {
         backGroundGameObject.SetActive(enable);
+
+        closeObject.SetActive(enable);
     }
 
     private void StopVideo()
@@ -167,6 +176,8 @@ public class VideoStreamer : MonoBehaviour
             OnComplete = null;
 
             EnableBackground(false);
+
+            closeObject.SetActive(false);
         }).OnComplete(() =>
         {
             rawImage.enabled = false;
@@ -179,8 +190,6 @@ public class VideoStreamer : MonoBehaviour
 
     public void GetThumbnailImage(string videoURL, Action<Texture> action)
     {
-        Debug.Log("GetThumbnailImage Called");
-
         if (videoPlayer == null)
         {
             Init();

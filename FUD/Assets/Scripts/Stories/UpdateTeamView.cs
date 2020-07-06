@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
+using System.Linq;
 using System;
 using TMPro;
-using System.Linq;
+
 
 public class UpdateTeamView : MonoBehaviour
 {
@@ -61,7 +63,12 @@ public class UpdateTeamView : MonoBehaviour
             teamModel.TeamMembers.Remove(item);
         }
 
-        Debug.Log("TeamMembers Count = " + teamModel.TeamMembers.Count);
+        StartCoroutine(UpdateTeamMembers());
+    }
+
+    IEnumerator UpdateTeamMembers()
+    {
+        yield return new WaitForEndOfFrame();
 
         for (int i = 0; i < teamModel.TeamMembers.Count; i++)
         {
@@ -173,9 +180,7 @@ public class UpdateTeamView : MonoBehaviour
 
         OnTeamUpdated = null;
 
-        Destroy(gameObject);
-
-        apiResponse = string.Empty;
+        OnBackButtonAction();
     }
 
 
@@ -265,7 +270,7 @@ public class UpdateTeamView : MonoBehaviour
     {
         searchContent.DestroyChildrens();
 
-        inputData = keyword = teamNameField.text = memberField.text = string.Empty;
+        apiResponse = inputData = keyword = teamNameField.text = memberField.text = string.Empty;
 
         selectedModel = null;
 
