@@ -249,7 +249,7 @@ public partial class APIHandler
         }));
     }
 
-    public void ApplyPortfolioAlteredFilter(int statusId, int roleId, Action<bool, string> action)
+    public void ApplyPortfolioAlteredFilter(int statusId, int sortId, int orderId,  Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -257,9 +257,11 @@ public partial class APIHandler
 
         url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
-        parameters.Add("role_id", roleId);
+        parameters.Add("sortBy", sortId);
 
         parameters.Add("status", statusId);
+
+        parameters.Add("sortOrder", orderId);
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
 
@@ -267,7 +269,7 @@ public partial class APIHandler
         }));
     }
 
-    public void ApplyPortfolioOfferedFilter(int statusId, int roleId, Action<bool, string> action)
+    public void ApplyPortfolioOfferedFilter(int sortId, int roleId, int orderById, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -277,7 +279,9 @@ public partial class APIHandler
 
         parameters.Add("role_id", roleId);
 
-        parameters.Add("status", statusId);
+        parameters.Add("sortBy", sortId);
+
+        parameters.Add("sortOrder", orderById);
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
 

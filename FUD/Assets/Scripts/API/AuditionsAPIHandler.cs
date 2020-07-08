@@ -62,7 +62,7 @@ public partial class APIHandler
         gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
     }
 
-    public void ApplyAudtionOfferedFilter(int statusId, int roleId, Action<bool, string> action)
+    public void ApplyAudtionOfferedFilter(int sortId, int roleId, int orderId, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -72,12 +72,15 @@ public partial class APIHandler
 
         parameters.Add("role_id", roleId);
 
-        parameters.Add("status", statusId);
+        parameters.Add("sortBy", sortId);
+
+        parameters.Add("sortOrder", orderId);
+
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
     }
 
-    public void ApplyAudtionAlteredFilter(int statusId, int roleId, Action<bool, string> action)
+    public void ApplyAudtionAlteredFilter(int sortId, int statusId, int orderId, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -85,9 +88,11 @@ public partial class APIHandler
 
         url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
-        parameters.Add("role_id", roleId);
+        parameters.Add("sortBy", sortId);
 
         parameters.Add("status", statusId);
+
+        parameters.Add("sortOrder", orderId);
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
     }

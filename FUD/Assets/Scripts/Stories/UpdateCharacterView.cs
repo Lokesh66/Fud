@@ -3,6 +3,7 @@ using UnityEngine;
 using DG.Tweening;
 using System;
 using TMPro;
+using System.Collections;
 
 public class UpdateCharacterView : MonoBehaviour
 {
@@ -28,8 +29,6 @@ public class UpdateCharacterView : MonoBehaviour
 
     public RectTransform galleryPanel;
 
-    public RectTransform content;
-
 
     StoryDetailsModel detailsModel;
 
@@ -49,6 +48,10 @@ public class UpdateCharacterView : MonoBehaviour
 
     bool isShowingGalleryPanel = false;
 
+    List<string> imageUrls;
+
+    List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
+
     Action<StoryCharacterModel> OnUpdateCharacter;
 
 
@@ -59,6 +62,13 @@ public class UpdateCharacterView : MonoBehaviour
         this.characterModel = characterModel;
 
         this.OnUpdateCharacter = OnUpdateCharacter;
+
+        StartCoroutine(UpdateView());
+    }
+
+    IEnumerator UpdateView()
+    {
+        yield return new WaitForEndOfFrame();
 
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
@@ -174,6 +184,31 @@ public class UpdateCharacterView : MonoBehaviour
         ClearData();
     }
 
+    public void OnCancelButtonAction()
+    {
+        SlideGalleryView(false);
+    }
+
+    public void OnMediaButtonAction(int mediaType)
+    {
+        EMediaType selectedType = (EMediaType)mediaType;
+
+        SlideGalleryView(false);
+
+        switch (selectedType)
+        {
+            case EMediaType.Image:
+                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                break;
+            case EMediaType.Audio:
+                GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
+                break;
+            case EMediaType.Video:
+                GalleryManager.Instance.GetVideosFromGallery(OnVideosUploaded);
+                break;
+        }
+    }
+
     public void OnButtonAction()
     {
         if (!CanCallAPI())
@@ -229,6 +264,95 @@ public class UpdateCharacterView : MonoBehaviour
         gameObject.SetActive(false);
 
         apiResponse = string.Empty;
+    }
+
+    void OnImagesUploaded(bool status, List<string> imageUrls)
+    {
+        if (status)
+        {
+            this.imageUrls = imageUrls;
+
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+
+            for (int i = 0; i < imageUrls.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", imageUrls[i]);
+
+                kvp.Add("media_type", "image");
+
+                uploadedDict.Add(kvp);
+            }
+        }
+        else
+        {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = status.ToString() + imageUrls[0];
+
+            UIManager.Instance.ShowAlert(alertModel);
+        }
+    }
+
+    void OnAudiosUploaded(bool status, List<string> audioUrls)
+    {
+        if (status)
+        {
+            this.imageUrls = audioUrls;
+
+            for (int i = 0; i < audioUrls.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", audioUrls[i]);
+
+                kvp.Add("media_type", "audio");
+
+                uploadedDict.Add(kvp);
+            }
+        }
+        else
+        {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = status.ToString() + imageUrls[0];
+
+            UIManager.Instance.ShowAlert(alertModel);
+        }
+    }
+
+    void OnVideosUploaded(bool status, List<string> videoUrls)
+    {
+        if (status)
+        {
+            this.imageUrls = videoUrls;
+
+            for (int i = 0; i < videoUrls.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", videoUrls[i]);
+
+                kvp.Add("media_type", "video");
+
+                uploadedDict.Add(kvp);
+            }
+        }
+        else
+        {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = status.ToString() + imageUrls[0];
+
+            UIManager.Instance.ShowAlert(alertModel);
+        }
     }
 
     bool CanCallAPI()

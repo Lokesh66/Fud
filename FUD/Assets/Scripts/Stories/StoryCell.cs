@@ -19,8 +19,6 @@ public class StoryCell : MonoBehaviour
 
     public GameObject editObject;
 
-    public GameObject statusTag;
-
     public Image storyImage;
 
 

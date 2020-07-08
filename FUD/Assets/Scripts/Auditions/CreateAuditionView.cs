@@ -86,8 +86,6 @@ public class CreateAuditionView : MonoBehaviour
     {
         projectId = audition.project_id;
 
-        //TimeSpan timeSpan = TimeSpan.FromSeconds(audition.end_date);
-
         DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0);
 
         previousDate = selectedDate = dateTime.AddSeconds(audition.end_date);
@@ -164,26 +162,21 @@ public class CreateAuditionView : MonoBehaviour
         GalleryManager.Instance.GetImageFromGallaery(OnImagesUploaded);
     }
 
-    public void OnRecordVideoAction()
-    {
-        NativeCamera.Permission permission = NativeCamera.RecordVideo((path) =>
-        {
-            string fileName = Path.GetFileName(path);
+    //public void OnRecordVideoAction()
+    //{
+    //    NativeCamera.Permission permission = NativeCamera.RecordVideo((path) =>
+    //    {
+    //        string fileName = Path.GetFileName(path);
 
-            byte[] fileBytes = File.ReadAllBytes(path);
+    //        byte[] fileBytes = File.ReadAllBytes(path);
 
-            titleText.text = fileBytes.Length.ToString();
+    //        titleText.text = fileBytes.Length.ToString();
 
-            NativeGallery.SaveVideoToGallery(fileBytes, "Videos", fileName);
+    //        NativeGallery.SaveVideoToGallery(fileBytes, "Videos", fileName);
 
-            GalleryManager.Instance.UploadVideoFile(path, OnVideoUploaded);
-        });
-    }
-
-    void OnVideoUploaded(bool status, List<string> imagesList)
-    {
-        
-    }
+    //        GalleryManager.Instance.UploadVideoFile(path, OnVideoUploaded);
+    //    });
+    //}
 
     void OnImagesUploaded(bool status, List<string> imagesList)
     {

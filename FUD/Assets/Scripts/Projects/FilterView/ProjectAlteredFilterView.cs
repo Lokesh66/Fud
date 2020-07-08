@@ -9,7 +9,9 @@ public class ProjectAlteredFilterView : MonoBehaviour
 {
     public TMP_Dropdown statusDropdown;
 
-    public TMP_Dropdown roleDropdown;
+    public TMP_Dropdown sortDropdown;
+
+    public TMP_Dropdown orderDropdown;
 
 
     List<Genre> genres;
@@ -22,24 +24,6 @@ public class ProjectAlteredFilterView : MonoBehaviour
         gameObject.SetActive(true);
 
         this.OnApplyFilter = OnApplyFilter;
-
-        SetView();
-    }
-
-    void SetView()
-    {
-        genres = DataManager.Instance.genres;
-
-        List<string> options = new List<string>();
-
-        foreach (var option in genres)
-        {
-            options.Add(option.name);
-        }
-
-        roleDropdown.ClearOptions();
-
-        roleDropdown.AddOptions(options);
     }
 
     public void OnCancelButtonAction()
@@ -51,13 +35,13 @@ public class ProjectAlteredFilterView : MonoBehaviour
 
     public void OnApplyButtonAction()
     {
-        string selectedGenreText = roleDropdown.options[roleDropdown.value].text;
+        int sortId = sortDropdown.value;
 
-        Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
+        int orderById = orderDropdown.value + 1;
 
         int statusId = GetStatusId();
 
-        GameManager.Instance.apiHandler.ApplyAlteredProjectsFilter(statusId, selectedGenre.id, (status, data) => {
+        GameManager.Instance.apiHandler.ApplyAlteredProjectsFilter(statusId, sortId, orderById, (status, data) => {
 
             if (status)
             {

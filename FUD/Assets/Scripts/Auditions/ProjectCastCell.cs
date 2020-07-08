@@ -11,9 +11,8 @@ public class ProjectCastCell : MonoBehaviour
     public TMP_Text genderText;
     public TMP_Text descriptionText;
 
-    public Sprite reviewSprite;
-    public Sprite shortListSprite;
-    public Sprite rejectSprite;
+    public TMP_Text statusText;
+
         
     Action<ProjectCast> OnTapAction;
 
@@ -44,21 +43,10 @@ public class ProjectCastCell : MonoBehaviour
 
     void UpdateStatusTag()
     {
-        switch (castData.cast_status)
-        {
-            case 3:
-            case 5:
-                statusImage.sprite = shortListSprite;
-                break;
+        EStatusType statusType = (EStatusType)castData.cast_status;
 
-            case 0:
-            case 8:
-                statusImage.sprite = rejectSprite;
-                break;
+        statusImage.sprite = Resources.Load<Sprite>("Images/StatusTags/" + statusType);
 
-            default:
-                statusImage.sprite = reviewSprite;
-                break;
-        }
+        statusText.text = statusType.ToString();
     }
 }

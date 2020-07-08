@@ -57,7 +57,7 @@ public partial class APIHandler
         }));
     }
 
-    public void ApplyOfferedProjectsFilter(int statusId, int roleId, Action<bool, ProjectOfferedResponse> action)
+    public void ApplyOfferedProjectsFilter(int sortId, int roleId, int orderBy, Action<bool, ProjectOfferedResponse> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -67,11 +67,11 @@ public partial class APIHandler
 
         parameters.Add("role_id", roleId);
 
-        parameters.Add("status", statusId);
+        parameters.Add("sortBy", sortId);
+
+        parameters.Add("sortOrder", orderBy);
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
-
-            Debug.Log("response = " + response);
 
             ProjectOfferedResponse projectsResponse = JsonUtility.FromJson<ProjectOfferedResponse>(response);
 
@@ -79,7 +79,7 @@ public partial class APIHandler
         }));
     }
 
-    public void ApplyAlteredProjectsFilter(int statusId, int roleId, Action<bool, ProjectOfferedResponse> action)
+    public void ApplyAlteredProjectsFilter(int statusId, int sortId, int orderId, Action<bool, ProjectOfferedResponse> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -87,9 +87,11 @@ public partial class APIHandler
 
         url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
-        parameters.Add("role_id", roleId);
+        parameters.Add("sortBy", sortId);
 
         parameters.Add("status", statusId);
+
+        parameters.Add("sortOrder", orderId);
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
 
@@ -151,11 +153,13 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateProjectStauts(int projectId, int status, Action<bool> action)
+    public void UpdateProjectStauts(int projectId, int castId, int status, Action<bool> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        parameters.Add("id", projectId);
+        parameters.Add("project_cast_id", castId);
+
+        parameters.Add("project_id", projectId);
 
         parameters.Add("status", status);
 

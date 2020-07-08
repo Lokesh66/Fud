@@ -54,7 +54,7 @@ public class ProjectStatusView : MonoBehaviour
 
     void UpdateProjectStatus(int status)
     {
-        GameManager.Instance.apiHandler.UpdateProjectStauts(selectedProject.id, status, (apiStatus) => {
+        GameManager.Instance.apiHandler.UpdateProjectStauts(selectedProject.project_id, selectedProject.project_cast_id, status, (apiStatus) => {
 
             OnAPIResponse(apiStatus);
         });

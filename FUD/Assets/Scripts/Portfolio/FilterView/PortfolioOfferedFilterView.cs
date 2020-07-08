@@ -7,7 +7,9 @@ using TMPro;
 
 public class PortfolioOfferedFilterView : MonoBehaviour
 {
-    public TMP_Dropdown statusDropdown;
+    public TMP_Dropdown sortDropdown;
+
+    public TMP_Dropdown orderDropdown;
 
     public TMP_Dropdown roleDropdown;
 
@@ -55,9 +57,12 @@ public class PortfolioOfferedFilterView : MonoBehaviour
 
         Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
 
-        int statusId = GetStatusId();
+        int sortId = sortDropdown.value;
 
-        GameManager.Instance.apiHandler.ApplyPortfolioOfferedFilter(statusId, selectedGenre.id, (status, data) => {
+        int orderById = orderDropdown.value + 1;
+
+
+        GameManager.Instance.apiHandler.ApplyPortfolioOfferedFilter(sortId, selectedGenre.id, orderById, (status, data) => {
 
             if (status)
             {
@@ -70,29 +75,6 @@ public class PortfolioOfferedFilterView : MonoBehaviour
 
     void ClearData()
     {
-        statusDropdown.value = 0;
-    }
-
-    int GetStatusId()
-    {
-        int statusId = -1;
-
-        switch (statusDropdown.value)
-        {
-            case 0:
-                statusId = 5;
-                break;
-            case 1:
-                statusId = 3;
-                break;
-            case 2:
-                statusId = 8;
-                break;
-            case 3:
-                statusId = 2;
-                break;
-        }
-
-        return statusId;
+        orderDropdown.value = sortDropdown.value = 0;
     }
 }

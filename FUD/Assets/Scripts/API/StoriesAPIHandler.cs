@@ -416,13 +416,15 @@ public partial class APIHandler
         }));
     }
 
-    public void ApplyStoryOfferedFilter(int statusId, int roleId, Action<bool, List<StoryActivityModel>> action)
+    public void ApplyStoryOfferedFilter(int sortId, int roleId, int orderBy, Action<bool, List<StoryActivityModel>> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
         parameters.Add("role_id", roleId);
 
-        parameters.Add("status", statusId);
+        parameters.Add("sortBy", sortId);
+
+        parameters.Add("sortOrder", orderBy);
 
         string url = APIConstants.GET_STORY_POSTS;
 
@@ -436,13 +438,15 @@ public partial class APIHandler
         }));
     }
 
-    public void ApplyStoryAlteredFilter(int statusId, int roleId, Action<bool, List<StoryAlteredModel>> action)
+    public void ApplyStoryAlteredFilter(int statusId, int sortId, int orderId, Action<bool, List<StoryAlteredModel>> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        parameters.Add("role_id", roleId);
+        parameters.Add("sortBy", sortId);
 
         parameters.Add("status", statusId);
+
+        parameters.Add("sortOrder", orderId);
 
         string url = APIConstants.GET_ALTERED_STORIES;
 

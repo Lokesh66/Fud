@@ -1,9 +1,9 @@
 ﻿#if UNITY_EDITOR
 
-using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using UnityEditor.SceneManagement;
 
 #endif
 
@@ -19,13 +19,15 @@ public class EditorMenu : MonoBehaviour
     [MenuItem("Scenes/SwitchToHomeScene")]
     static void SwitchToHomeScene()
     {
-        UnityEditor.SceneManagement.EditorSceneManager.OpenScene("Assets/Scenes/HomeScene.unity");
+        EditorSceneManager.OpenScene("Assets/Scenes/HomeScene.unity");
     }
 
     [MenuItem("Scenes/SwitchToDefaultScene")]
     static void SwitchToDefaultScene()
     {
-        UnityEditor.SceneManagement.EditorSceneManager.OpenScene("Assets/Scenes/SplashScreen.unity");
+        EditorSceneManager.OpenScene("Assets/Scenes/SplashScreen.unity");
+
+        EditorApplication.isPlaying = true;
     }
 }
 
