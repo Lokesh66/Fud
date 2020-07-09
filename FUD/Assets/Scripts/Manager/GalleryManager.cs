@@ -62,6 +62,26 @@ public class GalleryManager : MonoBehaviour
 
     }
 
+    public void TakeSelfie(Action<bool, List<string>> OnImageUploaded)
+    {
+        NativeCamera.Permission permission = NativeCamera.TakePicture((imagePath) => {
+
+            if (imagePath != null)
+            {
+                uploadedURLs.Clear();
+
+                this.OnUploaded = OnImageUploaded;
+                selectedImagesCount = 1;
+                UploadFile(imagePath, EMediaType.Image);
+            }
+            else
+            {
+                OnUploaded?.Invoke(false, null);
+            }
+
+        }, preferredCamera: NativeCamera.PreferredCamera.Front);
+    }
+
     public void PickImages(Action<bool, List<string>> OnUploaded)
     {
 #if UNITY_ANDROID

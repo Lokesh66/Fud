@@ -159,7 +159,9 @@ public class CreateAuditionView : MonoBehaviour
 
     public void UploadImageAction()
     {
-        GalleryManager.Instance.GetImageFromGallaery(OnImagesUploaded);
+        //GalleryManager.Instance.GetImageFromGallaery(OnImagesUploaded);
+
+        GalleryManager.Instance.TakeSelfie(OnImagesUploaded);
     }
 
     //public void OnRecordVideoAction()
