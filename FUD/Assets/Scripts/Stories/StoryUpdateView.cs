@@ -122,7 +122,7 @@ public class StoryUpdateView : MonoBehaviour
 
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Story Updation Success" : "Something went wrong, please try again.";
+        alertModel.message = status ? "Story Updation Success" : storyResponse.message;
 
         if (status)
         {

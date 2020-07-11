@@ -21,21 +21,13 @@ public class DownLoadManager : MonoBehaviour
             CallBack(null);
             return;
         }
-        var m = Regex.Match(imageurl, ".+(/.+)$");
-        string imageName = m.Groups[1].Value.Remove(0, 1);
-        string path = Application.persistentDataPath + "/" + imageName;
 
 
-        Debug.Log("Path Esissts = " + File.Exists(path));
+        string path = Application.temporaryCachePath + APIConstants.TEMP_IMAGES_PATH + Path.GetFileName(imageurl);
 
-        //path = "file://" + path;
+
         if (File.Exists(path))
         {
-            //path = "file://" + path;
-            //StartCoroutine(GetImage(path, CallBack));
-
-            Debug.Log("Loading from Local");
-
             LoadPNG(path, CallBack);
         }
         else
@@ -62,12 +54,7 @@ public class DownLoadManager : MonoBehaviour
             }
             else if (www.texture != null)
             {
-                var m = Regex.Match(imageurl, ".+(/.+)$");
-                string imageName = m.Groups[1].Value.Remove(0, 1);
-
-                string path = Application.persistentDataPath + "/" + imageName;
-
-                Debug.Log("Downloaded : imageName = " + path);
+                string path = Application.temporaryCachePath + APIConstants.TEMP_IMAGES_PATH + Path.GetFileName(imageurl);
 
                 Sprite profileSprite = Sprite.Create(www.texture, new Rect(0f, 0f, www.texture.width, www.texture.height), new Vector2(0.5f, 0.5f));//creates sprite from the texture of the image
                 CallBack(profileSprite);
@@ -111,11 +98,7 @@ public class DownLoadManager : MonoBehaviour
 
         Texture2D texture = null;
 
-        var m = Regex.Match(imageurl, ".+(/.+)$");
-        string imageName = m.Groups[1].Value.Remove(0, 1);
-        string path = Application.persistentDataPath + "/" + imageName;
-
-        Debug.Log("Reading Data Path = " + path);
+        string path = Application.temporaryCachePath + APIConstants.TEMP_IMAGES_PATH + Path.GetFileName(imageurl);
 
         if (File.Exists(path))
         {

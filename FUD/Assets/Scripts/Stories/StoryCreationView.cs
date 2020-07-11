@@ -125,8 +125,6 @@ public class StoryCreationView : MonoBehaviour
 
                 if (status)
                 {
-                    createdModel = JsonUtility.FromJson<UpdatedStoryResponse>(response).data;
-
                     Debug.Log("Story Uploaded Successfully");
                 }
                 else
@@ -134,19 +132,23 @@ public class StoryCreationView : MonoBehaviour
                     Debug.LogError("Story Updation Failed");
                 }
 
-                OnAPIResponse(status);
+                OnAPIResponse(status, response);
             });
         }
     }
 
-    void OnAPIResponse(bool status)
+    void OnAPIResponse(bool status, string response)
     {
+        UpdatedStoryResponse responseModel = JsonUtility.FromJson<UpdatedStoryResponse>(response);
+
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Story Creation Success" : "Something went wrong, please try again.";
+        alertModel.message = status ? "Story Creation Success" : responseModel.message;
 
         if (status)
         {
+            createdModel = responseModel.data;
+
             alertModel.okayButtonAction = OnSuccessResponse;
 
             alertModel.canEnableTick = true;

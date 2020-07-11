@@ -31,16 +31,19 @@ public class BrowserSelectedCell : MonoBehaviour
 
     void UpdateMediaImage()
     {
-        Texture2D texture = GameManager.Instance.downLoadManager.GetLocalTexture(portfolioModel.onScreenModel.content_url);
+        GameManager.Instance.downLoadManager.DownloadImage(portfolioModel.onScreenModel.content_url, (sprite) => {
 
-        String extension = Path.GetExtension(portfolioModel.onScreenModel.content_url).ToLowerInvariant();
+            Texture2D texture = sprite.texture.ToTexture2D();
 
-        TextureFormat format = (extension == ".jpg" || extension == ".jpeg") ? TextureFormat.RGB24 : TextureFormat.RGBA32;
+            String extension = Path.GetExtension(portfolioModel.onScreenModel.content_url).ToLowerInvariant();
 
-        Texture2D _texture = new Texture2D(2, 2, format, true, false);
+            TextureFormat format = (extension == ".jpg" || extension == ".jpeg") ? TextureFormat.RGB24 : TextureFormat.RGBA32;
 
-        TextureScale.ThreadedScale(_texture, 180, 180, true);
+            Texture2D _texture = new Texture2D(2, 2, format, true, false);
 
-        albumImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            TextureScale.ThreadedScale(_texture, 180, 180, true);
+
+            albumImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+        });
     }
 }

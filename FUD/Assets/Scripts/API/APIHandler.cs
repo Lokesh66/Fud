@@ -420,7 +420,7 @@ public partial class APIHandler
         {
             Debug.LogErrorFormat("<APIManager/GetRequest> Error ({0})", webRequest.error);
 
-            OnResponse?.Invoke(false, webRequest.error);
+            OnResponse?.Invoke(false, webRequest.downloadHandler.text);
         }
         else
         {
@@ -524,7 +524,7 @@ public partial class APIHandler
         else if (webRequest.isNetworkError || webRequest.isHttpError)
         {
             Debug.LogErrorFormat("<APIManager/ PUT/ ({0})> Error ({1})", webRequest.downloadHandler.text, url);
-            callback?.Invoke(false, webRequest.error);
+            callback?.Invoke(false, webRequest.downloadHandler.text);
         }
         else
         {

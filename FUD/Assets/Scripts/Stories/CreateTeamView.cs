@@ -106,9 +106,11 @@ public class CreateTeamView : MonoBehaviour
 
     void OnAPIResponse(bool status)
     {
+        UpdatedTeamModel responseModel = JsonUtility.FromJson<UpdatedTeamModel>(apiResponse);
+
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Story Team Creation Success" : "Something went wrong, please try again.";
+        alertModel.message = status ? "Story Team Creation Success" : responseModel.message;
 
         if (status)
         {

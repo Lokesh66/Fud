@@ -64,7 +64,8 @@ public class StoryActivitiesView : MonoBehaviour
 
                     isTableViewInitialised = true;
                 }
-                else {
+                else
+                {
                     tableView.Data.Clear();
 
                     tableView.Data.Add(activityModels.Count);
@@ -73,6 +74,9 @@ public class StoryActivitiesView : MonoBehaviour
                 }
 
                 noDataObject.SetActive(activityModels.Count == 0);
+            }
+            else {
+                CreateAlert(responseModel.message);
             }
         });
     }
@@ -148,5 +152,14 @@ public class StoryActivitiesView : MonoBehaviour
         tableView.Refresh();
 
         noDataObject.SetActive(activityModels.Count == 0);
+    }
+
+    void CreateAlert(string message)
+    {
+        AlertModel alertModel = new AlertModel();
+
+        alertModel.message = message;
+
+        UIManager.Instance.ShowAlert(alertModel);
     }
 }

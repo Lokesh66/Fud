@@ -248,16 +248,14 @@ public class UpdateStoryVersionView : MonoBehaviour
 
             if (status)
             {
-                UpdatedStoryVersionResponse versionResponse = JsonUtility.FromJson<UpdatedStoryVersionResponse>(response);
-
-                updatedModel = versionResponse.data;
+                
             }
             else
             {
                 Debug.LogError("Story Updation Failed");
             }
 
-            OnAPIResponse(status);
+            OnAPIResponse(status, response);
         });
     }
 
@@ -281,11 +279,15 @@ public class UpdateStoryVersionView : MonoBehaviour
         return true;
     }
 
-    void OnAPIResponse(bool status)
+    void OnAPIResponse(bool status, string response)
     {
+        UpdatedStoryVersionResponse versionResponse = JsonUtility.FromJson<UpdatedStoryVersionResponse>(response);
+
+        updatedModel = versionResponse.data;
+
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Story Version updation Success" : "Something went wrong, please try again.";
+        alertModel.message = status ? "Story Version updation Success" : versionResponse.message;
 
         if (status)
         {

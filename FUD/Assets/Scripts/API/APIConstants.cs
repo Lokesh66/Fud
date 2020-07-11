@@ -118,4 +118,6 @@ public class APIConstants
 
 
     public const int API_ITEM_LIMIT = 50;
+
+    public const string TEMP_IMAGES_PATH = "/TBImages/";
 }

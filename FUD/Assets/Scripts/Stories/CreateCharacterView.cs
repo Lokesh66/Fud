@@ -179,9 +179,11 @@ public class CreateCharacterView : MonoBehaviour
 
     void OnAPIResponse(bool status)
     {
+        UpdatedCharaterModel responseModel = JsonUtility.FromJson<UpdatedCharaterModel>(apiResponse);
+
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Story Character Creation Success" : "Something went wrong, please try again.";
+        alertModel.message = status ? "Story Character Creation Success" : responseModel.message;
 
         if (status)
         {

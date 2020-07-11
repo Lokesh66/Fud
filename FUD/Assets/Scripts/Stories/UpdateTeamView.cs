@@ -156,9 +156,11 @@ public class UpdateTeamView : MonoBehaviour
 
     void OnAPIResponse(bool status)
     {
+        UpdatedTeamModel responseModel = JsonUtility.FromJson<UpdatedTeamModel>(apiResponse);
+
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Story Team Updation Success" : "Something went wrong, please try again.";
+        alertModel.message = status ? "Story Team Updation Success" : responseModel.message;
 
         if (status)
         {

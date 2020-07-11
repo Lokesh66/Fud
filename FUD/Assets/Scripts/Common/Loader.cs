@@ -1,6 +1,6 @@
-﻿using DG.Tweening;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class Loader : MonoBehaviour
 {
@@ -27,8 +27,20 @@ public class Loader : MonoBehaviour
     #endregion
 
     public GameObject loaderPanel;
-    public Image loaderImage;
-    
+
+    public RectTransform leftWheelTrans;
+
+    public RectTransform rightWheelTrans;
+
+
+    Vector3 rotationValue = new Vector3(0, 0, 360);
+
+    RotateMode rotateMode = RotateMode.FastBeyond360;
+
+    Sequence mySequence = null;
+
+
+
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -40,14 +52,31 @@ public class Loader : MonoBehaviour
         {
             loaderPanel.SetActive(true);
 
-            loaderImage.rectTransform.DOLocalRotate(new Vector3(0, 0, 360), 0.8f).SetLoops(-1);
+            Sequence mySequence = DOTween.Sequence();
+
+            mySequence.Append(leftWheelTrans.DOLocalRotate(rotationValue, 0.6f, rotateMode).SetEase(Ease.Linear));
+
+            mySequence.Join(rightWheelTrans.DOLocalRotate(rotationValue, 0.6f, rotateMode).SetEase(Ease.Linear));
+
+            this.mySequence = mySequence.Play().SetLoops(-1);
         }
     }
 
     public void StopLoading()
     {
-        DOTween.Kill(loaderImage.rectTransform);
+        mySequence.onKill += OnKill;
+
+        mySequence?.Kill(true);
 
         loaderPanel.SetActive(false);
+    }
+
+    void OnKill()
+    {
+        mySequence.onKill -= OnKill;
+
+        leftWheelTrans.eulerAngles = Vector3.zero;
+
+        rightWheelTrans.eulerAngles = Vector3.zero;
     }
 }

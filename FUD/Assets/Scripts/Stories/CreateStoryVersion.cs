@@ -142,9 +142,11 @@ public class CreateStoryVersion : MonoBehaviour
 
     void OnAPIResponse(bool status)
     {
+        CreatedStoryVersionResponse responseModel = JsonUtility.FromJson<CreatedStoryVersionResponse>(apiResponse);
+
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Story Version Creation Success" : "Something went wrong, please try again.";
+        alertModel.message = status ? "Story Version Creation Success" : responseModel.message;
 
         if (status)
         {
