@@ -87,12 +87,15 @@ public class HomeStoriesPanel : MonoBehaviour
 
     void OnStoryScreenClosed(StoryModel createModel)
     {
-        storiesList.Add(createModel);
+        if (createModel != null)
+        {
+            storiesList.Add(createModel);
 
-        GameObject storyObject = Instantiate(homeCell, parentContent);
+            GameObject storyObject = Instantiate(homeCell, parentContent);
 
-        HomeCell homeItem = storyObject.GetComponent<HomeCell>();
+            HomeCell homeItem = storyObject.GetComponent<HomeCell>();
 
-        homeItem.SetView(HomeCellType.STORY, storiesList.Count - 1, createModel.title, createModel.story_poster, OnStorySelectAction);
+            homeItem.SetView(HomeCellType.STORY, storiesList.Count - 1, createModel.title, createModel.story_poster, OnStorySelectAction);
+        }
     }
 }
