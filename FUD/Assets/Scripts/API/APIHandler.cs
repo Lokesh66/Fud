@@ -406,6 +406,8 @@ public partial class APIHandler
             webRequest.SetRequestHeader("Authorization", GetToken());
         }
 
+        Debug.LogFormat("URL ({0}) ", url);
+
         Debug.Log("GetToken() = " + GetToken());
 
         yield return webRequest.SendWebRequest();

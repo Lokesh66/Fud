@@ -82,7 +82,7 @@ public class DownLoadManager : MonoBehaviour
         if (File.Exists(filePath))
         {
             fileData = File.ReadAllBytes(filePath);
-            tex = new Texture2D(1024, 1024, TextureFormat.DXT1, false);
+            tex = new Texture2D(1024, 1024, TextureFormat.ETC2_RGB, false);
             tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
         }
         Sprite ProfilePic = Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(0.5f, 0.5f));
@@ -104,7 +104,7 @@ public class DownLoadManager : MonoBehaviour
         {
             byte[] fileData = File.ReadAllBytes(path);
 
-            texture = new Texture2D(1024, 1024, TextureFormat.DXT1, false);
+            texture = new Texture2D(1024, 1024, TextureFormat.ETC2_RGB, false);
 
             texture.LoadImage(fileData);
         }

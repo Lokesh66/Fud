@@ -90,7 +90,7 @@ public class PortfolioAlteredView : MonoBehaviour
                 {
                     isPagingOver = true;
 
-                    pageNo = 0;
+                    pageNo = 1;
                 }
                 else
                 {
@@ -112,7 +112,7 @@ public class PortfolioAlteredView : MonoBehaviour
     {
         isPagingOver = false;
 
-        pageNo = 0;
+        pageNo = 1;
     }
 
     public void OnFilterButtonAction()

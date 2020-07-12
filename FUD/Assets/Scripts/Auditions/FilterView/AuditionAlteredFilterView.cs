@@ -39,11 +39,13 @@ public class AuditionAlteredFilterView : MonoBehaviour
 
         int statusId = GetStatusId();
 
-        GameManager.Instance.apiHandler.ApplyAudtionAlteredFilter(sortId, statusId, orderById, (status, data) => {
+        GameManager.Instance.apiHandler.ApplyAudtionAlteredFilter(sortId, statusId, orderById, (status, response) => {
 
             if (status)
             {
-                OnApplyFilter?.Invoke(data);
+                JoinedAuditionsResponse responseModel = JsonUtility.FromJson<JoinedAuditionsResponse>(response);
+
+                OnApplyFilter?.Invoke(responseModel.data);
 
                 OnCancelButtonAction();
             }   

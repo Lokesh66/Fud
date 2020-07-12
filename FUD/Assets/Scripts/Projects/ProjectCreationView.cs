@@ -47,7 +47,7 @@ public class ProjectCreationView : MonoBehaviour
 
 
 
-    System.Action<bool> backAction;
+    Action<bool> backAction;
 
     string defaultDateText = "Select Date";
 

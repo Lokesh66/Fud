@@ -123,6 +123,6 @@ public class PortfolioOfferedView : MonoBehaviour
 
         tableView.Refresh();
 
-        noDataObject.SetActive(activityModels.Count == 0);
+        noDataObject.SetActive(activityModels?.Count == 0);
     }
 }

@@ -69,7 +69,7 @@ public class AuditionView : BaseView
 
     void UpdateCurrentView()
     {
-        addObject.SetActive(currentTab == ETabType.Created);
+        //addObject.SetActive(currentTab == ETabType.Created);
 
         filterObject.SetActive(currentTab != ETabType.Created);
 

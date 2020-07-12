@@ -90,8 +90,6 @@ public class CreateAuditionView : MonoBehaviour
 
         previousDate = selectedDate = dateTime.AddSeconds(audition.end_date);
 
-        Debug.Log("selectedDate = " + selectedDate);
-
         typeDropdown.value = typeDropdown.options.FindIndex(option => option.text == audition.type);
         if (audition.type.Equals("group"))
         {

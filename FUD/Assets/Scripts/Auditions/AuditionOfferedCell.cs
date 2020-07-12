@@ -7,8 +7,8 @@ using System.IO;
 public class AuditionOfferedCell : MonoBehaviour
 {
     public TMP_Text titleText;
-    public TMP_Text ageText;
-    public TMP_Text rateOfPayText;
+    public TMP_Text topicText;
+    public TMP_Text descriptionText;
 
     Audition auditionData;
     AuditionOfferedView auditionController;
@@ -26,11 +26,11 @@ public class AuditionOfferedCell : MonoBehaviour
 
         if (auditionData != null)
         {
-            titleText.text = auditionData.topic;
+            titleText.text = auditionData.title;
 
-            ageText.text = "Age : " + auditionData.age_to.ToString();
+            topicText.text = auditionData.topic;
 
-            rateOfPayText.text = "Budget : " + auditionData.rate_of_pay;
+            descriptionText.text = auditionData.description;
         }
     }
 

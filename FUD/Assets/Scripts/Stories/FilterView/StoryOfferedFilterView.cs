@@ -42,6 +42,8 @@ public class StoryOfferedFilterView : MonoBehaviour
         roleDropdown.ClearOptions();
 
         roleDropdown.AddOptions(options);
+
+        roleDropdown.value = -1;
     }
 
     public void OnCancelButtonAction()

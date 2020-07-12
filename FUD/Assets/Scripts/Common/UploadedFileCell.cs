@@ -15,6 +15,9 @@ public class UploadedFileCell : MonoBehaviour
 
     public GameObject pauseObject;
 
+
+    string imageURL;
+
     EMediaType mediaType;
 
 
@@ -26,6 +29,8 @@ public class UploadedFileCell : MonoBehaviour
 
         if (isDownloadedImage)
         {
+            this.imageURL = imagePath;
+
             GameManager.Instance.downLoadManager.DownloadImage(imagePath, (sprite) => {
 
                 selectedImage.sprite = sprite;
@@ -40,6 +45,14 @@ public class UploadedFileCell : MonoBehaviour
 
                 selectedImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
             }
+        }
+    }
+
+    public void OnButtonAction()
+    {
+        if (imageURL.IsNOTNullOrEmpty())
+        {
+            UIManager.Instance.ShowBigScreen(imageURL);
         }
     }
 }

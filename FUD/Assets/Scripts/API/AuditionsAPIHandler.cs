@@ -62,15 +62,13 @@ public partial class APIHandler
         gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
     }
 
-    public void ApplyAudtionOfferedFilter(int sortId, int roleId, int orderId, Action<bool, string> action)
+    public void ApplyAudtionOfferedFilter(int sortId, int orderId, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
         string url = APIConstants.GET_OFFERED_AUDITIONS;
 
         url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
-
-        parameters.Add("role_id", roleId);
 
         parameters.Add("sortBy", sortId);
 
@@ -186,11 +184,9 @@ public class Audition
 }
 
 [Serializable]
-public class AuditionsResponse
+public class AuditionsResponse : BaseResponse
 {
-    public string message;
     public List<Audition> data;
-    public int status;
 }
 
 [Serializable]
@@ -235,11 +231,9 @@ public class JoinedAudition
 }
 
 [Serializable]
-public class JoinedAuditionsResponse
+public class JoinedAuditionsResponse : BaseResponse
 {
-    public string message;
     public List<JoinedAudition> data;
-    public int status;
 }
 
 [Serializable]

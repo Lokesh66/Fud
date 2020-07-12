@@ -13,6 +13,8 @@ public class PortfolioAlteredFilterView : MonoBehaviour
 
     public TMP_Dropdown orderDropdown;
 
+    public TMP_Dropdown roleDropdown;
+
 
     List<Genre> genres;
 
@@ -24,6 +26,24 @@ public class PortfolioAlteredFilterView : MonoBehaviour
         gameObject.SetActive(true);
 
         this.OnApplyFilter = OnApplyFilter;
+
+        SetView();
+    }
+
+    void SetView()
+    {
+        genres = DataManager.Instance.genres;
+
+        List<string> options = new List<string>();
+
+        foreach (var option in genres)
+        {
+            options.Add(option.name);
+        }
+
+        roleDropdown.ClearOptions();
+
+        roleDropdown.AddOptions(options);
     }
 
     public void OnCancelButtonAction()
@@ -35,17 +55,23 @@ public class PortfolioAlteredFilterView : MonoBehaviour
 
     public void OnApplyButtonAction()
     {
+        string selectedGenreText = roleDropdown.options[roleDropdown.value].text;
+
+        Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
+
         int sortId = sortDropdown.value;
 
         int orderById = orderDropdown.value + 1;
 
         int statusId = GetStatusId();
 
-        GameManager.Instance.apiHandler.ApplyPortfolioAlteredFilter(statusId, sortId, orderById, (status, data) => {
+        GameManager.Instance.apiHandler.ApplyPortfolioAlteredFilter(selectedGenre.id, statusId, sortId, orderById, (status, resopnse) => {
 
             if (status)
             {
-                OnApplyFilter?.Invoke(data);
+                PortfolioPostResponse responseModel = JsonUtility.FromJson<PortfolioPostResponse>(resopnse);
+
+                OnApplyFilter?.Invoke(responseModel.data);
 
                 OnCancelButtonAction();
             }   

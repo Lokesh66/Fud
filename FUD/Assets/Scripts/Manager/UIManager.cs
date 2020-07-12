@@ -100,6 +100,11 @@ public class UIManager : MonoBehaviour
         topCanvas.alertView.ShowAlert(alertModel);
     }
 
+    public void ShowBigScreen(string imageURL)
+    {
+        topCanvas.ShowBigScreen(imageURL);
+    }
+
     #endregion
 
     void LoadStore()
