@@ -72,14 +72,28 @@ public partial class APIHandler
                 GenreResponse data = JsonUtility.FromJson<GenreResponse>(response);
                 DataManager.Instance.UpdateGenres(data.data);*/
 
+        gameManager.apiCallingText.text = "API Calling";
+
         gameManager.StartCoroutine(GetRequest(APIConstants.GET_GENRES, false, (bool status, string response) =>
         {
+            GenreResponse data = JsonUtility.FromJson<GenreResponse>(response);
+
+            gameManager.starGameText.text = string.Format("status ({0}), responseModel {1}, Count {2}", status, data, data?.data?.Count);
+
+
             if (status)
             {
-                GenreResponse data = JsonUtility.FromJson<GenreResponse>(response);
                 DataManager.Instance.UpdateGenres(data.data);
             }
+            else {
+                AlertModel alertModel = new AlertModel();
+
+                alertModel.message = data.message;
+
+                UIManager.Instance.ShowAlert(alertModel);
+            }
         }, false));
+
     }
     #endregion
 
