@@ -22,7 +22,7 @@ public class BrowseFilterView : MonoBehaviour
     public TextMeshProUGUI ageValueText;
 
 
-    List<Genre> genres;
+    List<Craft> crafts;
 
     Action<List<PortfolioModel>> OnApplyFilter;
 
@@ -40,11 +40,11 @@ public class BrowseFilterView : MonoBehaviour
 
     void SetView()
     {
-        genres = DataManager.Instance.genres;
+        crafts = DataManager.Instance.crafts;
 
         List<string> options = new List<string>();
 
-        foreach (var option in genres)
+        foreach (var option in crafts)
         {
             options.Add(option.name);
         }
@@ -72,7 +72,7 @@ public class BrowseFilterView : MonoBehaviour
     {
         string selectedGenreText = roleDropdown.options[roleDropdown.value].text;
 
-        Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
+        Craft selectedGenre = crafts.Find(craft => craft.name.Equals(selectedGenreText));
 
         GameManager.Instance.apiHandler.ApplyBrowseFilter(ageFromField.text, ageToField.text, genderDropdown.captionText.text, selectedGenre.id, (status, data) => {
 

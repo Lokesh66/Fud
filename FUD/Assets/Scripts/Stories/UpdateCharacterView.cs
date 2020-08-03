@@ -9,7 +9,7 @@ public class UpdateCharacterView : MonoBehaviour
 {
     public RectTransform searchContent;
 
-    public TMP_InputField castField;
+    public TMP_Dropdown castDropdown;
 
     public TMP_InputField titleField;
 
@@ -18,6 +18,10 @@ public class UpdateCharacterView : MonoBehaviour
     public TMP_InputField suitableField;
 
     public TMP_InputField descriptionField;
+
+    public TMP_Dropdown craftDropdown;
+
+    public TMP_Dropdown roleCatageryDropdown;
 
     public GameObject searchCell;
 
@@ -50,9 +54,17 @@ public class UpdateCharacterView : MonoBehaviour
 
     List<string> imageUrls;
 
+    List<Craft> craftRoles;
+
+    Craft selectedCraft;
+
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
 
     Action<StoryCharacterModel> OnUpdateCharacter;
+
+    List<RoleCategeryModel> categeryModels;
+
+    private string mediaSource = "characters";
 
 
     public void Load(StoryCharacterModel characterModel, Action<StoryCharacterModel> OnUpdateCharacter)
@@ -64,6 +76,8 @@ public class UpdateCharacterView : MonoBehaviour
         this.OnUpdateCharacter = OnUpdateCharacter;
 
         StartCoroutine(UpdateView());
+
+        PopulateRoleDropdown();
     }
 
     IEnumerator UpdateView()
@@ -97,13 +111,13 @@ public class UpdateCharacterView : MonoBehaviour
 
     public void SetView()
     {
-        castField.text = characterModel.cast_name;
-
         titleField.text = characterModel.title;
 
         genderDropdown.captionText.text = characterModel.gender;
 
         descriptionField.text = characterModel.description;
+
+        castDropdown.value = characterModel.type;
     }
 
     void PopulateDropdown(List<UserSearchModel> searchModels)
@@ -123,6 +137,26 @@ public class UpdateCharacterView : MonoBehaviour
                 cellObject.GetComponent<UserSearchCell>().SetView(searchModels[i], OnSelectMember);
             }
         }
+    }
+
+    void PopulateRoleDropdown()
+    {
+        craftRoles = DataManager.Instance.crafts;
+
+        Craft selectedCraft = craftRoles.Find(item => item.id == characterModel.role_id);
+
+        List<string> options = new List<string>();
+
+        foreach (var option in craftRoles)
+        {
+            options.Add(option.name);
+        }
+
+        craftDropdown.ClearOptions();
+
+        craftDropdown.AddOptions(options);
+
+        craftDropdown.value = craftRoles.IndexOf(selectedCraft);
     }
 
     public void OnValueChange()
@@ -152,14 +186,50 @@ public class UpdateCharacterView : MonoBehaviour
         }
     }
 
+    public void OnRoleValueChange()
+    {
+        selectedCraft = craftRoles[craftDropdown.value];
+
+        GameManager.Instance.apiHandler.GetRoleCategeries(selectedCraft.id, (status, response) => {
+
+            RoleCategeryResponse responseModel = JsonUtility.FromJson<RoleCategeryResponse>(response);
+
+            if (status)
+            {
+                categeryModels = responseModel.data;
+
+                UpdateRoleCategeryDropdown();
+            }
+        });
+    }
+
+    void UpdateRoleCategeryDropdown()
+    {
+        List<string> options = new List<string>();
+
+        foreach (var option in categeryModels)
+        {
+            options.Add(option.name);
+        }
+
+        roleCatageryDropdown.ClearOptions();
+
+        roleCatageryDropdown.AddOptions(options);
+    }
+
     public void OnCastButtonAction()
     {
-        castField.Select();
+        castDropdown.Select();
     }
 
     public void OnTitleButtonAction()
     {
         titleField.Select();
+    }
+
+    public void OnCraftRoleButtonAction()
+    {
+        craftDropdown.Select();
     }
 
     public void OnGenderButtonAction()
@@ -198,13 +268,13 @@ public class UpdateCharacterView : MonoBehaviour
         switch (selectedType)
         {
             case EMediaType.Image:
-                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                GalleryManager.Instance.PickImages(mediaSource, OnImagesUploaded);
                 break;
             case EMediaType.Audio:
-                GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
+                GalleryManager.Instance.GetAudiosFromGallery(mediaSource, OnAudiosUploaded);
                 break;
             case EMediaType.Video:
-                GalleryManager.Instance.GetVideosFromGallery(OnVideosUploaded);
+                GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnVideosUploaded);
                 break;
         }
     }
@@ -227,7 +297,7 @@ public class UpdateCharacterView : MonoBehaviour
 
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
-        GameManager.Instance.apiHandler.UpdateCharacter(characterModel.id, storyId, titleField.text, castField.text, descriptionField.text, selectedModel.id, genderDropdown.captionText.text, (status, response) => {
+        GameManager.Instance.apiHandler.UpdateCharacter(characterModel.id, storyId, titleField.text, castDropdown.value, descriptionField.text, selectedModel.id, genderDropdown.captionText.text, (status, response) => {
 
             if (status)
             {
@@ -263,9 +333,7 @@ public class UpdateCharacterView : MonoBehaviour
 
         OnUpdateCharacter?.Invoke(characterModel);
 
-        gameObject.SetActive(false);
-
-        apiResponse = string.Empty;
+        OnBackButtonAction();
     }
 
     void OnImagesUploaded(bool status, List<string> imageUrls)
@@ -361,13 +429,17 @@ public class UpdateCharacterView : MonoBehaviour
     {
         string errorMessage = string.Empty;
 
-        if (string.IsNullOrEmpty(castField.text))
+        if (string.IsNullOrEmpty(titleField.text))
         {
-            errorMessage = "Character name should not be empty";
+            errorMessage = "Character Title should not be empty";
         }
         else if (string.IsNullOrEmpty(descriptionField.text))
         {
             errorMessage = "Story description should not be empty";
+        }
+        else if (string.IsNullOrEmpty(suitableField.text))
+        {
+            errorMessage = "Please Select Suitable Character";
         }
 
         if (!string.IsNullOrEmpty(errorMessage))
@@ -415,9 +487,9 @@ public class UpdateCharacterView : MonoBehaviour
 
         descriptionField.text = string.Empty;
 
-        castField.text = keyword = string.Empty;
+        apiResponse = keyword = string.Empty;
 
-        genderDropdown.value = 0;
+        castDropdown.value = genderDropdown.value = 0;
 
         isSearchAPICalled = false;
     }

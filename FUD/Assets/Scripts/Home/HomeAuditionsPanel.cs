@@ -16,6 +16,8 @@ public class HomeAuditionsPanel : MonoBehaviour
 
     Audition auditionData;
 
+    private string mediaSource = "audition";
+
     private void OnEnable()
     {
         GetAuditions();
@@ -94,13 +96,13 @@ public class HomeAuditionsPanel : MonoBehaviour
         switch (selectedType)
         {
             case EMediaType.Image:
-                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                GalleryManager.Instance.PickImages(mediaSource, OnImagesUploaded);
                 break;
             case EMediaType.Video:
-                GalleryManager.Instance.GetVideosFromGallery(OnVideosUploaded);
+                GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnVideosUploaded);
                 break;
             case EMediaType.Audio:
-                GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
+                GalleryManager.Instance.GetAudiosFromGallery(mediaSource, OnAudiosUploaded);
                 break;
         }
     }
@@ -115,7 +117,7 @@ public class HomeAuditionsPanel : MonoBehaviour
 
             NativeGallery.SaveVideoToGallery(fileBytes, "Videos", fileName);
 
-            GalleryManager.Instance.UploadVideoFile(path, OnVideosUploaded);
+            GalleryManager.Instance.UploadVideoFile(path, mediaSource, OnVideosUploaded);
         });
     }
 

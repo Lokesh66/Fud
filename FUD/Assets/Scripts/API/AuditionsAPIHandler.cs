@@ -95,6 +95,23 @@ public partial class APIHandler
         gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
     }
 
+    public void ApplyAudtionCreateFilter(int sortId, int projectId, int orderId, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        string url = APIConstants.GET_CREATED_AUDITIONS;
+
+        url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
+
+        parameters.Add("sortBy", sortId);
+
+        parameters.Add("project_id", projectId);
+
+        parameters.Add("sortOrder", orderId);
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
+    }
+
     public void GetCreatedAuditions(int pageNo, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -106,6 +123,25 @@ public partial class APIHandler
         parameters.Add("fetch_created", 1);
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
+    }
+
+    public void GetProjectAuditions(Action<bool, List<AuditionProjectModel>> OnResponse)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        string url = APIConstants.GET_CREATED_AUDITIONS;
+
+        url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
+
+            CreatedAuditionProjects responseModel = JsonUtility.FromJson<CreatedAuditionProjects>(response);
+
+            if (status)
+            {
+                OnResponse?.Invoke(true, responseModel.data);
+            }
+        }));
     }
 
     public void GetHomeAuditions(Action<bool, string> action)
@@ -135,7 +171,6 @@ public partial class APIHandler
     {
         gameManager.StartCoroutine(PutRequest(APIConstants.USER_AUDITION, true, parameters, action));
     }
-
 
     public void SearchAuditions(int pageNo, Dictionary<string, object> parameters, Action<bool, string> action)
     {
@@ -177,7 +212,7 @@ public class Audition
     public int age_to;
     public int no_of_persons_req;
     public int no_of_persons_joined;
-    public string type;
+    public int type;
     public int end_date;
     public DateTime created_date_time;
     public DateTime updatedAt;
@@ -257,9 +292,20 @@ public class SearchAudition
 }
 
 [Serializable]
-public class SearchAuditionResponse
+public class SearchAuditionResponse : BaseResponse
 {
-    public string message;
     public List<SearchAudition> data;
-    public int status;
+}
+
+[Serializable]
+public class CreatedAuditionProjects : BaseResponse
+{
+    public List<AuditionProjectModel> data;
+}
+
+[Serializable]
+public class AuditionProjectModel
+{
+    public int id;
+    public string title;
 }

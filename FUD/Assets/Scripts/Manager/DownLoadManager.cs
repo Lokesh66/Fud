@@ -10,6 +10,13 @@ public class DownLoadManager : MonoBehaviour
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
+
+        string baseDirectoryPath = Path.Combine(APIConstants.PERSISTENT_PATH, APIConstants.TEMP_IMAGES_PATH);
+
+        if (!Directory.Exists(baseDirectoryPath))
+        {
+            Directory.CreateDirectory(baseDirectoryPath);
+        }
     }
 
     #region Imagedownload
@@ -23,7 +30,7 @@ public class DownLoadManager : MonoBehaviour
         }
 
 
-        string path = Application.temporaryCachePath + APIConstants.TEMP_IMAGES_PATH + Path.GetFileName(imageurl);
+        string path = Path.Combine(Application.persistentDataPath + APIConstants.TEMP_IMAGES_PATH + Path.GetFileName(imageurl));
 
 
         if (File.Exists(path))
@@ -54,11 +61,14 @@ public class DownLoadManager : MonoBehaviour
             }
             else if (www.texture != null)
             {
-                string path = Application.temporaryCachePath + APIConstants.TEMP_IMAGES_PATH + Path.GetFileName(imageurl);
+                string path = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, Path.GetFileName(imageurl));
 
-                Sprite profileSprite = Sprite.Create(www.texture, new Rect(0f, 0f, www.texture.width, www.texture.height), new Vector2(0.5f, 0.5f));//creates sprite from the texture of the image
+                Debug.Log("Path = " + path);
+
+                Sprite profileSprite = Sprite.Create(www.texture, new Rect(0f, 0f, www.texture.width, www.texture.height), new Vector2(0.5f, 0f));//creates sprite from the texture of the image
                 CallBack(profileSprite);
                 byte[] texByte = www.texture.EncodeToPNG();//to convert texture to png
+
                 File.WriteAllBytes(path, texByte);
             }
             else
@@ -98,7 +108,7 @@ public class DownLoadManager : MonoBehaviour
 
         Texture2D texture = null;
 
-        string path = Application.temporaryCachePath + APIConstants.TEMP_IMAGES_PATH + Path.GetFileName(imageurl);
+        string path = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, Path.GetFileName(imageurl));
 
         if (File.Exists(path))
         {

@@ -31,6 +31,8 @@ public class UpdatePortfolioView : MonoBehaviour
 
     List<PortfolioAlbumModel> mediaList = new List<PortfolioAlbumModel>();
 
+    private string mediaSource = "portfolio";
+
 
     public void Load(PortfolioModel portfolioModel)
     {
@@ -62,6 +64,11 @@ public class UpdatePortfolioView : MonoBehaviour
             mediaCells.Add(_mediaCell);
 
             UpdateMediaDict(portfolioModel.PortfolioMedia[i]);
+        }
+
+        if (mediaList.Count > 0)
+        {
+            SetVideoThumbnails(0);
         }
     }
 
@@ -144,13 +151,13 @@ public class UpdatePortfolioView : MonoBehaviour
         switch (selectedType)
         {
             case EMediaType.Image:
-                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                GalleryManager.Instance.PickImages(mediaSource, OnImagesUploaded);
                 break;
             case EMediaType.Audio:
-                GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
+                GalleryManager.Instance.GetAudiosFromGallery(mediaSource, OnAudiosUploaded);
                 break;
             case EMediaType.Video:
-                GalleryManager.Instance.GetVideosFromGallery(OnVideosUploaded);
+                GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnVideosUploaded);
                 break;
         }
     }

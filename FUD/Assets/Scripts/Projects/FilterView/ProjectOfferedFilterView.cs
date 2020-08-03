@@ -65,7 +65,7 @@ public class ProjectOfferedFilterView : MonoBehaviour
 
             if (status)
             {
-                OnApplyFilter?.Invoke(data);
+                OnApplyFilter?.Invoke(data.data);
 
                 OnCancelButtonAction();
             }   

@@ -8,11 +8,15 @@ public class CreateCharacterView : MonoBehaviour
 {
     public RectTransform searchContent;
 
-    public TMP_InputField castField;
+    public TMP_Dropdown castDropdown;
 
     public TMP_InputField titleField;
 
     public TMP_Dropdown genderDropDown;
+
+    public TMP_Dropdown craftDropdown;
+
+    public TMP_Dropdown roleCatageryDropdown;
 
     public TMP_InputField suitableField;
 
@@ -41,9 +45,17 @@ public class CreateCharacterView : MonoBehaviour
 
     List<string> imageUrls;
 
+    List<Craft> craftRoles;
+
+    Craft selectedCraft;
+
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
 
     Action<StoryCharacterModel> OnCreateCharacter;
+
+    List<RoleCategeryModel> categeryModels;
+
+    private string mediaSource = "characters";
 
 
     public void SetView(StoryDetailsModel detailsModel, Action<StoryCharacterModel> action)
@@ -51,6 +63,26 @@ public class CreateCharacterView : MonoBehaviour
         this.detailsModel = detailsModel;
 
         OnCreateCharacter = action;
+
+        PopulateRoleDropdown();
+    }
+
+    void PopulateRoleDropdown()
+    {
+        craftRoles = DataManager.Instance.crafts;
+
+        List<string> options = new List<string>();
+
+        foreach (var option in craftRoles)
+        {
+            options.Add(option.name);
+        }
+
+        craftDropdown.ClearOptions();
+
+        craftDropdown.AddOptions(options);
+
+        OnRoleValueChange();
     }
 
     void PopulateDropdown(List<UserSearchModel> searchModels)
@@ -100,9 +132,40 @@ public class CreateCharacterView : MonoBehaviour
         }
     }
 
+    public void OnRoleValueChange()
+    {
+        selectedCraft = craftRoles[craftDropdown.value];
+
+        GameManager.Instance.apiHandler.GetRoleCategeries(selectedCraft.id, (status, response) => {
+
+            RoleCategeryResponse responseModel = JsonUtility.FromJson<RoleCategeryResponse>(response);
+
+            if (status)
+            {
+                categeryModels = responseModel.data;
+
+                UpdateRoleCategeryDropdown();
+            }
+        });
+    }
+
+    void UpdateRoleCategeryDropdown()
+    {
+        List<string> options = new List<string>();
+
+        foreach (var option in categeryModels)
+        {
+            options.Add(option.name);
+        }
+
+        roleCatageryDropdown.ClearOptions();
+
+        roleCatageryDropdown.AddOptions(options);
+    }
+
     public void OnCastButtonAction()
     {
-        castField.Select();
+        castDropdown.Select();
     }
 
     public void OnTitleButtonAction()
@@ -115,6 +178,11 @@ public class CreateCharacterView : MonoBehaviour
         genderDropDown.Select();
     }
 
+    public void OnCraftRoleButtonAction()
+    {
+        craftDropdown.Select();
+    }
+
     public void OnCharacterButtonAction()
     {
         suitableField.Select();
@@ -123,6 +191,11 @@ public class CreateCharacterView : MonoBehaviour
     public void OnDescriptionButtonAction()
     {
         descriptionField.Select();
+    }
+
+    public void OnBackButtonAction()
+    {
+        Destroy(gameObject);
     }
 
     public void OnButtonAction()
@@ -141,7 +214,9 @@ public class CreateCharacterView : MonoBehaviour
             selectedModel = searchModel;
         }
 
-        GameManager.Instance.apiHandler.CreateCharacter(detailsModel.id, titleField.text, castField.text, descriptionField.text, genderDropDown.captionText.text, selectedModel.id, uploadedDict, (status, response) => {
+        CreateCharacterModel model = GetCharacterModel();
+
+        GameManager.Instance.apiHandler.CreateCharacter(model, uploadedDict, (status, response) => {
 
             if (status)
             {
@@ -166,13 +241,13 @@ public class CreateCharacterView : MonoBehaviour
         switch (selectedType)
         {
             case EMediaType.Image:
-                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                GalleryManager.Instance.PickImages(mediaSource, OnImagesUploaded);
                 break;
             case EMediaType.Audio:
-                GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
+                GalleryManager.Instance.GetAudiosFromGallery(mediaSource, OnAudiosUploaded);
                 break;
             case EMediaType.Video:
-                GalleryManager.Instance.GetVideosFromGallery(OnVideosUploaded);
+                GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnVideosUploaded);
                 break;
         }
     }
@@ -212,13 +287,18 @@ public class CreateCharacterView : MonoBehaviour
     {
         string errorMessage = string.Empty;
 
-        if (string.IsNullOrEmpty(castField.text))
+
+        if (string.IsNullOrEmpty(titleField.text))
         {
-            errorMessage = "Character name should not be empty";
+            errorMessage = "Character Title should not be empty";
         }
         else if (string.IsNullOrEmpty(descriptionField.text))
         {
             errorMessage = "Story description should not be empty";
+        }
+        else if(string.IsNullOrEmpty(suitableField.text))
+        {
+            errorMessage = "Please Select Suitable Character";
         }
 
         if (!string.IsNullOrEmpty(errorMessage))
@@ -366,5 +446,28 @@ public class CreateCharacterView : MonoBehaviour
         float targetPostion = panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
 
         galleryPanel.DOAnchorPosY(targetPostion, 0.4f);
+    }
+
+    CreateCharacterModel GetCharacterModel()
+    {
+        CreateCharacterModel characterModel = new CreateCharacterModel();
+
+        characterModel.characterId = selectedModel.id;
+
+        characterModel.craftId = selectedCraft.id;
+
+        characterModel.description = descriptionField.text;
+
+        characterModel.gender = genderDropDown.captionText.text;
+
+        characterModel.id = detailsModel.id;
+
+        characterModel.roleCategeryId = categeryModels[roleCatageryDropdown.value].id;
+
+        characterModel.title = titleField.text;
+
+        characterModel.type = castDropdown.value;
+
+        return characterModel;
     }
 }

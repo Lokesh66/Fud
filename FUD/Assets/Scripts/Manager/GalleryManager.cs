@@ -5,9 +5,15 @@ using System.IO;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using SimpleFileBrowser;
+using TMPro;
+
 
 public class GalleryManager : MonoBehaviour
 {
+    public TextMeshProUGUI loadingCountText;
+
+
     Action<bool, List<string>> OnUploaded;
 
     private List<string> uploadedURLs = new List<string>();
@@ -43,7 +49,7 @@ public class GalleryManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void GetImageFromGallaery(Action<bool, List<string>> OnImageUploaded)
+    public void GetImageFromGallaery(string mediaSource, Action<bool, List<string>> OnImageUploaded)
     {
         NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((imagesPath) => {
             if (imagesPath != null)
@@ -52,7 +58,7 @@ public class GalleryManager : MonoBehaviour
 
                 this.OnUploaded = OnImageUploaded;
                 selectedImagesCount = 1;
-                UploadFile(imagesPath, EMediaType.Image);
+                UploadFile(imagesPath, EMediaType.Image, mediaSource);
             }
             else
             {
@@ -62,7 +68,7 @@ public class GalleryManager : MonoBehaviour
 
     }
 
-    public void TakeSelfie(Action<bool, List<string>> OnImageUploaded)
+    public void TakeSelfie(string mediaSource,Action<bool, List<string>> OnImageUploaded)
     {
         NativeCamera.Permission permission = NativeCamera.TakePicture((imagePath) => {
 
@@ -71,8 +77,11 @@ public class GalleryManager : MonoBehaviour
                 uploadedURLs.Clear();
 
                 this.OnUploaded = OnImageUploaded;
+
+                loadedFiles[0] = imagePath;
+
                 selectedImagesCount = 1;
-                UploadFile(imagePath, EMediaType.Image);
+                UploadFile(imagePath, EMediaType.Image, mediaSource);
             }
             else
             {
@@ -82,8 +91,27 @@ public class GalleryManager : MonoBehaviour
         }, preferredCamera: NativeCamera.PreferredCamera.Front);
     }
 
-    public void PickImages(Action<bool, List<string>> OnUploaded)
+    public void PickImages(string mediaSource, Action<bool, List<string>> OnUploaded)
     {
+        //string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "banner2.png");
+
+        //uploadedURLs.Clear();
+
+        //this.OnUploaded = OnUploaded;
+
+        //Array.Clear(loadedFiles, 0, loadedFiles.Length);
+
+        //loadedFiles[0] = _filePath;
+
+        //selectedImagesCount = 1;
+
+        //for (int i = 0; i < 1; i++)
+        //{
+        //    UploadFile(_filePath, EMediaType.Image, mediaSource);
+        //}
+
+        //return;
+
 #if UNITY_ANDROID
         NativeGallery.Permission permission = NativeGallery.GetImagesFromGallery((imagesPath) =>
         {
@@ -108,7 +136,7 @@ public class GalleryManager : MonoBehaviour
 
                     for (int i = 0; i < imagesPath.Length; i++)
                     {
-                        UploadFile(imagesPath[i], EMediaType.Image);
+                        UploadFile(imagesPath[i], EMediaType.Image, mediaSource);
                     }
                 }
             }
@@ -119,11 +147,11 @@ public class GalleryManager : MonoBehaviour
         AlertMessage.Instance.SetText("Permission result: " + permission);
         Debug.Log("Permission result: " + permission);
 #elif UNITY_IOS
-        PickImage(OnUploaded);
+        PickImage(mediaSource, OnUploaded);
 #endif
     }
 
-    public void GetAudiosFromGallery(Action<bool, List<string>> OnUploaded)
+    public void GetAudiosFromGallery(string mediaSource, Action<bool, List<string>> OnUploaded)
     {
         NativeGallery.Permission permission = NativeGallery.GetAudiosFromGallery((audiosPaths) =>
         {
@@ -137,13 +165,13 @@ public class GalleryManager : MonoBehaviour
 
                 for (int i = 0; i < audiosPaths.Length; i++)
                 {
-                    UploadFile(audiosPaths[i], EMediaType.Audio);
+                    UploadFile(audiosPaths[i], EMediaType.Audio, mediaSource);
                 }
             }
         });
     }
 
-    public void GetVideosFromGallery(Action<bool, List<string>> OnUploaded)
+    public void GetVideosFromGallery(string mediaSource, Action<bool, List<string>> OnUploaded)
     {
         NativeGallery.Permission permission = NativeGallery.GetVideosFromGallery((videoPaths) =>
         {
@@ -157,19 +185,19 @@ public class GalleryManager : MonoBehaviour
 
                 for (int i = 0; i < videoPaths.Length; i++)
                 {
-                    UploadFile(videoPaths[i], EMediaType.Video);
+                    UploadFile(videoPaths[i], EMediaType.Video, mediaSource);
                 }
             }
         });
     }
 
-    public void UploadVideoFile(string filePath, Action<bool, List<string>> OnUploaded)
+    public void UploadVideoFile(string filePath, string mediaSource, Action<bool, List<string>> OnUploaded)
     {
         this.OnUploaded = OnUploaded;
 
         selectedImagesCount = 1;
 
-        UploadFile(filePath, EMediaType.Video);
+        UploadFile(filePath, EMediaType.Video, mediaSource);
     }
 
     public void RecordVideo()
@@ -177,19 +205,25 @@ public class GalleryManager : MonoBehaviour
     
     }
 
+    int loadingCount = 0;
+
 #region Upload File
 
-    void UploadFile(string filePath, EMediaType mediaType)
+    void UploadFile(string filePath, EMediaType mediaType, string mediaSource)
     {
         Loader.Instance.StartLoading();
 
-        GameManager.Instance.apiHandler.UploadFile(filePath, mediaType, (status, response) => {
+        GameManager.Instance.apiHandler.UploadFile(filePath, mediaType, mediaSource, (status, response) => {
 
             if (status) 
             {
                 FileUploadResponseModel responseModel = JsonUtility.FromJson<FileUploadResponseModel>(response);
 
                 uploadedURLs.Add(responseModel.data.s3_file_path);
+
+                Debug.Log("Upoaded URL = " + responseModel.data.s3_file_path);
+
+                Debug.Log("Upoaded Count = " + uploadedURLs.Count + " selectedImagesCount = " + selectedImagesCount);
 
                 if (uploadedURLs.Count == selectedImagesCount)
                 {
@@ -202,8 +236,6 @@ public class GalleryManager : MonoBehaviour
                     AlertModel alertModel = new AlertModel();
 
                     alertModel.message = responseModel.message;
-
-                    alertModel.okayButtonAction = AlertDismissAction;
 
                     UIManager.Instance.ShowAlert(alertModel);
 
@@ -238,6 +270,8 @@ public class GalleryManager : MonoBehaviour
                 OnUploaded = null;
             }
 
+            //loadingCount--;
+
             Loader.Instance.StopLoading();
 
         });
@@ -245,7 +279,7 @@ public class GalleryManager : MonoBehaviour
 
     void AlertDismissAction()
     {
-        UIManager.Instance.gameObject.SetActive(false);
+        //UIManager.Instance.gameObject.SetActive(false);
     }
 
     void UpdateLocalData(List<string> imageURls, EMediaType mediaType)
@@ -286,7 +320,7 @@ public class GalleryManager : MonoBehaviour
         return loadedFiles;
     }
 
-    public void PickImage(Action<bool, List<string>> OnUploaded)
+    public void PickImage(string mediaSource, Action<bool, List<string>> OnUploaded)
     {
         NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((imagePath) =>
         {
@@ -302,7 +336,7 @@ public class GalleryManager : MonoBehaviour
                 {
                     selectedImagesCount = 1;
 
-                    UploadFile(imagePath, EMediaType.Image);
+                    UploadFile(imagePath, EMediaType.Image, mediaSource);
                 }
             }
         });

@@ -27,9 +27,13 @@ public class APIConstants
 
     public const string GET_GENRES = BASE_URL + "v1/genres/";
 
+    public const string GET_ROLE_CATEGERIES = BASE_URL + "v1/searcRoleCategories/";
+
     public const string CREATE_STORY = BASE_URL + "v1/story/";
 
     public const string CREATE_PROJECT = BASE_URL + "v1/projects/";
+
+    public const string GET_AUDITION_PROJECTS = BASE_URL + "created";
 
     public const string UPDATE_OFFERED_PROJECT_STATUS = BASE_URL + "v1/projects/offered/";
 
@@ -113,11 +117,13 @@ public class APIConstants
 
     public const string VERIFY_ORDER_ID = SUBSCRIPTION_BASE_URL + "v1/order/payment/verify";
 
+    public const string GET_HOME_BANNERS = BASE_URL + "v1/searchBanners/";
+
     public const string ACCOUNT_LOGOUT = BASE_URL + "V1/user/logout/";
 
 
 
     public const int API_ITEM_LIMIT = 50;
 
-    public const string TEMP_IMAGES_PATH = "/TBImages/";
+    public const string TEMP_IMAGES_PATH = "TBImages";
 }

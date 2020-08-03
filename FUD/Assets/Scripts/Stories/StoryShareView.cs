@@ -21,6 +21,7 @@ public class StoryShareView : MonoBehaviour
 
     bool isSearchAPICalled = false;
 
+
     private void OnEnable()
     {
         keyword = string.Empty;

@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine.UI;
+﻿using frame8.ScrollRectItemsAdapter.MultiplePrefabsExample;
+using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using System.IO;
 using TMPro;
 
 
@@ -42,12 +41,17 @@ public class StoryCreationView : MonoBehaviour
 
     public TMP_Dropdown dropdown;
 
+    public TMP_Dropdown accessDropdown;
+
     public TMP_InputField descriptionField;
 
-    public Image screenShotImage;
+    public GameObject addImageObject;
+
+    public Texture2D addPosterTexture;
 
 
-    MyStoriesController storiesController;
+    public RemoteImageBehaviour titlePosterImage;
+
 
     StoryModel createdModel;
 
@@ -55,7 +59,11 @@ public class StoryCreationView : MonoBehaviour
 
     List<string> imageUrls;
 
+    string titlePosterURL = string.Empty;
+
     System.Action<StoryModel> OnClose;
+
+    private string mediaSource = "stories";
 
 
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
@@ -101,6 +109,8 @@ public class StoryCreationView : MonoBehaviour
         OnClose = null;
 
         createdModel = null;
+
+        Reset();
     }
 
     public void OnUploadAction()
@@ -120,7 +130,7 @@ public class StoryCreationView : MonoBehaviour
 
             Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
 
-            GameManager.Instance.apiHandler.CreateStory(storyTitleField.text, subTitleField.text, descriptionField.text, selectedGenre.id, uploadedDict, (status, response) =>
+            GameManager.Instance.apiHandler.CreateStory(storyTitleField.text, subTitleField.text, descriptionField.text, titlePosterURL, selectedGenre.id, accessDropdown.value, uploadedDict, (status, response) =>
             {
 
                 if (status)
@@ -168,6 +178,11 @@ public class StoryCreationView : MonoBehaviour
         OnBackButtonAction();
     }
 
+    public void OnTitlePosterButtonAction()
+    {
+        GalleryManager.Instance.GetImageFromGallaery(mediaSource, OnTitlePosterUploaded);
+    }
+
     public void OnMediaButtonAction(int mediaType)
     {
         EMediaType selectedType = (EMediaType)mediaType;
@@ -177,15 +192,32 @@ public class StoryCreationView : MonoBehaviour
         switch (selectedType)
         {
             case EMediaType.Image:
-                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                GalleryManager.Instance.PickImages(mediaSource, OnImagesUploaded);
                 break;
             case EMediaType.Audio:
-                GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
+                GalleryManager.Instance.GetAudiosFromGallery(mediaSource, OnAudiosUploaded);
                 break;
             case EMediaType.Video:
-                GalleryManager.Instance.GetVideosFromGallery(OnVideosUploaded);
+                GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnVideosUploaded);
                 break;           
         }
+    }
+
+    public void OnTItleAction()
+    {
+        storyTitleField.Select();
+    }
+
+    public void OnStotyLineAction()
+    {
+        subTitleField.Select();
+    }
+
+    public void OnDescriptionAction()
+    {
+        descriptionField.Select();
+
+        TouchScreenKeyboard.Open(descriptionField.text);
     }
 
     public void OnCancelButtonAction()
@@ -226,11 +258,15 @@ public class StoryCreationView : MonoBehaviour
         //storyTitleField.text = string.Empty;
         parentPanel.gameObject.SetActive(false);
 
+        addImageObject.SetActive(true);
+
+        titlePosterImage._RawImage.texture = addPosterTexture;
+
         storyTitleField.text = string.Empty;
 
         subTitleField.text = string.Empty;
 
-        descriptionField.text = string.Empty;
+        titlePosterURL = descriptionField.text = string.Empty;
     }
 
     void OnImagesUploaded(bool status, List<string> imageUrls)
@@ -312,6 +348,32 @@ public class StoryCreationView : MonoBehaviour
 
                 uploadedDict.Add(kvp);
             }
+        }
+        else
+        {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = status.ToString() + imageUrls[0];
+
+            UIManager.Instance.ShowAlert(alertModel);
+        }
+    }
+
+    public void OnTitlePosterUploaded(bool status, List<string> imageURls)
+    {
+        if (status)
+        {
+            titlePosterURL = imageURls[0];
+
+            titlePosterImage.Load(titlePosterURL, true, (fromCache, success) =>
+            {
+                if (success)
+                {
+                    titlePosterImage.Load(titlePosterURL);
+                }
+            });
+
+            addImageObject.SetActive(false);
         }
         else
         {

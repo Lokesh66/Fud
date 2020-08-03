@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 using TMPro;
+
 
 public class AuditionDetailView : MonoBehaviour
 {

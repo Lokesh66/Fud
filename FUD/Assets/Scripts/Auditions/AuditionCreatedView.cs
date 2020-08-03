@@ -13,6 +13,8 @@ public class AuditionCreatedView : MonoBehaviour
 
     public UserAuditionController userAuditionController;
 
+    public AuditionCreateFilterView filterView;
+
     public AuditionsCreatedTableView tableView;
 
 
@@ -25,6 +27,8 @@ public class AuditionCreatedView : MonoBehaviour
     int pageNo = 1;
 
     int MAX_CREATED_AUDITIONS = 50;
+
+    bool isInitialized = false;
 
 
     public void Load()
@@ -41,6 +45,11 @@ public class AuditionCreatedView : MonoBehaviour
         userAuditionController.SetView(userAuditions, auditionId, OnClosed);
     }
 
+    public void OnFilterButtonAction()
+    {
+        filterView.Load(OnFilterAction);
+    }
+
     void OnClosed(bool canReload)
     {
         if (canReload)
@@ -49,16 +58,13 @@ public class AuditionCreatedView : MonoBehaviour
         }
     }
 
-
     #region ButtonActions
 
     public void GetAuditions()
     {
         noDataView.gameObject.SetActive(false);
 
-        tableView.gameObject.SetActive(false);
-
-        GameManager.Instance.apiHandler.GetOfferedAuditions(pageNo, (status, response) => {
+        GameManager.Instance.apiHandler.GetCreatedAuditions(pageNo, (status, response) => {
 
             if (status)
             {
@@ -74,7 +80,20 @@ public class AuditionCreatedView : MonoBehaviour
                     pageNo = 1;
                 }
 
-                tableView.gameObject.SetActive(true);
+                if (!isInitialized)
+                {
+                    tableView.gameObject.SetActive(true);
+
+                    isInitialized = true;
+                }
+                else
+                {
+                    tableView.Data.Clear();
+
+                    tableView.Data.Add(createdAuditions.Count);
+
+                    tableView.Refresh();
+                }
 
                 if (createdAuditions.Count == 0)
                 {
@@ -141,7 +160,7 @@ public class AuditionCreatedView : MonoBehaviour
 
     void GetNextPageData()
     {
-        GameManager.Instance.apiHandler.GetOfferedAuditions(pageNo, (status, response) =>
+        GameManager.Instance.apiHandler.GetCreatedAuditions(pageNo, (status, response) =>
         {
             if (status)
             {
@@ -177,6 +196,19 @@ public class AuditionCreatedView : MonoBehaviour
         pageNo = 1;
 
         isPagingOver = false;
+    }
+
+    void OnFilterAction(object data)
+    {
+        createdAuditions = data as List<Audition>;
+
+        tableView.Data.Clear();
+
+        tableView.Data.Add(createdAuditions.Count);
+
+        tableView.Refresh();
+
+        noDataView.gameObject.SetActive(createdAuditions.Count == 0);
     }
 }
 

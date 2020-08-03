@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
+
 
 public class StoryDetailsView : MonoBehaviour
 {
@@ -10,7 +10,6 @@ public class StoryDetailsView : MonoBehaviour
     public TextMeshProUGUI ratingText;
 
     public TextMeshProUGUI genreText;
-
 
 
 

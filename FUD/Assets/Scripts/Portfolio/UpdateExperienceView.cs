@@ -45,6 +45,8 @@ public class UpdateExperienceView : MonoBehaviour
 
     List<IndustryModel> industryModels;
 
+    private string mediaSource = "portfolio";
+
 
     public void Load(WorkExperianceModel workModel)
     {
@@ -124,8 +126,6 @@ public class UpdateExperienceView : MonoBehaviour
 
         Genre requiredGenre = genres.Find(genre => genre.id == workModel.role_id);
 
-        Genre selectedGenre = genres.Find(genre => genre.name.Equals(requiredGenre.name));
-
         List<string> options = new List<string>();
 
         foreach (var option in genres)
@@ -137,14 +137,12 @@ public class UpdateExperienceView : MonoBehaviour
 
         roleDropDown.AddOptions(options);
 
-        roleDropDown.value = roleDropDown.options.FindIndex(option => options.Equals(selectedGenre.name));
+        roleDropDown.value = genres.IndexOf(requiredGenre);
     }
 
     void LoadIndustries()
     {
         IndustryModel requiredGenre = industryModels.Find(industryModel => industryModel.id == workModel.industry_id);
-
-        IndustryModel selectedGenre = industryModels.Find(industryModel => industryModel.name.Equals(requiredGenre.name));
 
         List<string> options = new List<string>();
 
@@ -157,7 +155,7 @@ public class UpdateExperienceView : MonoBehaviour
 
         industryDropDown.AddOptions(options);
 
-        industryDropDown.value = industryDropDown.options.FindIndex(option => options.Equals(selectedGenre.name));
+        industryDropDown.value = industryModels.IndexOf(requiredGenre);
     }
 
     public void OnCancelButtonAction()
@@ -293,13 +291,13 @@ public class UpdateExperienceView : MonoBehaviour
         switch (selectedType)
         {
             case EMediaType.Image:
-                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                GalleryManager.Instance.PickImages(mediaSource, OnImagesUploaded);
                 break;
             case EMediaType.Audio:
-                GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
+                GalleryManager.Instance.GetAudiosFromGallery(mediaSource, OnAudiosUploaded);
                 break;
             case EMediaType.Video:
-                GalleryManager.Instance.GetVideosFromGallery(OnVideosUploaded);
+                GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnVideosUploaded);
                 break;
         }
     }

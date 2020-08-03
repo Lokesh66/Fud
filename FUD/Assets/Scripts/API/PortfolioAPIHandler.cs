@@ -271,13 +271,19 @@ public partial class APIHandler
         }));
     }
 
-    public void ApplyPortfolioOfferedFilter(int sortId, int orderById, Action<bool, string> action)
+    public void ApplyPortfolioOfferedFilter(int sortId, int orderById, string gender, int ageFrom, int ageTo, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
         string url = APIConstants.GET_PORTFOLIO_POSTS;
 
         url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
+
+        parameters.Add("gender", gender);
+
+        parameters.Add("age_from", ageFrom);
+
+        parameters.Add("age_to", ageTo);
 
         parameters.Add("sortBy", sortId);
 
@@ -329,6 +335,8 @@ public partial class APIHandler
             parameters.Add("phone", infoModel.contactNumber);
 
         parameters.Add("role_id", infoModel.roleId);
+
+        parameters.Add("role_category_id", infoModel.categeryId);
 
         if (idProof.IsNOTNullOrEmpty())
         {
@@ -517,6 +525,7 @@ public class ProfileInfoModel
     public string contactNumber;
     public string nativeLocation;
     public int roleId;
+    public int categeryId;
     public string profile_image;
     public string aadherNumber;
 }
@@ -532,7 +541,7 @@ public class PortfolioMediaModel
     public string description;
     public DateTime created_date_time;
     public DateTime updatedAt;
-    public List<object> PortfolioMedia;
+    public List<PortfolioAlbumModel> PortfolioMedia;
 }
 
 [Serializable]

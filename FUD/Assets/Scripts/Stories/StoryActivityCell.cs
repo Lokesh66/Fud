@@ -11,7 +11,7 @@ public class StoryActivityCell : MonoBehaviour
 
     //public Image storyImage;
 
-    public TextMeshProUGUI commentText;    
+    public TextMeshProUGUI descriptionText;    
 
 
     StoryActivityPopUp activityPopUp;
@@ -29,7 +29,7 @@ public class StoryActivityCell : MonoBehaviour
 
         titleText.text = activityModel.title;
 
-        commentText.text = activityModel.comment;
+        descriptionText.text = activityModel.StoryVersions.description;
     }
 
     public void OnTapAction()

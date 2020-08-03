@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine.UI;
+﻿using frame8.ScrollRectItemsAdapter.MultiplePrefabsExample;
+using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using System.IO;
 using TMPro;
 
 
@@ -18,9 +17,12 @@ public class StoryUpdateView : MonoBehaviour
 
     public TMP_Dropdown dropdown;
 
+    public TMP_Dropdown accessDropdown;
+
     public TMP_InputField descriptionField;
 
-    public Image screenShotImage;
+    public RemoteImageBehaviour titlePosterImage;
+
 
     List<Genre> genres;
 
@@ -29,6 +31,10 @@ public class StoryUpdateView : MonoBehaviour
     StoryModel storyModel;
 
     StoryCell storyCell;
+
+    private string titlePosterURL = string.Empty;
+
+    private string mediaSource = "stories";
 
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
 
@@ -50,6 +56,10 @@ public class StoryUpdateView : MonoBehaviour
         subTitleField.text = storyModel.story_line;
 
         descriptionField.text = storyModel.description;
+
+        accessDropdown.value = storyModel.access_modifier;
+
+        UpdateTitlePosterImage();
 
         PopulateDropdown();
     }
@@ -78,6 +88,11 @@ public class StoryUpdateView : MonoBehaviour
         dropdown.value = genres.IndexOf(selectedGenre);
     }
 
+    void UpdateTitlePosterImage()
+    {
+        titlePosterImage.Load(storyModel.title_poster);
+    }
+
     public void OnUploadAction()
     {
         ShowGalleryPanel();
@@ -86,6 +101,21 @@ public class StoryUpdateView : MonoBehaviour
     public void OnBackButtonAction()
     {
         Destroy(gameObject);
+    }
+
+    public void OnTitleAction()
+    {
+        storyTitleField.Select();
+    }
+
+    public void OnStotyLineAction()
+    {
+        subTitleField.Select();
+    }
+
+    public void OnDescriptionAction()
+    {
+        descriptionField.Select();
     }
 
     public void OnSubmitAction()
@@ -99,7 +129,7 @@ public class StoryUpdateView : MonoBehaviour
 
         Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
 
-        GameManager.Instance.apiHandler.UpdateStory(storyModel.id, storyTitleField.text, subTitleField.text, descriptionField.text, selectedGenre.id, uploadedDict, (status, response) => {
+        GameManager.Instance.apiHandler.UpdateStory(storyModel.id, storyTitleField.text, subTitleField.text, descriptionField.text, titlePosterURL, selectedGenre.id, accessDropdown.value, uploadedDict, (status, response) => {
 
             if (status)
             {                
@@ -171,9 +201,34 @@ public class StoryUpdateView : MonoBehaviour
         return true;
     }
 
-    public void OnScreenShotAction()
+    public void OnEditTitlePosterAction()
     {
-        GetScreenShot();
+        GalleryManager.Instance.GetImageFromGallaery(mediaSource, OnTitlePosterUploaded);
+    }
+
+    public void OnTitlePosterUploaded(bool status, List<string> imageURls)
+    {
+        if (status)
+        {
+            titlePosterURL = imageURls[0];
+
+            titlePosterImage.Load(titlePosterURL, onCompleted : (fromCache, success) => {
+
+                if(success)
+                {
+                    titlePosterImage.Load(titlePosterURL);
+                }
+
+            });
+        }
+        else
+        {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = status.ToString() + imageUrls[0];
+
+            UIManager.Instance.ShowAlert(alertModel);
+        }
     }
 
     void ShowGalleryPanel()
@@ -199,13 +254,13 @@ public class StoryUpdateView : MonoBehaviour
         switch (selectedType)
         {
             case EMediaType.Image:
-                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                GalleryManager.Instance.PickImages(mediaSource, OnImagesUploaded);
                 break;
             case EMediaType.Audio:
-                GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
+                GalleryManager.Instance.GetAudiosFromGallery(mediaSource, OnAudiosUploaded);
                 break;
             case EMediaType.Video:
-                GalleryManager.Instance.GetVideosFromGallery(OnAudiosUploaded);
+                GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnAudiosUploaded);
                 break;
         }
     }
@@ -315,10 +370,5 @@ public class StoryUpdateView : MonoBehaviour
         subTitleField.text = string.Empty;
 
         descriptionField.text = string.Empty;
-    }
-
-    void GetScreenShot()
-    {
-
     }
 }

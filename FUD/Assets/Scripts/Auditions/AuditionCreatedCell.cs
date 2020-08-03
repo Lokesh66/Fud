@@ -7,12 +7,15 @@ using System.IO;
 public class AuditionCreatedCell : MonoBehaviour
 {
     public TMP_Text titleText;
-    public TMP_Text ageText;
-    public TMP_Text rateOfPayText;
+    public TMP_Text peopleJoinedText;
+    public TMP_Text projectNameText;
 
     Audition auditionData;
     AuditionCreatedView auditionController;
     ETabType auditionType;
+
+
+    private string mediaSource = "audition";
 
 
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
@@ -28,9 +31,9 @@ public class AuditionCreatedCell : MonoBehaviour
         {
             titleText.text = auditionData.topic;
 
-            ageText.text = "Age : " + auditionData.age_to.ToString();
+            peopleJoinedText.text = "People Joined : " + auditionData.no_of_persons_joined.ToString();
 
-            rateOfPayText.text = "Budget : " + auditionData.rate_of_pay;
+            projectNameText.text = auditionData.title;
         }
     }
 
@@ -65,6 +68,18 @@ public class AuditionCreatedCell : MonoBehaviour
         });        
     }
 
+    public void OnEditButtonAction()
+    {
+        CreateAuditionView.Instance.EditView(auditionData, Refresh);
+    }
+
+    void Refresh(bool isDataUpdated)
+    {
+        if (isDataUpdated)
+        {
+            auditionController.GetAuditions();
+        }
+    }
 
     void RecordVideo()
     {
@@ -78,7 +93,7 @@ public class AuditionCreatedCell : MonoBehaviour
 
             NativeGallery.SaveVideoToGallery(fileBytes, "Videos", fileName);
 
-            GalleryManager.Instance.UploadVideoFile(path, OnVideoUploaded);
+            GalleryManager.Instance.UploadVideoFile(path, mediaSource, OnVideoUploaded);
         });
     }
 
@@ -117,13 +132,13 @@ public class AuditionCreatedCell : MonoBehaviour
         switch (selectedType)
         {
             case EMediaType.Image:
-                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                GalleryManager.Instance.PickImages(mediaSource, OnImagesUploaded);
                 break;
             case EMediaType.Video:
-                GalleryManager.Instance.GetVideosFromGallery(OnVideosUploaded);
+                GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnVideosUploaded);
                 break;
             case EMediaType.Audio:
-                GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
+                GalleryManager.Instance.GetAudiosFromGallery(mediaSource, OnAudiosUploaded);
                 break;
         }
     }

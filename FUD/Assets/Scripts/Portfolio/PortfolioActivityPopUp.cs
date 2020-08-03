@@ -6,15 +6,15 @@ public class PortfolioActivityPopUp : MonoBehaviour
 {
     //public Image storyImage;
 
-    public TextMeshProUGUI titleText;
-
-    public TextMeshProUGUI commentText;
-
-    public TextMeshProUGUI descriptionText;
 
     public GameObject acceptObject;
 
+    public GameObject likeObject;
+
     public GameObject shortListObject;
+
+
+    public PortfolioOfferedDetailView detailsView;
 
 
     PortfolioActivityModel activityModel;
@@ -38,17 +38,24 @@ public class PortfolioActivityPopUp : MonoBehaviour
 
         this.tabType = tabType;
 
-        //titleText.text = activityModel.Portfolio.title;
-
-        //commentText.text = activityModel.comments;
-
-        //descriptionText.text = activityModel.Portfolio.description;
-
         currentUserId = DataManager.Instance.userInfo.id;
+
+        likeObject.SetActive(tabType == ETabType.Offers);
+
+        acceptObject.SetActive(tabType == ETabType.Offers);
+
+        shortListObject.SetActive(tabType == ETabType.Offers);
 
         acceptObject.SetActive(currentUserId != activityModel.user_id);
 
         shortListObject.SetActive(currentUserId != activityModel.user_id);
+    }
+
+    public void OnViewButtonAction()
+    {
+        detailsView.Load(activityModel);
+
+        gameObject.SetActive(false);
     }
 
     public void OnStatusButtonAction(int userStatus)
@@ -59,7 +66,7 @@ public class PortfolioActivityPopUp : MonoBehaviour
             {
                 this.userStatus = userStatus;
 
-                CreateAlert(status);
+                CreateAlert(status, response);
             });
         }
         else
@@ -69,7 +76,7 @@ public class PortfolioActivityPopUp : MonoBehaviour
         }
     }
 
-    void CreateAlert(bool status)
+    void CreateAlert(bool status, string response)
     {
         AlertModel alertModel = new AlertModel();
 

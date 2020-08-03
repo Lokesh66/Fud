@@ -13,6 +13,8 @@ public class PortfolioExperienceDetails : MonoBehaviour
 
     public UpdateExperienceView updatePortfolioExperiance;
 
+    public WorkExperienceDetailView detailView;
+
 
     WorkExperianceModel experianceModel;
 
@@ -35,6 +37,13 @@ public class PortfolioExperienceDetails : MonoBehaviour
         //titleText.text = experianceModel.title;
 
         //description.text = experianceModel.description;
+    }
+
+    public void OnViewButtonAction()
+    {
+        gameObject.SetActive(false);
+
+        detailView.Load(experianceModel);
     }
 
     public void OnButtonAction(int buttonIndex)

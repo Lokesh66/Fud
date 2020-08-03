@@ -76,7 +76,7 @@ public class StoryActivitiesView : MonoBehaviour
                 noDataObject.SetActive(activityModels.Count == 0);
             }
             else {
-                CreateAlert(responseModel.message);
+                CreateAlert(responseModel?.message);
             }
         });
     }

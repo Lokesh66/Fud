@@ -56,6 +56,14 @@ public class CreatedPortfolioMediaCell : MonoBehaviour
         }
     }
 
+    public void OnButtonAction()
+    {
+        if (mediaType == EMediaType.Image)
+        {
+            UIManager.Instance.ShowBigScreen(albumModel.content_url);
+        }
+    }
+
     public void OnDeleteButtonAction()
     {
         AlertModel alertModel = new AlertModel();

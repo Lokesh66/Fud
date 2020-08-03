@@ -10,6 +10,8 @@ public class CreateStoryVersion : MonoBehaviour
 
     public TMP_Dropdown roledropDown;
 
+    public TMP_Dropdown accessDropdown;
+
     public TMP_InputField descriptionField;
 
     public RectTransform galleryPanel;
@@ -22,6 +24,8 @@ public class CreateStoryVersion : MonoBehaviour
     List<string> imageUrls;
 
     string apiResponse;
+
+    private string mediaSource = "stories";
 
 
     bool isShowingGalleryPanel = false;
@@ -61,13 +65,13 @@ public class CreateStoryVersion : MonoBehaviour
         switch (selectedType)
         {
             case EMediaType.Image:
-                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                GalleryManager.Instance.PickImages(mediaSource, OnImagesUploaded);
                 break;
             case EMediaType.Audio:
-                GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
+                GalleryManager.Instance.GetAudiosFromGallery(mediaSource, OnAudiosUploaded);
                 break;
             case EMediaType.Video:
-                GalleryManager.Instance.GetVideosFromGallery(OnVideosUploaded);
+                GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnVideosUploaded);
                 break;
         }
     }
@@ -104,7 +108,7 @@ public class CreateStoryVersion : MonoBehaviour
 
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
-        GameManager.Instance.apiHandler.CreateStoryVersion(storyId, descriptionField.text, selectedGenre.id, uploadedDict, (status, response) => {
+        GameManager.Instance.apiHandler.CreateStoryVersion(storyId, descriptionField.text, selectedGenre.id, accessDropdown.value, uploadedDict, (status, response) => {
 
             if (status)
             {

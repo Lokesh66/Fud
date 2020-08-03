@@ -118,9 +118,12 @@ public class AuditionView : BaseView
         {
             offeredView.OnFilterButtonAction();
         }
-        else
+        else if (currentTab == ETabType.Altered)
         {
             alteredView.OnFilterButtonAction();
+        }
+        else {
+            createdView.OnFilterButtonAction();
         }
     }
 }

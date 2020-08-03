@@ -21,6 +21,8 @@ public class PortfolioCreationView : MonoBehaviour
 
     private bool isShowingGalleryPanel = false;
 
+    private string mediaSource = "portfolio";
+
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
 
 
@@ -38,13 +40,13 @@ public class PortfolioCreationView : MonoBehaviour
         switch (selectedType)
         {
             case EMediaType.Image:
-                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                GalleryManager.Instance.PickImages(mediaSource, OnImagesUploaded);
                 break;
             case EMediaType.Audio:
-                GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
+                GalleryManager.Instance.GetAudiosFromGallery(mediaSource, OnAudiosUploaded);
                 break;
             case EMediaType.Video:
-                GalleryManager.Instance.GetVideosFromGallery(OnVideosUploaded);
+                GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnVideosUploaded);
                 break;
         }
     }
@@ -128,10 +130,16 @@ public class PortfolioCreationView : MonoBehaviour
 
     void OnImagesUploaded(bool status, List<string> imageUrls)
     {
+        //Debug.Log("OnImagesUploaded : Status = " + status + " url = " + imageUrls.Count);
+
         if (status)
         {
+            //Debug.Log("Available : = " + DataManager.Instance.CanLoadScreen(EFeatureType.PortfolioAlbums));
+
             if (DataManager.Instance.CanLoadScreen(EFeatureType.PortfolioAlbums))
             {
+                //Debug.Log("Loaded Files Length = " + GalleryManager.Instance.GetLoadedFiles().Length);
+
                 filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
 
                 for (int i = 0; i < imageUrls.Count; i++)
@@ -145,6 +153,8 @@ public class PortfolioCreationView : MonoBehaviour
                     kvp.Add("media_type", "image");
 
                     uploadedDict.Add(kvp);
+
+                    Debug.Log("Updating Media Dic");
                 }
             }
             else {

@@ -30,7 +30,7 @@ public partial class APIHandler
         }));
     }
 
-    public void CreateStory(string title, string subTitle, string description,int genreId, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
+    public void CreateStory(string title, string subTitle, string description, string posterURL, int genreId, int accessValue, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -40,7 +40,14 @@ public partial class APIHandler
 
         parameters.Add("description", description);
 
+        parameters.Add("access_modifier", accessValue);
+
         parameters.Add("genre_id", genreId);
+
+        if (posterURL.IsNOTNullOrEmpty())
+        {
+            parameters.Add("title_poster", posterURL);
+        }
 
         if (multimediaModels.Count > 0)
         {
@@ -71,7 +78,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateStory(int storyId, string title, string subTitle, string description, int genreId, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
+    public void UpdateStory(int storyId, string title, string subTitle, string description, string titlePosterURL, int genreId, int accessValue, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -83,7 +90,14 @@ public partial class APIHandler
 
         parameters.Add("description", description);
 
+        parameters.Add("access_modifier", accessValue);
+
         parameters.Add("genre_id", genreId);
+
+        if (titlePosterURL.IsNOTNullOrEmpty())
+        {
+            parameters.Add("title_poster", titlePosterURL);
+        }
 
         if (multimediaModels.Count > 0)
         {
@@ -108,13 +122,15 @@ public partial class APIHandler
         }));
     }
 
-    public void CreateStoryVersion(int storyId, string description, int roleId, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
+    public void CreateStoryVersion(int storyId, string description, int roleId, int accessValue, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
         parameters.Add("story_id", storyId);
 
         parameters.Add("description", description);
+
+        parameters.Add("access_modifier", accessValue);
 
         parameters.Add("genre_id", roleId);
 
@@ -133,7 +149,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateStoryVersion(int storyId, int versionId, string description, int roleId, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
+    public void UpdateStoryVersion(int storyId, int versionId, string description, int roleId, int accessValue, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -146,6 +162,8 @@ public partial class APIHandler
         parameters.Add("id", versionId);
 
         parameters.Add("description", description);
+
+        parameters.Add("access_modifier", accessValue);
 
         parameters.Add("genre_id", roleId);
 
@@ -196,7 +214,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateCharacter(int characterId, int storyId, string title, string castName, string description, int performerId, string gender, Action<bool, string> action)
+    public void UpdateCharacter(int characterId, int storyId, string title, int castId, string description, int performerId, string gender, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -206,7 +224,7 @@ public partial class APIHandler
 
         parameters.Add("title", title);
 
-        parameters.Add("cast_name", castName);
+        parameters.Add("type", castId);
 
         parameters.Add("description", description);
 
@@ -223,21 +241,25 @@ public partial class APIHandler
         }));
     }
 
-    public void CreateCharacter(int story_id,  string title, string castName, string description, string gender, int performerId, List<Dictionary<string, object>> multimedia, Action<bool, string> action)
+    public void CreateCharacter(CreateCharacterModel model, List<Dictionary<string, object>> multimedia, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        parameters.Add("story_id", story_id);
+        parameters.Add("story_id", model.id);
 
-        parameters.Add("title", title);
+        parameters.Add("title", model.title);
 
-        parameters.Add("cast_name", castName);
+        parameters.Add("type", model.type);
 
-        parameters.Add("description", description);
+        parameters.Add("role_id", model.craftId);
 
-        parameters.Add("suitable_performer", performerId);
+        parameters.Add("role_category_id", model.roleCategeryId);
 
-        parameters.Add("gender", gender);
+        parameters.Add("description", model.description);
+
+        parameters.Add("suitable_performer", model.characterId);
+
+        parameters.Add("gender", model.gender);
 
         if (multimedia.Count > 0)
         {
@@ -358,11 +380,15 @@ public partial class APIHandler
 
         parameters.Add("story_id", story_id);
 
-        parameters.Add("title", title);
-
         parameters.Add("story_version_id", versionId);
 
         parameters.Add("posted_to", postedTo);
+
+
+        if (title.IsNOTNullOrEmpty())
+        {
+            parameters.Add("title", title);
+        }
 
         //parameters.Add("comment", comment);
 
@@ -460,12 +486,25 @@ public partial class APIHandler
         }));
     }
 
-    public void UploadFile(string filePath, EMediaType mediaType, Action<bool, string> OnResposne)
+    public void GetRoleCategeries(int roleId, Action<bool, string> action)
     {
-        gameManager.StartCoroutine(Upload(filePath, mediaType, ((status, response) => {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("role_id", roleId);
+
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.GET_ROLE_CATEGERIES, true, parameters, (apiStatus, response) =>
+        {
+            action(apiStatus, response);
+        }));
+    }
+
+    public void UploadFile(string filePath, EMediaType mediaType, string mediaSource, Action<bool, string> OnResposne)
+    {
+        gameManager.StartCoroutine(Upload(filePath, mediaType, mediaSource, (status, response) => {
 
             OnResposne?.Invoke(status, response);
-        })));
+        }));
     }
 }
 
@@ -478,7 +517,8 @@ public class StoryModel
     public string description;
     public int type_id;
     public int genre_id;
-    public string story_poster;
+    public string title_poster;
+    public int access_modifier;
     public int is_featured;
     public string status;
     public object created_date_time;
@@ -536,6 +576,7 @@ public class StoryVersion
     public object ratings;
     public object price;
     public int genre_id;
+    public int access_modifier;
     public object image_url;
     public object background_url;
     public object thumb_image_url;
@@ -584,13 +625,21 @@ public class StoryCharacterModel
 {
     public int id;
     public int story_id;
-    public string cast_name;
+    public int type;
+    public int role_id;
+    public int role_category_id;
     public string title;
     public string description;
     public string suitable_performer;
     public string gender;
     public DateTime created_date_time;
     public DateTime updatedAt;
+
+
+    public string GetCharacterType(int castId)
+    {
+        return castId > 0 ? "crew" : "cast";
+    }
 }
 
 [Serializable]
@@ -880,4 +929,34 @@ public class StoryAlteredModel
 public class StoriesAlteredResponse : BaseResponse
 {
     public List<StoryAlteredModel> data;
+}
+
+
+[Serializable]
+public class RoleCategeryModel
+{
+    public int id;
+    public int role_id;
+    public string name;
+    public string status;
+    public DateTime created_date;
+    public object updatedAt;
+}
+
+[Serializable]
+public class RoleCategeryResponse : BaseResponse 
+{
+    public List<RoleCategeryModel> data;
+}
+
+public class CreateCharacterModel
+{
+    public int id;
+    public string title;
+    public int type;
+    public string description;
+    public string gender;
+    public int characterId;
+    public int craftId;
+    public int roleCategeryId;
 }

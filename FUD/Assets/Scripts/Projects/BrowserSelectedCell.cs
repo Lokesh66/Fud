@@ -8,6 +8,8 @@ public class BrowserSelectedCell : MonoBehaviour
     public Image albumImage;
 
 
+    PortfolioAlbumModel onScreenModel;
+
     PortfolioModel portfolioModel;
 
 
@@ -19,6 +21,8 @@ public class BrowserSelectedCell : MonoBehaviour
 
         if (mediaType == EMediaType.Image)
         {
+            onScreenModel = portfolioModel.onScreenModel;
+
             UpdateMediaImage();
 
             //Texture2D texture = NativeGallery.LoadImageAtPath(albumModel.onScreenModel.content_url, markTextureNonReadable: false);
@@ -31,7 +35,17 @@ public class BrowserSelectedCell : MonoBehaviour
 
     void UpdateMediaImage()
     {
-        GameManager.Instance.downLoadManager.DownloadImage(portfolioModel.onScreenModel.content_url, (sprite) => {
+        if (!onScreenModel.content_url.IsNOTNullOrEmpty())
+        {
+            return;
+        }
+
+        GameManager.Instance.downLoadManager.DownloadImage(onScreenModel.content_url, (sprite) => {
+
+            if (this == null)
+            {
+                return;
+            }
 
             Texture2D texture = sprite.texture.ToTexture2D();
 
@@ -42,6 +56,8 @@ public class BrowserSelectedCell : MonoBehaviour
             Texture2D _texture = new Texture2D(2, 2, format, true, false);
 
             TextureScale.ThreadedScale(_texture, 180, 180, true);
+
+            Debug.Log("albumImage = " + albumImage + " texture = " + texture);
 
             albumImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
         });

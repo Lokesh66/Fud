@@ -20,6 +20,8 @@ public class UpdateStoryVersionView : MonoBehaviour
 
     public RectTransform mediaContent;
 
+    public TMP_Dropdown accessDropdown;
+
 
     List<Genre> genres;
 
@@ -36,6 +38,8 @@ public class UpdateStoryVersionView : MonoBehaviour
     List<MultimediaModel> mediaList = new List<MultimediaModel>();
 
     bool isShowingGalleryPanel = false;
+
+    private string mediaSource = "stories";
 
     List<UpdateVersionMediaCell> mediaCells = new List<UpdateVersionMediaCell>();
 
@@ -73,6 +77,8 @@ public class UpdateStoryVersionView : MonoBehaviour
     {
         descriptionField.text = storyVersion.description;
 
+        accessDropdown.value = storyVersion.access_modifier;
+
         PopulateDropdown();
 
         LoadMedia();
@@ -83,8 +89,6 @@ public class UpdateStoryVersionView : MonoBehaviour
         genres = DataManager.Instance.genres;
 
         Genre requiredGenre = genres.Find(genre => genre.id == storyVersion.genre_id);
-
-        Genre selectedGenre = genres.Find(genre => genre.name.Equals(requiredGenre.name));
 
         List<string> options = new List<string>();
 
@@ -97,7 +101,7 @@ public class UpdateStoryVersionView : MonoBehaviour
 
         roledropDown.AddOptions(options);
 
-        roledropDown.value = roledropDown.options.FindIndex(option => options.Equals(selectedGenre.name));
+        roledropDown.value = genres.IndexOf(requiredGenre);
     }
 
     void LoadMedia()
@@ -204,13 +208,13 @@ public class UpdateStoryVersionView : MonoBehaviour
         switch (selectedType)
         {
             case EMediaType.Image:
-                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                GalleryManager.Instance.PickImages(mediaSource, OnImagesUploaded);
                 break;
             case EMediaType.Audio:
-                GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
+                GalleryManager.Instance.GetAudiosFromGallery(mediaSource, OnAudiosUploaded);
                 break;
             case EMediaType.Video:
-                GalleryManager.Instance.GetVideosFromGallery(OnVideosUploaded);
+                GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnVideosUploaded);
                 break;
         }
     }
@@ -244,7 +248,7 @@ public class UpdateStoryVersionView : MonoBehaviour
 
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
-        GameManager.Instance.apiHandler.UpdateStoryVersion(storyId, storyVersion.id, descriptionField.text, selectedGenre.id, uploadedDict, (status, response) => {
+        GameManager.Instance.apiHandler.UpdateStoryVersion(storyId, storyVersion.id, descriptionField.text, selectedGenre.id, accessDropdown.value, uploadedDict, (status, response) => {
 
             if (status)
             {

@@ -18,9 +18,9 @@ public class ExperianceCell : MonoBehaviour
 
     WorkExperianceModel experianceModel;
 
-    Action<WorkExperianceModel> OnButtonAction;
+    Action<WorkExperianceModel, bool> OnButtonAction;
 
-    public void Load(WorkExperianceModel experianceModel, Action<WorkExperianceModel> OnButtonAction)
+    public void Load(WorkExperianceModel experianceModel, Action<WorkExperianceModel, bool> OnButtonAction)
     {
         this.experianceModel = experianceModel;
 
@@ -45,7 +45,12 @@ public class ExperianceCell : MonoBehaviour
     public void OnTapAction()
     {
         //ShowAlbums();
-        OnButtonAction?.Invoke(experianceModel);
+        OnButtonAction?.Invoke(experianceModel, false);
+    }
+
+    public void OnReadMoreButtonAction()
+    {
+        OnButtonAction?.Invoke(experianceModel, true);
     }
 
     void ShowAlbums()

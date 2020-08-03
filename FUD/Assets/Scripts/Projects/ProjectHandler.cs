@@ -35,6 +35,8 @@ public class ProjectHandler : MonoBehaviour
     public List<ProjectOfferedModel> offeredModels;
 
 
+    bool isInitialized = false;
+
     bool isPagingOver = false;
 
     int pageNo = 1;
@@ -145,8 +147,6 @@ public class ProjectHandler : MonoBehaviour
     {
         noDataView.gameObject.SetActive(false);
 
-        createdTableView.gameObject.SetActive(false);
-
         GameManager.Instance.apiHandler.GetProjects(pageNo, (status, projectsResponse) => {
 
             if (status && projectsResponse != null)
@@ -162,7 +162,20 @@ public class ProjectHandler : MonoBehaviour
                     pageNo = 1;
                 }
 
-                createdTableView.gameObject.SetActive(true);
+                if (!isInitialized)
+                {
+                    createdTableView.gameObject.SetActive(true);
+
+                    isInitialized = true;
+                }
+                else
+                {
+                    createdTableView.Data.Clear();
+
+                    createdTableView.Data.Add(projectModels.Count);
+
+                    createdTableView.Refresh();
+                }
 
                 if (projectModels.Count == 0)
                 {
@@ -214,6 +227,8 @@ public class ProjectHandler : MonoBehaviour
                     {
                         ProjectCreationView.Instance.SetView(stories.data, (isProjectAdded) =>
                         {
+                            Debug.Log("isProjectAdded = " + isProjectAdded);
+
                             if (isProjectAdded)
                             {
                                 GetAllProjects();

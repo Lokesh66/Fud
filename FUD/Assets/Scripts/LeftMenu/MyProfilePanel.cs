@@ -15,6 +15,8 @@ public class MyProfilePanel : MonoBehaviour
     public TMP_Text primarySkillsText;
     public TMP_Text secondarySkillsText;
 
+    public TMP_Text roleCategeryText;
+
 
     public ProfileInfoView infoView;
 
@@ -23,9 +25,9 @@ public class MyProfilePanel : MonoBehaviour
     {
         UserData data = DataManager.Instance.userInfo;
 
-        List<Genre> genres = DataManager.Instance.genres;
+        List<Craft> crafts = DataManager.Instance.crafts;
 
-        Genre selectedGenre = genres.Find(item => item.id == data.role_id);
+        Craft selectedGenre = crafts.Find(item => item.id == data.role_id);
 
         if (data != null)
         {
@@ -36,6 +38,7 @@ public class MyProfilePanel : MonoBehaviour
             roleText.text = selectedGenre.name;
             primarySkillsText.text = "";
             secondarySkillsText.text = "";
+            roleCategeryText.text = data.role_category_name;
         }
         gameObject.SetActive(true);
 

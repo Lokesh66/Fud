@@ -35,6 +35,9 @@ public class JoinedAuditionCell : MonoBehaviour
 
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
 
+    private string mediaSource = "audition";
+
+
     public void SetView(AuditionAlteredView auditionController, JoinedAudition audition)
     {
         auditionData = audition;
@@ -108,7 +111,7 @@ public class JoinedAuditionCell : MonoBehaviour
 
             NativeGallery.SaveVideoToGallery(fileBytes, "Videos", fileName);
 
-            GalleryManager.Instance.UploadVideoFile(path, OnVideoUploaded);
+            GalleryManager.Instance.UploadVideoFile(path, mediaSource, OnVideoUploaded);
         });
     }
 
@@ -146,13 +149,13 @@ public class JoinedAuditionCell : MonoBehaviour
         switch (selectedType)
         {
             case EMediaType.Image:
-                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                GalleryManager.Instance.PickImages(mediaSource, OnImagesUploaded);
                 break;
             case EMediaType.Video:
-                GalleryManager.Instance.GetVideosFromGallery(OnVideosUploaded);
+                GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnVideosUploaded);
                 break;
             case EMediaType.Audio:
-                GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
+                GalleryManager.Instance.GetAudiosFromGallery(mediaSource, OnAudiosUploaded);
                 break;
         }
     }

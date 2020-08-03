@@ -189,7 +189,7 @@ public class StoryDetailsController : MonoBehaviour
 
     public string GetStoryTitle()
     {
-        return currentDetailsModel.title;
+        return currentDetailsModel?.title;
     }
 
     public int GetStoryId()

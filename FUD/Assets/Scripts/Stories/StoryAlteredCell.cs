@@ -10,19 +10,12 @@ public class StoryAlteredCell : MonoBehaviour
 
     public TextMeshProUGUI titleText;
 
+    public TextMeshProUGUI descriptionText;
+
     public Image statusTag;
 
     public TextMeshProUGUI statusText;
 
-    [Space]
-
-    public Sprite reviewTag;
-
-    public Sprite deleteTag;
-
-    public Sprite shortListTag;
-
-    [Space]
 
 
     StoryAlteredModel alteredModel;
@@ -39,6 +32,8 @@ public class StoryAlteredCell : MonoBehaviour
         this.alteredModel = alteredModel;
 
         titleText.text = alteredModel.title;
+
+        descriptionText.text = alteredModel.StoryVersions.description;
 
         isOwnStory = DataManager.Instance.userInfo.id == alteredModel.user_id;
 

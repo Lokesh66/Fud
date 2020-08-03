@@ -45,7 +45,7 @@ public class ProjectAlteredFilterView : MonoBehaviour
 
             if (status)
             {
-                OnApplyFilter?.Invoke(data);
+                OnApplyFilter?.Invoke(data.data);
 
                 OnCancelButtonAction();
             }   

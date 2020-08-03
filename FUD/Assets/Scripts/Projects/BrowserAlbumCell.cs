@@ -8,6 +8,8 @@ public class BrowserAlbumCell : MonoBehaviour
 
     public GameObject selectObject;
 
+    public GameObject selectBG;
+
 
     PortfolioModel portfolioModel;
 
@@ -21,6 +23,8 @@ public class BrowserAlbumCell : MonoBehaviour
         this.portfolioModel = portfolioModel;
 
         this.OnSelectAction = OnSelectAction;
+
+        //selectBG.SetActive(portfolioModel.onScreenModel.content_url.IsNOTNullOrEmpty());
         
         //PortfolioAlbumModel _albumModel = portfolioModel.PortfolioMedia.Find(item => DataManager.Instance.GetMediaType(item.media_type) == EMediaType.Video);
 

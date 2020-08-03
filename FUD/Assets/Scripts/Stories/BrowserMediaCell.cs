@@ -65,6 +65,7 @@ public class BrowserMediaCell : MonoBehaviour
         switch (mediaType)
         {
             case EMediaType.Image:
+                OpenBigScreen();
                 break;
             case EMediaType.Video:
                 PlayVideo();
@@ -83,5 +84,10 @@ public class BrowserMediaCell : MonoBehaviour
     void PlayAudio()
     {
         AudioStreamer.Instance.AudioStream(albumModel.content_url, null);
+    }
+
+    void OpenBigScreen()
+    {
+        UIManager.Instance.ShowBigScreen(albumModel.content_url);
     }
 }

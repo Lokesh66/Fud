@@ -51,7 +51,7 @@ public class HomeStoriesPanel : MonoBehaviour
             }
             else
             {
-                homeItem.SetView(HomeCellType.STORY, i - 1, storiesList[i - 1].title, storiesList[i - 1].story_poster, OnStorySelectAction);
+                homeItem.SetView(HomeCellType.STORY, i - 1, storiesList[i - 1].title, storiesList[i - 1].title_poster, OnStorySelectAction);
             }
         }
 
@@ -95,7 +95,7 @@ public class HomeStoriesPanel : MonoBehaviour
 
             HomeCell homeItem = storyObject.GetComponent<HomeCell>();
 
-            homeItem.SetView(HomeCellType.STORY, storiesList.Count - 1, createModel.title, createModel.story_poster, OnStorySelectAction);
+            homeItem.SetView(HomeCellType.STORY, storiesList.Count - 1, createModel.title, createModel.title_poster, OnStorySelectAction);
         }
     }
 }

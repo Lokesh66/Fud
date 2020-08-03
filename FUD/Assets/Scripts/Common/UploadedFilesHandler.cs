@@ -10,6 +10,9 @@ public class UploadedFilesHandler : MonoBehaviour
 
     public RectTransform mediaButtonTrans;
 
+    public bool isSingleImage = false;
+
+
     EMediaType mediaType;
 
 
@@ -30,13 +33,13 @@ public class UploadedFilesHandler : MonoBehaviour
             fileCell.Load(paths[i], isDownloadedFile, mediaType);
         }
 
+        mediaButtonTrans?.gameObject.SetActive(!isSingleImage);
+
         mediaButtonTrans?.SetAsLastSibling();
     }
 
     private void OnDisable()
     {
-        Debug.Log("OnDisable : mediaButtonTrans = " + mediaButtonTrans);
-
         if (mediaButtonTrans != null)
         {
             content.DestroyChildrens(mediaButtonTrans?.gameObject);

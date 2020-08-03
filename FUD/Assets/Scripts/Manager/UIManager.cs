@@ -22,8 +22,6 @@ public class UIManager : MonoBehaviour
     public TopCanvas topCanvas;
 
 
-    public LeftMenu leftMenu;
-
 
     void Awake()
     {
@@ -34,7 +32,7 @@ public class UIManager : MonoBehaviour
 
     void Init()
     {
-        leftMenu = new LeftMenu();
+        
     }
 
     #region Un Available Features

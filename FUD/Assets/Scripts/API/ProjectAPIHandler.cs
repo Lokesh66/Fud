@@ -79,7 +79,7 @@ public partial class APIHandler
         }));
     }
 
-    public void ApplyAlteredProjectsFilter(int statusId, int sortId, int orderId, Action<bool, ProjectOfferedResponse> action)
+    public void ApplyAlteredProjectsFilter(int statusId, int sortId, int orderId, Action<bool, ProjectsResponse> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -95,7 +95,7 @@ public partial class APIHandler
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
 
-            ProjectOfferedResponse projectsResponse = JsonUtility.FromJson<ProjectOfferedResponse>(response);
+            ProjectsResponse projectsResponse = JsonUtility.FromJson<ProjectsResponse>(response);
 
             action(status, projectsResponse);
         }));

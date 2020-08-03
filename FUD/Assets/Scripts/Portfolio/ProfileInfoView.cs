@@ -28,7 +28,9 @@ public class ProfileInfoView : MonoBehaviour
 
     public TMP_InputField aadherField;
 
-    public TMP_Dropdown roleDropDown;
+    public TMP_Dropdown craftDropdown;
+
+    public TMP_Dropdown roleCatageryDropdown;
 
 
     public Image idProof;
@@ -41,13 +43,19 @@ public class ProfileInfoView : MonoBehaviour
 
     private string defaultDobText = "Date of Birth";
 
+    private string mediaSource = "profile";
+
     DateTime dateOfBirth;
 
     UserData data;
 
     Action<bool> OnCloseAction;
 
-    List<Genre> genres;
+    List<Craft> craftRoles;
+
+    List<RoleCategeryModel> categeryModels;
+
+    Craft selectedCraft;
 
     EProofType idProofType;
 
@@ -111,22 +119,29 @@ public class ProfileInfoView : MonoBehaviour
 
     void PopulateDropdown()
     {
-        genres = DataManager.Instance.genres;
+        craftRoles = DataManager.Instance.crafts;
 
-        Genre requiredGenre = genres.Find(genre => genre.id == data.role_id);
+        Craft requiredGenre = craftRoles.Find(genre => genre.id == data.role_id);
 
         List<string> options = new List<string>();
 
-        foreach (var option in genres)
+        foreach (var option in craftRoles)
         {
             options.Add(option.name);
         }
 
-        roleDropDown.ClearOptions();
+        craftDropdown.ClearOptions();
 
-        roleDropDown.AddOptions(options);
+        craftDropdown.AddOptions(options);
 
-        roleDropDown.value = genres.IndexOf(requiredGenre);
+        craftDropdown.value = craftRoles.IndexOf(requiredGenre);
+
+        OnRoleValueChange();
+
+        if (data.role_category_name.IsNOTNullOrEmpty())
+        {
+            roleCatageryDropdown.captionText.text = data.role_category_name;
+        }
     }
 
     void SetImage()
@@ -140,16 +155,36 @@ public class ProfileInfoView : MonoBehaviour
         }
     }
 
+    public void OnNameSelection()
+    {
+        nameField.Select();
+    }
+
+    public void OnMailSelection()
+    {
+        mailField.Select();
+    }
+
+    public void OnContactSelection()
+    {
+        contactField.Select();
+    }
+
+    public void OnAadherSelection()
+    {
+        aadherField.Select();
+    }
+
     public void OnProofButtonAction(int isIdProof)
     {
         this.idProofType = (EProofType)isIdProof;
 
-        GalleryManager.Instance.PickImage(OnImagesUploaded);
+        GalleryManager.Instance.PickImage(mediaSource, OnImagesUploaded);
     }
 
     public void OnProfileImageAction()
     {
-        GalleryManager.Instance.PickImage(OnProfileImageUploaded);
+        GalleryManager.Instance.TakeSelfie(mediaSource, OnProfileImageUploaded);
     }
 
     public void OnAadherEndEdit()
@@ -232,9 +267,9 @@ public class ProfileInfoView : MonoBehaviour
             return;
         }
 
-        string selectedGenreText = roleDropDown.options[roleDropDown.value].text;
+        string selectedGenreText = craftDropdown.options[craftDropdown.value].text;
 
-        Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
+        Craft selectedGenre = craftRoles.Find(genre => genre.name.Equals(selectedGenreText));
 
         ProfileInfoModel infoModel = new ProfileInfoModel();
 
@@ -246,6 +281,7 @@ public class ProfileInfoView : MonoBehaviour
         infoModel.nativeLocation = data.native_location;
         infoModel.roleId = selectedGenre.id;
         infoModel.profile_image = profileImageURL;
+        infoModel.categeryId = categeryModels[roleCatageryDropdown.value].id;
         infoModel.aadherNumber = aadherField.text.Replace(" ", string.Empty);
 
 
@@ -326,6 +362,37 @@ public class ProfileInfoView : MonoBehaviour
 
             UIManager.Instance.ShowAlert(alertModel);
         }
+    }
+
+    public void OnRoleValueChange()
+    {
+        selectedCraft = craftRoles[craftDropdown.value];
+
+        GameManager.Instance.apiHandler.GetRoleCategeries(selectedCraft.id, (status, response) => {
+
+            RoleCategeryResponse responseModel = JsonUtility.FromJson<RoleCategeryResponse>(response);
+
+            if (status)
+            {
+                categeryModels = responseModel.data;
+
+                UpdateRoleCategeryDropdown();
+            }
+        });
+    }
+
+    void UpdateRoleCategeryDropdown()
+    {
+        List<string> options = new List<string>();
+
+        foreach (var option in categeryModels)
+        {
+            options.Add(option.name);
+        }
+
+        roleCatageryDropdown.ClearOptions();
+
+        roleCatageryDropdown.AddOptions(options);
     }
 
     void UpdateProfileImage(string imagePath)

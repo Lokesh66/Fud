@@ -47,9 +47,14 @@ public class PortfolioExperianceView : MonoBehaviour
         }
     }
 
-    void OnCellButtonAction(WorkExperianceModel experianceModel)
+    void OnCellButtonAction(WorkExperianceModel experianceModel, bool isReadMore)
     {
         experienceDetails.Load(experianceModel, this);
+
+        if (isReadMore)
+        {
+            experienceDetails.OnViewButtonAction();
+        }
     }
 
     public void RemovePortfolioExperience(WorkExperianceModel experienceModel)

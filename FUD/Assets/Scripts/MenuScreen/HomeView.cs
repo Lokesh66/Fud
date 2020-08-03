@@ -5,6 +5,10 @@ public class HomeView : BaseView
 {
     public LeftMenu leftMenuPanel;
 
+    public HomeBannersView bannersView;
+
+    public HomeAlertsView alertsView;
+
 
     #region Ovveride Methods
     protected override void EnableView()
@@ -49,6 +53,10 @@ public class HomeView : BaseView
         DataManager.Instance.UpdateUserInfo(loginResponse.data);
 
         GameManager.Instance.apiHandler.GetAvailableActvities(null);
+
+        bannersView.Load();
+
+        alertsView.Load();
     }
 
     public void OnMenuButtonAction()

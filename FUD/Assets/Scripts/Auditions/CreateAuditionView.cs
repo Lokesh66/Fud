@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine.UI;
+using UnityEngine;
 using TMPro;
-using System.Collections.Generic;
 using DG.Tweening;
 using System;
 using System.IO;
@@ -41,8 +42,13 @@ public class CreateAuditionView : MonoBehaviour
     public TMP_InputField descriptionText;
     public TMP_Text endDateText;
 
+    //public Image capturedImage;
+
     public TMP_Text buttonText;
-    public TMP_Text errorText;
+
+    public UploadedFilesHandler filesHandler;
+
+    public WebCamDeviceHandler deviceHandler;
 
     bool isNewAuditionCreated;
 
@@ -51,6 +57,8 @@ public class CreateAuditionView : MonoBehaviour
     string defaultDateText = "Select Date";
 
     string uploadedImageUrl = string.Empty;
+
+    private string mediaSource = "audition";
 
     Audition audition;
 
@@ -61,6 +69,8 @@ public class CreateAuditionView : MonoBehaviour
     DateTime previousDate;
 
     System.Action<bool> backAction;
+
+
     public void SetView(int projectId, Action<bool> action)
     {
         isUpdate = false;
@@ -69,7 +79,9 @@ public class CreateAuditionView : MonoBehaviour
         uploadedImageUrl = string.Empty;
         backAction = action;
         isNewAuditionCreated = false;
-        buttonText.text = "Create Audition";
+        buttonText.text = "Submit";
+
+        filesHandler.mediaButtonTrans.gameObject.SetActive(true);
     }
 
     public void EditView(Audition audition, Action<bool> action)
@@ -90,10 +102,12 @@ public class CreateAuditionView : MonoBehaviour
 
         previousDate = selectedDate = dateTime.AddSeconds(audition.end_date);
 
-        typeDropdown.value = typeDropdown.options.FindIndex(option => option.text == audition.type);
-        if (audition.type.Equals("group"))
+        typeDropdown.value = typeDropdown.options.FindIndex(option => option.text.Equals(audition.type));
+
+        if (audition.type.Equals(0))
         {
             membersText.gameObject.SetActive(true);
+
             membersText.text = audition.no_of_persons_req.ToString();
         }
         else
@@ -159,7 +173,22 @@ public class CreateAuditionView : MonoBehaviour
     {
         //GalleryManager.Instance.GetImageFromGallaery(OnImagesUploaded);
 
-        GalleryManager.Instance.TakeSelfie(OnImagesUploaded);
+        GalleryManager.Instance.TakeSelfie(mediaSource, OnImagesUploaded);
+
+        //deviceHandler.transform.parent.gameObject.SetActive(true);    
+
+        //deviceHandler.SwitchCamera();
+    }
+
+    public void OnSelfieButtonAction()
+    {
+        //capturedImage.GetComponent<Image>().enabled = true;
+        //RectTransform imageRect = capturedImage.GetComponent<RectTransform>();
+        //string path = Path.Combine(Application.persistentDataPath, "CapturedPhoto.png");
+        //StartCoroutine(CapturePhoto.Capture(imageRect, path, (Sprite sprite) => { capturedImage.sprite = sprite;
+
+        //    //deviceHandler.transform.parent.gameObject.SetActive(false);
+        //}));
     }
 
     //public void OnRecordVideoAction()
@@ -178,12 +207,54 @@ public class CreateAuditionView : MonoBehaviour
     //    });
     //}
 
+    #region Button Actions
+
+    public void OnGroupButtonAction()
+    {
+        membersText.Select();
+    }
+
+    public void OnTopicButtonAction()
+    {
+        topicText.Select();
+    }
+
+    public void OnTitleButtonAction()
+    {
+        titleText.Select();
+    }
+
+    public void OnRateOfPayButtonAction()
+    {
+        payAmountText.Select();
+    }
+
+    public void OnAgeFromButtonAction()
+    {
+        ageFromText.Select();
+    }
+
+    public void OnAgeToButtonAction()
+    {
+        ageToText.Select();
+    }
+
+    public void OnDescriptionButtonAction()
+    {
+        descriptionText.Select();
+    }
+
+    #endregion
+
     void OnImagesUploaded(bool status, List<string> imagesList)
     {
         if (status)
         {            
-            if (imagesList != null && imagesList.Count > 0){
+            if (imagesList != null && imagesList.Count > 0) {
+
                 uploadedImageUrl = imagesList[0];
+
+                filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
             }
         }
         else
@@ -205,8 +276,9 @@ public class CreateAuditionView : MonoBehaviour
         {
             errorMessage = "Audition type should not be empty";
             //ShowErrorMessage("Audition type should not be empty");
-        }else if (typeDropdown.captionText.text.ToLower().Equals("group") &&
-            string.IsNullOrEmpty(membersText.text))
+        }
+        else if (typeDropdown.captionText.text.ToLower().Equals("group") &&
+           string.IsNullOrEmpty(membersText.text))
         {
             errorMessage = "Group Audition members should not be empty";
         }
@@ -232,7 +304,7 @@ public class CreateAuditionView : MonoBehaviour
         }
         else if (string.IsNullOrEmpty(ageToText.text))
         {
-            errorMessage = "Audition to age should not be empty";         
+            errorMessage = "Audition to age should not be empty";
             //ShowErrorMessage("Audition age should not be empty");
         }
         else if (int.Parse(ageToText.text) < int.Parse(ageFromText.text))
@@ -242,13 +314,17 @@ public class CreateAuditionView : MonoBehaviour
         }
         else if (string.IsNullOrEmpty(endDateText.text) || endDateText.text.Equals(defaultDateText))
         {
-            errorMessage = "Audition date should not be empty";          
+            errorMessage = "Audition date should not be empty";
             //ShowErrorMessage("Audition date should not be empty");
         }
         else if (string.IsNullOrEmpty(descriptionText.text))
         {
             errorMessage = "Audition description should not be empty";
             //ShowErrorMessage("Audition description should not be empty");
+        }
+        else if (ageFromText.text.Equals("0") || ageToText.text.Equals("0"))
+        {
+            errorMessage = "Please enter valid age";
         }
         if (!string.IsNullOrEmpty(errorMessage))
         {

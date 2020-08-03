@@ -2,6 +2,7 @@
 using UnityEngine;
 using System;
 
+
 public partial class APIHandler
 {
     public static bool IS_PRODUCTION = false;
@@ -17,8 +18,6 @@ public partial class APIHandler
 
     public const string APP_ID = "1362262b24f262b46ab91599e22631";
 
-
-    private string currentOrderId = string.Empty;
 
     public void Example()
     {

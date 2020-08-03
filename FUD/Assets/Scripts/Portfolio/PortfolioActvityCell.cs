@@ -15,8 +15,6 @@ public class PortfolioActvityCell : MonoBehaviour
 
     //public Image storyImage;
 
-    public TextMeshProUGUI commentText;
-
 
     PortfolioActivityPopUp activityPopUp;
 
@@ -40,8 +38,6 @@ public class PortfolioActvityCell : MonoBehaviour
 
         titleText.text = model.Portfolio.title;
 
-        commentText.text = model.comments;
-
         descriptionText.text = model.Portfolio.description;
 
         statusTag.gameObject.SetActive(tabType == ETabType.Altered);
@@ -64,11 +60,8 @@ public class PortfolioActvityCell : MonoBehaviour
     }
 
     public void OnTapAction()
-    {
-        if (tabType == ETabType.Offers)
-        {
-            activityPopUp?.Load(activityModel, OnPopUpClose, tabType);
-        }
+    { 
+        activityPopUp?.Load(activityModel, OnPopUpClose, tabType);
     }
 
     void UpdateStatusTag()

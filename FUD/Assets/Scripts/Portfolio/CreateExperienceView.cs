@@ -33,6 +33,8 @@ public class CreateExperienceView : MonoBehaviour
 
     private bool isShowingGalleryPanel = false;
 
+    private string mediaSource = "portfolio";
+
     List<IndustryModel> industryModels;
 
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
@@ -250,13 +252,13 @@ public class CreateExperienceView : MonoBehaviour
         switch (selectedType)
         {
             case EMediaType.Image:
-                GalleryManager.Instance.PickImages(OnImagesUploaded);
+                GalleryManager.Instance.PickImages(mediaSource, OnImagesUploaded);
                 break;
             case EMediaType.Audio:
-                GalleryManager.Instance.GetAudiosFromGallery(OnAudiosUploaded);
+                GalleryManager.Instance.GetAudiosFromGallery(mediaSource, OnAudiosUploaded);
                 break;
             case EMediaType.Video:
-                GalleryManager.Instance.GetVideosFromGallery(OnVideosUploaded);
+                GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnVideosUploaded);
                 break;
         }
     }
@@ -331,6 +333,8 @@ public class CreateExperienceView : MonoBehaviour
         if (status)
         {
             this.imageUrls = videoUrls;
+
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Video);
 
             for (int i = 0; i < videoUrls.Count; i++)
             {

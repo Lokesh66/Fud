@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+
 
 public class ProjectsDetailedView : MonoBehaviour
 {
@@ -27,6 +29,8 @@ public class ProjectsDetailedView : MonoBehaviour
     }
     #endregion
 
+    public TextMeshProUGUI titleText;
+
     public GameObject parentPanel;
     public GameObject createButton;
 
@@ -47,6 +51,8 @@ public class ProjectsDetailedView : MonoBehaviour
     System.Action OnBackButtonClick;
 
     private Project project;
+
+
     public void SetView(Project projectData, System.Action backAction)
     {
         project = projectData;
@@ -54,6 +60,8 @@ public class ProjectsDetailedView : MonoBehaviour
         OnBackButtonClick = backAction;
         StartCoroutine(UpdateTabPanelView());
         Load();
+
+        titleText.text = projectData.title;
     }
 
     private void Load()
@@ -82,6 +90,7 @@ public class ProjectsDetailedView : MonoBehaviour
 
     public void BackButtonAction()
     {
+        ClearData();
         parentPanel.SetActive(false);
         OnBackButtonClick?.Invoke();
         OnBackButtonClick = null;
@@ -106,5 +115,10 @@ public class ProjectsDetailedView : MonoBehaviour
     public void LoadAuditions()
     {
         tabToggles[3].isOn = true;
+    }
+
+    void ClearData()
+    {
+        tabToggles[0].isOn = true;
     }
 }

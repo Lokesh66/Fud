@@ -35,7 +35,7 @@ public class CharacterView : MonoBehaviour
     {
         titleText.text = characterModel.title;
 
-        castText.text = characterModel.cast_name;
+        castText.text = characterModel.GetCharacterType(characterModel.type);
 
         descriptionText.text = characterModel.description;
 

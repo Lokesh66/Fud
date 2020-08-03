@@ -54,7 +54,10 @@ public class HomeCell : MonoBehaviour
         {
             GameManager.Instance.downLoadManager.DownloadImage(url, (sprite) => {
 
-                iconImage.sprite = sprite;
+                if (this != null)
+                {
+                    iconImage.sprite = sprite;
+                }
             });
         }
     }

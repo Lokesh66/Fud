@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
 
 public class StoriesAlteredPopUpView : MonoBehaviour
 {
@@ -12,6 +11,10 @@ public class StoriesAlteredPopUpView : MonoBehaviour
 
     public GameObject rejectObject;
 
+    public GameObject shareObject;
+
+
+    public StoryShareView shareStoryVersionView;
 
     public VersionMultimediaView multimediaView;
 
@@ -36,11 +39,15 @@ public class StoriesAlteredPopUpView : MonoBehaviour
     {
         int statusValue = isOwnStory ? alteredModel.sender_status : alteredModel.reciever_status;
 
+        EStatusType statusType = (EStatusType)statusValue;
+
+        shareObject.SetActive(statusType == EStatusType.Accepted && !isOwnStory);
+
         rejectObject.SetActive(!isOwnStory);
 
-        acceptObject.SetActive(!isOwnStory && (EStatusType)statusValue != EStatusType.Accepted);
+        acceptObject.SetActive(!isOwnStory && statusType != EStatusType.Accepted);
 
-        shortListObject.SetActive(!isOwnStory && (EStatusType)statusValue != EStatusType.ShortListed);
+        shortListObject.SetActive(!isOwnStory && statusType != EStatusType.ShortListed);
     }
 
 
@@ -49,6 +56,13 @@ public class StoriesAlteredPopUpView : MonoBehaviour
         multimediaView.Load(alteredModel.StoryVersions);
 
         gameObject.SetActive(false);
+    }
+
+    public void OnShareButtonAction()
+    {
+        gameObject.SetActive(false);
+
+        shareStoryVersionView.Load(alteredModel.StoryVersions);
     }
 
     public void OnCancelButtonAction()

@@ -19,8 +19,6 @@ public class StoryCell : MonoBehaviour
 
     public GameObject editObject;
 
-    public Image storyImage;
-
 
     StoryModel storyModel;
 
@@ -75,12 +73,12 @@ public class StoryCell : MonoBehaviour
 
     void SetImage()
     {
-        string imagePath = string.Empty;
+        //string imagePath = string.Empty;
 
-        Texture2D texture = NativeGallery.LoadImageAtPath(imagePath, markTextureNonReadable: false);
+        //Texture2D texture = NativeGallery.LoadImageAtPath(imagePath, markTextureNonReadable: false);
 
-        TextureScale.ThreadedScale(texture, (int)storyImage.rectTransform.rect.width, (int)storyImage.rectTransform.rect.height, true);
+        //TextureScale.ThreadedScale(texture, (int)storyImage.rectTransform.rect.width, (int)storyImage.rectTransform.rect.height, true);
 
-        storyImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+        //storyImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
     }
 }

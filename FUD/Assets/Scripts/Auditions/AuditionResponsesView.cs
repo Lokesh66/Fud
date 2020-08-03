@@ -27,8 +27,6 @@ public class AuditionResponsesView : MonoBehaviour
 
     public void Load(List<SearchAudition> searchAuditions, int auditionId)
     {
-        Debug.Log("ResponseView : Load Called");
-
         this.auditionResponses = searchAuditions;
 
         this.auditionId = auditionId;

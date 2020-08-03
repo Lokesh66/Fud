@@ -159,6 +159,8 @@ public class UserData
     public string profile_image;
     public long phone;
     public int role_id;
+    public string role_name;
+    public string role_category_name;
     public object plan_id;
     public int age;
     public int login_code;
