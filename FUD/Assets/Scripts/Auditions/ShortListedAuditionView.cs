@@ -97,12 +97,13 @@ public class ShortListedAuditionView : MonoBehaviour
         {
             VideoStreamer.Instance.StreamVideo(model.content_url, OnVideoComplete);
         }
-        if (mediaType == EMediaType.Audio)
+        else if (mediaType == EMediaType.Audio)
         {
             AudioStreamer.Instance.AudioStream(model.content_url, OnVideoComplete);
         }
         else
         {
+            //UIManager.Instance.ShowBigScreen(model.content_url);
             buttonsPanel.SetActive(true);
         }
     }
@@ -155,6 +156,8 @@ public class ShortListedAuditionView : MonoBehaviour
 
     void OnVideoComplete()
     {
+        Debug.Log("OnVideo Complete Called : ShortListedView");
+
         buttonsPanel.SetActive(true);
     }
 }

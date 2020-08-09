@@ -125,6 +125,8 @@ public class UserAuditionController : MonoBehaviour
 
         EMediaType mediaType = model.GetMediaType(model.media_type);
 
+        Debug.Log("Meida Type : OnVideoComplete Called");
+
         if (mediaType == EMediaType.Video)
         {
             VideoStreamer.Instance.StreamVideo(model.content_url, OnVideoComplete);
@@ -141,6 +143,8 @@ public class UserAuditionController : MonoBehaviour
 
     void OnVideoComplete()
     {
+        Debug.Log("User Audition Controller : OnVideoComplete Called");
+
         buttonsPanel.SetActive(true);
     }
 

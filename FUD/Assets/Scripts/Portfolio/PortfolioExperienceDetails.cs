@@ -73,7 +73,7 @@ public class PortfolioExperienceDetails : MonoBehaviour
 
     void OnEditButtonAction()
     {
-        updatePortfolioExperiance.Load(experianceModel);
+        updatePortfolioExperiance.Load(experianceModel, OnExperienceUpdate);
     }
 
     void OnDeleteButtonAction()
@@ -85,6 +85,11 @@ public class PortfolioExperienceDetails : MonoBehaviour
                 experianceView.RemovePortfolioExperience(experianceModel);
             }
         });
+    }
+
+    void OnExperienceUpdate(WorkExperianceModel updatedModel)
+    {
+        experianceView.OnUpdateExperience(experianceModel, updatedModel);
     }
 
     void Reset()

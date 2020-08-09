@@ -14,7 +14,11 @@ public class CreateTeamView : MonoBehaviour
 
     public TMP_InputField memberField;
 
+    public TMP_Dropdown accessDropdown;
+
     public GameObject searchCell;
+
+    public GameObject scrollObject;
 
 
     StoryDetailsModel detailsModel;
@@ -47,6 +51,8 @@ public class CreateTeamView : MonoBehaviour
         searchContent.DestroyChildrens();
 
         GameObject cellObject = null;
+
+        scrollObject.SetActive(searchModels.Count != 0);
 
         for (int i = 0; i < searchModels.Count; i++)
         {
@@ -93,7 +99,7 @@ public class CreateTeamView : MonoBehaviour
 
         string members = GetMemberIds(member);
 
-        GameManager.Instance.apiHandler.CreateStoryTeam(detailsModel.id, teamNameField.text, descriptionField.text, members, (status, response) =>
+        GameManager.Instance.apiHandler.CreateStoryTeam(detailsModel.id, teamNameField.text, descriptionField.text, members, accessDropdown.value, (status, response) =>
         {
             if (status)
             {

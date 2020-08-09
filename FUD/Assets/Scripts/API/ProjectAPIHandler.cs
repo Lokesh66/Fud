@@ -12,6 +12,8 @@ public partial class APIHandler
 
         gameManager.StartCoroutine(GetRequest(url, true, (status, response) => {
 
+            Debug.Log("GetProjects : response = " + response);
+
             if (status)
             {
                 ProjectsResponse projectsResponse = JsonUtility.FromJson<ProjectsResponse>(response);

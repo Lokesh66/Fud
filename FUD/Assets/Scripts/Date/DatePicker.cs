@@ -111,6 +111,8 @@ public class DatePicker : MonoBehaviour
         //    yearType = EYearsType.ProjectYears;
         //}
 
+        monthDropDown.value = selectedDate.Month - 1;
+
         PopulateYearsDropDown();
     }
 

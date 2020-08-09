@@ -174,6 +174,9 @@ public class UserData
     public object reffered_by;
     public string device_token;
     public string dob;
+    public string add_proof_identity;
+    public string add_proof_front;
+    public string add_proof_back;
     public DateTime created_date_time;
     public DateTime updatedAt;
     public List<FeaturedModel> UserFeatures;

@@ -35,7 +35,7 @@ public class UpdateExperienceView : MonoBehaviour
 
     string dateDefaultText = "Select Date";
 
-    List<Genre> genres;
+    List<Craft> craftRoles;
 
     List<string> imageUrls;
 
@@ -45,12 +45,16 @@ public class UpdateExperienceView : MonoBehaviour
 
     List<IndustryModel> industryModels;
 
+    Action<WorkExperianceModel> OnUpdate;
+
     private string mediaSource = "portfolio";
 
 
-    public void Load(WorkExperianceModel workModel)
+    public void Load(WorkExperianceModel workModel, Action<WorkExperianceModel> OnUpdate)
     {
         this.workModel = workModel;
+
+        this.OnUpdate = OnUpdate;
 
         gameObject.SetActive(true);
 
@@ -122,13 +126,13 @@ public class UpdateExperienceView : MonoBehaviour
 
     void LoadRoles()
     {
-        genres = DataManager.Instance.genres;
+        craftRoles = DataManager.Instance.crafts;
 
-        Genre requiredGenre = genres.Find(genre => genre.id == workModel.role_id);
+        Craft requiredGenre = craftRoles.Find(genre => genre.id == workModel.role_id);
 
         List<string> options = new List<string>();
 
-        foreach (var option in genres)
+        foreach (var option in craftRoles)
         {
             options.Add(option.name);
         }
@@ -137,7 +141,7 @@ public class UpdateExperienceView : MonoBehaviour
 
         roleDropDown.AddOptions(options);
 
-        roleDropDown.value = genres.IndexOf(requiredGenre);
+        roleDropDown.value = craftRoles.IndexOf(requiredGenre);
     }
 
     void LoadIndustries()
@@ -178,7 +182,7 @@ public class UpdateExperienceView : MonoBehaviour
         {
             string selectedGenreText = roleDropDown.options[roleDropDown.value].text;
 
-            Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
+            Craft selectedGenre = craftRoles.Find(genre => genre.name.Equals(selectedGenreText));
 
             string selectedIndustryText = industryDropDown.options[industryDropDown.value].text;
 
@@ -198,6 +202,7 @@ public class UpdateExperienceView : MonoBehaviour
 
             GameManager.Instance.apiHandler.UpdateWorkExperiance(experianceModel, workModel.id, uploadedDict, (status, response) =>
             {
+                Debug.Log("Updated Experiance : response = " + response);
                 OnAPIResponse(status);
             });
         }

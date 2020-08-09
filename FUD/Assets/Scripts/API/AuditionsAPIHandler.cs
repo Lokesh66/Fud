@@ -153,6 +153,8 @@ public partial class APIHandler
     { 
         gameManager.StartCoroutine(PostRequest(APIConstants.USER_AUDITION, true, parameters, (bool status, string response) => {
 
+            Debug.Log("JoinAudition : response = " + response + " statis = " + status);
+
             if (status)
             {
                 DataManager.Instance.UpdateFeaturedData(EFeatureType.AuditionJoining);

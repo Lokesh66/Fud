@@ -102,7 +102,7 @@ public class StoriesAlteredView : MonoBehaviour
     {
         NoDataModel noDataModel = new NoDataModel();
 
-        noDataModel.subTitle = "No Altered Stories Right Now";
+        noDataModel.subTitle = "No Modified Stories Right Now";
 
         return noDataModel;
     }

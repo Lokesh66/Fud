@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using TMPro;
-
+using System.Collections;
 
 public class StoryCreationView : MonoBehaviour
 {
@@ -130,9 +130,8 @@ public class StoryCreationView : MonoBehaviour
 
             Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
 
-            GameManager.Instance.apiHandler.CreateStory(storyTitleField.text, subTitleField.text, descriptionField.text, titlePosterURL, selectedGenre.id, accessDropdown.value, uploadedDict, (status, response) =>
+            GameManager.Instance.apiHandler.CreateStory(storyTitleField.text, subTitleField.text, descriptionField.text, titlePosterURL, selectedGenre.id, 1 - accessDropdown.value, uploadedDict, (status, response) =>
             {
-
                 if (status)
                 {
                     Debug.Log("Story Uploaded Successfully");
@@ -369,7 +368,7 @@ public class StoryCreationView : MonoBehaviour
             {
                 if (success)
                 {
-                    titlePosterImage.Load(titlePosterURL);
+                    StartCoroutine(UpdateTitlePoster());
                 }
             });
 
@@ -383,6 +382,13 @@ public class StoryCreationView : MonoBehaviour
 
             UIManager.Instance.ShowAlert(alertModel);
         }
+    }
+
+    IEnumerator UpdateTitlePoster()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        titlePosterImage.Load(titlePosterURL);
     }
 
     void ShowGalleryPanel()

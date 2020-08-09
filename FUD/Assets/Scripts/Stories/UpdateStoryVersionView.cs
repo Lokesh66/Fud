@@ -106,7 +106,7 @@ public class UpdateStoryVersionView : MonoBehaviour
 
     void LoadMedia()
     {
-        mediaContent.DestroyChildrens();
+        mediaContent.DestroyChildrens(filesHandler.mediaButtonTrans?.gameObject);
 
         UpdateVersionMediaCell _mediaCell = null;
 

@@ -42,6 +42,13 @@ public class CreateAuditionView : MonoBehaviour
     public TMP_InputField descriptionText;
     public TMP_Text endDateText;
 
+
+    public TMP_Dropdown craftDropdown;
+
+    public TMP_Dropdown roleCatageryDropdown;
+
+
+
     //public Image capturedImage;
 
     public TMP_Text buttonText;
@@ -68,7 +75,13 @@ public class CreateAuditionView : MonoBehaviour
 
     DateTime previousDate;
 
-    System.Action<bool> backAction;
+    List<Craft> craftRoles;
+
+    Craft selectedCraft;
+
+    List<RoleCategeryModel> categeryModels;
+
+    Action<bool> backAction;
 
 
     public void SetView(int projectId, Action<bool> action)
@@ -82,6 +95,57 @@ public class CreateAuditionView : MonoBehaviour
         buttonText.text = "Submit";
 
         filesHandler.mediaButtonTrans.gameObject.SetActive(true);
+
+        PopulateRoleDropdown();
+    }
+
+    void PopulateRoleDropdown()
+    {
+        craftRoles = DataManager.Instance.crafts;
+
+        List<string> options = new List<string>();
+
+        foreach (var option in craftRoles)
+        {
+            options.Add(option.name);
+        }
+
+        craftDropdown.ClearOptions();
+
+        craftDropdown.AddOptions(options);
+
+        OnRoleValueChange();
+    }
+
+    public void OnRoleValueChange()
+    {
+        selectedCraft = craftRoles[craftDropdown.value];
+
+        GameManager.Instance.apiHandler.GetRoleCategeries(selectedCraft.id, (status, response) => {
+
+            RoleCategeryResponse responseModel = JsonUtility.FromJson<RoleCategeryResponse>(response);
+
+            if (status)
+            {
+                categeryModels = responseModel.data;
+
+                UpdateRoleCategeryDropdown();
+            }
+        });
+    }
+
+    void UpdateRoleCategeryDropdown()
+    {
+        List<string> options = new List<string>();
+
+        foreach (var option in categeryModels)
+        {
+            options.Add(option.name);
+        }
+
+        roleCatageryDropdown.ClearOptions();
+
+        roleCatageryDropdown.AddOptions(options);
     }
 
     public void EditView(Audition audition, Action<bool> action)
@@ -244,6 +308,11 @@ public class CreateAuditionView : MonoBehaviour
         descriptionText.Select();
     }
 
+    public void OnCraftRoleButtonAction()
+    {
+        craftDropdown.Select();
+    }
+
     #endregion
 
     void OnImagesUploaded(bool status, List<string> imagesList)
@@ -355,6 +424,9 @@ public class CreateAuditionView : MonoBehaviour
         parameters.Add("description", descriptionText.text);
         parameters.Add("age_from", Convert.ToInt16(ageFromText.text));
         parameters.Add("age_to", Convert.ToInt16(ageToText.text));
+        parameters.Add("role_id", selectedCraft.id);
+        parameters.Add("role_category_id", categeryModels[roleCatageryDropdown.value].id);
+
 
         string auditionType = typeDropdown.captionText.text.ToLower();
         parameters.Add("type", auditionType);// "group","individual");

@@ -25,14 +25,9 @@ public class CreatedPortfolioView : MonoBehaviour
 
         for (int i = 0; i < portfolioModel.PortfolioMedia.Count; i++)
         {
-            EMediaType mediaType = DataManager.Instance.GetMediaType(portfolioModel.PortfolioMedia[i].media_type);
+            GameObject mediaObject = Instantiate(mediaCell, content);
 
-            if (mediaType == EMediaType.Image)
-            {
-                GameObject mediaObject = Instantiate(mediaCell, content);
-
-                mediaObject.GetComponent<CreatedPortfolioMediaCell>().SetView(portfolioModel.PortfolioMedia[i], OnDeleteAction);
-            }
+            mediaObject.GetComponent<CreatedPortfolioMediaCell>().SetView(portfolioModel.PortfolioMedia[i], OnDeleteAction);
         }
     }
 

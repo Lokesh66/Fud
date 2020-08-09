@@ -1,12 +1,14 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
+
 
 public class StoryTeamDetails : MonoBehaviour
 {
     public TextMeshProUGUI titleText;
 
     public UpdateTeamView updateTeamView;
+
+    public StoryTeamDetailView detailView;
 
 
     StoryTeamModel teamModel;
@@ -45,12 +47,22 @@ public class StoryTeamDetails : MonoBehaviour
             case 2:
                 OnCancelButtonAction();
                 break;
+            case 3:
+                OnViewButtonAction();
+                break;
         }
     }
 
     void OnCancelButtonAction()
     {
         Reset();
+
+        gameObject.SetActive(false);
+    }
+
+    void OnViewButtonAction()
+    {
+        detailView.Load(teamModel);
 
         gameObject.SetActive(false);
     }

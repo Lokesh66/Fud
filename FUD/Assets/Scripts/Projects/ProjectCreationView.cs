@@ -55,7 +55,7 @@ public class ProjectCreationView : MonoBehaviour
 
     List<ProjectStory> stories = new List<ProjectStory>();
 
-    public void SetView(List<ProjectStory> stories, System.Action<bool> action)
+    public void SetView(List<ProjectStory> stories, Action<bool> action)
     {
         this.stories = stories;
 

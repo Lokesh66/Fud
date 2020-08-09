@@ -9,7 +9,7 @@ using System.IO;
 public class LeftMenu : MonoBehaviour
 {
     public SettingsPanel settingsPanel;
-    public MyProfilePanel profilePanel;
+    public ProfileView profileView;
     public SubscriptionController subscriptionController;
 
     public Image profileIcon;
@@ -64,7 +64,7 @@ public class LeftMenu : MonoBehaviour
 
     public void ProfileButtonAction()
     {
-        profilePanel.SetView();
+        profileView.Load();
     }
 
     public void OnBasicInfoButtonAction()

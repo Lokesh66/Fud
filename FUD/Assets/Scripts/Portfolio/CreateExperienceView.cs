@@ -29,7 +29,7 @@ public class CreateExperienceView : MonoBehaviour
 
     PortfolioView portfolioView = null;
 
-    List<Genre> genres;
+    List<Craft> craftRoles;
 
     private bool isShowingGalleryPanel = false;
 
@@ -62,11 +62,11 @@ public class CreateExperienceView : MonoBehaviour
 
     void LoadRoles()
     {
-        genres = DataManager.Instance.genres;
+        craftRoles = DataManager.Instance.crafts;
 
         List<string> options = new List<string>();
 
-        foreach (var option in genres)
+        foreach (var option in craftRoles)
         {
             options.Add(option.name);
         }
@@ -103,7 +103,7 @@ public class CreateExperienceView : MonoBehaviour
         {
             string selectedGenreText = roleDropDown.options[roleDropDown.value].text;
 
-            Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
+            Craft selectedGenre = craftRoles.Find(genre => genre.name.Equals(selectedGenreText));
 
             string selectedIndustryText = industryDropDown.options[industryDropDown.value].text;
 
@@ -123,7 +123,6 @@ public class CreateExperienceView : MonoBehaviour
 
             GameManager.Instance.apiHandler.CreateWorkExperiance(experianceModel, uploadedDict, (status, response) =>
             {
-
                 if (status)
                 {
 

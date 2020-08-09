@@ -114,6 +114,8 @@ public class ProfileInfoView : MonoBehaviour
             PopulateDropdown();
 
             SetImage();
+
+            UpdateAddressProofs();
         }
     }
 
@@ -153,6 +155,19 @@ public class ProfileInfoView : MonoBehaviour
                 profileImage.sprite = sprite;
             });
         }
+    }
+
+    void UpdateAddressProofs()
+    {
+        GameManager.Instance.downLoadManager.DownloadImage(data.add_proof_front, (sprite) =>
+        {
+            frontAddressProof.sprite = sprite;
+        });
+
+        GameManager.Instance.downLoadManager.DownloadImage(data.add_proof_back, (sprite) =>
+        {
+            backAddressProof.sprite = sprite;
+        });
     }
 
     public void OnNameSelection()

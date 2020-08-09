@@ -33,7 +33,10 @@ public class UploadedFileCell : MonoBehaviour
 
             GameManager.Instance.downLoadManager.DownloadImage(imagePath, (sprite) => {
 
-                selectedImage.sprite = sprite;
+                if (this != null)
+                {
+                    selectedImage.sprite = sprite;
+                }
             });
         }
         else {
@@ -54,5 +57,10 @@ public class UploadedFileCell : MonoBehaviour
         {
             UIManager.Instance.ShowBigScreen(imageURL);
         }
+    }
+
+    public void OnDeleteButtonAction()
+    {
+
     }
 }

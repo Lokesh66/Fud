@@ -145,6 +145,8 @@ public class ProjectHandler : MonoBehaviour
 
     void GetAllProjects()
     {
+        Debug.Log("GetAllProjects Called");
+
         noDataView.gameObject.SetActive(false);
 
         GameManager.Instance.apiHandler.GetProjects(pageNo, (status, projectsResponse) => {
@@ -161,6 +163,8 @@ public class ProjectHandler : MonoBehaviour
 
                     pageNo = 1;
                 }
+
+                Debug.Log("GetAllProjects = isInitialized : " + isInitialized + " Name = " + gameObject.name);
 
                 if (!isInitialized)
                 {
@@ -227,8 +231,6 @@ public class ProjectHandler : MonoBehaviour
                     {
                         ProjectCreationView.Instance.SetView(stories.data, (isProjectAdded) =>
                         {
-                            Debug.Log("isProjectAdded = " + isProjectAdded);
-
                             if (isProjectAdded)
                             {
                                 GetAllProjects();

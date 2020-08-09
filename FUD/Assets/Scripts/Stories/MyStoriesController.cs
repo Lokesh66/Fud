@@ -12,6 +12,8 @@ public class MyStoriesController : BaseView
 
     public MyStoriesView storiesView;
 
+    public MyStoriesBrowseView browserView;
+
     public TextMeshProUGUI[] buttonsList;
 
     public GameObject addObject;
@@ -63,11 +65,6 @@ public class MyStoriesController : BaseView
     
     }
 
-    void ShowOffersScreen()
-    {
-        activitiesView.EnableView();
-    }
-
     void ShowAlteredScreen()
     { 
     
@@ -114,6 +111,11 @@ public class MyStoriesController : BaseView
             case ETabType.Created:
                 currentObject = storiesView.gameObject;
                 storiesView.EnableView(this);
+                break;
+
+            case ETabType.Browser:
+                currentObject = browserView.gameObject;
+                browserView.EnableView(this);
                 break;
         }
     }

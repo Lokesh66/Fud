@@ -63,8 +63,6 @@ public class DownLoadManager : MonoBehaviour
             {
                 string path = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, Path.GetFileName(imageurl));
 
-                Debug.Log("Path = " + path);
-
                 Sprite profileSprite = Sprite.Create(www.texture, new Rect(0f, 0f, www.texture.width, www.texture.height), new Vector2(0.5f, 0f));//creates sprite from the texture of the image
                 CallBack(profileSprite);
                 byte[] texByte = www.texture.EncodeToPNG();//to convert texture to png

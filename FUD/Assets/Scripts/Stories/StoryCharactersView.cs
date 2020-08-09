@@ -78,9 +78,12 @@ public class StoryCharactersView : MonoBehaviour
     {
         gameObject.SetActive(true);
 
-        GameObject characterObject = Instantiate(cellCache, content);
+        if (characterModel != null)
+        {
+            GameObject characterObject = Instantiate(cellCache, content);
 
-        characterObject.GetComponent<StoryCharacterCell>().Load(characterModel, OnCellButtonAction);
+            characterObject.GetComponent<StoryCharacterCell>().Load(characterModel, OnCellButtonAction);
+        }
 
         noDataView.gameObject.SetActive(characterModels?.Count == 0);
     }

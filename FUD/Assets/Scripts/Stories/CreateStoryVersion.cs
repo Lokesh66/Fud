@@ -221,6 +221,8 @@ public class CreateStoryVersion : MonoBehaviour
         {
             this.imageUrls = audioUrls;
 
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+
             for (int i = 0; i < audioUrls.Count; i++)
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();

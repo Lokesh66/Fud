@@ -1,19 +1,23 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using TMPro;
+
 
 public class ProjectStoriesPanel : MonoBehaviour
 {
+    public RectTransform mediaContent;
+
+    public GameObject mediaCell;
+
     public TMP_Text storyLineText;
     public TMP_Text descriptionText;
     public TMP_Text genreText;
-    public TMP_Text typeText;
-    public TMP_Text versionsText;
 
-    public GameObject moreStoriesPanel;
-    public TMP_Text moreStoriesText;
 
-    public Transform parentContent;
-    public GameObject storyCell;
+    List<MultimediaModel> mediaList;
+
+    List<VersionMediaCell> cellsList = new List<VersionMediaCell>();
+
 
     public void SetData(StoryVersion storyVersion)
     {
@@ -23,5 +27,49 @@ public class ProjectStoriesPanel : MonoBehaviour
         {
             genreText.text = genre.name;
         }
+
+        mediaList = storyVersion.Multimedia;
+
+        LoadMedia();
+    }
+
+    void LoadMedia()
+    {
+        mediaContent.DestroyChildrens();
+
+        VersionMediaCell _mediaCell = null;
+
+        cellsList.Clear();
+
+        for (int i = 0; i < mediaList.Count; i++)
+        {
+            GameObject mediaObject = Instantiate(mediaCell, mediaContent);
+
+            _mediaCell = mediaObject.GetComponent<VersionMediaCell>();
+
+            _mediaCell.SetView(mediaList[i]);
+
+            cellsList.Add(_mediaCell);
+        }
+
+        if (mediaList.Count > 0)
+        {
+            SetVideoThumbnails(0);
+        }
+    }
+
+    void SetVideoThumbnails(int index)
+    {
+        cellsList[index].SetVideoThumbnail(() => {
+
+            index++;
+
+            if (index >= mediaList.Count)
+            {
+                return;
+            }
+
+            SetVideoThumbnails(index);
+        });
     }
 }

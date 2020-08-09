@@ -85,6 +85,12 @@ public class StoryActivitiesView : MonoBehaviour
     {
         activityModels.Remove(activityModel);
 
+        tableView.Data.Clear();
+
+        tableView.Data.Add(activityModels.Count);
+
+        tableView.Refresh();
+
         noDataObject.SetActive(activityModels.Count == 0);
     }
 

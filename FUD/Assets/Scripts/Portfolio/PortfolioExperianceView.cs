@@ -65,4 +65,15 @@ public class PortfolioExperianceView : MonoBehaviour
 
         experianceModels.Remove(experienceModel);
     }
+
+    public void OnUpdateExperience(WorkExperianceModel oldModel, WorkExperianceModel newModel)
+    {
+        int modelIndex = experianceModels.IndexOf(oldModel);
+
+        experianceModels.Remove(oldModel);
+
+        experianceModels.Insert(modelIndex, newModel);
+
+        content.GetChild(modelIndex).GetComponent<ExperianceCell>().Load(newModel, OnCellButtonAction);
+    }
 }

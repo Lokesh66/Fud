@@ -82,8 +82,8 @@ public class WorkExperienceDetailView : MonoBehaviour
             {
                 _imageURls[i] = experianceModel.WorkExpMedia[i].content_url;
             }
-
-            filesHandler.Load(_imageURls, true);
         }
+
+        filesHandler.Load(_imageURls, true);
     }
 }

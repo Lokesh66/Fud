@@ -31,6 +31,8 @@ public class APIConstants
 
     public const string CREATE_STORY = BASE_URL + "v1/story/";
 
+    public const string GET_PUBLIC_STORIES = BASE_URL + "v1/publicStories";
+
     public const string CREATE_PROJECT = BASE_URL + "v1/projects/";
 
     public const string GET_AUDITION_PROJECTS = BASE_URL + "created";
@@ -52,6 +54,8 @@ public class APIConstants
     public const string GET_PROJECT_CHARACTERS = BASE_URL + "v1/getStoryCharactersByProject";
 
     public const string STORY_DETAILS = BASE_URL + "v1/searchStory/";
+
+    public const string GET_PUBLIC_STORY_DETAILS = BASE_URL + "v1/searchPublicStory/";
 
     public const string STORY_VERSION_DETAILS = BASE_URL + "v1/searchStoryVersion/";
 

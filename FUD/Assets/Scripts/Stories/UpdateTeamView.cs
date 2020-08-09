@@ -16,7 +16,11 @@ public class UpdateTeamView : MonoBehaviour
 
     public TMP_InputField memberField;
 
+    public TMP_Dropdown accessDropdown;
+
     public GameObject searchCell;
+
+    public GameObject scrollObject;
 
 
     UserSearchModel selectedModel;
@@ -90,6 +94,8 @@ public class UpdateTeamView : MonoBehaviour
 
         GameObject cellObject = null;
 
+        scrollObject.SetActive(searchModels.Count != 0);
+
         for (int i = 0; i < searchModels.Count; i++)
         {
             cellObject = Instantiate(searchCell, searchContent);
@@ -143,7 +149,7 @@ public class UpdateTeamView : MonoBehaviour
 
         string title = StoryDetailsController.Instance.GetStoryTitle();
 
-        GameManager.Instance.apiHandler.UpdateStoryTeam(teamModel.story_id, title, teamModel.id, descriptionField.text, members, (status, response) =>
+        GameManager.Instance.apiHandler.UpdateStoryTeam(teamModel.story_id, title, teamModel.id, descriptionField.text, members, accessDropdown.value, (status, response) =>
         {
             if (status)
             {

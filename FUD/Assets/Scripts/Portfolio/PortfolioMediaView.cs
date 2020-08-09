@@ -15,7 +15,12 @@ public class PortfolioMediaView : MonoBehaviour
     public PortfolioMediaTableView tableView;
 
 
+    public GameObject noDataObject;
+
+
     PortfolioModel selectedModel;
+
+    bool isInitialized = false;
 
 
     [HideInInspector]
@@ -46,7 +51,24 @@ public class PortfolioMediaView : MonoBehaviour
                 pageNo = 1;
             }
 
+            if (!isInitialized)
+            {
+                tableView.gameObject.SetActive(true);
+
+                isInitialized = true;
+            }
+            else
+            {
+                tableView.Data.Clear();
+
+                tableView.Data.Add(portfolioModels.Count);
+
+                tableView.Refresh();
+            }
+
             tableView.gameObject.SetActive(true);
+
+            noDataObject.SetActive(portfolioModels.Count == 0);
         });
     }
 

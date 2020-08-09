@@ -297,13 +297,20 @@ public class StoryDetailsController : MonoBehaviour
 
     public void UpdataCharacters(StoryCharacterModel characterModel)
     {
-        currentDetailsModel.StoryCharacters.Add(characterModel);
+        currentObject?.SetActive(true);
+
+        if (characterModel != null)
+        {
+            currentDetailsModel.StoryCharacters.Add(characterModel);
+        }
 
         charactersView.Refresh(characterModel);
     }
 
     public void UpdateTeams(StoryTeamModel teamModel)
     {
+        currentObject?.SetActive(true);
+
         currentDetailsModel.Myteam.Add(teamModel);
 
         teamsView.Refresh(teamModel);

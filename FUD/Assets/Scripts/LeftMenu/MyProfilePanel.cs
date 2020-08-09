@@ -12,14 +12,18 @@ public class MyProfilePanel : MonoBehaviour
     public TMP_Text emailText;
     public TMP_Text contactText;
     public TMP_Text roleText;
-    public TMP_Text primarySkillsText;
-    public TMP_Text secondarySkillsText;
+    public TMP_Text aadherText;
 
     public TMP_Text roleCategeryText;
 
 
     public ProfileInfoView infoView;
 
+
+    public void Load()
+    {
+        SetView();
+    }
 
     public void SetView()
     {
@@ -36,9 +40,9 @@ public class MyProfilePanel : MonoBehaviour
             emailText.text = data.email_id;
             contactText.text = data.phone.ToString();
             roleText.text = selectedGenre.name;
-            primarySkillsText.text = "";
-            secondarySkillsText.text = "";
+
             roleCategeryText.text = data.role_category_name;
+            aadherText.text = data.add_proof_identity;
         }
         gameObject.SetActive(true);
 

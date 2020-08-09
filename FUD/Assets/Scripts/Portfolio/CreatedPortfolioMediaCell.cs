@@ -30,7 +30,10 @@ public class CreatedPortfolioMediaCell : MonoBehaviour
         {
             GameManager.Instance.downLoadManager.DownloadImage(albumModel.content_url, (sprite) =>
             {
-                albumImage.sprite = sprite;
+                if (this != null)
+                {
+                    albumImage.sprite = sprite;
+                }
             });
         }
     }

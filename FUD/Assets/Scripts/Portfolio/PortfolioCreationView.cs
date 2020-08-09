@@ -93,7 +93,7 @@ public class PortfolioCreationView : MonoBehaviour
         {
             return;
         }
-        GameManager.Instance.apiHandler.CreatePortfolio(titleField.text, descriptionField.text, accessDropDown.value, uploadedDict, (status, response) => {
+        GameManager.Instance.apiHandler.CreatePortfolio(titleField.text, descriptionField.text, 1 - accessDropDown.value, uploadedDict, (status, response) => {
 
             OnAPIResponse(status, response);
         });
@@ -175,6 +175,8 @@ public class PortfolioCreationView : MonoBehaviour
     {
         if (status)
         {
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+
             for (int i = 0; i < audioUrls.Count; i++)
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();

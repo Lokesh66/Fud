@@ -30,6 +30,31 @@ public partial class APIHandler
         }));
     }
 
+    public void GetAllPublicStories(int pageNo, Action<bool, List<StoryModel>> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        string url = APIConstants.GET_PUBLIC_STORIES;
+
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
+
+            Debug.Log("API Response = " + response);
+
+            if (status)
+            {
+                StoriesResponse stories = JsonUtility.FromJson<StoriesResponse>(response);
+                action?.Invoke(true, stories.data);
+            }
+            else
+            {
+                action?.Invoke(false, null);
+            }
+
+        }));
+    }
+
     public void CreateStory(string title, string subTitle, string description, string posterURL, int genreId, int accessValue, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -117,6 +142,18 @@ public partial class APIHandler
         parameters.Add("story_id", storyId);
 
         gameManager.StartCoroutine(PostRequest(APIConstants.STORY_DETAILS, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void GetPublicStoryDetails(int storyId, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("story_id", storyId);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.GET_PUBLIC_STORY_DETAILS, true, parameters, (status, response) => {
 
             action(status, response);
         }));
@@ -306,7 +343,7 @@ public partial class APIHandler
         }));
     }
 
-    public void CreateStoryTeam(int story_id, string title, string description, string members, Action<bool, string> action)
+    public void CreateStoryTeam(int story_id, string title, string description, string members, int accessValue, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -316,6 +353,8 @@ public partial class APIHandler
 
         parameters.Add("description", description);
 
+        parameters.Add("access_modifier", accessValue);
+
         parameters.Add("members", members);
 
         gameManager.StartCoroutine(PostRequest(APIConstants.UPDATE_STORY_TEAM, true, parameters, (status, response) => {
@@ -324,7 +363,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateStoryTeam(int story_id, string title, int teamId, string description, string members, Action<bool, string> action)
+    public void UpdateStoryTeam(int story_id, string title, int teamId, string description, string members, int accessValue, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -335,6 +374,8 @@ public partial class APIHandler
         parameters.Add("title", title);
 
         parameters.Add("description", description);
+
+        parameters.Add("access_modifier", accessValue);
 
         parameters.Add("members", members);
 
@@ -947,6 +988,12 @@ public class RoleCategeryModel
 public class RoleCategeryResponse : BaseResponse 
 {
     public List<RoleCategeryModel> data;
+}
+
+[Serializable]
+public class StoryBrowseDetailResponse : BaseResponse
+{
+    public StoryActivityModel data;
 }
 
 public class CreateCharacterModel

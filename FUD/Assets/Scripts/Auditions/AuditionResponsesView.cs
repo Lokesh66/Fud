@@ -68,7 +68,7 @@ public class AuditionResponsesView : MonoBehaviour
         {
             VideoStreamer.Instance.StreamVideo(model.content_url, OnVideoComplete);
         }
-        if (mediaType == EMediaType.Audio)
+        else if (mediaType == EMediaType.Audio)
         {
             AudioStreamer.Instance.AudioStream(model.content_url, OnVideoComplete);
         }
@@ -126,6 +126,8 @@ public class AuditionResponsesView : MonoBehaviour
 
     void OnVideoComplete()
     {
+        Debug.Log("OnVideo Complete Called : AuditionResponsesView");
+
         buttonsPanel.SetActive(true);
     }
 }

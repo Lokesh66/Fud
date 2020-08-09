@@ -24,25 +24,34 @@ public class UploadedFilesHandler : MonoBehaviour
 
         UploadedFileCell fileCell = null;
 
-        for (int i = 0; i < paths.Length; i++)
+        foreach (var path in paths)
         {
-            GameObject cellObject = Instantiate(cellCache, content);
+            if (path.IsNOTNullOrEmpty())
+            {
+                GameObject cellObject = Instantiate(cellCache, content);
 
-            fileCell = cellObject.GetComponent<UploadedFileCell>();
+                fileCell = cellObject.GetComponent<UploadedFileCell>();
 
-            fileCell.Load(paths[i], isDownloadedFile, mediaType);
+                fileCell.Load(path, isDownloadedFile, mediaType);
+            }
         }
 
-        mediaButtonTrans?.gameObject.SetActive(!isSingleImage);
+        if (mediaButtonTrans != null)
+        {
+            mediaButtonTrans.gameObject.SetActive(!isSingleImage);
 
-        mediaButtonTrans?.SetAsLastSibling();
+            mediaButtonTrans.SetAsLastSibling();
+        }
     }
 
     private void OnDisable()
     {
         if (mediaButtonTrans != null)
         {
-            content.DestroyChildrens(mediaButtonTrans?.gameObject);
+            content.DestroyChildrens(mediaButtonTrans.gameObject);
+        }
+        else {
+            content.DestroyChildrens();
         }
     }
 }

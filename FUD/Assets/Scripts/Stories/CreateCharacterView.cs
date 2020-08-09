@@ -195,6 +195,8 @@ public class CreateCharacterView : MonoBehaviour
 
     public void OnBackButtonAction()
     {
+        OnCreateCharacter?.Invoke(null);
+
         Destroy(gameObject);
     }
 

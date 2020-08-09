@@ -24,7 +24,7 @@ public class AllPlansView : MonoBehaviour
 
     List<SubscriptionModel> modelsList = null;
 
-    List<Genre> genres;
+    List<Craft> craftRoles;
 
     string selectedRole = string.Empty;
 
@@ -60,9 +60,9 @@ public class AllPlansView : MonoBehaviour
         {
             selectedRole = roleDropDown.captionText.text;
 
-            Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedRole));
+            Craft selectedCraft = craftRoles.Find(genre => genre.name.Equals(selectedRole));
 
-            roleId = selectedGenre.id.ToString();
+            roleId = selectedCraft.id.ToString();
 
             Load();
         }
@@ -176,11 +176,11 @@ public class AllPlansView : MonoBehaviour
 
     void ShowRoleDropDown()
     {
-        genres = DataManager.Instance.genres;
+        craftRoles = DataManager.Instance.crafts;
 
         List<string> options = new List<string>();
 
-        foreach (var option in genres)
+        foreach (var option in craftRoles)
         {
             options.Add(option.name);
         }
