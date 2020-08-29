@@ -60,6 +60,11 @@ public class AuditionResponsesView : MonoBehaviour
     {
         selectedAudition = audition;
 
+        buttonsPanel.SetActive(true);
+    }
+
+    public void OnPlayButtonAction()
+    {
         MultimediaModel model = selectedAudition.UserAuditionMultimedia[0];
 
         EMediaType mediaType = model.GetMediaType(model.media_type);
@@ -74,7 +79,8 @@ public class AuditionResponsesView : MonoBehaviour
         }
         else
         {
-            buttonsPanel.SetActive(true);
+            UIManager.Instance.ShowBigScreen(model.content_url);
+            //buttonsPanel.SetActive(true);
         }
     }
 
@@ -128,6 +134,6 @@ public class AuditionResponsesView : MonoBehaviour
     {
         Debug.Log("OnVideo Complete Called : AuditionResponsesView");
 
-        buttonsPanel.SetActive(true);
+        //buttonsPanel.SetActive(true);
     }
 }

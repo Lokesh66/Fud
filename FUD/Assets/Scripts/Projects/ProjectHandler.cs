@@ -28,6 +28,9 @@ public class ProjectHandler : MonoBehaviour
     public ProjectOfferedFilterView offeredFilterView;
 
 
+    public ProjectCreatedDetailsView detailsView;
+
+
     [HideInInspector]
     public List<Project> projectModels;
 
@@ -200,15 +203,7 @@ public class ProjectHandler : MonoBehaviour
     {
         if (tabType == ETabType.Created)
         {
-            GameManager.Instance.apiHandler.GetProjectDetails(project.id, (status, projectDetail) =>
-            {
-                if (status)
-                {
-                    ProjectsDetailedView.Instance.SetView(projectDetail, () =>
-                    {
-                    });
-                }
-            });
+            detailsView.Load(project);
         }
     }
 

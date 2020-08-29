@@ -5,9 +5,16 @@ using TMPro;
 
 public class PortfolioOfferedDetailView : MonoBehaviour
 {
-    public TextMeshProUGUI titleText;
+    public TextMeshProUGUI nameText;
 
-    public TextMeshProUGUI descripionText;
+    public TextMeshProUGUI phoneText;
+
+    public TextMeshProUGUI roleText;
+
+    public TextMeshProUGUI roleCategoryText;
+
+    public TextMeshProUGUI mailText;
+
 
     public GameObject mediaCell;
 
@@ -23,17 +30,36 @@ public class PortfolioOfferedDetailView : MonoBehaviour
 
     public void Load(PortfolioActivityModel activityModel)
     {
-        this.activityModel = activityModel;
+        GameManager.Instance.apiHandler.GetPortfolioProfileInfo(activityModel.portfolio_id, (status, response) => {
 
-        gameObject.SetActive(true);
+            PortfolioPostResponse responseModel = JsonUtility.FromJson<PortfolioPostResponse>(response);
 
-        titleText.text = activityModel.Portfolio.title;
+            if (responseModel != null)
+            {
+                this.activityModel = responseModel.data[0];
 
-        descripionText.text = activityModel.Portfolio.description;
+                gameObject.SetActive(true);
 
-        mediaList = activityModel.Portfolio.PortfolioMedia;
+                mediaList = activityModel.Portfolio.PortfolioMedia;
 
-        LoadMedia();
+                SetView();
+
+                LoadMedia();
+            }
+        });
+    }
+
+    void SetView()
+    {
+        nameText.text = activityModel.Users.name;
+
+        phoneText.text = activityModel.Users.phone.ToString();
+
+        roleText.text = activityModel.Users.Craftroles.name;
+
+        roleCategoryText.text = activityModel.Users.RoleCategories.name;
+
+        mailText.text = activityModel.Users.email_id;
     }
 
     void LoadMedia()

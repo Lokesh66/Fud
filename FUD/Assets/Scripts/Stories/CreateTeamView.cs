@@ -167,8 +167,6 @@ public class CreateTeamView : MonoBehaviour
 
     void OnSelectMember(object _selectedModel)
     {
-        Debug.Log("OnSelectMember Called");
-
         this.selectedModel = _selectedModel as UserSearchModel;
 
         if (!inputData.Contains(selectedModel.name))
@@ -182,9 +180,11 @@ public class CreateTeamView : MonoBehaviour
             inputData = memberField.text;
 
             keyword = string.Empty;
-
-            searchContent.DestroyChildrens();
         }
+        else {
+            memberField.text = inputData;
+        }
+        searchContent.DestroyChildrens();
     }
 
     void GetSearchedUsers()

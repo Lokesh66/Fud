@@ -67,6 +67,18 @@ public partial class APIHandler
         }));
     }
 
+    public void GetPortfolioProfileInfo(int portfolioId, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("portfolio_id", portfolioId);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.GET_PORTFOLIO_INFO, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
     public void CreateWorkExperiance(CreateExperianceModel experianceModel, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -257,13 +269,25 @@ public partial class APIHandler
 
         url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
-        parameters.Add("role_id", roleId);
+        if (!roleId.Equals(-1))
+        {
+            parameters.Add("role_id", roleId);
+        }
 
-        parameters.Add("sortBy", sortId);
+        if (!sortId.Equals(-1))
+        {
+            parameters.Add("sortBy", sortId);
+        }
 
-        parameters.Add("status", statusId);
+        if (!statusId.Equals(-1))
+        {
+            parameters.Add("status", statusId);
+        }
 
-        parameters.Add("sortOrder", orderId);
+        if (!orderId.Equals(-1))
+        {
+            parameters.Add("sortOrder", orderId);
+        }
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
 
@@ -279,15 +303,23 @@ public partial class APIHandler
 
         url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
-        parameters.Add("gender", gender);
+        if (gender.IsNOTNullOrEmpty())
+        {
+            parameters.Add("gender", gender);
+        }
+
+        if (!sortId.Equals(-1))
+        {
+            parameters.Add("sortBy", sortId);
+        }
+        if (!orderById.Equals(-1))
+        {
+            parameters.Add("sortOrder", orderById);
+        }
 
         parameters.Add("age_from", ageFrom);
 
         parameters.Add("age_to", ageTo);
-
-        parameters.Add("sortBy", sortId);
-
-        parameters.Add("sortOrder", orderById);
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
 
@@ -541,6 +573,7 @@ public class PortfolioMediaModel
     public string description;
     public DateTime created_date_time;
     public DateTime updatedAt;
+    public ActivityOwnerModel Users;
     public List<PortfolioAlbumModel> PortfolioMedia;
 }
 
@@ -558,6 +591,7 @@ public class PortfolioActivityModel
     public string comments;
     public DateTime created_date_time;
     public DateTime updatedAt;
+    public UserData Users;
     public PortfolioMediaModel Portfolio;
 }
 
@@ -565,6 +599,14 @@ public class PortfolioActivityModel
 public class PortfolioPostResponse : BaseResponse
 {
     public List<PortfolioActivityModel> data;
+}
+
+[Serializable]
+public class ActivityOwnerModel
+{
+    public int id;
+    public string name;
+    public string profile_image;
 }
 
 

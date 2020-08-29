@@ -55,6 +55,33 @@ public partial class APIHandler
         }));
     }
 
+    public void GetAllHistories(int pageNo, int storyId, Action<bool, List<StoryModel>> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        string url = APIConstants.GET_HISTORY_STORIES;
+
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
+
+        parameters.Add("story_id", storyId);
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
+
+            Debug.Log("API Response = " + response);
+
+            if (status)
+            {
+                StoriesResponse stories = JsonUtility.FromJson<StoriesResponse>(response);
+                action?.Invoke(true, stories.data);
+            }
+            else
+            {
+                action?.Invoke(false, null);
+            }
+
+        }));
+    }
+
     public void CreateStory(string title, string subTitle, string description, string posterURL, int genreId, int accessValue, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -142,6 +169,22 @@ public partial class APIHandler
         parameters.Add("story_id", storyId);
 
         gameManager.StartCoroutine(PostRequest(APIConstants.STORY_DETAILS, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void GetStoryHistories(int pageNo, int storyId, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        string url = APIConstants.GET_HISTORY_STORIES;
+
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
+
+        parameters.Add("story_id", storyId);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.GET_HISTORY_STORIES, true, parameters, (status, response) => {
 
             action(status, response);
         }));
@@ -483,15 +526,24 @@ public partial class APIHandler
         }));
     }
 
-    public void ApplyStoryOfferedFilter(int sortId, int roleId, int orderBy, Action<bool, List<StoryActivityModel>> action)
+    public void ApplyStoryOfferedFilter(int roleId, int sortId, int orderBy, Action<bool, List<StoryActivityModel>> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        parameters.Add("role_id", roleId);
+        if (!roleId.Equals(-1))
+        {
+            parameters.Add("role_id", roleId);
+        }
 
-        parameters.Add("sortBy", sortId);
+        if (!sortId.Equals(-1))
+        {
+            parameters.Add("sortBy", sortId);
+        }
 
-        parameters.Add("sortOrder", orderBy);
+        if (!orderBy.Equals(-1))
+        {
+            parameters.Add("sortOrder", orderBy);
+        }
 
         string url = APIConstants.GET_STORY_POSTS;
 
@@ -509,11 +561,18 @@ public partial class APIHandler
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        parameters.Add("sortBy", sortId);
-
-        parameters.Add("status", statusId);
-
-        parameters.Add("sortOrder", orderId);
+        if (!sortId.Equals(-1))
+        {
+            parameters.Add("sortBy", sortId);
+        }
+        if (!statusId.Equals(-1))
+        {
+            parameters.Add("status", statusId);
+        }
+        if (!orderId.Equals(-1))
+        {
+            parameters.Add("sortOrder", orderId);
+        }
 
         string url = APIConstants.GET_ALTERED_STORIES;
 
@@ -651,6 +710,7 @@ public class StoryDetailsModel
     public List<StoryVersion> StoryVersions;
     public List<StoryCharacterModel> StoryCharacters;
     public List<StoryTeamModel> Myteam;
+    public List<StoryHistoryModel> StoryTrack;
     public StoryDetailsController.EScreenSubType currentTab = 0;
 
     public DetailsScreenModel screenModel;
@@ -675,12 +735,28 @@ public class StoryCharacterModel
     public string gender;
     public DateTime created_date_time;
     public DateTime updatedAt;
-
+    public CraftRoleModel Craftroles;
+    public RoleCategoryModel RoleCategories;
+    public ActivityOwnerModel UserInfo;
 
     public string GetCharacterType(int castId)
     {
         return castId > 0 ? "crew" : "cast";
     }
+}
+
+[Serializable]
+public class CraftRoleModel
+{
+    public int id;
+    public string name;
+}
+
+[Serializable]
+public class RoleCategoryModel
+{
+    public int id;
+    public string name;
 }
 
 [Serializable]
@@ -696,6 +772,20 @@ public class StoryTeamModel
     public string title;
     public DateTime updatedAt;
     public List<TeamMembersItem> TeamMembers;
+}
+
+[Serializable]
+public class StoryHistoryModel
+{
+    public int id;
+    public int story_id;
+    public int from_user;
+    public object to_user;
+    public int creator_id;
+    public string activity;
+    public object created_date_time;
+    public int updated_date_time;
+    public ActivityOwnerModel fromUser;
 }
 
 [Serializable]
@@ -780,11 +870,9 @@ public class MultiMediaResponse : BaseResponse
 }
 
 [Serializable]
-public class UserSearchModel
+public class UserSearchModel : ActivityOwnerModel
 {
-    public string name;
 
-    public int id;
 }
 
 [Serializable]
@@ -953,6 +1041,7 @@ public class StoryAlteredModel
     public int id;
     public string title;
     public int posted_to;
+    public string title_poster;
     public int story_id;
     public int story_version_id;
     public int source_id;
@@ -964,6 +1053,14 @@ public class StoryAlteredModel
     public DateTime created_date_time;
     public DateTime updatedAt;
     public StoryVersion StoryVersions;
+    public ActivityOwnerModel Users;
+    public Stories Stories;
+}
+
+[Serializable]
+public class Stories
+{
+    public string title_poster;
 }
 
 [Serializable]
@@ -994,6 +1091,18 @@ public class RoleCategeryResponse : BaseResponse
 public class StoryBrowseDetailResponse : BaseResponse
 {
     public StoryActivityModel data;
+}
+
+[Serializable]
+public class HistoryResponses
+{
+    public List<StoryHistoryModel> StoryTrack;
+}
+
+[Serializable]
+public class StoryHistoryResponse : BaseResponse
+{
+    public List<HistoryResponses> data;
 }
 
 public class CreateCharacterModel

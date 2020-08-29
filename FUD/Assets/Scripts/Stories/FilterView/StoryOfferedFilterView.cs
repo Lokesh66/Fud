@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
 using System;
 using TMPro;
@@ -7,14 +6,8 @@ using TMPro;
 
 public class StoryOfferedFilterView : MonoBehaviour
 {
-    public TMP_Dropdown sortDropdown;
+    public List<FilterCell> filterCells;
 
-    public TMP_Dropdown orderDropdown;
-
-    public TMP_Dropdown roleDropdown;
-
-
-    List<Genre> genres;
 
     Action<object> OnApplyFilter;
 
@@ -24,26 +17,6 @@ public class StoryOfferedFilterView : MonoBehaviour
         gameObject.SetActive(true);
 
         this.OnApplyFilter = OnApplyFilter;
-
-        SetView();
-    }
-
-    void SetView()
-    {
-        genres = DataManager.Instance.genres;
-
-        List<string> options = new List<string>();
-
-        foreach (var option in genres)
-        {
-            options.Add(option.name);
-        }
-
-        roleDropdown.ClearOptions();
-
-        roleDropdown.AddOptions(options);
-
-        roleDropdown.value = -1;
     }
 
     public void OnCancelButtonAction()
@@ -55,15 +28,13 @@ public class StoryOfferedFilterView : MonoBehaviour
 
     public void OnApplyButtonAction()
     {
-        string selectedGenreText = roleDropdown.options[roleDropdown.value].text;
+        int genreId = filterCells[0].GetStatus();
 
-        Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
+        int sortId = filterCells[1].GetStatus();
 
-        int sortId = sortDropdown.value;
+        int orderBy = filterCells[2].GetStatus();
 
-        int orderById = orderDropdown.value + 1;
-
-        GameManager.Instance.apiHandler.ApplyStoryOfferedFilter(sortId, selectedGenre.id, orderById, (status, data) => {
+        GameManager.Instance.apiHandler.ApplyStoryOfferedFilter(genreId, sortId, orderBy, (status, data) => {
 
             if (status)
             {
@@ -74,8 +45,11 @@ public class StoryOfferedFilterView : MonoBehaviour
         });
     }
 
-    void ClearData()
+    public void ClearData()
     {
-        roleDropdown.value = orderDropdown.value = sortDropdown.value = 0;
+        for (int i = 0; i < filterCells.Count; i++)
+        {
+            filterCells[i].ClearSelectedModels();
+        }
     }
 }

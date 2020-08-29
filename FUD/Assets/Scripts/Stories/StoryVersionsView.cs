@@ -75,7 +75,7 @@ public class StoryVersionsView : MonoBehaviour
 
     public void OnShareButtonAction(StoryVersion storyVersion)
     {
-        shareView.Load(storyVersion);
+        shareView.Load(storyVersion, this);
     }
 
     public void OnRemoveVersion(StoryVersion storyVersion)

@@ -7,11 +7,8 @@ using TMPro;
 
 public class PortfolioOfferedFilterView : MonoBehaviour
 {
-    public TMP_Dropdown genderDropdown;
+    public List<FilterCell> filterCells;
 
-    public TMP_Dropdown sortDropdown;
-
-    public TMP_Dropdown orderDropdown;
 
     public TMP_InputField ageFromField;
 
@@ -37,15 +34,17 @@ public class PortfolioOfferedFilterView : MonoBehaviour
 
     public void OnApplyButtonAction()
     {
-        int sortId = sortDropdown.value;
+        string gender = GetGenderType(filterCells[0].GetStatus());
 
-        int orderById = orderDropdown.value + 1;
+        int sortId = filterCells[1].GetStatus();
+
+        int orderBy = filterCells[2].GetStatus();
 
         int ageFrom = int.Parse(ageFromField.text);
 
         int ageTo = int.Parse(ageToField.text);
 
-        GameManager.Instance.apiHandler.ApplyPortfolioOfferedFilter(sortId, orderById, genderDropdown.captionText.text, ageFrom, ageTo, (status, resopnse) => {
+        GameManager.Instance.apiHandler.ApplyPortfolioOfferedFilter(sortId, orderBy, gender, ageFrom, ageTo, (status, resopnse) => {
 
             if (status)
             {
@@ -58,8 +57,33 @@ public class PortfolioOfferedFilterView : MonoBehaviour
         });
     }
 
-    void ClearData()
+    public void ClearData()
     {
-        orderDropdown.value = sortDropdown.value = 0;
+        for (int i = 0; i < filterCells.Count; i++)
+        {
+            filterCells[i].ClearSelectedModels();
+        }
+    }
+
+    string GetGenderType(int index)
+    {
+        string gender = string.Empty;
+
+        switch(index)
+        {
+            case 0:
+                gender = "Male";
+                break;
+
+            case 1:
+                gender = "Female";
+                break;
+
+            case 2:
+                gender = "Others";
+                break;
+        }
+
+        return gender;
     }
 }

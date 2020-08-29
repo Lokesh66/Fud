@@ -32,6 +32,7 @@ public class StoryDetailsController : MonoBehaviour
         Versions,
         Characters,
         Team,
+        History,
     }
 
     public Transform creationPanelParent;
@@ -43,6 +44,8 @@ public class StoryDetailsController : MonoBehaviour
     public StoryCharactersView charactersView;
 
     public StoryTeamView teamsView;
+
+    public StoriesHistoryView historyView;
 
     public TextMeshProUGUI titeText;
 
@@ -158,7 +161,7 @@ public class StoryDetailsController : MonoBehaviour
 
             UpdateScreen();
 
-            addButtonObject.SetActive(currentType != EScreenSubType.Details);
+            addButtonObject.SetActive(currentType != EScreenSubType.Details && currentType != EScreenSubType.History);
         }
     }
 
@@ -183,6 +186,9 @@ public class StoryDetailsController : MonoBehaviour
                 break;
             case EScreenSubType.Team:
                 ShowTeamsScreen();
+                break;
+            case EScreenSubType.History:
+                ShowHistoryScreen();
                 break;
         }
     }
@@ -236,6 +242,15 @@ public class StoryDetailsController : MonoBehaviour
         currentObject.SetActive(false);
 
         teamsView.Load(currentDetailsModel.Myteam, this);
+    }
+
+    void ShowHistoryScreen()
+    {
+        currentObject = historyView.gameObject;
+
+        currentObject.SetActive(false);
+
+        historyView.Load(currentDetailsModel.StoryTrack);
     }
 
     #endregion

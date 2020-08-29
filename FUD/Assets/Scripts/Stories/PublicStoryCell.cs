@@ -53,7 +53,7 @@ public class PublicStoryCell : MonoBehaviour
 
         Vector2 cellSize = rectTransform.sizeDelta;
 
-        cellSize.y += description.preferredHeight - 120.0f;
+        cellSize.y += description.preferredHeight - 150.0f;
 
         rectTransform.sizeDelta = new Vector2(cellSize.x, cellSize.y);
     }

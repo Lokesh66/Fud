@@ -28,7 +28,7 @@ public class UserAuditionCell : MonoBehaviour
         if (auditionData != null)
         {
             titleText.text = auditionData.status;
-            ageText.text = auditionData.user_id.ToString();
+            ageText.text = auditionData.Users.name;
 
             List<MultimediaModel> modelsList = auditionData.UserAuditionMultimedia;
 

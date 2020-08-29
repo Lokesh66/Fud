@@ -7,6 +7,9 @@ using TMPro;
 
 public class BrowseFilterView : MonoBehaviour
 {
+    public List<FilterCell> filterCells;
+
+
     public RectTransform minFillTrans;
 
     public Slider ageSlider;
@@ -14,10 +17,6 @@ public class BrowseFilterView : MonoBehaviour
     public TMP_InputField ageFromField;
 
     public TMP_InputField ageToField;
-
-    public TMP_Dropdown genderDropdown;
-
-    public TMP_Dropdown roleDropdown;
 
     public TextMeshProUGUI ageValueText;
 
@@ -34,28 +33,9 @@ public class BrowseFilterView : MonoBehaviour
         gameObject.SetActive(true);
 
         this.OnApplyFilter = OnApplyFilter;
-
-        SetView();
     }
 
-    void SetView()
-    {
-        crafts = DataManager.Instance.crafts;
-
-        List<string> options = new List<string>();
-
-        foreach (var option in crafts)
-        {
-            options.Add(option.name);
-        }
-
-        roleDropdown.ClearOptions();
-
-        roleDropdown.AddOptions(options);
-    }
-
-
-
+ 
     public void OnAgeSliderValueChange()
     {
         ageValueText.text = minAgeValue + "-" + ageSlider.value + " Yrs";
@@ -70,11 +50,11 @@ public class BrowseFilterView : MonoBehaviour
 
     public void OnApplyButtonAction()
     {
-        string selectedGenreText = roleDropdown.options[roleDropdown.value].text;
+        string gender = GetGenderType(filterCells[0].GetStatus());
 
-        Craft selectedGenre = crafts.Find(craft => craft.name.Equals(selectedGenreText));
+        int roleId = filterCells[1].GetStatus();
 
-        GameManager.Instance.apiHandler.ApplyBrowseFilter(ageFromField.text, ageToField.text, genderDropdown.captionText.text, selectedGenre.id, (status, data) => {
+        GameManager.Instance.apiHandler.ApplyBrowseFilter(ageFromField.text, ageToField.text, gender, roleId, (status, data) => {
 
             if (status)
             {
@@ -91,6 +71,31 @@ public class BrowseFilterView : MonoBehaviour
 
         ageToField.text = 100.ToString();
 
-        genderDropdown.value = 0;
+        for (int i = 0; i < filterCells.Count; i++)
+        {
+            filterCells[i].ClearSelectedModels();
+        }
+    }
+
+    string GetGenderType(int index)
+    {
+        string gender = string.Empty;
+
+        switch (index)
+        {
+            case 0:
+                gender = "Male";
+                break;
+
+            case 1:
+                gender = "Female";
+                break;
+
+            case 2:
+                gender = "Others";
+                break;
+        }
+
+        return gender;
     }
 }

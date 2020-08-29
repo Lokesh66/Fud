@@ -35,12 +35,12 @@ public class StoryTeamCell : MonoBehaviour
 
         membersText.text = string.Empty;
 
-        for (int i = 0; i < teamModel.TeamMembers.Count; i++)
-        {
-            string appendString = i != teamModel.TeamMembers.Count - 1 ? "," : string.Empty;
+        //for (int i = 0; i < teamModel.TeamMembers.Count; i++)
+        //{
+        //    string appendString = i != teamModel.TeamMembers.Count - 1 ? "," : string.Empty;
 
-            membersText.text += teamModel.TeamMembers[i].users.name + appendString;
-        }
+        //    membersText.text += teamModel.TeamMembers[i].users.name + appendString;
+        //}
     }
 
     public void OnTapAction()

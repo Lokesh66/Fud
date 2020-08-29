@@ -70,10 +70,14 @@ public partial class APIHandler
 
         url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
-        parameters.Add("sortBy", sortId);
-
-        parameters.Add("sortOrder", orderId);
-
+        if (!sortId.Equals(-1))
+        {
+            parameters.Add("sortBy", sortId);
+        }
+        if (!orderId.Equals(-1))
+        {
+            parameters.Add("sortOrder", orderId);
+        }
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
     }
@@ -86,11 +90,20 @@ public partial class APIHandler
 
         url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
-        parameters.Add("sortBy", sortId);
+        if (!sortId.Equals(-1))
+        {
+            parameters.Add("sortBy", sortId);
+        }
 
-        parameters.Add("status", statusId);
+        if (!statusId.Equals(-1))
+        {
+            parameters.Add("status", statusId);
+        }
 
-        parameters.Add("sortOrder", orderId);
+        if (!orderId.Equals(-1))
+        {
+            parameters.Add("sortOrder", orderId);
+        }
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
     }
@@ -103,11 +116,20 @@ public partial class APIHandler
 
         url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
-        parameters.Add("sortBy", sortId);
+        if (!sortId.Equals(-1))
+        {
+            parameters.Add("sortBy", sortId);
+        }
 
-        parameters.Add("project_id", projectId);
+        if (!projectId.Equals(-1))
+        {
+            parameters.Add("project_id", projectId);
+        }
 
-        parameters.Add("sortOrder", orderId);
+        if (!orderId.Equals(-1))
+        {
+            parameters.Add("sortOrder", orderId);
+        }
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
     }
@@ -121,6 +143,21 @@ public partial class APIHandler
         url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
         parameters.Add("fetch_created", 1);
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
+    }
+
+    public void GetProjectCasts(int pageNo, string sourcefrom, int projectId, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        string url = APIConstants.GET_PROJECT_CASTS;
+
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
+
+        parameters.Add("project_id", projectId);
+
+        parameters.Add("source_from", sourcefrom);
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
     }
@@ -183,6 +220,15 @@ public partial class APIHandler
         gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
     }
 
+    public void GetShortListedAuditions(int pageNo, Dictionary<string, object> parameters, Action<bool, string> action)
+    {
+        string url = APIConstants.SEARCH_AUDITION;
+
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
+    }
+
     public void AcceptOrRejectAudition(int auditionId, int userAuditionId, int status, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -201,7 +247,7 @@ public partial class APIHandler
 public class Audition
 {
     public int id;
-    public object project_cast_id;
+    public int project_cast_id;
     public string topic;
     public int project_id;
     public int user_id;
@@ -210,6 +256,8 @@ public class Audition
     public string title;
     public string image_url;
     public string description;
+    public int role_id;
+    public int role_category_id;
     public int age_from;
     public int age_to;
     public int no_of_persons_req;
@@ -288,6 +336,7 @@ public class SearchAudition
     public string status;
     public DateTime created_date_time;
     public DateTime updatedAt;
+    public ActivityOwnerModel Users;
     public List<MultimediaModel> UserAuditionMultimedia;
 
     public MultimediaModel onScreenModel = null;
@@ -310,4 +359,17 @@ public class AuditionProjectModel
 {
     public int id;
     public string title;
+}
+
+[Serializable]
+public class AudCreateCastModel
+{
+    public int id;
+    public StoryCharacterModel StoryCharacters;
+}
+
+[Serializable]
+public class AudCreationCastResponse : BaseResponse
+{
+    public List<AudCreateCastModel> data;
 }

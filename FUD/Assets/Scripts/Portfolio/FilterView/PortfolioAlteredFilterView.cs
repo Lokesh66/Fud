@@ -7,16 +7,9 @@ using TMPro;
 
 public class PortfolioAlteredFilterView : MonoBehaviour
 {
-    public TMP_Dropdown statusDropdown;
-
-    public TMP_Dropdown sortDropdown;
-
-    public TMP_Dropdown orderDropdown;
-
-    public TMP_Dropdown roleDropdown;
+    public List<FilterCell> filterCells;
 
 
-    List<Genre> genres;
 
     Action<object> OnApplyFilter;
 
@@ -26,24 +19,6 @@ public class PortfolioAlteredFilterView : MonoBehaviour
         gameObject.SetActive(true);
 
         this.OnApplyFilter = OnApplyFilter;
-
-        SetView();
-    }
-
-    void SetView()
-    {
-        genres = DataManager.Instance.genres;
-
-        List<string> options = new List<string>();
-
-        foreach (var option in genres)
-        {
-            options.Add(option.name);
-        }
-
-        roleDropdown.ClearOptions();
-
-        roleDropdown.AddOptions(options);
     }
 
     public void OnCancelButtonAction()
@@ -55,17 +30,15 @@ public class PortfolioAlteredFilterView : MonoBehaviour
 
     public void OnApplyButtonAction()
     {
-        string selectedGenreText = roleDropdown.options[roleDropdown.value].text;
+        int genreId = filterCells[0].GetStatus();
 
-        Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
+        int sortId = filterCells[1].GetStatus();
 
-        int sortId = sortDropdown.value;
+        int orderById = filterCells[2].GetStatus();
 
-        int orderById = orderDropdown.value + 1;
+        int statusId = filterCells[3].GetStatus();
 
-        int statusId = GetStatusId();
-
-        GameManager.Instance.apiHandler.ApplyPortfolioAlteredFilter(selectedGenre.id, statusId, sortId, orderById, (status, resopnse) => {
+        GameManager.Instance.apiHandler.ApplyPortfolioAlteredFilter(genreId, statusId, sortId, orderById, (status, resopnse) => {
 
             if (status)
             {
@@ -78,31 +51,11 @@ public class PortfolioAlteredFilterView : MonoBehaviour
         });
     }
 
-    void ClearData()
+    public void ClearData()
     {
-        statusDropdown.value = 0;
-    }
-
-    int GetStatusId()
-    {
-        int statusId = -1;
-
-        switch (statusDropdown.value)
+        for (int i = 0; i < filterCells.Count; i++)
         {
-            case 0:
-                statusId = 5;
-                break;
-            case 1:
-                statusId = 3;
-                break;
-            case 2:
-                statusId = 8;
-                break;
-            case 3:
-                statusId = 2;
-                break;
+            filterCells[i].ClearSelectedModels();
         }
-
-        return statusId;
     }
 }

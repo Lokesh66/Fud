@@ -155,6 +155,17 @@ public class UserAuditionController : MonoBehaviour
         OnBackButtonAction();
     }
 
+    public void OnPlayButtonAction()
+    {
+        if (currentType == EAuditionStatusScreen.Live)
+        {
+            liveAuditionResponsesView.OnPlayButtonAction();
+        }
+        else {
+            shortListedAuditionView.OnPlayButtonAction();
+        }
+    }
+
     public void AcceptButtonAction()
     {
         buttonsPanel.SetActive(false);
@@ -173,6 +184,19 @@ public class UserAuditionController : MonoBehaviour
         buttonsPanel.SetActive(false);
 
         GameManager.Instance.apiHandler.AcceptOrRejectAudition(selectedAudition.audition_id, selectedAudition.id, 8, (status, response) =>
+        {
+            if (status)
+            {
+                Reload();
+            }
+        });
+    }
+
+    public void ShortListButtonAction()
+    {
+        buttonsPanel.SetActive(false);
+
+        GameManager.Instance.apiHandler.AcceptOrRejectAudition(selectedAudition.audition_id, selectedAudition.id, 1, (status, response) =>
         {
             if (status)
             {

@@ -7,11 +7,7 @@ using TMPro;
 
 public class AuditionAlteredFilterView : MonoBehaviour
 {
-    public TMP_Dropdown statusDropdown;
-
-    public TMP_Dropdown sortDropdown;
-
-    public TMP_Dropdown orderDropdown;
+    public List<FilterCell> filterCells;
 
 
     Action<object> OnApplyFilter;
@@ -33,11 +29,12 @@ public class AuditionAlteredFilterView : MonoBehaviour
 
     public void OnApplyButtonAction()
     {
-        int sortId = sortDropdown.value;
+        int statusId = filterCells[0].GetStatus();
 
-        int orderById = orderDropdown.value + 1;
+        int sortId = filterCells[1].GetStatus();
 
-        int statusId = GetStatusId();
+        int orderById = filterCells[2].GetStatus();
+
 
         GameManager.Instance.apiHandler.ApplyAudtionAlteredFilter(sortId, statusId, orderById, (status, response) => {
 
@@ -52,31 +49,11 @@ public class AuditionAlteredFilterView : MonoBehaviour
         });
     }
 
-    void ClearData()
+    public void ClearData()
     {
-        statusDropdown.value = 0;
-    }
-
-    int GetStatusId()
-    {
-        int statusId = -1;
-
-        switch (statusDropdown.value)
+        for (int i = 0; i < filterCells.Count; i++)
         {
-            case 0:
-                statusId = 5;
-                break;
-            case 1:
-                statusId = 3;
-                break;
-            case 2:
-                statusId = 8;
-                break;
-            case 3:
-                statusId = 2;
-                break;
+            filterCells[i].ClearSelectedModels();
         }
-
-        return statusId;
     }
 }

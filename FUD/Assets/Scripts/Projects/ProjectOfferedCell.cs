@@ -1,17 +1,18 @@
-﻿using UnityEngine.UI;
+﻿using frame8.ScrollRectItemsAdapter.MultiplePrefabsExample;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using System.Collections.Generic;
+
 
 public class ProjectOfferedCell : MonoBehaviour
 {
+    public RemoteImageBehaviour profileImage;
+
     public RectTransform rectTransform;
 
     public TextMeshProUGUI titleText;
-    public TextMeshProUGUI genreText;
+    public TextMeshProUGUI workingDaysText;
     public TextMeshProUGUI descriptionText;
-
-    public TextMeshProUGUI budgetText;
 
 
     private ProjectOfferedModel projectModel;
@@ -24,17 +25,16 @@ public class ProjectOfferedCell : MonoBehaviour
 
         OnClickAction = OnProjectSelected;
 
-        List<Genre> genres = DataManager.Instance.genres;
+        titleText.text = projectModel.Project_cast.StoryCharacters.title;
 
-        Genre selectedGenre = genres.Find(item => item.id == projectModel.role);
+        descriptionText.text = projectModel.Project_cast.StoryCharacters.description;
 
-        titleText.text = projectModel.Projects.title;
+        profileImage.Load(model.Projects?.Users?.profile_image);
 
-        genreText.text = selectedGenre.name;
-
-        descriptionText.text = projectModel.Projects.description;
-
-        budgetText.text = "Budget : " + projectModel.Projects.cost_estimation.ToString();
+        if (projectModel.Project_cast.StoryCharacters.estimated_working_days != null)
+        {
+            workingDaysText.text = ((int)projectModel.Project_cast.StoryCharacters.estimated_working_days).ToString();
+        }
     }
 
     public void OnButtonAction()

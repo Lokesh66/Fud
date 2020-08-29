@@ -36,59 +36,57 @@ public class ShortListedAuditionView : MonoBehaviour
 
     void GetShortListedAuditions()
     {
-        if (auditionResponses == null)
-        {
-            Dictionary<string, object> parameters = new Dictionary<string, object>();
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-            parameters.Add("id", auditionId);
-           
-            parameters.Add("status", "shortlisted");
+        GameManager.Instance.apiHandler.GetShortListedAuditions(pageNo, parameters, (status, response) => {
 
-            GameManager.Instance.apiHandler.SearchAuditions(pageNo, parameters, (status, response) => {
+            if (status)
+            {
+                SearchAuditionResponse auditionResponse = JsonUtility.FromJson<SearchAuditionResponse>(response);
 
-                if (status)
+                auditionResponses = auditionResponse.data;
+
+                noDataObject.SetActive(auditionResponses.Count == 0);
+
+                if (auditionResponse.data.Count > 0)
                 {
-                    SearchAuditionResponse auditionResponse = JsonUtility.FromJson<SearchAuditionResponse>(response);
+                    pageNo++;
 
-                    auditionResponses = auditionResponse.data;
-
-                    noDataObject.SetActive(auditionResponses.Count == 0);
-
-                    if (auditionResponse.data.Count > 0)
+                    if (auditionResponses.Count < MAX_AUDITION_RESPONSES)
                     {
-                        pageNo++;
+                        isPagingOver = true;
 
-                        if (auditionResponses.Count < MAX_AUDITION_RESPONSES)
-                        {
-                            isPagingOver = true;
+                        pageNo = 1;
+                    }
 
-                            pageNo = 1;
-                        }
+                    if (!isInitialized)
+                    {
+                        tableView.gameObject.SetActive(true);
 
-                        if (!isInitialized)
-                        {
-                            tableView.gameObject.SetActive(true);
+                        isInitialized = true;
+                    }
+                    else
+                    {
+                        tableView.Data.Clear();
 
-                            isInitialized = true;
-                        }
-                        else
-                        {
-                            tableView.Data.Clear();
+                        tableView.Data.Add(auditionResponses.Count);
 
-                            tableView.Data.Add(auditionResponses.Count);
-
-                            tableView.Refresh();
-                        }
+                        tableView.Refresh();
                     }
                 }
-            });
-        }
+            }
+        });
     }
 
     public void OnAuditionSelectAction(SearchAudition audition)
     {
         selectedAudition = audition;
 
+        buttonsPanel.SetActive(true);
+    }
+
+    public void OnPlayButtonAction()
+    {
         MultimediaModel model = selectedAudition.UserAuditionMultimedia[0];
 
         EMediaType mediaType = model.GetMediaType(model.media_type);
@@ -103,8 +101,8 @@ public class ShortListedAuditionView : MonoBehaviour
         }
         else
         {
-            //UIManager.Instance.ShowBigScreen(model.content_url);
-            buttonsPanel.SetActive(true);
+            UIManager.Instance.ShowBigScreen(model.content_url);
+            //buttonsPanel.SetActive(true);
         }
     }
 
@@ -122,7 +120,7 @@ public class ShortListedAuditionView : MonoBehaviour
 
         parameters.Add("id", auditionId);
 
-        GameManager.Instance.apiHandler.SearchAuditions(pageNo, parameters, (status, response) =>
+        GameManager.Instance.apiHandler.GetShortListedAuditions(pageNo, parameters, (status, response) =>
         {
             if (status)
             {

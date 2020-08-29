@@ -13,6 +13,8 @@ public class StoryShareView : MonoBehaviour
     public TMP_InputField searchField;
 
 
+    StoryVersionsView versionsView;
+
     StoryVersion currentVersion;
 
     UserSearchModel selectedModel = null;
@@ -29,11 +31,13 @@ public class StoryShareView : MonoBehaviour
         searchField.text = keyword;
     }
 
-    public void Load(StoryVersion storyVersion)
+    public void Load(StoryVersion storyVersion, StoryVersionsView versionsView)
     {
         gameObject.SetActive(true);
 
         currentVersion = storyVersion;
+
+        this.versionsView = versionsView;
     }
 
     public void OnValueChange()
@@ -72,7 +76,7 @@ public class StoryShareView : MonoBehaviour
 
         GameManager.Instance.apiHandler.UpdateStoryPost(currentVersion.story_id, currentVersion.id, storyTitle, userId, (status, response) => {
 
-            OnAPIResponse(status);
+            OnAPIResponse(status, response);
         });
     }
 
@@ -114,11 +118,13 @@ public class StoryShareView : MonoBehaviour
         searchContent.DestroyChildrens();
     }
 
-    void OnAPIResponse(bool status)
+    void OnAPIResponse(bool status, string response)
     {
+        BaseResponse responseModel = JsonUtility.FromJson<BaseResponse>(response); 
+
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Story Version Share Success" : "Something went wrong, please try again.";
+        alertModel.message = status ? "Story Version Share Success" : responseModel.message;
 
         if (status)
         {
@@ -135,6 +141,8 @@ public class StoryShareView : MonoBehaviour
         Reset();
 
         OnBackAction();
+
+        versionsView?.OnRemoveVersion(currentVersion);
 
         DataManager.Instance.UpdateFeaturedData(EFeatureType.ShareStoryVersion);
     }

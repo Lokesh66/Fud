@@ -100,7 +100,19 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 			var model = Data [viewsHolder.ItemIndex];
 
 			viewsHolder.views.gameObject.transform.parent.GetComponent<StoryAlteredCell> ().SetAlteredView (model, adataObject.OnAlteredTapAction);
-			
+
+			var imageURLAtRequest = model.Stories.title_poster;
+
+			int itemIndexAtRequest = viewsHolder.ItemIndex;
+
+			viewsHolder.remoteImageBehaviour.Load(imageURLAtRequest, true, (fromCache, success) => {
+				if (success)
+				{
+					if (!IsRequestStillValid(viewsHolder.ItemIndex, itemIndexAtRequest, imageURLAtRequest))
+						return;
+				}
+			});
+
 			if ((viewsHolder.ItemIndex != 0 && viewsHolder.ItemIndex == Data.Count - 12 && _ScrollRect.velocity.y > 10) ||(Data.Count < 12 && viewsHolder.ItemIndex == Data.Count - 1))
 			{
 				Debug.LogError("It's Reaching to Last Index");
@@ -114,7 +126,8 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 		{
 			return
 				_CellsCount > itemIndex// be sure the index still points to a valid model
-				&& itemIdexAtRequest == itemIndex;// be sure the view's associated model index is the same (i.e. the viewsHolder wasn't re-used)
+				&& itemIdexAtRequest == itemIndex// be sure the view's associated model index is the same (i.e. the viewsHolder wasn't re-used)
+			    && imageURLAtRequest == Data[itemIndex].title_poster;
 		}
 
 		#endregion

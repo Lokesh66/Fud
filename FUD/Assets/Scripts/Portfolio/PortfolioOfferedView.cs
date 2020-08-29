@@ -31,6 +31,8 @@ public class PortfolioOfferedView : MonoBehaviour
 
     public void Load()
     {
+        ClearData();
+
         LoadOfferedData();
 
         gameObject.SetActive(true);
@@ -124,5 +126,10 @@ public class PortfolioOfferedView : MonoBehaviour
         tableView.Refresh();
 
         noDataObject.SetActive(activityModels?.Count == 0);
+    }
+
+    void ClearData()
+    {
+        filterView.ClearData();
     }
 }

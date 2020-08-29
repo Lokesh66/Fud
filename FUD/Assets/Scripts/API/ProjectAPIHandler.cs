@@ -59,7 +59,21 @@ public partial class APIHandler
         }));
     }
 
-    public void ApplyOfferedProjectsFilter(int sortId, int roleId, int orderBy, Action<bool, ProjectOfferedResponse> action)
+    public void GetProjectProducers(int pageNo, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        string url = APIConstants.GET_PRODUCERS_LIST;
+
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void ApplyOfferedProjectsFilter(int sortId, int roleId, int orderBy, int producerId, Action<bool, ProjectOfferedResponse> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -67,11 +81,25 @@ public partial class APIHandler
 
         url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
-        parameters.Add("role_id", roleId);
+        if (!roleId.Equals(-1))
+        {
+            parameters.Add("role_id", roleId);
+        }
 
-        parameters.Add("sortBy", sortId);
+        if (!sortId.Equals(-1))
+        {
+            parameters.Add("sortBy", sortId);
+        }
 
-        parameters.Add("sortOrder", orderBy);
+        if (!orderBy.Equals(-1))
+        {
+            parameters.Add("sortOrder", orderBy);
+        }
+
+        if (!producerId.Equals(-1))
+        {
+            parameters.Add("producer_id", producerId);
+        }
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
 
@@ -89,11 +117,18 @@ public partial class APIHandler
 
         url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
-        parameters.Add("sortBy", sortId);
-
-        parameters.Add("status", statusId);
-
-        parameters.Add("sortOrder", orderId);
+        if (!sortId.Equals(-1))
+        {
+            parameters.Add("sortBy", sortId);
+        }
+        if (!statusId.Equals(-1))
+        {
+            parameters.Add("status", statusId);
+        }
+        if (!orderId.Equals(-1))
+        {
+            parameters.Add("sortOrder", orderId);
+        }
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
 
@@ -240,6 +275,64 @@ public partial class APIHandler
         }));
     }
 
+    public void CreateProjectTeam(int project_id, string title, string description, string members, int accessValue, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("project_id", project_id);
+
+        parameters.Add("title", title);
+
+        parameters.Add("description", description);
+
+        parameters.Add("access_modifier", accessValue);
+
+        parameters.Add("members", members);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_PROJECT_TEAM, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void UpdateProjectTeam(int project_id, string title, int teamId, string description, string members, int accessValue, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("project_id", project_id);
+
+        parameters.Add("id", teamId);
+
+        parameters.Add("title", title);
+
+        parameters.Add("description", description);
+
+        parameters.Add("access_modifier", accessValue);
+
+        parameters.Add("members", members);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_PROJECT_TEAM, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void RemoveProjectTeam(int teamId, int projectId, int status, Action<bool> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("project_id", projectId);
+
+        parameters.Add("id", teamId);
+
+        parameters.Add("status", status);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_PROJECT_TEAM, true, parameters, (apiStatus, response) => {
+
+            action(apiStatus);
+        }));
+    }
+
     public void UpdateProjectScene(SceneCreationModel creationModel, int sceneId, List<Dictionary<string, object>> characterScenes, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -377,10 +470,12 @@ public class Project
     public int status;
     public int start_date;
     public int release_date;
+    public ActivityOwnerModel Users;
     public List<StoryVersion> StoryVersions;
     public List<ProjectCast> Project_cast;
     public List<Audition> Audition;
     public List<SceneModel> StoryScenes;
+    public List<ProjectTeamModel> MyProjectTeam;
     public DateTime created_date_time;
     public DateTime updatedAt;
 }
@@ -421,14 +516,21 @@ public class ProjectOfferedModel
     public DateTime created_date_time;
     public DateTime updatedAt;
     public Project Projects;
+    public ProjectCast Project_cast;
 }
 
 [Serializable]
-public class ProjectOfferedResponse
+public class ProjectOfferOwnerModel
 {
-    public string message;
+    public string title;
+    public ActivityOwnerModel Users;
+}
+
+
+[Serializable]
+public class ProjectOfferedResponse : BaseResponse
+{
     public List<ProjectOfferedModel> data;
-    public int status;
 }
 
 
@@ -530,4 +632,24 @@ public class ProjectCharacterModel : StoryCharacterModel
     public int project_status;
     public string status;
     public int story_version_id;
+}
+
+[Serializable]
+public class ProjectCastDetailsResponse : BaseResponse
+{
+    public ProjectCast data;
+}
+
+[Serializable]
+public class UpdatedProjectTeamModel : BaseResponse
+{
+    public ProjectTeamModel data;
+}
+
+[Serializable]
+public class ProjectTeamModel : StoryTeamModel
+{
+    public int project_id;
+
+    public TeamMembersItem ProjectTeamMembers;
 }

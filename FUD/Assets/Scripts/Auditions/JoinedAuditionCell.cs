@@ -17,13 +17,6 @@ public class JoinedAuditionCell : MonoBehaviour
 
     public Image tagImage;
 
-
-    public Sprite reviewSprite;
-
-    public Sprite shortlistedSprite;
-
-    public Sprite rejectedSprite;
-
     JoinedAudition auditionData;
     AuditionAlteredView auditionController;
 
@@ -50,7 +43,7 @@ public class JoinedAuditionCell : MonoBehaviour
 
             UpdateStatusTag();
 
-            StartCountDown();
+            //StartCountDown();
         }
     }
 
@@ -327,7 +320,7 @@ public class JoinedAuditionCell : MonoBehaviour
 
     void StartCountDown()
     {
-        CancelInvoke("CountDown");
+        //CancelInvoke("CountDown");
 
         long totalSeconds = auditionData.Audition.end_date;
 

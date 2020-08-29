@@ -1,11 +1,10 @@
-﻿using frame8.ScrollRectItemsAdapter.MultiplePrefabsExample;
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 
 
 public class HomeBannerCell : MonoBehaviour
 {
-    public RemoteImageBehaviour bannerImage;
+    public UnityEngine.UI.Image bannerImage;
 
     public TextMeshProUGUI storyTitleText;
 
@@ -28,6 +27,13 @@ public class HomeBannerCell : MonoBehaviour
 
         subTitleText.text = bannerModel.sub_title;
 
-        bannerImage.Load(bannerModel.image_url);
+        Loader.Instance.StartLoading();
+
+        GameManager.Instance.downLoadManager.DownloadImage(bannerModel.image_url, (sprite) => {
+
+            Loader.Instance.StopLoading();
+
+            bannerImage.sprite = sprite;
+        });
     }
 }

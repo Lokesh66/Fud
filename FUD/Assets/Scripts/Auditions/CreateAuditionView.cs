@@ -33,10 +33,10 @@ public class CreateAuditionView : MonoBehaviour
     public Transform parentPanel;
 
     public TMP_Dropdown typeDropdown;
+    public TMP_Dropdown castsDropdown;
     public TMP_InputField membersText;
     public TMP_InputField topicText;
     public TMP_InputField titleText;
-    public TMP_InputField payAmountText;
     public TMP_InputField ageFromText;
     public TMP_InputField ageToText;
     public TMP_InputField descriptionText;
@@ -79,7 +79,11 @@ public class CreateAuditionView : MonoBehaviour
 
     Craft selectedCraft;
 
+    AudCreateCastModel selectedCast;
+
     List<RoleCategeryModel> categeryModels;
+
+    List<AudCreateCastModel> castModels;
 
     Action<bool> backAction;
 
@@ -97,6 +101,8 @@ public class CreateAuditionView : MonoBehaviour
         filesHandler.mediaButtonTrans.gameObject.SetActive(true);
 
         PopulateRoleDropdown();
+
+        PopulateCastsDropdown();
     }
 
     void PopulateRoleDropdown()
@@ -113,8 +119,37 @@ public class CreateAuditionView : MonoBehaviour
         craftDropdown.ClearOptions();
 
         craftDropdown.AddOptions(options);
+    }
 
-        OnRoleValueChange();
+    void PopulateCastsDropdown()
+    {
+        GameManager.Instance.apiHandler.GetProjectCasts(1, "audition", projectId, (status, response) => {
+
+            AudCreationCastResponse responseModel = JsonUtility.FromJson<AudCreationCastResponse>(response);
+
+            if (responseModel.data.Count > 0)
+            {
+                castModels = responseModel.data;
+
+                List<string> options = new List<string>();
+
+                foreach (var option in castModels)
+                {
+                    options.Add(option.StoryCharacters.title);
+                }
+
+                castsDropdown.ClearOptions();
+
+                castsDropdown.AddOptions(options);
+
+                if (isUpdate)
+                {
+                    selectedCast = castModels.Find(item => item.id == audition.project_cast_id);
+
+                    castsDropdown.value = castModels.IndexOf(selectedCast);
+                }
+            }
+        });
     }
 
     public void OnRoleValueChange()
@@ -156,6 +191,35 @@ public class CreateAuditionView : MonoBehaviour
         parentPanel.gameObject.SetActive(true);
         backAction = action;
         isNewAuditionCreated = false;
+
+        PopulateRoleDropdown();
+
+        selectedCraft = craftRoles.Find(item => item.id == audition.role_id);
+
+        craftDropdown.value = craftRoles.IndexOf(selectedCraft);
+
+        UpdateRoleCatagery();
+    }
+
+    public void UpdateRoleCatagery()
+    {
+        selectedCraft = craftRoles[craftDropdown.value];
+
+        GameManager.Instance.apiHandler.GetRoleCategeries(selectedCraft.id, (status, response) => {
+
+            RoleCategeryResponse responseModel = JsonUtility.FromJson<RoleCategeryResponse>(response);
+
+            if (status)
+            {
+                categeryModels = responseModel.data;
+
+                UpdateRoleCategeryDropdown();
+
+                RoleCategeryModel selectedModel = categeryModels.Find(item => item.id == audition.role_category_id);
+
+                roleCatageryDropdown.value = categeryModels.IndexOf(selectedModel);
+            }
+        });
     }
 
     void SetData()
@@ -180,7 +244,6 @@ public class CreateAuditionView : MonoBehaviour
         }
         topicText.text = audition.topic;
         titleText.text = audition.title;
-        payAmountText.text = audition.rate_of_pay.ToString();
         ageFromText.text = audition.age_from.ToString();
         ageToText.text = audition.age_to.ToString();
         if (selectedDate != DateTime.MinValue || selectedDate != DateTime.MaxValue)
@@ -288,11 +351,6 @@ public class CreateAuditionView : MonoBehaviour
         titleText.Select();
     }
 
-    public void OnRateOfPayButtonAction()
-    {
-        payAmountText.Select();
-    }
-
     public void OnAgeFromButtonAction()
     {
         ageFromText.Select();
@@ -361,11 +419,6 @@ public class CreateAuditionView : MonoBehaviour
             errorMessage = "Audition title should not be empty";
             //ShowErrorMessage("Audition title should not be empty");
         }
-        else if (string.IsNullOrEmpty(payAmountText.text))
-        {
-            errorMessage = "Audition payment should not be empty";
-            //ShowErrorMessage("Audition payment should not be empty");
-        }
         else if (string.IsNullOrEmpty(ageFromText.text))
         {
             errorMessage = "Audition from age should not be empty";
@@ -415,10 +468,11 @@ public class CreateAuditionView : MonoBehaviour
     
     void CreateAudition()
     {
+        selectedCast = castModels[castsDropdown.value];
+
         Dictionary<string, object> parameters = new Dictionary<string, object>();
         parameters.Add("project_id", projectId);
         parameters.Add("topic", topicText.text);
-        parameters.Add("rate_of_pay", long.Parse(payAmountText.text));
         parameters.Add("end_date", endDateText.text);// "2020-03-23");
         parameters.Add("title", titleText.text);
         parameters.Add("description", descriptionText.text);
@@ -426,6 +480,7 @@ public class CreateAuditionView : MonoBehaviour
         parameters.Add("age_to", Convert.ToInt16(ageToText.text));
         parameters.Add("role_id", selectedCraft.id);
         parameters.Add("role_category_id", categeryModels[roleCatageryDropdown.value].id);
+        parameters.Add("project_cast_id", selectedCast.id);
 
 
         string auditionType = typeDropdown.captionText.text.ToLower();
@@ -473,10 +528,8 @@ public class CreateAuditionView : MonoBehaviour
         parameters.Add("id", audition.id);
         if (!audition.topic.Equals(topicText.text))
             parameters.Add("topic", topicText.text);
-        if (!audition.rate_of_pay.Equals(long.Parse(payAmountText.text)))
-            parameters.Add("rate_of_pay", long.Parse(payAmountText.text));
         if (!DatePicker.Instance.GetDateString(selectedDate).Equals(previousDate))
-            parameters.Add("end_date", selectedDate);// "2020-03-23");
+            parameters.Add("end_date", endDateText.text);// "2020-03-23");
         if (!audition.title.Equals(titleText.text))
             parameters.Add("title", titleText.text);
         if (!audition.description.Equals(descriptionText.text))
@@ -485,6 +538,8 @@ public class CreateAuditionView : MonoBehaviour
             parameters.Add("age_from", Convert.ToInt16(ageFromText.text));
         if (!audition.age_to.Equals(Convert.ToInt16(ageToText.text)))
             parameters.Add("age_to", Convert.ToInt16(ageToText.text));
+
+        parameters.Add("project_cast_id", selectedCast.id);
 
         string auditionType = typeDropdown.captionText.text.ToLower();
         if (!audition.type.Equals(auditionType) ||
@@ -542,7 +597,7 @@ public class CreateAuditionView : MonoBehaviour
     {
         typeDropdown.value = 0;
 
-        payAmountText.text = titleText.text = topicText.text = membersText.text = string.Empty;
+        titleText.text = topicText.text = membersText.text = string.Empty;
 
         ageFromText.text = ageToText.text = string.Empty;
 

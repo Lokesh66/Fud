@@ -113,6 +113,8 @@ public class PortfolioAlteredView : MonoBehaviour
         isPagingOver = false;
 
         pageNo = 1;
+
+        filterView.ClearData();
     }
 
     public void OnFilterButtonAction()

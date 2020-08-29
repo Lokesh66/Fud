@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using frame8.ScrollRectItemsAdapter.MultiplePrefabsExample;
+using UnityEngine;
 using System;
 using TMPro;
 
@@ -6,6 +7,8 @@ using TMPro;
 public class ShareSearchCell : MonoBehaviour
 {
     public TextMeshProUGUI userNameText;
+
+    public RemoteImageBehaviour remoteImageBehaviour;
 
 
     Action<object> OnButtonPressed;
@@ -19,6 +22,8 @@ public class ShareSearchCell : MonoBehaviour
         this.searchModel = searchModel;
 
         userNameText.text = searchModel.name;
+
+        remoteImageBehaviour.Load(searchModel.profile_image);
     }
 
     public void OnButtonAction()

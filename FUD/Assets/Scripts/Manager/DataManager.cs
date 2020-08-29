@@ -179,6 +179,8 @@ public class UserData
     public string add_proof_back;
     public DateTime created_date_time;
     public DateTime updatedAt;
+    public CraftRoleModel Craftroles;
+    public RoleCategeryModel RoleCategories;
     public List<FeaturedModel> UserFeatures;
 }
 

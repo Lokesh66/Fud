@@ -25,22 +25,22 @@ public class ProfileView : MonoBehaviour
 
     private GameObject currentObject;
 
-    private EProfileTabType currentTab = EProfileTabType.Info;
+    private EProfileTabType currentTab;
 
 
     public void Load()
     {
         gameObject.SetActive(true);
 
-        UpdateCurrentView();
+        //UpdateCurrentView();
     }
 
     #region Button Actions
 
     public void OnTabAction(int tabIndex)
     {
-        if (currentTab != (EProfileTabType)tabIndex)
-        {
+        //if (currentTab != (EProfileTabType)tabIndex)
+        //{
             buttonsList[(int)currentTab].color = disabledColor;
 
             buttonsList[tabIndex].color = selectedColor;
@@ -50,7 +50,7 @@ public class ProfileView : MonoBehaviour
             currentObject?.SetActive(false);
 
             UpdateCurrentView();
-        }
+        //}
     }
 
     public void OnBackButtonAction()

@@ -7,14 +7,8 @@ using TMPro;
 
 public class ProjectOfferedFilterView : MonoBehaviour
 {
-    public TMP_Dropdown sortDropdown;
+    public List<FilterCell> filterCells;
 
-    public TMP_Dropdown orderDropdown;
-
-    public TMP_Dropdown roleDropdown;
-
-
-    List<Genre> genres;
 
     Action<object> OnApplyFilter;
 
@@ -23,25 +17,32 @@ public class ProjectOfferedFilterView : MonoBehaviour
     {
         gameObject.SetActive(true);
 
+        GameManager.Instance.apiHandler.GetProjectProducers(1, (status, response) => {
+
+            if (status)
+            {
+                List<ProjectOfferedModel> dataList = JsonUtility.FromJson<ProjectOfferedResponse>(response).data;
+
+                List<DropdownModel> dropdownModels = new List<DropdownModel>();
+
+                DropdownModel dropdownModel = null;
+
+                for (int i = 0; i < dataList.Count; i++)
+                {
+                    dropdownModel = new DropdownModel();
+
+                    dropdownModel.text = dataList[i].Projects.Users.name;
+
+                    dropdownModel.id = dataList[i].Projects.Users.id;
+
+                    dropdownModels.Add(dropdownModel);
+                }
+
+                filterCells[3].Load(dropdownModels);
+            }
+        });
+
         this.OnApplyFilter = OnApplyFilter;
-
-        SetView();
-    }
-
-    void SetView()
-    {
-        genres = DataManager.Instance.genres;
-
-        List<string> options = new List<string>();
-
-        foreach (var option in genres)
-        {
-            options.Add(option.name);
-        }
-
-        roleDropdown.ClearOptions();
-
-        roleDropdown.AddOptions(options);
     }
 
     public void OnCancelButtonAction()
@@ -53,15 +54,15 @@ public class ProjectOfferedFilterView : MonoBehaviour
 
     public void OnApplyButtonAction()
     {
-        string selectedGenreText = roleDropdown.options[roleDropdown.value].text;
+        int genreId = filterCells[0].GetStatus();
 
-        Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
+        int sortId = filterCells[1].GetStatus();
 
-        int sortId = sortDropdown.value;
+        int orderBy = filterCells[2].GetStatus();
 
-        int orderById = orderDropdown.value + 1;
+        int producerId = filterCells[3].GetStatus();
 
-        GameManager.Instance.apiHandler.ApplyOfferedProjectsFilter(sortId, selectedGenre.id, orderById, (status, data) => {
+        GameManager.Instance.apiHandler.ApplyOfferedProjectsFilter(sortId, genreId, orderBy, producerId, (status, data) => {
 
             if (status)
             {
@@ -72,8 +73,11 @@ public class ProjectOfferedFilterView : MonoBehaviour
         });
     }
 
-    void ClearData()
+    public void ClearData()
     {
-        orderDropdown.value = sortDropdown.value = 0;
+        for (int i = 0; i < filterCells.Count; i++)
+        {
+            filterCells[i].ClearSelectedModels();
+        }
     }
 }

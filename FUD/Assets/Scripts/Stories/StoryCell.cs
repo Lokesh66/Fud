@@ -13,8 +13,6 @@ public class StoryCell : MonoBehaviour
 
     public TextMeshProUGUI description;
 
-    public GameObject updateStoryCache;
-
     public GameObject readMoreObject;
 
     public GameObject editObject;
@@ -24,10 +22,10 @@ public class StoryCell : MonoBehaviour
 
     ScrollRect scrollRect;
 
-    public Action<int> OnTapActon;
+    public Action<StoryCell> OnTapActon;
 
 
-    public void SetView(StoryModel storyModel, Action<int> tapAction = null)
+    public void SetView(StoryModel storyModel, Action<StoryCell> tapAction = null)
     {
         this.storyModel = storyModel;
 
@@ -37,7 +35,7 @@ public class StoryCell : MonoBehaviour
 
         description.text = storyModel.description;
 
-        editObject.SetActive(true);
+        //editObject.SetActive(true);
 
         //SetImage();
     }
@@ -46,7 +44,7 @@ public class StoryCell : MonoBehaviour
     {
         Debug.Log("Title = " + titleText.text + " Id = " + storyModel.id);
 
-        OnTapActon?.Invoke(storyModel.id);
+        OnTapActon?.Invoke(this);
     }
 
     public void OnReadMoreButtonAction()
@@ -64,11 +62,12 @@ public class StoryCell : MonoBehaviour
 
     public void OnUpdateButtonAction()
     {
-        Transform parent = StoryDetailsController.Instance.transform;
+        
+    }
 
-        GameObject createObject = Instantiate(updateStoryCache, parent);
-
-        createObject.GetComponent<StoryUpdateView>().Load(storyModel, this);
+    public StoryModel GetStoryModel()
+    {
+        return storyModel;
     }
 
     void SetImage()

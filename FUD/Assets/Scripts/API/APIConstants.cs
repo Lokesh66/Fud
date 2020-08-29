@@ -33,9 +33,15 @@ public class APIConstants
 
     public const string GET_PUBLIC_STORIES = BASE_URL + "v1/publicStories";
 
+    public const string GET_HISTORY_STORIES = BASE_URL + "v1/searchTrack";
+
     public const string CREATE_PROJECT = BASE_URL + "v1/projects/";
 
     public const string GET_AUDITION_PROJECTS = BASE_URL + "created";
+
+    public const string GET_PROJECT_CASTS = BASE_URL + "v1/searchProjectCast";
+
+    public const string GET_PRODUCERS_LIST = BASE_URL + "v1/fetchProducers";
 
     public const string UPDATE_OFFERED_PROJECT_STATUS = BASE_URL + "v1/projects/offered/";
 
@@ -71,6 +77,8 @@ public class APIConstants
 
     public const string UPDATE_STORY_TEAM = BASE_URL + "v1/teamMembers/";
 
+    public const string CREATE_PROJECT_TEAM = BASE_URL + "v1/project/teamMembers/";
+
     public const string SEARCH_TEAM_MEMBER = BASE_URL + "v1/searchUsers/";
 
     public const string MEDIA_URL = MEDIA_UPLOAD_BASE_URL + "adam/v1/uploadFile/";
@@ -92,6 +100,8 @@ public class APIConstants
     public const string UPDATE_AUDITION_STATUS = BASE_URL + "v1/audition/updateStatus/";
 
     public const string USER_PORTFOLIO = BASE_URL + "v1/userPortfolio/";
+
+    public const string GET_PORTFOLIO_INFO = BASE_URL + "v1/user/portfolioInfo/";
 
     public const string UPDATE_EXPERIANCE = BASE_URL + "v1/workExperience/";
 

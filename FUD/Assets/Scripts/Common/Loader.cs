@@ -54,8 +54,6 @@ public class Loader : MonoBehaviour
     {
         //GalleryManager.Instance.loadingCountText.text = "Start Loading";
 
-        Debug.Log("StartLoading Called");
-
         if (!loaderPanel.activeSelf)
         {
             loaderPanel.SetActive(true);
@@ -72,8 +70,6 @@ public class Loader : MonoBehaviour
 
     public void StopLoading()
     {
-        Debug.Log("StopLoading Called");
-
         if (mySequence != null)
         {
             mySequence.onKill += OnKill;

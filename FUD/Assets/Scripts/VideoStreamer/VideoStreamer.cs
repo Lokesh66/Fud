@@ -105,12 +105,14 @@ public class VideoStreamer : MonoBehaviour
         }
     }
 
-    public void StreamVideo(string url, System.Action onComplete)
+    public void StreamVideo(string url, Action onComplete)
     {
         if(videoPlayer == null)
         {
             Init();
         }
+
+        Loader.Instance.StartLoading();
 
         videoPlayer.url = url;
 
@@ -129,10 +131,13 @@ public class VideoStreamer : MonoBehaviour
     private void PrepareCompleted(VideoPlayer source)
     {
         source.controlledAudioTrackCount = source.audioTrackCount;
+
         for(int i=0; i < source.audioTrackCount; i++)
         {
             source.EnableAudioTrack((ushort)i, true);
         }
+
+        Loader.Instance.StopLoading();
 
         source.Play();
 
@@ -168,6 +173,8 @@ public class VideoStreamer : MonoBehaviour
         videoPlayer.frameReady -= OnFirstFrame;
 
         videoPlayer.Stop();
+
+        Debug.Log("Stop Video Called");
 
         Sequence sequence = DOTween.Sequence();
         sequence.Append(canvasGroup.DOFade(0.0f, TRANSITION_TIME).OnStart(() => 

@@ -39,13 +39,13 @@ public class StoryActivityCell : MonoBehaviour
 
     void OnPopUpClose(int updatedStatus)
     {
-        switch (updatedStatus)
-        {
-            case 3:
-            case 5:
-            case 8:
-                Destroy(gameObject);
-                break;
-        }
+        //switch (updatedStatus)
+        //{
+        //    case 3:
+        //    case 5:
+        //    case 8:
+        //        Destroy(gameObject);
+        //        break;
+        //}
     }
 }

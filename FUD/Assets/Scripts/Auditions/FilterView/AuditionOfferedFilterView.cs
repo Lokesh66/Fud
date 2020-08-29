@@ -7,12 +7,8 @@ using TMPro;
 
 public class AuditionOfferedFilterView : MonoBehaviour
 {
-    public TMP_Dropdown sortDropdown;
+    public List<FilterCell> filterCells;
 
-    public TMP_Dropdown orderDropdown;
-
-
-    List<Genre> genres;
 
     Action<object> OnApplyFilter;
 
@@ -33,9 +29,9 @@ public class AuditionOfferedFilterView : MonoBehaviour
 
     public void OnApplyButtonAction()
     {
-        int sortId = sortDropdown.value;
+        int sortId = filterCells[0].GetStatus();
 
-        int orderById = orderDropdown.value + 1;
+        int orderById = filterCells[1].GetStatus();
 
 
         GameManager.Instance.apiHandler.ApplyAudtionOfferedFilter(sortId, orderById, (status, response) => {
@@ -51,8 +47,11 @@ public class AuditionOfferedFilterView : MonoBehaviour
         });
     }
 
-    void ClearData()
+    public void ClearData()
     {
-        orderDropdown.value = sortDropdown.value = 0;
+        for (int i = 0; i < filterCells.Count; i++)
+        {
+            filterCells[i].ClearSelectedModels();
+        }
     }
 }

@@ -7,6 +7,7 @@ using System.IO;
 public class AuditionCreatedCell : MonoBehaviour
 {
     public TMP_Text titleText;
+    public TMP_Text descriptionText;
     public TMP_Text peopleJoinedText;
     public TMP_Text projectNameText;
 
@@ -31,7 +32,9 @@ public class AuditionCreatedCell : MonoBehaviour
         {
             titleText.text = auditionData.topic;
 
-            peopleJoinedText.text = "People Joined : " + auditionData.no_of_persons_joined.ToString();
+            descriptionText.text = auditionData.description;
+
+            peopleJoinedText.text = "Entries : " + auditionData.no_of_persons_joined.ToString();
 
             projectNameText.text = auditionData.title;
         }
@@ -39,46 +42,17 @@ public class AuditionCreatedCell : MonoBehaviour
 
     public void OnClickAction()
     {
-        Dictionary<string, object> parameters = new Dictionary<string, object>();
-        parameters.Add("id", auditionData.id);
-        //parameters.Add("page", 0);
-        //parameters.Add("limit", 20);
-
-        GameManager.Instance.apiHandler.SearchAuditions(1, parameters, (status, response) =>
-        {
-            if (status)
-            {
-                Debug.Log(response);
-
-                SearchAuditionResponse auditionResponse = JsonUtility.FromJson<SearchAuditionResponse>(response);
-
-                if (auditionResponse.data.Count > 0)
-                {
-                    auditionController.SetUserAuditions(auditionResponse.data, auditionData.id);
-                }
-                else
-                {
-                    AlertModel alertModel = new AlertModel();
-
-                    alertModel.message = "You have not received any audition responses";
-
-                    UIManager.Instance.ShowAlert(alertModel);
-                }
-            }
-        });        
+        auditionController.OnCellTapAction(this);
     }
 
     public void OnEditButtonAction()
     {
-        CreateAuditionView.Instance.EditView(auditionData, Refresh);
+        //CreateAuditionView.Instance.EditView(auditionData, Refresh);
     }
 
-    void Refresh(bool isDataUpdated)
+    public Audition GetAuditionModel()
     {
-        if (isDataUpdated)
-        {
-            auditionController.GetAuditions();
-        }
+        return auditionData;
     }
 
     void RecordVideo()

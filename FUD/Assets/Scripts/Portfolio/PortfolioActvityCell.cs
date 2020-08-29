@@ -1,10 +1,12 @@
-﻿using UnityEngine.UI;
+﻿using frame8.ScrollRectItemsAdapter.MultiplePrefabsExample;
+using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 
-
 public class PortfolioActvityCell : MonoBehaviour
 {
+    public RemoteImageBehaviour profileImage;
+
     public TextMeshProUGUI titleText;
 
     public TextMeshProUGUI descriptionText;
@@ -25,8 +27,6 @@ public class PortfolioActvityCell : MonoBehaviour
 
     bool isOwnAlbum = false;
 
-    int currentUserId;
-
 
     public void Load(PortfolioActivityModel model, PortfolioActivityPopUp activityPopUp, ETabType tabType)
     {
@@ -41,6 +41,8 @@ public class PortfolioActvityCell : MonoBehaviour
         descriptionText.text = model.Portfolio.description;
 
         statusTag.gameObject.SetActive(tabType == ETabType.Altered);
+
+        profileImage.Load(activityModel.Portfolio.Users?.profile_image);
 
         if (tabType == ETabType.Altered)
         {

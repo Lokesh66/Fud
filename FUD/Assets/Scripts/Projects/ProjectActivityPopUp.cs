@@ -9,6 +9,9 @@ public class ProjectActivityPopUp : MonoBehaviour
     public GameObject rejectObject;
 
 
+    public ProjectCastDetailsView detailsView;
+
+
     ProjectCast activityModel;
 
     ProjectCastsPanel castPanel;
@@ -27,6 +30,21 @@ public class ProjectActivityPopUp : MonoBehaviour
         this.castPanel = castsPanel;
 
         currentUserId = DataManager.Instance.userInfo.id;
+    }
+
+    public void OnViewButtonAction()
+    {
+        GameManager.Instance.apiHandler.GetProjectCasts(1, "cast&crew", activityModel.project_id, (status, response) => {
+
+            if (status)
+            {
+                gameObject.SetActive(false);
+
+                ProjectCast projectCast = JsonUtility.FromJson<ProjectCastDetailsResponse>(response).data;
+
+                detailsView.Load(projectCast);
+            }
+        });
     }
 
     public void OnStatusUpdate(int statusIndex)

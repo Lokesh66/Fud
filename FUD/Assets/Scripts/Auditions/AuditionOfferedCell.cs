@@ -1,14 +1,17 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
+﻿using frame8.ScrollRectItemsAdapter.MultiplePrefabsExample;
 using System.Collections.Generic;
+using UnityEngine;
 using System.IO;
+using TMPro;
+
 
 public class AuditionOfferedCell : MonoBehaviour
 {
     public TMP_Text titleText;
     public TMP_Text topicText;
     public TMP_Text descriptionText;
+
+    public RemoteImageBehaviour remoteImageBehaviour;
 
     Audition auditionData;
     AuditionOfferedView auditionController;
@@ -21,9 +24,12 @@ public class AuditionOfferedCell : MonoBehaviour
     public void SetView(AuditionOfferedView auditionController, Audition audition)
     {
         auditionData = audition;
+
         this.auditionController = auditionController;
 
         auditionType = auditionController.tabType;
+
+        remoteImageBehaviour.Load(audition.image_url);
 
         if (auditionData != null)
         {

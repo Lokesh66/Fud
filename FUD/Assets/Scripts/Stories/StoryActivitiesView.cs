@@ -140,6 +140,8 @@ public class StoryActivitiesView : MonoBehaviour
         pageNo = 1;
 
         isPagingOver = false;
+
+        filterView.ClearData();
     }
 
     public void OnFilterButtonAction()

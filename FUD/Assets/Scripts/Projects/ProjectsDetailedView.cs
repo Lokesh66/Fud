@@ -32,7 +32,6 @@ public class ProjectsDetailedView : MonoBehaviour
     public TextMeshProUGUI titleText;
 
     public GameObject parentPanel;
-    public GameObject createButton;
 
     public HorizontalLayoutGroup tabsLayoutGroup;
 
@@ -40,6 +39,7 @@ public class ProjectsDetailedView : MonoBehaviour
     public ProjectCastsPanel castsPanel;
     public ProjectAuditionsPanel auditionsPanel;
     public ProjectScenesPanel scenesPanel;
+    public ProjectTeamView teamView;
 
     public ProjectAuditionDetailView auditionDetails;
 
@@ -74,6 +74,7 @@ public class ProjectsDetailedView : MonoBehaviour
         castsPanel.SetData(project.id, project.Project_cast);
         auditionsPanel.SetData(project.id, project.Audition);
         scenesPanel.SetData(project, project.StoryScenes);
+        teamView.Load(project.MyProjectTeam);
     }
 
     public void Reload()
@@ -94,6 +95,7 @@ public class ProjectsDetailedView : MonoBehaviour
         parentPanel.SetActive(false);
         OnBackButtonClick?.Invoke();
         OnBackButtonClick = null;
+        teamView.Unload();
     }
 
     public void AddNewButtonAction()
@@ -120,5 +122,10 @@ public class ProjectsDetailedView : MonoBehaviour
     void ClearData()
     {
         tabToggles[0].isOn = true;
+    }
+
+    public Project GetCurrentProjectModel()
+    {
+        return project;
     }
 }

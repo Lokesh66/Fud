@@ -7,11 +7,8 @@ using TMPro;
 
 public class AuditionCreateFilterView : MonoBehaviour
 {
-    public TMP_Dropdown projectDropdown;
 
-    public TMP_Dropdown sortDropdown;
-
-    public TMP_Dropdown orderDropdown;
+    public List<FilterCell> filterCells;
 
 
     List<AuditionProjectModel> projectsModels;
@@ -34,17 +31,22 @@ public class AuditionCreateFilterView : MonoBehaviour
 
             if (status)
             {
-                projectsModels = dataList;
+                List<DropdownModel> dropdownModels = new List<DropdownModel>();
 
-                List<string> options = new List<string>();
+                DropdownModel dropdownModel = null;
 
-                foreach (var option in projectsModels)
+                for (int i = 0; i < dataList.Count; i++)
                 {
-                    options.Add(option.title);
+                    dropdownModel = new DropdownModel();
+
+                    dropdownModel.text = dataList[i].title;
+
+                    dropdownModel.id = dataList[i].id;
+
+                    dropdownModels.Add(dropdownModel);
                 }
 
-                projectDropdown.ClearOptions();
-                projectDropdown.AddOptions(options);
+                filterCells[0].Load(dropdownModels);
             }
         });
     }
@@ -58,13 +60,13 @@ public class AuditionCreateFilterView : MonoBehaviour
 
     public void OnApplyButtonAction()
     {
-        int sortId = sortDropdown.value;
+        int projectId = filterCells[0].GetStatus();
 
-        int orderById = orderDropdown.value + 1;
+        int sortId = filterCells[1].GetStatus();
 
-        int projectId = projectsModels[projectDropdown.value].id;
+        int orderById = filterCells[2].GetStatus();
 
-        GameManager.Instance.apiHandler.ApplyAudtionAlteredFilter(sortId, projectId, orderById, (status, response) => {
+        GameManager.Instance.apiHandler.ApplyAudtionCreateFilter(sortId, projectId, orderById, (status, response) => {
 
             if (status)
             {
@@ -77,8 +79,11 @@ public class AuditionCreateFilterView : MonoBehaviour
         });
     }
 
-    void ClearData()
+    public void ClearData()
     {
-        projectDropdown.value = 0;
+        for (int i = 0; i < filterCells.Count; i++)
+        {
+            filterCells[i].ClearSelectedModels();
+        }
     }
 }

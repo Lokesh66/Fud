@@ -33,8 +33,6 @@ public class ProjectCreationView : MonoBehaviour
 
     public TMP_InputField titleField;
 
-    public TMP_InputField budgetField;
-
     public TMP_InputField descriptionField;
     
     public TMP_Dropdown storySelectionDropdown;
@@ -55,6 +53,8 @@ public class ProjectCreationView : MonoBehaviour
 
     List<ProjectStory> stories = new List<ProjectStory>();
 
+
+
     public void SetView(List<ProjectStory> stories, Action<bool> action)
     {
         this.stories = stories;
@@ -69,6 +69,11 @@ public class ProjectCreationView : MonoBehaviour
         parentPanel.gameObject.SetActive(true);
         backAction = action;
         isDataUpdated = false;
+    }
+
+    public void EditSetView()
+    {
+
     }
 
     public void OnStartDateAction()
@@ -114,8 +119,6 @@ public class ProjectCreationView : MonoBehaviour
 
         parameters.Add("story_version_id", model.StoryVersions.id);
 
-        parameters.Add("cost_estimation", long.Parse(budgetField.text));
-
         parameters.Add("start_date", startDateText.text);
 
         parameters.Add("release_date", releaseDateText.text);
@@ -157,10 +160,6 @@ public class ProjectCreationView : MonoBehaviour
         {
             errorMessage = "Select Stroy for your story";
         }
-        else if (string.IsNullOrEmpty(budgetField.text))
-        {
-            errorMessage = "Select budjet for your story";
-        }
         else if (string.IsNullOrEmpty(releaseDateText.text) || startDateText.text.Equals(defaultDateText))
         {
             errorMessage = "Please select respective dates";
@@ -183,7 +182,7 @@ public class ProjectCreationView : MonoBehaviour
 
     void ClearData()
     {
-        titleField.text = budgetField.text = descriptionField.text = string.Empty;
+        titleField.text = descriptionField.text = string.Empty;
 
         storySelectionDropdown.value = 0;
     }

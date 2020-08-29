@@ -111,6 +111,7 @@ namespace frame8.ScrollRectItemsAdapter.MultiplePrefabsExample
 		void loadFromLocal(string filePath, string imageURL, bool refreshResources, bool loadCachedIfAvailable = true, Action<bool, bool> onCompleted = null, Action onCanceled = null)
 		{
 			LoadSprite(filePath, Path.GetFileName(imageURL), (byte[] obj) => {
+				Debug.Log("CallBack");
 				//UnityMainThreadDispatcher.Instance().Enqueue(() => {
 					if (this != null && _RawImage != null)
 					{
@@ -147,17 +148,20 @@ namespace frame8.ScrollRectItemsAdapter.MultiplePrefabsExample
 		public void Load(string imageURL, bool loadCachedIfAvailable = true, Action<bool, bool> onCompleted = null, Action onCanceled = null)
 		{
 			if (_RawImage == null)
+			{
 				return;
+			}
+
 			if (imageURL == null || imageURL.Length <= 0)
 			{
 				Destroy(_RawImage.material.mainTexture);
 
 				_RawImage.texture = _LoadingTexture;
+
 				return;
 			}
-			string filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, Path.GetFileName(imageURL));
 
-			Debug.Log("filePath = " + filePath);
+			string filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, Path.GetFileName(imageURL));
 
 			if (File.Exists(filePath))
 			{
@@ -202,6 +206,8 @@ namespace frame8.ScrollRectItemsAdapter.MultiplePrefabsExample
 								{   
 									File.WriteAllBytes(path, response);
 									//loadFromLocal(path, imageURL, true, loadCachedIfAvailable, onCompleted, onCanceled);
+									Debug.Log("Calling Load");
+									Load(_CurrentRequestedURL, loadCachedIfAvailable, onCompleted, onCanceled);
 								}
 								result.removeRequest();
 							};

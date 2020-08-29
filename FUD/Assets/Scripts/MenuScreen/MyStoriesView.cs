@@ -18,6 +18,9 @@ public class MyStoriesView : MonoBehaviour
     public MyStoriesTableView tableView;
 
 
+    public CreatedPopUpView popUpView;
+
+
     public List<StoryModel> storiesList;
 
     MyStoriesController storiesController;
@@ -94,9 +97,11 @@ public class MyStoriesView : MonoBehaviour
         storiesList.Clear();
     }
 
-    public void OnStoryTapAction(int storyId)
+    public void OnStoryTapAction(StoryCell storyCell)
     {
-        StoryDetailsController.Instance.Load(storyId, OnStoryClosedAction);
+        popUpView.Load(storyCell);
+
+        //StoryDetailsController.Instance.Load(storyId, OnStoryClosedAction);
     }
 
     void OnStoryClosedAction()

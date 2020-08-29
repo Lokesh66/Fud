@@ -62,7 +62,7 @@ public class StoryPublicPopUp : MonoBehaviour
 
                 if (responseModel.data != null)
                 {
-                    
+                    detailView.Load(responseModel.data);
                 }
             }
         });

@@ -29,7 +29,10 @@ public class  VersionMediaCell : MonoBehaviour
         {
             GameManager.Instance.downLoadManager.DownloadImage(model.content_url, (sprite) =>
             {
-                albumImage.sprite = sprite;
+                if (this != null)
+                {
+                    albumImage.sprite = sprite;
+                }
             });
         }
     }

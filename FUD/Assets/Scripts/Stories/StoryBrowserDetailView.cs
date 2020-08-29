@@ -25,6 +25,8 @@ public class StoryBrowserDetailView : MonoBehaviour
     {
         this.model = model;
 
+        gameObject.SetActive(true);
+
         SetView();
     }
 

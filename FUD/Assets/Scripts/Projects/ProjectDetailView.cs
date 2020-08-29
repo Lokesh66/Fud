@@ -43,7 +43,7 @@ public class ProjectDetailView : MonoBehaviour
 
         titleText.text = projectData.title;
 
-        descriptionText.text = projectData.description;
+        descriptionText.text = offeredModel.Project_cast.StoryCharacters.description;
 
         costText.text = projectData.cost_estimation.ToString();
 

@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using SimpleFileBrowser;
 
 
 public class GalleryManager : MonoBehaviour
@@ -111,24 +110,24 @@ public class GalleryManager : MonoBehaviour
 
     public void PickImages(string mediaSource, Action<bool, List<string>> OnUploaded)
     {
-        string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "banner2.png");
+        //string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "banner2.png");
 
-        uploadedURLs.Clear();
+        //uploadedURLs.Clear();
 
-        this.OnUploaded = OnUploaded;
+        //this.OnUploaded = OnUploaded;
 
-        Array.Clear(loadedFiles, 0, loadedFiles.Length);
+        //Array.Clear(loadedFiles, 0, loadedFiles.Length);
 
-        loadedFiles[0] = _filePath;
+        //loadedFiles[0] = _filePath;
 
-        selectedImagesCount = 1;
+        //selectedImagesCount = 1;
 
-        for (int i = 0; i < 1; i++)
-        {
-            UploadFile(_filePath, EMediaType.Image, mediaSource);
-        }
+        //for (int i = 0; i < 1; i++)
+        //{
+        //    UploadFile(_filePath, EMediaType.Image, mediaSource);
+        //}
 
-        return;
+        //return;
 
 #if UNITY_ANDROID
         NativeGallery.Permission permission = NativeGallery.GetImagesFromGallery((imagesPath) =>
@@ -257,11 +256,11 @@ public class GalleryManager : MonoBehaviour
 
                     selectedImagesCount = 0;
 
-                    AlertModel alertModel = new AlertModel();
+                    //AlertModel alertModel = new AlertModel();
 
-                    alertModel.message = responseModel.message;
+                    //alertModel.message = responseModel.message;
 
-                    UIManager.Instance.ShowAlert(alertModel);
+                    //UIManager.Instance.ShowAlert(alertModel);
 
                     uploadedURLs.Clear();
 

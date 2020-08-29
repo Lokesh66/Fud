@@ -17,6 +17,8 @@ public class AuditionCreatedView : MonoBehaviour
 
     public AuditionsCreatedTableView tableView;
 
+    public AuditionCreatedDetailsView detailsView;
+
 
     [HideInInspector]
     public List<Audition> createdAuditions;
@@ -56,6 +58,11 @@ public class AuditionCreatedView : MonoBehaviour
         {
             GetAuditions();
         }
+    }
+
+    public void OnCellTapAction(AuditionCreatedCell createdCell)
+    {
+        detailsView.Load(this, createdCell);
     }
 
     #region ButtonActions
