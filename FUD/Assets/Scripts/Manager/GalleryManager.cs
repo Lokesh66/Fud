@@ -45,6 +45,8 @@ public class GalleryManager : MonoBehaviour
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
+
+        Debug.Log("Dummy Log");
     }
 
     public void GetImageFromGallaery(string mediaSource, Action<bool, List<string>> OnImageUploaded)
