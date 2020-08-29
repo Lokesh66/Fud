@@ -55,8 +55,6 @@ public class CreateAuditionView : MonoBehaviour
 
     public UploadedFilesHandler filesHandler;
 
-    public WebCamDeviceHandler deviceHandler;
-
     bool isNewAuditionCreated;
 
     int projectId;
