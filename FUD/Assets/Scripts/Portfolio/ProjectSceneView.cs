@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+using System;
 
 public class ProjectSceneView : MonoBehaviour
 {
@@ -47,13 +47,17 @@ public class ProjectSceneView : MonoBehaviour
 
     void SetView()
     {
+        DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0);
+
+        DateTime selectedDate = dateTime.AddSeconds(detailsModel.start_time);
+
         sceneOrderText.text = detailsModel.scene_order.ToString();
 
         locationText.text = detailsModel.location;
 
         descriptionText.text = detailsModel.description;
 
-        startDateText.text = detailsModel.start_time.ToString();
+        startDateText.text = DatePicker.Instance.GetDateString(selectedDate);
 
         shootTimeDropdown.captionText.text = detailsModel.shoot_time;
 

@@ -81,17 +81,19 @@ public class CharacterDetailsView : MonoBehaviour
     {
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
-        GameManager.Instance.apiHandler.RemoveCharacter(characterModel.id, storyId, 8, (status) => {
+        GameManager.Instance.apiHandler.RemoveCharacter(characterModel.id, storyId, 8, (status, response) => {
 
-            OnAPIResponse(status);
+            OnAPIResponse(status, response);
         });
     }
 
-    void OnAPIResponse(bool status)
+    void OnAPIResponse(bool status, string response)
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Character Removed Successfully" : "Something went wrong, please try again.";
+        BaseResponse baseResponse = JsonUtility.FromJson<BaseResponse>(response);
+
+        alertModel.message = status ? "Character Removed Successfully" : baseResponse.message;
 
         if (status)
         {

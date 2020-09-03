@@ -190,7 +190,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateProjectStauts(int projectId, int castId, int status, Action<bool> action)
+    public void UpdateProjectStauts(int projectId, int castId, int status, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -202,7 +202,7 @@ public partial class APIHandler
 
         gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_OFFERED_PROJECT_STATUS, true, parameters, (apiStatus, response) =>
         {
-            action(apiStatus);
+            action(apiStatus, response);
         }));
     }
 
@@ -420,11 +420,11 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateShortListedAlbums(Dictionary<string, object> parameters, Action<bool> action)
+    public void UpdateShortListedAlbums(Dictionary<string, object> parameters, Action<bool, string> action)
     {
         gameManager.StartCoroutine(PostRequest(APIConstants.UPDATE_SHORTLISTED_ALBUMS, true, parameters, (status, response) => {
 
-            action(status);
+            action(status, response);
         }));
     }
 }
@@ -604,7 +604,7 @@ public class SceneDetailsModel
     public int story_version_id;
     public int project_id;
     public string location;
-    public DateTime start_time;
+    public int start_time;
     public int status;
     public DateTime created_date_time;
     public string updatedAt;

@@ -71,17 +71,19 @@ public class ProjectBrowserView : MonoBehaviour
 
         body.Add("portfolios", dataList);
 
-        GameManager.Instance.apiHandler.UpdateShortListedAlbums(body, (apiStatus) => {
+        GameManager.Instance.apiHandler.UpdateShortListedAlbums(body, (apiStatus, apiRespose) => {
 
-            OnAPIResponse(apiStatus);
+            OnAPIResponse(apiStatus, apiRespose);
         });
     }
 
-    void OnAPIResponse(bool status)
+    void OnAPIResponse(bool status, string response)
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Selected Albums are Shortlisted" : "Something went wrong, please try again.";
+        BaseResponse baseResponse = JsonUtility.FromJson<BaseResponse>(response);
+
+        alertModel.message = status ? "Selected Albums are Shortlisted" : baseResponse.message;
 
         if (status)
         {

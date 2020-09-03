@@ -87,13 +87,15 @@ public class LoginScreen : MonoBehaviour
 
     public void OnClick_ResendOTP()
     {        
-        GameManager.Instance.apiHandler.SendOTP(number, (bool status) => {
+        GameManager.Instance.apiHandler.SendOTP(number, (bool status, string response) => {
             if (status)
             {
                 StartTimer();
             }
 
-            string message = status ? "Please enter OTP that we have sent to registered mobile number" : "Something went worng, please try again";
+            BaseResponse baseResponse = JsonUtility.FromJson<BaseResponse>(response);
+
+            string message = status ? "Please enter OTP that we have sent to registered mobile number" : baseResponse.message;
 
             ShowValidationMessage(message);
         });

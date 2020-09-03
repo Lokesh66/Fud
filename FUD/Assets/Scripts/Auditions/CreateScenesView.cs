@@ -117,17 +117,19 @@ public class CreateScenesView : MonoBehaviour
 
                 GameManager.Instance.apiHandler.CreateProjectScene(creationModel, dialoguesList, (status, response) =>
                 {
-                    OnAPIResponse(status);
+                    OnAPIResponse(status, response);
                 });
             }
         }
     }
 
-    void OnAPIResponse(bool status)
+    void OnAPIResponse(bool status, string response)
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Scene Creation Success" : "Something went wrong, please try again.";
+        BaseResponse baseResponse = JsonUtility.FromJson<BaseResponse>(response);
+
+        alertModel.message = status ? "Scene Creation Success" : baseResponse.message;
 
         if (status)
         {

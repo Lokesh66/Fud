@@ -80,7 +80,9 @@ public class PortfolioActivityPopUp : MonoBehaviour
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Status updation success" : "Something went wrong, please try again";
+        BaseResponse baseResponse = JsonUtility.FromJson<BaseResponse>(response);
+
+        alertModel.message = status ? "Status updation success" : baseResponse.message;
 
         alertModel.okayButtonAction = OnCloseButton;
 

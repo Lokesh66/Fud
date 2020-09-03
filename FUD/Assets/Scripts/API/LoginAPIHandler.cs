@@ -7,7 +7,7 @@ using System.IO;
 
 public partial class APIHandler
 {
-    public void SendOTP(long phoneNumber, Action<bool> action)
+    public void SendOTP(long phoneNumber, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -15,7 +15,7 @@ public partial class APIHandler
 
         gameManager.StartCoroutine(PostRequest(APIConstants.USER_OTP, false, parameters, (bool status, string response) => {
             Debug.LogFormat("<LoginAPIHandler/SendOTP> Response ({0})", response);
-            action?.Invoke(status);
+            action?.Invoke(status, response);
 
         }));
     }

@@ -125,6 +125,11 @@ public class ProjectTeamView : MonoBehaviour
 
     public void CreateTeam()
     {
+        if (FindObjectOfType<ProjectTeamCreationView>() != null)
+        {
+            return;
+        }
+
         createObject = Instantiate(createTeamObject, ProjectsDetailedView.Instance.transform);
 
         createObject.GetComponent<ProjectTeamCreationView>().SetView(Refresh);

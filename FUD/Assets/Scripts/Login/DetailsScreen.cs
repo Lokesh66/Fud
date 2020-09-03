@@ -52,7 +52,7 @@ public class DetailsScreen : MonoBehaviour
         }
         else
         {
-            GameManager.Instance.apiHandler.SendOTP(long.Parse(numberFieldText.text), (bool status) =>
+            GameManager.Instance.apiHandler.SendOTP(long.Parse(numberFieldText.text), (bool status, string response) =>
             {
                 if (status)
                 {
@@ -67,7 +67,9 @@ public class DetailsScreen : MonoBehaviour
                     
                 }
 
-                string message = status ? "Please enter OTP that we have sent to registered mobile number" : "Something went worng, please try again";
+                BaseResponse baseResponse = JsonUtility.FromJson<BaseResponse>(response);
+
+                string message = status ? "Please enter OTP that we have sent to registered mobile number" : baseResponse.message;
 
                 ShowValidationMessage(message);
             });

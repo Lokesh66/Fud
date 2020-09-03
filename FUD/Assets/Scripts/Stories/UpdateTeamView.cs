@@ -149,7 +149,7 @@ public class UpdateTeamView : MonoBehaviour
 
         string title = StoryDetailsController.Instance.GetStoryTitle();
 
-        GameManager.Instance.apiHandler.UpdateStoryTeam(teamModel.story_id, title, teamModel.id, descriptionField.text, members, accessDropdown.value, (status, response) =>
+        GameManager.Instance.apiHandler.UpdateStoryTeam(teamModel.story_id, teamNameField.text, teamModel.id, descriptionField.text, members, accessDropdown.value, (status, response) =>
         {
             if (status)
             {

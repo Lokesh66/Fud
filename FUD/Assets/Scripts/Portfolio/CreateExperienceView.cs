@@ -128,16 +128,18 @@ public class CreateExperienceView : MonoBehaviour
 
                 }
 
-                OnAPIResponse(status);
+                OnAPIResponse(status, response);
             });
         }
     }
 
-    void OnAPIResponse(bool status)
+    void OnAPIResponse(bool status, string response)
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Portfolio Experiance Creation Success" : "Something went wrong, please try again.";
+        BaseResponse baseResponse = JsonUtility.FromJson<BaseResponse>(response);
+
+        alertModel.message = status ? "Portfolio Experiance Creation Success" : baseResponse.message;
 
         if (status)
         {

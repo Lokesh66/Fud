@@ -54,17 +54,19 @@ public class ProjectStatusView : MonoBehaviour
 
     void UpdateProjectStatus(int status)
     {
-        GameManager.Instance.apiHandler.UpdateProjectStauts(selectedProject.project_id, selectedProject.project_cast_id, status, (apiStatus) => {
+        GameManager.Instance.apiHandler.UpdateProjectStauts(selectedProject.project_id, selectedProject.project_cast_id, status, (apiStatus, response) => {
 
-            OnAPIResponse(apiStatus);
+            OnAPIResponse(apiStatus, response);
         });
     }
 
-    void OnAPIResponse(bool status)
+    void OnAPIResponse(bool status, string response)
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Project status updated Successfully" : "Something went wrong, please try again.";
+        BaseResponse baseResponse = JsonUtility.FromJson<BaseResponse>(response);
+
+        alertModel.message = status ? "Project status updated Successfully" : baseResponse.message;
 
         if (status)
         {

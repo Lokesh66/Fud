@@ -377,6 +377,8 @@ public class CreateCharacterView : MonoBehaviour
         {
             this.imageUrls = audioUrls;
 
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Audio);
+
             for (int i = 0; i < audioUrls.Count; i++)
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();
@@ -405,6 +407,8 @@ public class CreateCharacterView : MonoBehaviour
         if (status)
         {
             this.imageUrls = videoUrls;
+
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Video);
 
             for (int i = 0; i < videoUrls.Count; i++)
             {

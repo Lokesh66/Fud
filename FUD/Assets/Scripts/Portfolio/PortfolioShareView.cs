@@ -114,15 +114,17 @@ public class PortfolioShareView : MonoBehaviour
 
             }
 
-            OnAPIResponse(status);
+            OnAPIResponse(status, response);
         });
     }
 
-    void OnAPIResponse(bool status)
+    void OnAPIResponse(bool status, string response)
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Album Shared Successfully" : "Something went wrong, please try again.";
+        BaseResponse baseResponse = JsonUtility.FromJson<BaseResponse>(response);
+
+        alertModel.message = status ? "Album Shared Successfully" : baseResponse.message;
 
         if (status)
         {

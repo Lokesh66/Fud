@@ -352,7 +352,7 @@ public partial class APIHandler
         }));
     }
 
-    public void RemoveCharacter(int id, int storyId, int status, Action<bool> action)
+    public void RemoveCharacter(int id, int storyId, int status, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -364,7 +364,7 @@ public partial class APIHandler
 
         gameManager.StartCoroutine(PutRequest(APIConstants.SAVE_STORY_CHARACTER, true, parameters, (apiStatus, response) => {
 
-            action(apiStatus);
+            action(apiStatus, response);
         }));
     }
 
