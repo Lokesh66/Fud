@@ -77,6 +77,8 @@ public class VideoStreamer : MonoBehaviour
 
     public Slider positionSlider;
 
+    public Slider volumeSlider;
+
 
     UniversalMediaPlayer currentPlayer;
 
@@ -171,6 +173,11 @@ public class VideoStreamer : MonoBehaviour
 
             dragHelper.ResetIsDragged();
         }
+    }
+
+    public void OnVolumeValueChange()
+    {
+        //currentPlayer.
     }
 
     public void OnPauseButtonAction()
