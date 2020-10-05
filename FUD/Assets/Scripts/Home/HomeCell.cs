@@ -52,7 +52,7 @@ public class HomeCell : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(url))
         {
-            GameManager.Instance.downLoadManager.DownloadImage(url, (sprite) => {
+            GameManager.Instance.apiHandler.DownloadImage(url, (sprite) => {
 
                 if (this != null)
                 {

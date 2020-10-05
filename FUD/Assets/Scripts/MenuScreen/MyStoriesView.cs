@@ -99,9 +99,12 @@ public class MyStoriesView : MonoBehaviour
 
     public void OnStoryTapAction(StoryCell storyCell)
     {
-        popUpView.Load(storyCell);
+        popUpView.Load(storyCell, this);
+    }
 
-        //StoryDetailsController.Instance.Load(storyId, OnStoryClosedAction);
+    public void OnStoryVersionShared()
+    {
+        storiesController.OnTabAction(1);
     }
 
     void OnStoryClosedAction()

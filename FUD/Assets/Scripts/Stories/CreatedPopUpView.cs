@@ -1,18 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
 
 public class CreatedPopUpView : MonoBehaviour
 {
     public GameObject updateStoryCache;
 
 
+    MyStoriesView storiesView;
+
     StoryCell storyCell;
 
 
-    public void Load(StoryCell activityModel)
+    public void Load(StoryCell activityModel, MyStoriesView storiesView)
     {
         this.storyCell = activityModel;
+
+        this.storiesView = storiesView;
 
         gameObject.SetActive(true);
     }
@@ -21,7 +24,12 @@ public class CreatedPopUpView : MonoBehaviour
     {
         gameObject.SetActive(false);
 
-        StoryDetailsController.Instance.Load(storyCell.GetStoryModel().id, null);
+        StoryDetailsController.Instance.Load(storyCell.GetStoryModel().id, OnBackFromDetailView);
+    }
+
+    void OnBackFromDetailView()
+    {
+        storiesView.OnStoryVersionShared();
     }
 
     public void OnEditButtonAction()

@@ -23,6 +23,8 @@ public class AuditionOfferedView : MonoBehaviour
 
     bool isPagingOver = false;
 
+    bool isInitialized = false;
+
     int pageNo = 1;
 
     int MAX_OFFERED_AUDITIONS = 50;
@@ -52,8 +54,6 @@ public class AuditionOfferedView : MonoBehaviour
     {
         noDataView.gameObject.SetActive(false);
 
-        tableView.gameObject.SetActive(false);
-
         GameManager.Instance.apiHandler.GetOfferedAuditions(pageNo, (status, response) => {
 
             if (status)
@@ -70,7 +70,20 @@ public class AuditionOfferedView : MonoBehaviour
                     pageNo = 1;
                 }
 
-                tableView.gameObject.SetActive(true);
+                if (!isInitialized)
+                {
+                    tableView.gameObject.SetActive(true);
+
+                    isInitialized = true;
+                }
+                else
+                {
+                    tableView.Data.Clear();
+
+                    tableView.Data.Add(offeredAuditions.Count);
+
+                    tableView.Refresh();
+                }
 
                 if (offeredAuditions.Count == 0)
                 {

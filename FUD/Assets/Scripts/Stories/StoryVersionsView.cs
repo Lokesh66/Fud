@@ -102,6 +102,8 @@ public class StoryVersionsView : MonoBehaviour
     {
         int versionIndex = storyVersionList.IndexOf(storyVersion);
 
+        Debug.Log("Version Index = " + versionIndex);
+
         content.GetChild(versionIndex).GetComponent<StoryVersionCell>().SetView(updatedModel, this);
     }
 

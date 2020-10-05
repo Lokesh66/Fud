@@ -48,14 +48,11 @@ public class CreateExperienceView : MonoBehaviour
 
         LoadRoles();
 
-        GameManager.Instance.apiHandler.GetIndustries((status, industriesList) => {
+        DataManager.Instance.GetIndustries((industriesList) => {
 
-            if (status) 
-            { 
-                industryModels = industriesList;
+            industryModels = industriesList;
 
-                LoadIndustries();
-            }
+            LoadIndustries();
         });
            
     }
@@ -290,14 +287,6 @@ public class CreateExperienceView : MonoBehaviour
                 uploadedDict.Add(kvp);
             }
         }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString();
-
-            UIManager.Instance.ShowAlert(alertModel);
-        }
     }
 
     void OnAudiosUploaded(bool status, List<string> audioUrls)
@@ -305,6 +294,8 @@ public class CreateExperienceView : MonoBehaviour
         if (status)
         {
             this.imageUrls = audioUrls;
+
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Audio);
 
             for (int i = 0; i < audioUrls.Count; i++)
             {
@@ -318,14 +309,6 @@ public class CreateExperienceView : MonoBehaviour
 
                 uploadedDict.Add(kvp);
             }
-        }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString() + imageUrls[0];
-
-            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -349,14 +332,6 @@ public class CreateExperienceView : MonoBehaviour
 
                 uploadedDict.Add(kvp);
             }
-        }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString() + imageUrls[0];
-
-            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 }

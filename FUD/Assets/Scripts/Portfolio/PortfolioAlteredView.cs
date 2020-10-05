@@ -22,6 +22,8 @@ public class PortfolioAlteredView : MonoBehaviour
     public List<PortfolioActivityModel> activityModels;
 
 
+    bool isInitialized = false;
+
     bool isPagingOver = false;
 
     int pageNo = 1;
@@ -31,6 +33,8 @@ public class PortfolioAlteredView : MonoBehaviour
 
     public void Load()
     {
+        Debug.Log("Load Called");
+
         ClearData();
 
         LoadAlteredData();
@@ -40,8 +44,6 @@ public class PortfolioAlteredView : MonoBehaviour
 
     void LoadAlteredData()
     {
-        tableView.gameObject.SetActive(false);
-
         GameManager.Instance.apiHandler.GetAlteredPortfolios(pageNo, (status, response) => {
 
             PortfolioPostResponse responseModel = JsonUtility.FromJson<PortfolioPostResponse>(response);
@@ -59,7 +61,20 @@ public class PortfolioAlteredView : MonoBehaviour
                     pageNo = 1;
                 }
 
-                tableView.gameObject.SetActive(true);
+                if (!isInitialized)
+                {
+                    tableView.gameObject.SetActive(true);
+
+                    isInitialized = true;
+                }
+                else
+                {
+                    tableView.Data.Clear();
+
+                    tableView.Data.Add(activityModels.Count);
+
+                    tableView.Refresh();
+                }
 
                 noDataObject.SetActive(activityModels.Count == 0);
             }
@@ -115,6 +130,17 @@ public class PortfolioAlteredView : MonoBehaviour
         pageNo = 1;
 
         filterView.ClearData();
+    }
+
+    public void RemoveOffer(PortfolioActivityModel activityModel)
+    {
+        activityModels.Remove(activityModel);
+
+        tableView.Data.Clear();
+
+        tableView.Data.Add(activityModels.Count);
+
+        tableView.Refresh();
     }
 
     public void OnFilterButtonAction()

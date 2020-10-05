@@ -24,6 +24,8 @@ public class AuditionAlteredView : MonoBehaviour
 
     bool isPagingOver = false;
 
+    bool isInitialized = false;
+
     int pageNo = 1;
 
     int MAX_ALTERED_AUDITIONS = 50;
@@ -52,16 +54,14 @@ public class AuditionAlteredView : MonoBehaviour
     {
         noDataView.gameObject.SetActive(false);
 
-        tableView.gameObject.SetActive(false);
-
         GameManager.Instance.apiHandler.GetAlteredAuditions(pageNo, (status, response) => {
 
-            if (status)
+            JoinedAuditionsResponse joinedAuditionsResponse = JsonUtility.FromJson<JoinedAuditionsResponse>(response);
+
+            joinedAuditions = joinedAuditionsResponse.data;
+
+            if (status && joinedAuditions.Count > 0)
             {
-                JoinedAuditionsResponse joinedAuditionsResponse = JsonUtility.FromJson<JoinedAuditionsResponse>(response);
-
-                joinedAuditions = joinedAuditionsResponse.data;
-
                 pageNo++;
 
                 if (joinedAuditions.Count < MAX_ALTERED_AUDITIONS)
@@ -71,7 +71,20 @@ public class AuditionAlteredView : MonoBehaviour
                     pageNo = 1;
                 }
 
-                tableView.gameObject.SetActive(true);
+                if (!isInitialized)
+                {
+                    tableView.gameObject.SetActive(true);
+
+                    isInitialized = true;
+                }
+                else
+                {
+                    tableView.Data.Clear();
+
+                    tableView.Data.Add(joinedAuditions.Count);
+
+                    tableView.Refresh();
+                }
             }
             else
             {

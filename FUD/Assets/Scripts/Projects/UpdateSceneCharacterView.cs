@@ -6,407 +6,113 @@ using System.Linq;
 
 public class UpdateSceneCharacterView : MonoBehaviour
 {
-    public ScrollRect scrollRect;
-
-    public GameObject dialogueCell;
-
-    public Button enterButton;
-
-    public TMP_InputField dialogueField;
-
-    public RectTransform searchContent;
-
-    public RectTransform searchScrollTrans;
-
-    public GameObject searchCell;
-
-    public GameObject scrollObject;
-
-    public RectTransform enterPanelTrans;
-
-
-    UserSearchModel selectedModel;
-
-
-    UpdateSceneView updateSceneView;
-
-    DialogueCell editedDialogueCell;
-
-    List<Dictionary<string, object>> dialogues = new List<Dictionary<string, object>>();
-
-    string keyword = string.Empty;
-
-    float searchScrollMaxHeight = 400.0f;
-
-    float searchCellHeight = 100.0f;
-
-    bool isLeftAlign = true;
-
-    bool isSearchAPICalled = false;
-
-
-    public void EnableView(List<SceneCharacter> sceneCharacters, UpdateSceneView updateSceneView)
+    public enum ESubTabType
     {
+        Manual,
+        Auto,
+    }
+
+    public TextMeshProUGUI[] buttonsList;
+
+
+    public UpdateSceneManualView manualView;
+
+    public UpdateSceneAutoView autoView;
+
+
+    public Color selectedColor;
+
+    public Color disabledColor;
+
+
+    GameObject currentObject;
+
+    SceneDetailsModel detailsModel;
+
+    List<Dictionary<string, object>> autoDialogues = new List<Dictionary<string, object>>();
+
+    List<Dictionary<string, object>> manualDialogues = new List<Dictionary<string, object>>();
+
+    private ESubTabType currentTab = ESubTabType.Auto;
+
+
+    public void Load(SceneDetailsModel detailsModel)
+    {
+        this.detailsModel = detailsModel;
+
+        OnTabAction(0);
+
         gameObject.SetActive(true);
-
-        this.updateSceneView = updateSceneView;
-
-        dialogueField.onTouchScreenKeyboardStatusChanged.RemoveAllListeners();
-
-        dialogueField.onTouchScreenKeyboardStatusChanged.AddListener(delegate { OnStatusChanged(); });
-
-        Load(sceneCharacters);
     }
-    void OnStatusChanged()
+
+    #region Button Actions
+
+    public void OnTabAction(int tabIndex)
     {
-        if (!dialogueField.wasCanceled)
+        if (currentTab != (ESubTabType)tabIndex)
         {
-            enterPanelTrans.anchoredPosition = new Vector2(enterPanelTrans.anchoredPosition.x, 0.0f);
+            buttonsList[(int)currentTab].color = disabledColor;
+
+            buttonsList[tabIndex].color = selectedColor;
+
+            currentTab = (ESubTabType)tabIndex;
+
+            currentObject?.SetActive(false);
+
+            UpdateCurrentView();
         }
     }
 
-    void SetDialougeFieldPosition()
-    {
-        enterPanelTrans.anchoredPosition = new Vector2(enterPanelTrans.anchoredPosition.x, GetKeyboardHeight(true));
-    }
+    #endregion
 
-    public void OnSelect()
+    void UpdateCurrentView()
     {
-#if !UNITY_EDITOR
-        Invoke("SetDialougeFieldPosition", 0.3f);
-#endif
-    }
-
-    public void OnValueChange()
-    {
-        if (selectedModel == null)
+        switch (currentTab)
         {
-            enterButton.interactable = false;
+            case ESubTabType.Manual:
+                currentObject = manualView.gameObject;
+                manualView.EnableView(detailsModel.SceneCharacters, this);
+                break;
 
-            if (!isSearchAPICalled && selectedModel == null)
-            {
-                keyword = dialogueField.text;
-
-                CallSearchAPI();
-            }
-        }
-        else
-        {
-            int characterIndex = dialogueField.text.IndexOf(':');
-
-            int startIndex = dialogueField.text.Contains("@") ? 1 : 0;
-
-            int lastIndex = dialogueField.text.Contains(":") ? characterIndex - startIndex : selectedModel.name.Length - startIndex;
-
-            string subString = dialogueField.text.Substring(startIndex, lastIndex);
-
-            if (!subString.Equals(selectedModel.name) && !isSearchAPICalled)
-            {
-                keyword = subString;
-
-                CallSearchAPI();
-            }
-
-            if (characterIndex + 2 < dialogueField.text.Length)
-            {
-                enterButton.interactable = true;
-            }
-            else
-            {
-                enterButton.interactable = false;
-            }
+            case ESubTabType.Auto:
+                currentObject = autoView.gameObject;
+                autoView.EnableView(this);
+                break;
         }
     }
 
-    void CallSearchAPI()
+    public void OnBackButtonAction()
     {
-        if (keyword.IndexOf('@') == 0)
-        {
-            keyword = keyword.Remove(0, 1);
-        }
-
-        Debug.Log("keyword = " + keyword);
-
-        if (keyword.Length > 2)
-        {
-            //Call Search API
-            isSearchAPICalled = true;
-
-            GetSearchedUsers();
-        }
-    }
-
-    void GetSearchedUsers()
-    {
-        GameManager.Instance.apiHandler.SearchTeamMember(keyword, (status, response) =>
-        {
-            if (status)
-            {
-                UserSearchResponse searchResponse = JsonUtility.FromJson<UserSearchResponse>(response);
-
-                PopulateDropdown(searchResponse.data);
-
-                isSearchAPICalled = false;
-            }
-        });
-    }
-
-    void PopulateDropdown(List<UserSearchModel> searchModels)
-    {
-        searchContent.DestroyChildrens();
-
-        GameObject cellObject = null;
-
-        if (searchModels.Count > 0)
-        {
-            scrollObject.SetActive(true);
-
-            float scrollHeight = searchModels.Count > 3 ? searchScrollMaxHeight : searchCellHeight * searchModels.Count;
-
-            searchScrollTrans.sizeDelta = new Vector2(searchScrollTrans.rect.width, scrollHeight);
-
-            searchScrollTrans.anchoredPosition = new Vector2(0, scrollHeight + searchCellHeight + searchCellHeight / 2);
-
-            for (int i = 0; i < searchModels.Count; i++)
-            {
-                cellObject = Instantiate(searchCell, searchContent);
-
-                cellObject.GetComponent<UserSearchCell>().SetView(searchModels[i], OnSelectMember);
-            }
-        }
-    }
-
-    void OnSelectMember(object _selectedModel)
-    {
-        this.selectedModel = _selectedModel as UserSearchModel;
-
-        dialogueField.text = "@" + selectedModel.name + ":";
-
-        searchContent.DestroyChildrens();
-
-        scrollObject.SetActive(false);
-    }
-
-    void Load(List<SceneCharacter> sceneCharacters)
-    {
-        if (scrollRect.content.childCount <= 0)
-        {
-            for (int i = 0; i < sceneCharacters.Count; i++)
-            {
-                GameObject dialogueObject = Instantiate(dialogueCell, scrollRect.content);
-
-                string fieldMessage = sceneCharacters[i].dailogue;
-
-                UserSearchModel searchModel = new UserSearchModel();
-
-                searchModel.id = sceneCharacters[i].character_id;
-
-                searchModel.name = sceneCharacters[i].Users.name;
-
-                DialogueCell _dialogueCell = dialogueObject.GetComponent<DialogueCell>();
-
-                _dialogueCell.SetView(fieldMessage, isLeftAlign, searchModel, OnCellButtonAction, OnDeleteDialogueAction, sceneCharacters[i].id);
-
-                //dialogueCells.Add(_dialogueCell);
-
-                isLeftAlign = !isLeftAlign;
-            }
-        }
-    }
-
-    public void OnBackAction()
-    {
-        //ClearData();
+        autoView.OnBackButtonAction();
 
         gameObject.SetActive(false);
+
+        currentTab = ESubTabType.Auto;
     }
 
-    public void OnEnterButtonAction()
+    public void SetManualDialogues(List<Dictionary<string, object>> manualDialogues)
     {
-        Debug.Log("editedDialogueCell = " + editedDialogueCell);
+        this.manualDialogues = manualDialogues;
 
-        if (editedDialogueCell != null)
-        {
-            Dictionary<string, object> characterBody = new Dictionary<string, object>();
-
-            if (editedDialogueCell.dialogueId != -1)
-            {
-                Dictionary<string, object> existedBody = dialogues.Find(item => item.TryGetValue("id", out object id) == true ? editedDialogueCell.dialogueId == (int)id : false);
-
-                characterBody["character_id"] = selectedModel.id;
-
-                characterBody["dailogue"] = dialogueField.text;
-
-                characterBody["id"] = editedDialogueCell.dialogueId;
-
-                if (existedBody != null)
-                {
-                    int index = dialogues.IndexOf(existedBody);
-
-                    dialogues.RemoveAt(index);
-
-                    dialogues.Insert(index, characterBody);
-                }
-                else
-                {
-                    dialogues.Add(characterBody);
-                }
-
-                editedDialogueCell.SetView(dialogueField.text, editedDialogueCell.isLeftAlign, editedDialogueCell.userSearchModel, OnCellButtonAction, OnDeleteDialogueAction, editedDialogueCell.dialogueId);
-            }
-            else {
-                int index = dialogues.IndexOf(editedDialogueCell.dialogueModel);
-
-                dialogues.RemoveAt(index);
-
-                editedDialogueCell.SetView(dialogueField.text, editedDialogueCell.isLeftAlign, editedDialogueCell.userSearchModel, OnCellButtonAction, OnDeleteDialogueAction, editedDialogueCell.dialogueId);
-
-                dialogues.Insert(index, editedDialogueCell.dialogueModel);
-            }
-
-            editedDialogueCell = null;
-
-            /*
-            int index = dialogueCells.IndexOf(editedDialogueCell);
-
-            Debug.Log("index = " + index);
-
-            Dictionary<string, object> characterBody = dialogues.ElementAt(index);
-
-            characterBody["character_id"] = selectedModel.id;
-
-            characterBody["dailogue"] = dialogueField.text;
-
-            dialogues.RemoveAt(index);
-
-            Debug.Log("After Removing");
-
-            if (editedDialogueCell.dialogueId != -1)
-            {
-                characterBody["id"] = editedDialogueCell.dialogueId;
-            }
-
-            editedDialogueCell.SetView(dialogueField.text, editedDialogueCell.isLeftAlign, editedDialogueCell.userSearchModel, OnCellButtonAction, editedDialogueCell.dialogueId);
-
-            dialogues.Insert(index, characterBody);
-
-            editedDialogueCell = null;
-            */
-        }
-        else
-        {
-            GameObject dialogueObj = Instantiate(dialogueCell, scrollRect.content);
-
-            DialogueCell _dialogueCell = dialogueObj.GetComponent<DialogueCell>();
-
-            _dialogueCell.SetView(dialogueField.text, isLeftAlign, selectedModel, OnCellButtonAction, OnDeleteDialogueAction);
-
-           /* Dictionary<string, object> sceneCharacter = new Dictionary<string, object>();
-
-            sceneCharacter.Add("character_id", selectedModel.id);
-
-            sceneCharacter.Add("dailogue", dialogueField.text);*/
-
-            dialogues.Add(_dialogueCell.dialogueModel);
-
-            isLeftAlign = !isLeftAlign;
-        }
-
-        ClearFieldData();
+        OnBackButtonAction();
     }
 
-    public void OnSaveButtonAction()
+    public void SetAutoDialogues(List<Dictionary<string, object>> autoDialogues)
     {
-        updateSceneView.OnSaveDialogues(dialogues);
+        this.autoDialogues = autoDialogues;
 
-        ResetData();
+        OnBackButtonAction();
+    }
 
-        gameObject.SetActive(false);
+    public List<Dictionary<string, object>> GetDialogues(bool isManual)
+    {
+        return isManual ? manualDialogues : autoDialogues;
     }
 
     public void ClearData()
     {
-        dialogues.Clear();
+        manualView.ClearData();
 
-        scrollRect.content.DestroyChildrens();
-    }
-
-    void ResetData()
-    {
-        selectedModel = null;
-
-        keyword = dialogueField.text = string.Empty;
-
-        searchContent.DestroyChildrens();
-    }
-
-    void OnCellButtonAction(DialogueCell editedDialogueCell)
-    {
-        this.editedDialogueCell = editedDialogueCell;
-
-        selectedModel = editedDialogueCell.userSearchModel;
-
-        TouchScreenKeyboard.Open(editedDialogueCell.dialogueText.text);
-
-        dialogueField.text = editedDialogueCell.dialogueText.text;
-    }
-
-    void ClearFieldData()
-    {
-        enterButton.interactable = false;
-
-        selectedModel = null;
-
-        scrollRect.verticalNormalizedPosition = 0.0f;
-
-        keyword = dialogueField.text = string.Empty;
-    }
-
-    void OnDeleteDialogueAction(DialogueCell dialogueCell)
-    {
-        int cellIndex = dialogueCell.transform.GetSiblingIndex();
-
-        Destroy(scrollRect.content.GetChild(cellIndex).gameObject);
-
-        if (dialogues.Contains(dialogueCell.dialogueModel))
-        {
-            dialogues.Remove(dialogues[cellIndex]);
-        }
-
-        ClearFieldData();
-    }
-
-    int GetKeyboardHeight(bool includeInput)
-    {
-#if UNITY_ANDROID
-        using (var unityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-        {
-            var unityPlayer = unityClass.GetStatic<AndroidJavaObject>("currentActivity").Get<AndroidJavaObject>("mUnityPlayer");
-            var view = unityPlayer.Call<AndroidJavaObject>("getView");
-            var dialog = unityPlayer.Get<AndroidJavaObject>("b");
-
-            if (view == null || dialog == null)
-                return 0;
-
-            var decorHeight = 0;
-
-            if (includeInput)
-            {
-                var decorView = dialog.Call<AndroidJavaObject>("getWindow").Call<AndroidJavaObject>("getDecorView");
-
-                if (decorView != null)
-                    decorHeight = decorView.Call<int>("getHeight");
-            }
-
-            using (var rect = new AndroidJavaObject("android.graphics.Rect"))
-            {
-                view.Call("getWindowVisibleDisplayFrame", rect);
-                return Display.main.systemHeight - rect.Call<int>("height") + decorHeight;
-            }
-        }
-#else
-        var height = Mathf.RoundToInt(TouchScreenKeyboard.area.height);
-        return height >= Display.main.systemHeight ? 0 : height;
-#endif
+        autoView.ClearData();
     }
 }

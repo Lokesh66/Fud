@@ -39,8 +39,6 @@ public class CreateScenesView : MonoBehaviour
     public TMP_InputField descriptionText;
     public TMP_Text startDateText;
 
-    public TextMeshProUGUI buttonText;
-
     public TMP_Text errorText;
 
     bool isNewSceneCreated;
@@ -53,6 +51,8 @@ public class CreateScenesView : MonoBehaviour
 
     Action<bool> backAction;
 
+    List<Dictionary<string, object>> autoSceneDialogues = new List<Dictionary<string, object>>();
+
     List<Dictionary<string, object>> dialoguesList = new List<Dictionary<string, object>>();
 
 
@@ -64,9 +64,6 @@ public class CreateScenesView : MonoBehaviour
         isNewSceneCreated = false;
 
         isDialoguesAdded = false;
-
-        buttonText.text = "Next";
-
     }
 
     public void OnDateSelectAction()
@@ -85,41 +82,39 @@ public class CreateScenesView : MonoBehaviour
         backAction = null;
     }
 
+    public void OnNextButtonAction()
+    {
+        ShowDialougesPanel();
+    }
+
     public void CreateSceneButtonAction()
     {
-        if (!isDialoguesAdded)
+        if (!CanCallAPI())
         {
-            ShowDialougesPanel();
+            return;
         }
         else
         {
-            if (!CanCallAPI())
+            string selectedPlace = placeDropdown.options[placeDropdown.value].text;
+
+            string shootTime = shootTimeDropdown.options[shootTimeDropdown.value].text;
+
+            SceneCreationModel creationModel = new SceneCreationModel();
+
+            creationModel.decsription = descriptionText.text;
+            creationModel.location = locationText.text;
+            creationModel.place_type = selectedPlace;
+            creationModel.project_id = projectModel.id;
+            creationModel.story_id = projectModel.story_id;
+            creationModel.story_version_id = projectModel.story_version_id;
+            creationModel.shoot_time = shootTime;
+            creationModel.scene_order = int.Parse(sceneOrderText.text);
+            creationModel.start_time = startDateText.text;
+
+            GameManager.Instance.apiHandler.CreateProjectScene(creationModel, dialoguesView.GetDialogues(true), dialoguesView.GetDialogues(false), (status, response) =>
             {
-                return;
-            }
-            else
-            {
-                string selectedPlace = placeDropdown.options[placeDropdown.value].text;
-
-                string shootTime = shootTimeDropdown.options[shootTimeDropdown.value].text;
-
-                SceneCreationModel creationModel = new SceneCreationModel();
-
-                creationModel.decsription = descriptionText.text;
-                creationModel.location = locationText.text;
-                creationModel.place_type = selectedPlace;
-                creationModel.project_id = projectModel.id;
-                creationModel.story_id = projectModel.story_id;
-                creationModel.story_version_id = projectModel.story_version_id;
-                creationModel.shoot_time = shootTime;
-                creationModel.scene_order = int.Parse(sceneOrderText.text);
-                creationModel.start_time = startDateText.text;
-
-                GameManager.Instance.apiHandler.CreateProjectScene(creationModel, dialoguesList, (status, response) =>
-                {
-                    OnAPIResponse(status, response);
-                });
-            }
+                OnAPIResponse(status, response);
+            });
         }
     }
 
@@ -186,7 +181,7 @@ public class CreateScenesView : MonoBehaviour
 
     void ShowDialougesPanel()
     {
-        dialoguesView.EnableView();
+        dialoguesView.Load();
     }
 
     void ClearData()
@@ -196,29 +191,5 @@ public class CreateScenesView : MonoBehaviour
         sceneOrderText.text = locationText.text = descriptionText.text = string.Empty;
 
         errorText.text = startDateText.text = string.Empty;
-
-        buttonText.text = "Next";
-    }
-
-    public void OnSaveDialogues(List<Dictionary<string, object>> dialogues)
-    {
-        if (dialogues.Count > 0)
-        {
-            buttonText.text = "Create";
-
-            isDialoguesAdded = true;
-
-            for (int i = 0; i < dialogues.Count; i++)
-            {
-                Dictionary<string, object> element = new Dictionary<string, object>();
-
-                foreach (var item in dialogues[i])
-                {
-                    element.Add(item.Key, item.Value);
-                }
-
-                dialoguesList.Add(element);
-            }
-        }
     }
 }

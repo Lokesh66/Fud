@@ -9,8 +9,9 @@ public class JoinedAuditionCell : MonoBehaviour
 {
     public Image icon;
     public TMP_Text titleText;
-    public TMP_Text endDate;
-    public TMP_Text entriesCountText;
+
+    public TMP_Text descriptionText;
+    
     public TMP_Text statusText;
 
     public Sprite defaultSprite;
@@ -40,6 +41,8 @@ public class JoinedAuditionCell : MonoBehaviour
         if (auditionData != null)
         {
             titleText.text = auditionData.Audition.title;
+
+            descriptionText.text = auditionData.Audition.description;
 
             UpdateStatusTag();
 
@@ -172,14 +175,6 @@ public class JoinedAuditionCell : MonoBehaviour
             }
             UpdateAudition();
         }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString();
-
-            UIManager.Instance.ShowAlert(alertModel);
-        }
     }
 
     void OnAudiosUploaded(bool status, List<string> audioUrls)
@@ -199,14 +194,6 @@ public class JoinedAuditionCell : MonoBehaviour
                 uploadedDict.Add(kvp);
             }
             UpdateAudition();
-        }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString();
-
-            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -228,14 +215,6 @@ public class JoinedAuditionCell : MonoBehaviour
             }
             UpdateAudition();
         }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString();
-
-            UIManager.Instance.ShowAlert(alertModel);
-        }
     }
 
     void JoinAudition()
@@ -251,12 +230,6 @@ public class JoinedAuditionCell : MonoBehaviour
                 alertModel.message = "Audition Joined Successfully";
                 alertModel.okayButtonAction = Refresh;
                 alertModel.canEnableTick = true;
-                UIManager.Instance.ShowAlert(alertModel);
-            }
-            else
-            {
-                AlertModel alertModel = new AlertModel();
-                alertModel.message = "Joining Audition Failed";
                 UIManager.Instance.ShowAlert(alertModel);
             }
         });
@@ -330,7 +303,7 @@ public class JoinedAuditionCell : MonoBehaviour
 
             if (timeSpan.Days > 2)
             {
-                endDate.text = "Entries close in " + timeSpan.Days + "Days";
+                //endDate.text = "Entries close in " + timeSpan.Days + "Days";
             }
             else
             {
@@ -375,7 +348,7 @@ public class JoinedAuditionCell : MonoBehaviour
             }
         }
 
-        endDate.text = "Entries close in " + string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+        //endDate.text = "Entries close in " + string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
     }
 
     void UpdateAuditionStatus(int statusIndex)

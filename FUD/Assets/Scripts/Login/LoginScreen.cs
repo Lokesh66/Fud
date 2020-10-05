@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿    using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
 using TMPro;
@@ -54,14 +54,15 @@ public class LoginScreen : MonoBehaviour
                     offset = 0;
                     timer = 120;
                     timerText.text = "";
-                    resendOtp.interactable = true;
+
+                    resendOtp.gameObject.SetActive(true);
                 }
             }
         }
     }
     void StartTimer()
     {
-        resendOtp.interactable = false;
+        resendOtp.gameObject.SetActive(false);
         updateTimer = true;
         timer = 120;
     }

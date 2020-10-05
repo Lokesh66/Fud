@@ -55,7 +55,7 @@ public class MyProfilePanel : MonoBehaviour
 
         if (data.profile_image.IsNOTNullOrEmpty())
         {
-            GameManager.Instance.downLoadManager.DownloadImage(data.profile_image, sprite => {
+            GameManager.Instance.apiHandler.DownloadImage(data.profile_image, sprite => {
 
                 profileIcon.sprite = sprite;
             });

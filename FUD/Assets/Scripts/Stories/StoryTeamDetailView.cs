@@ -40,6 +40,8 @@ public class StoryTeamDetailView : MonoBehaviour
             teamModel.TeamMembers.Remove(item);
         }
 
+        StopAllCoroutines();
+
         StartCoroutine(UpdateTeamMembers());
     }
 
@@ -49,12 +51,6 @@ public class StoryTeamDetailView : MonoBehaviour
 
         for (int i = 0; i < teamModel.TeamMembers.Count; i++)
         {
-            UserSearchModel searchModel = new UserSearchModel();
-
-            searchModel.id = teamModel.TeamMembers[i].users.id;
-
-            searchModel.name = teamModel.TeamMembers[i].users.name;
-
             membersText.text += teamModel.TeamMembers[i].users.name + ",";
         }
     }
@@ -62,5 +58,7 @@ public class StoryTeamDetailView : MonoBehaviour
     public void OnBackButtonAction()
     {
         gameObject.SetActive(false);
+
+        membersText.text = string.Empty;
     }
 }

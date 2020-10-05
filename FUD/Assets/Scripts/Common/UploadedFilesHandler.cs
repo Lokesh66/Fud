@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 public class UploadedFilesHandler : MonoBehaviour
 {
@@ -16,7 +18,7 @@ public class UploadedFilesHandler : MonoBehaviour
     EMediaType mediaType;
 
 
-    public void Load(string[] paths, bool isDownloadedFile, EMediaType mediaType = EMediaType.Image)
+    public void Load(string[] paths, bool isDownloadedFile, EMediaType mediaType = EMediaType.Image, Action<object> OnDeleteAction = null)
     {
         //content.DestroyChildrens();
 
@@ -32,7 +34,7 @@ public class UploadedFilesHandler : MonoBehaviour
 
                 fileCell = cellObject.GetComponent<UploadedFileCell>();
 
-                fileCell.Load(path, isDownloadedFile, mediaType);
+                fileCell.Load(path, isDownloadedFile, mediaType, OnDeleteAction);
             }
         }
 

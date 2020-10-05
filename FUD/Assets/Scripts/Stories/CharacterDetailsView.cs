@@ -1,12 +1,11 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
+using frame8.ScrollRectItemsAdapter.MultiplePrefabsExample;
 
 public class CharacterDetailsView : MonoBehaviour
 {
     //public Image userImage;
-
-    public TextMeshProUGUI description;
 
     public UpdateCharacterView updateCharacterView;
 

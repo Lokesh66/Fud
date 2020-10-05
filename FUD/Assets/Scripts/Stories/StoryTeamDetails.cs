@@ -76,17 +76,17 @@ public class StoryTeamDetails : MonoBehaviour
     {
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
-        GameManager.Instance.apiHandler.RemoveTeam(teamModel.id, storyId, 8, (status) => {
+        GameManager.Instance.apiHandler.RemoveTeam(teamModel.id, storyId, 8, (status, response) => {
 
-            Debug.Log("status = " + status);
-
-            OnAPIResponse(status);
+            OnAPIResponse(status, response);
         });
     }
 
-    void OnAPIResponse(bool status)
+    void OnAPIResponse(bool status, string apiResponse)
     {
         AlertModel alertModel = new AlertModel();
+
+        BaseResponse responseModel = JsonUtility.FromJson<BaseResponse>(apiResponse);
 
         alertModel.message = status ? "Team Removed Successfully" : "Something went wrong, please try again.";
 

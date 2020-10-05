@@ -20,13 +20,14 @@ public partial class APIHandler
         }));
     }
 
-    public void SignIn(string name, long phoneNumber, int roleId, Action<bool, UserData> action)
+    public void SignIn(string name, long phoneNumber, int roleId, int countryId, Action<bool, UserData> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
         parameters.Add("name", name);
         parameters.Add("phone", phoneNumber);
         parameters.Add("role_id", roleId);
+        parameters.Add("country_id", countryId);
         //parameters.Add("login_code", "1234");// code);
         Debug.Log("device_token : "+SystemInfo.deviceUniqueIdentifier);
         parameters.Add("device_token", SystemInfo.deviceUniqueIdentifier);
@@ -125,5 +126,44 @@ public partial class APIHandler
             }
         }));
     }
+
+    public void GetCountries(Action<bool, List<CountryModel>> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        gameManager.StartCoroutine(GetRequest(APIConstants.GET_COUNTRIES, false, (bool status, string response) => {
+
+            Debug.Log("Countries Respopnse = " + response);
+
+            CountriesResponse responseModel = JsonUtility.FromJson<CountriesResponse>(response);
+
+            if (status)
+            {
+                action?.Invoke(true, responseModel.data);
+            }
+            else
+            {
+                action?.Invoke(false, null);
+            }
+        }));
+    }
+}
+
+[Serializable]
+public class CountriesResponse : BaseResponse
+{
+    public List<CountryModel> data;
+}
+
+[Serializable]
+public class CountryModel
+{
+    public int id;
+    public string name;
+    public string iso;
+    public int numcode;
+    public int phonecode;
+    public string nicename;
+    public string iso3;
 }
 

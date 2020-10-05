@@ -55,7 +55,7 @@ public class PortfolioView : BaseView
     {
         base.OnRemoveLastSubView();
 
-        portfolioHandler.Load();
+        portfolioHandler.Load(this);
 
         //UpdateScreen();
     }
@@ -107,7 +107,7 @@ public class PortfolioView : BaseView
 
             case ETabType.Created:
                 currentObject = portfolioHandler.gameObject;
-                portfolioHandler.Load();
+                portfolioHandler.Load(this);
                 break;
         }
     }

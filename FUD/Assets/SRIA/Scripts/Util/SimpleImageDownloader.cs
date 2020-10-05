@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.ComponentModel;
+using UnityEngine.Networking;
 
 namespace frame8.ScrollRectItemsAdapter.Util
 {
@@ -71,24 +72,30 @@ namespace frame8.ScrollRectItemsAdapter.Util
 		IEnumerator DownloadCoroutine (Request request)
 		{
 			_ExecutingRequests.Add (request);
-			var www = new WWW (request.url);
 
-			yield return www;
+			//string url = APIConstants.MEDIA_UPLOAD_BASE_URL + "adam/v1/downloadFile?" + "key_name=" + request.url;
 
-			if (string.IsNullOrEmpty (www.error)) {
+			UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture(request.url);
+
+			//webRequest.SetRequestHeader("Authorization", GetToken());
+
+			yield return webRequest.SendWebRequest();
+
+			//if (webRequest.isNetworkError || webRequest.isHttpError) {
 				if (request.onDone != null) {
-					var result = new Result (www);
-					if (www.progress >= 1.0f && www.isDone) {
+					var result = new Result (webRequest);
+					if (webRequest.isDone) {
 						request.onDone (result);
 					} else {
 						StartCoroutine(DownloadCoroutine (request));
 					}
 				}
-			} else {
+        //}
+		else {
 				if (request.onError != null)
 					request.onError ();
 			}
-			www.Dispose ();
+			webRequest.Dispose ();
 			_ExecutingRequests.Remove (request);
 		}
 
@@ -102,17 +109,19 @@ namespace frame8.ScrollRectItemsAdapter.Util
 
 		public class Result
 		{
-			WWW _UsedWWW;
+			UnityWebRequest _UsedWWW;
 
 
-			internal Result (WWW www)
+			internal Result (UnityWebRequest www)
 			{
 				_UsedWWW = www;
 			}
 
 			public byte[] getByteData ()
 			{
-				return _UsedWWW.bytes;
+				Debug.Log("_UsedWWW URL = " + _UsedWWW.url);
+
+				return DownloadHandlerTexture.GetContent(_UsedWWW).EncodeToPNG();
 			}
 
 			public void removeRequest ()
@@ -122,14 +131,12 @@ namespace frame8.ScrollRectItemsAdapter.Util
 
 			public Texture2D CreateTextureFromReceivedData ()
 			{
-				return _UsedWWW.texture;
+				return DownloadHandlerTexture.GetContent(_UsedWWW);
 			}
 
 			public void LoadTextureInto (Texture2D existingTexture)
 			{
-
-
-				_UsedWWW.LoadImageIntoTexture (existingTexture);
+				//_UsedWWW.LoadImageIntoTexture (existingTexture);
 			}
 		}
 
@@ -248,9 +255,14 @@ namespace frame8.ScrollRectItemsAdapter.Util
  
 			//*** Return
 			return oNewTex;
+
+		}
+
+		string GetToken()
+		{
+			return GameManager.Instance.apiHandler.GetToken();
 		}
 	}
-
 
 }
 

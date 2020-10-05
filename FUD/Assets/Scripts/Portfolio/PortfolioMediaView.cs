@@ -27,6 +27,9 @@ public class PortfolioMediaView : MonoBehaviour
     public List<PortfolioModel> portfolioModels;
 
 
+    PortfolioView portfolioView;
+
+
     bool isPagingOver = false;
 
     int pageNo = 1;
@@ -34,12 +37,17 @@ public class PortfolioMediaView : MonoBehaviour
     int MAX_PORTFOLIO_ALBUMS = 50;
 
 
-    public void Load()
+    public void Load(PortfolioView portfolioView)
     {
+        this.portfolioView = portfolioView;
+
         tableView.gameObject.SetActive(false);
 
         GameManager.Instance.apiHandler.GetAllAlbums(pageNo, (status, models) =>
         {
+            if (portfolioModels == null)
+                return;
+
             portfolioModels = models;
 
             pageNo++;
@@ -79,7 +87,7 @@ public class PortfolioMediaView : MonoBehaviour
 
     public void OnShareButtonAction(PortfolioModel portfolioModel)
     {
-        shareView.Load(portfolioModel);
+        shareView.Load(portfolioModel, OnPortfolioShared);
     }
 
     public void RemovePortfolio(PortfolioModel portfolioModel)
@@ -131,5 +139,10 @@ public class PortfolioMediaView : MonoBehaviour
                 tableView.Refresh();
             }
         });
+    }
+
+    void OnPortfolioShared()
+    {
+        portfolioView.OnTabAction(1);
     }
 }

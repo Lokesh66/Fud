@@ -12,7 +12,10 @@ public class AuditionResponsesView : MonoBehaviour
 
     public List<SearchAudition> auditionResponses;
 
-    SearchAudition selectedAudition;
+
+    UserAuditionController auditionController;
+
+    UserAuditionCell selectedAuditionCell;
 
     bool isInitialized = false;
 
@@ -25,11 +28,13 @@ public class AuditionResponsesView : MonoBehaviour
     int auditionId = -1;
 
 
-    public void Load(List<SearchAudition> searchAuditions, int auditionId)
+    public void Load(List<SearchAudition> searchAuditions, int auditionId, UserAuditionController auditionController)
     {
         this.auditionResponses = searchAuditions;
 
         this.auditionId = auditionId;
+
+        this.auditionController = auditionController;
 
         pageNo++;
 
@@ -56,22 +61,23 @@ public class AuditionResponsesView : MonoBehaviour
         }
     }
 
-    public void OnAuditionSelectAction(SearchAudition audition)
+    public void OnAuditionSelectAction(UserAuditionCell audition)
     {
-        selectedAudition = audition;
+        selectedAuditionCell = audition;
 
-        buttonsPanel.SetActive(true);
+        auditionController.OnAuditionSelectAction(audition);
     }
 
     public void OnPlayButtonAction()
     {
-        MultimediaModel model = selectedAudition.UserAuditionMultimedia[0];
+        MultimediaModel model = selectedAuditionCell.auditionData.UserAuditionMultimedia[0];
 
         EMediaType mediaType = model.GetMediaType(model.media_type);
 
         if (mediaType == EMediaType.Video)
         {
-            VideoStreamer.Instance.StreamVideo(model.content_url, OnVideoComplete);
+            UIManager.Instance.topCanvas.PlayVideo(selectedAuditionCell.icon, selectedAuditionCell.mediaPlayer);
+            //VideoStreamer.Instance.StreamVideo(model.content_url, OnVideoComplete);
         }
         else if (mediaType == EMediaType.Audio)
         {

@@ -27,4 +27,10 @@ public class CanvasManager : MonoBehaviour
     #endregion
 
     public LeftMenu leftMenu;
+
+
+    public float GetCanvasWidth()
+    {
+        return (transform as RectTransform).rect.width;
+    }
 }

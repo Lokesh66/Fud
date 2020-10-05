@@ -1,30 +1,75 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+
 
 public class SceneCharacterView : MonoBehaviour
 {
-    public RectTransform content;
-
-    public GameObject dialogueCell;
-
-
-    bool isLeftAlign = true;
-
-
-    public void Load(List<SceneCharacter> sceneCharacters)
+    public enum ESceneTabType
     {
+        Manual,
+        Auto
+    }
+
+
+    public SceneManualView manualView;
+
+    public SceneAutoView autoView;
+
+
+    public TextMeshProUGUI[] buttonsList;
+
+
+    public Color selectedColor;
+
+    public Color disabledColor;
+
+
+    GameObject currentObject;
+
+    ESceneTabType currentTab;
+
+    List<SceneCharacter> scenesList;
+
+
+    public void Load(List<SceneCharacter> scensList)
+    {
+        this.scenesList = scensList;
+
         gameObject.SetActive(true);
 
-        for (int i = 0; i < sceneCharacters.Count; i++)
+        UpdateCurrentView();
+    }
+
+    public void OnTabAction(int tabIndex)
+    {
+        if (currentTab != (ESceneTabType)tabIndex)
         {
-            GameObject dialogueObject = Instantiate(dialogueCell, content);
+            buttonsList[(int)currentTab].color = disabledColor;
 
-            string fieldMessage = sceneCharacters[i].dailogue;
+            buttonsList[tabIndex].color = selectedColor;
 
-            dialogueObject.GetComponent<DialogueCell>().SetView(fieldMessage, isLeftAlign, null, null, null);
+            currentTab = (ESceneTabType)tabIndex;
 
-            isLeftAlign = !isLeftAlign;
+            currentObject?.SetActive(false);
+
+            UpdateCurrentView();
+        }
+    }
+
+    void UpdateCurrentView()
+    {
+        switch (currentTab)
+        {
+            case ESceneTabType.Manual:
+                currentObject = manualView.gameObject;
+                manualView.Load(scenesList);
+                break;
+
+            case ESceneTabType.Auto:
+                currentObject = autoView.gameObject;
+                autoView.Load(scenesList);
+                break;
         }
     }
 
@@ -37,6 +82,10 @@ public class SceneCharacterView : MonoBehaviour
 
     public void ClearData()
     {
-        content.DestroyChildrens();
+        currentTab = ESceneTabType.Manual;
+
+        manualView.ClearData();
+
+        autoView.ClearData();
     }
 }

@@ -7,10 +7,13 @@ public class DetailsScreen : MonoBehaviour
     public TextMeshProUGUI signInText;
     public TMP_InputField nameFieldText;
     public TMP_InputField numberFieldText;
+    public TMP_Dropdown countryDropdown;
 
     System.Action<bool, object> OnButtonAction;
 
     private bool isNewUser = false;
+
+    List<CountryModel> countryModels;
 
 
     public void SetView(bool isNewUser, System.Action<bool, object> action)
@@ -26,6 +29,35 @@ public class DetailsScreen : MonoBehaviour
         this.isNewUser = isNewUser;
 
         signInText.text = isNewUser ? "Sign In" : "Login";
+
+        countryDropdown.gameObject.SetActive(isNewUser);
+
+        if (isNewUser)
+        {
+            SetCountryDropdown();
+        }
+    }
+
+    void SetCountryDropdown()
+    {
+        GameManager.Instance.apiHandler.GetCountries((status, modelsList) => {
+
+            if (status)
+            {
+                countryModels = modelsList;
+
+                List<string> options = new List<string>();
+
+                foreach (var option in countryModels)
+                {
+                    options.Add(option.name);
+                }
+
+                countryDropdown.ClearOptions();
+
+                countryDropdown.AddOptions(options);
+            }
+        });
     }
 
     public void OnClick_SendOTP()
@@ -42,11 +74,15 @@ public class DetailsScreen : MonoBehaviour
 
         if (isNewUser)
         {
-            Dictionary<string, string> body = new Dictionary<string, string>();
+            Dictionary<string, object> body = new Dictionary<string, object>();
+
+            CountryModel selectedModel = countryModels[countryDropdown.value];
 
             body.Add("name", nameFieldText.text);
 
             body.Add("number", numberFieldText.text);
+
+            body.Add("country_id", selectedModel.id);
 
             OnButtonAction?.Invoke(true, body);
         }
@@ -56,7 +92,7 @@ public class DetailsScreen : MonoBehaviour
             {
                 if (status)
                 {
-                    Dictionary<string, string> body = new Dictionary<string, string>();
+                    Dictionary<string, object> body = new Dictionary<string, object>();
 
                     body.Add("number", numberFieldText.text);
 

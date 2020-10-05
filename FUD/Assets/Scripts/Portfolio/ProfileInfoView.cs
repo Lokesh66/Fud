@@ -40,6 +40,13 @@ public class ProfileInfoView : MonoBehaviour
     public Image backAddressProof;
 
 
+    public GameObject frontAddObject;
+
+    public GameObject backAddObject;
+
+
+    public Sprite addressBGSprite;
+
 
     private string defaultDobText = "Date of Birth";
 
@@ -57,6 +64,8 @@ public class ProfileInfoView : MonoBehaviour
 
     Craft selectedCraft;
 
+    ProfileFileUploadModel profilePicUploadModel;
+
     EProofType idProofType;
 
     int currentAadherCount = 0;
@@ -66,8 +75,6 @@ public class ProfileInfoView : MonoBehaviour
     string frontProofURL = string.Empty;
 
     string backProofURL = string.Empty;
-
-    string profileImageURL = string.Empty;
 
     string aadherString = string.Empty;
 
@@ -159,14 +166,18 @@ public class ProfileInfoView : MonoBehaviour
 
     void UpdateAddressProofs()
     {
-        GameManager.Instance.downLoadManager.DownloadImage(data.add_proof_front, (sprite) =>
+        GameManager.Instance.apiHandler.DownloadImage(data.add_proof_front, (sprite) =>
         {
-            frontAddressProof.sprite = sprite;
+            frontAddressProof.sprite = sprite != null ? sprite : addressBGSprite;
+
+            frontAddObject.SetActive(sprite == null);
         });
 
-        GameManager.Instance.downLoadManager.DownloadImage(data.add_proof_back, (sprite) =>
+        GameManager.Instance.apiHandler.DownloadImage(data.add_proof_back, (sprite) =>
         {
-            backAddressProof.sprite = sprite;
+            backAddressProof.sprite = sprite != null ? sprite : addressBGSprite;
+
+            backAddObject.SetActive(sprite == null);
         });
     }
 
@@ -194,12 +205,16 @@ public class ProfileInfoView : MonoBehaviour
     {
         this.idProofType = (EProofType)isIdProof;
 
+        string mediaSource = idProofType == EProofType.IdProof ? "Id_Proof" : idProofType == EProofType.FrontAddress ? "Front_Address" : "Back_Address";
+
         GalleryManager.Instance.PickImage(mediaSource, OnImagesUploaded);
     }
 
     public void OnProfileImageAction()
     {
-        GalleryManager.Instance.TakeSelfie(mediaSource, OnProfileImageUploaded);
+        string faceId = data.face_id;
+
+        GalleryManager.Instance.GetProfilePic(mediaSource, faceId, OnProfileImageUploaded);
     }
 
     public void OnAadherEndEdit()
@@ -270,8 +285,12 @@ public class ProfileInfoView : MonoBehaviour
             errorMessage = "Date of Birth should not be empty";
         }
         else if (string.IsNullOrEmpty(contactField.text)){
-            errorMessage = "Current Location should not be empty";
+            errorMessage = "Contact Number should not be empty";
         }
+        //else if (profilePicUploadModel != null || !data.profile_image.IsNOTNullOrEmpty())
+        //{
+        //    errorMessage = "Profile image should not be empty";
+        //}
 
 
         if (!string.IsNullOrEmpty(errorMessage))
@@ -295,10 +314,15 @@ public class ProfileInfoView : MonoBehaviour
         infoModel.currentLocation = data.current_location;
         infoModel.nativeLocation = data.native_location;
         infoModel.roleId = selectedGenre.id;
-        infoModel.profile_image = profileImageURL;
         infoModel.categeryId = categeryModels[roleCatageryDropdown.value].id;
         infoModel.aadherNumber = aadherField.text.Replace(" ", string.Empty);
 
+        if (profilePicUploadModel != null)
+        {
+            infoModel.profile_image = profilePicUploadModel.Key;
+            infoModel.faceId = profilePicUploadModel.faceId;
+            infoModel.isCeleb = profilePicUploadModel.isCeleb;
+        }
 
         GameManager.Instance.apiHandler.UpdateProfileInfo(infoModel, idProofURL, frontProofURL, backProofURL, (status, model) => {
             AlertModel alertModel = new AlertModel();
@@ -325,6 +349,7 @@ public class ProfileInfoView : MonoBehaviour
     {
         gameObject.SetActive(false);
         idProofURL = frontProofURL = backProofURL = string.Empty;
+        profilePicUploadModel = null;
         OnCloseAction?.Invoke(isUserDataUpdated);
     }
 
@@ -359,23 +384,15 @@ public class ProfileInfoView : MonoBehaviour
         }
     }
 
-    void OnProfileImageUploaded(bool status, List<string> imageUrls)
+    void OnProfileImageUploaded(bool status, ProfileFileUploadModel fileUploadModel)
     {
+        string[] imagePaths = GalleryManager.Instance.GetLoadedFiles();
+
         if (status)
         {
-            string[] imagePaths = GalleryManager.Instance.GetLoadedFiles();
-
-            profileImageURL = imageUrls[0];
+            profilePicUploadModel = fileUploadModel;
 
             UpdateProfileImage(imagePaths[0]);
-        }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString() + imageUrls[0];
-
-            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 

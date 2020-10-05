@@ -27,6 +27,8 @@ public class UpdateStoryVersionView : MonoBehaviour
 
     List<string> imageUrls;
 
+    List<int> deletedMedia = new List<int>();
+
     StoryVersion storyVersion;
 
     StoryVersion updatedModel;
@@ -125,25 +127,7 @@ public class UpdateStoryVersionView : MonoBehaviour
             mediaCells.Add(_mediaCell);
         }
 
-        if (mediaList.Count > 0)
-        {
-            SetVideoThumbnails(0);
-        }
-    }
-
-    void SetVideoThumbnails(int index)
-    {
-        mediaCells[index].SetVideoThumbnail(() => {
-
-            index++;
-
-            if (index >= mediaList.Count)
-            {
-                return;
-            }
-
-            SetVideoThumbnails(index);
-        });
+        filesHandler.mediaButtonTrans.SetAsLastSibling();
     }
 
     void UpdateMediaDict(MultimediaModel model)
@@ -169,30 +153,37 @@ public class UpdateStoryVersionView : MonoBehaviour
 
         Destroy(mediaContent.GetChild(modelIndex).gameObject);
 
-        foreach (var item in uploadedDict)
+        if (multimediaModel.id != -1)
         {
-            Dictionary<string, object> mediaItem = item as Dictionary<string, object>;
-
-            foreach (var kvp in mediaItem)
+            deletedMedia.Add(multimediaModel.id);
+        }
+        else
+        {
+            foreach (var item in uploadedDict)
             {
-                if (kvp.Key.Equals("content_url"))
+                Dictionary<string, object> mediaItem = item as Dictionary<string, object>;
+
+                foreach (var kvp in mediaItem)
                 {
-                    url = kvp.Value as string;
-
-                    if (url.Equals(multimediaModel.content_url))
+                    if (kvp.Key.Equals("content_url"))
                     {
-                        uploadedDict.Remove(mediaItem);
+                        url = kvp.Value as string;
 
-                        isItemRemoved = true;
+                        if (url.Equals(multimediaModel.content_url))
+                        {
+                            uploadedDict.Remove(mediaItem);
 
-                        break;
+                            isItemRemoved = true;
+
+                            break;
+                        }
                     }
                 }
-            }
 
-            if (isItemRemoved)
-            {
-                break;
+                if (isItemRemoved)
+                {
+                    break;
+                }
             }
         }
 
@@ -233,6 +224,8 @@ public class UpdateStoryVersionView : MonoBehaviour
 
         uploadedDict.Clear();
 
+        deletedMedia.Clear();
+
         Reset();
     }
 
@@ -248,7 +241,7 @@ public class UpdateStoryVersionView : MonoBehaviour
 
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
-        GameManager.Instance.apiHandler.UpdateStoryVersion(storyId, storyVersion.id, descriptionField.text, selectedGenre.id, accessDropdown.value, uploadedDict, (status, response) => {
+        GameManager.Instance.apiHandler.UpdateStoryVersion(storyId, storyVersion.id, descriptionField.text, selectedGenre.id, accessDropdown.value, uploadedDict, deletedMedia, (status, response) => {
 
             if (status)
             {
@@ -287,7 +280,7 @@ public class UpdateStoryVersionView : MonoBehaviour
     {
         UpdatedStoryVersionResponse versionResponse = JsonUtility.FromJson<UpdatedStoryVersionResponse>(response);
 
-        updatedModel = versionResponse.data;
+        updatedModel = versionResponse.data[0];
 
         AlertModel alertModel = new AlertModel();
 
@@ -343,18 +336,10 @@ public class UpdateStoryVersionView : MonoBehaviour
 
                 model.content_url = imageUrls[i];
 
-                mediaList.Add(model);
-
                 uploadedDict.Add(kvp);
+
+                mediaList.Add(model);
             }
-        }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString();
-
-            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -384,18 +369,10 @@ public class UpdateStoryVersionView : MonoBehaviour
 
                 model.content_url = audioUrls[i];
 
-                mediaList.Add(model);
-
                 uploadedDict.Add(kvp);
+
+                mediaList.Add(model);
             }
-        }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString() + imageUrls[0];
-
-            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -425,18 +402,10 @@ public class UpdateStoryVersionView : MonoBehaviour
 
                 model.content_url = videoUrls[i];
 
-                mediaList.Add(model);
-
                 uploadedDict.Add(kvp);
+
+                mediaList.Add(model);
             }
-        }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString() + imageUrls[0];
-
-            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -444,7 +413,6 @@ public class UpdateStoryVersionView : MonoBehaviour
     {
         ShowGalleryPanel();
     }
-
 
     void ShowGalleryPanel()
     {

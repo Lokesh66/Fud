@@ -3,9 +3,13 @@ using UnityEngine.UI;
 using UnityEngine;
 using System;
 using TMPro;
+using UMP;
+
 
 public class UserAuditionCell : MonoBehaviour
 {
+    public UniversalMediaPlayer mediaPlayer;
+
     public RawImage icon;
 
     public TMP_Text titleText;
@@ -13,14 +17,15 @@ public class UserAuditionCell : MonoBehaviour
 
     public Texture2D defaultTexture;
 
-    SearchAudition auditionData;
+    [HideInInspector]
+    public SearchAudition auditionData;
 
     MultimediaModel auditionMultimedia;
 
-    Action<SearchAudition> OnSelect;
+    Action<UserAuditionCell> OnSelect;
 
 
-    public void SetView(SearchAudition audition, Action<SearchAudition> action)
+    public void SetView(SearchAudition audition, Action<UserAuditionCell> action)
     {
         auditionData = audition;
         OnSelect = action;
@@ -49,42 +54,29 @@ public class UserAuditionCell : MonoBehaviour
 
                     if (mediaType == EMediaType.Video)
                     {
-                        icon.texture = defaultTexture;
+                        mediaPlayer.Path = modelsList[0].content_url;
+
+                        mediaPlayer.Prepare();
+
+                        mediaPlayer.AddEndReachedEvent(() =>
+                        {
+                            VideoStreamer.Instance.updatedRawImage.gameObject.SetActive(false);
+                        });
+
+                        mediaPlayer.AddImageReadyEvent((texture) =>
+                        {
+                            icon.texture = texture;
+                        });
                     }
                 }
             }
         }
     }
 
-    public void SetVideoThumbnail(Action OnNext)
-    {
-        EMediaType mediaType = DataManager.Instance.GetMediaType(auditionMultimedia.media_type);
-
-        if (mediaType == EMediaType.Video)
-        {
-            VideoStreamer.Instance.GetThumbnailImage(auditionData.UserAuditionMultimedia[0].content_url, (texture) =>
-            {
-                if (this != null)
-                {
-                     Rect rect = new Rect(0, 0, icon.rectTransform.rect.width, icon.rectTransform.rect.height);
-
-                     Sprite sprite = Sprite.Create(texture.ToTexture2D(), rect, new Vector2(0.5f, 0.5f));
-
-                     //icon.sprite = sprite;
-
-                     OnNext?.Invoke();
-                }
-            });
-        }
-        else {
-            OnNext?.Invoke();
-        }
-    }
-
     public void OnClickAction()
     {
         Debug.Log("OnClickAction ");
-        OnSelect?.Invoke(auditionData);
+        OnSelect?.Invoke(this);
         /*AuditionJoinView.Instance.Load(auditionData, false, (index) => {
             switch (index)
             {
@@ -96,4 +88,8 @@ public class UserAuditionCell : MonoBehaviour
         });*/
     }
 
+    public void OnVideoPlayButtonAction()
+    {
+        UIManager.Instance.topCanvas.PlayVideo(icon, mediaPlayer);
+    }
 }

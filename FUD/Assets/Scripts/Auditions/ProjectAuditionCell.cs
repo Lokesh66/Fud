@@ -22,7 +22,7 @@ public class ProjectAuditionCell : MonoBehaviour
             titleText.text = auditionData.topic;
             ageText.text = auditionData.age_to.ToString();
             icon.gameObject.SetActive(false);
-            GameManager.Instance.downLoadManager.DownloadImage(audition.image_url, (sprite) => {
+            GameManager.Instance.apiHandler.DownloadImage(audition.image_url, (sprite) => {
                 if (sprite != null)
                 {
                     icon.sprite = sprite;

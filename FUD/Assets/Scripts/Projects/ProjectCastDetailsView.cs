@@ -22,7 +22,7 @@ public class ProjectCastDetailsView : MonoBehaviour
     {
         gameObject.SetActive(true);
 
-        remoteImageBehaviour.Load(projectCast.StoryCharacters.UserInfo.profile_image);
+        remoteImageBehaviour.Load(projectCast.StoryCharacters.UserInfo?.profile_image);
 
         roleText.text = projectCast.StoryCharacters.Craftroles.name;
 
@@ -32,7 +32,7 @@ public class ProjectCastDetailsView : MonoBehaviour
 
         descriptionText.text = projectCast.StoryCharacters.description;
 
-        userNameText.text = projectCast.StoryCharacters.UserInfo.name;
+        userNameText.text = projectCast.StoryCharacters.UserInfo?.name;
     }
 
     public void OnBackButtonAction()

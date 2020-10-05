@@ -90,21 +90,19 @@ public class StoriesAlteredPopUpView : MonoBehaviour
 
     public void OnSelectButtonAction(int statusIndex)
     {
-        GameManager.Instance.apiHandler.UpdateStoryPostStatus(alteredModel.id, statusIndex, (status, message) =>
+        GameManager.Instance.apiHandler.UpdateStoryPostStatus(alteredModel.id, statusIndex, (status, response) =>
         {
-            if (status)
-            {
-                
-            }
-            OnAPIResponse(status);
+            OnAPIResponse(status, response);
         });
     }
 
-    void OnAPIResponse(bool status)
+    void OnAPIResponse(bool status, string apiResponse)
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Status updation success" : "Something went wrong, please try again.";
+        BaseResponse responseModel = JsonUtility.FromJson<BaseResponse>(apiResponse);
+
+        alertModel.message = status ? "Status updation success" : responseModel.message;
 
         alertModel.okayButtonAction = OnCancelButtonAction;
 

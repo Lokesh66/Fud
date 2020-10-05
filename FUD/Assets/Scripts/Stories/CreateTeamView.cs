@@ -184,7 +184,10 @@ public class CreateTeamView : MonoBehaviour
         else {
             memberField.text = inputData;
         }
+
         searchContent.DestroyChildrens();
+
+        scrollObject.SetActive(false);
     }
 
     void GetSearchedUsers()

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using frame8.ScrollRectItemsAdapter.GridExample;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -6,29 +6,51 @@ using TMPro;
 
 public class StoryShareView : MonoBehaviour
 {
-    public RectTransform searchContent;
-
-    public GameObject searchCell;
+    public GameObject shareButtonObject;
 
     public TMP_InputField searchField;
+
+    public StoryShareTableView tableView;
+
+    public StoryShareFilterView filterView;
+
+    public NoDataView noDataView;
+
+
+    [HideInInspector]
+    public List<UserSearchModel> dataList;
 
 
     StoryVersionsView versionsView;
 
     StoryVersion currentVersion;
 
+    ShareSearchCell currentCell;
+
     UserSearchModel selectedModel = null;
+
 
     string keyword = string.Empty;
 
+    string sourceFrom = "story_share";
+
     bool isSearchAPICalled = false;
+
+
+    bool isInitialized = false;
+
+    bool isPagingOver = false;
+
+    int pageNo = 1;
+
+    int MAX_USERS = 50;
 
 
     private void OnEnable()
     {
         keyword = string.Empty;
 
-        searchField.text = keyword;
+        //searchField.text = keyword;
     }
 
     public void Load(StoryVersion storyVersion, StoryVersionsView versionsView)
@@ -38,6 +60,36 @@ public class StoryShareView : MonoBehaviour
         currentVersion = storyVersion;
 
         this.versionsView = versionsView;
+
+        GameManager.Instance.apiHandler.GetAllUsers(pageNo, sourceFrom, (status, dataList) => {
+
+            if (status)
+            {
+                this.dataList = dataList;
+
+                if (dataList.Count < MAX_USERS)
+                {
+                    isPagingOver = true;
+
+                    pageNo = 1;
+                }
+
+                if (!isInitialized)
+                {
+                    tableView.gameObject.SetActive(true);
+
+                    isInitialized = true;
+                }
+                else
+                {
+                    tableView.Data.Clear();
+
+                    tableView.Data.Add(dataList.Count);
+
+                    tableView.Refresh();
+                }
+            }
+        });
     }
 
     public void OnValueChange()
@@ -59,6 +111,13 @@ public class StoryShareView : MonoBehaviour
             if (!searchField.text.Equals(selectedModel.name))
             {
                 selectedModel = null;
+
+                currentCell.UpdateDeselectViw();
+
+                if (string.IsNullOrEmpty(searchField.text))
+                {
+                    Load(currentVersion, versionsView);
+                }
             }
         }
     }
@@ -88,34 +147,35 @@ public class StoryShareView : MonoBehaviour
             {
                 UserSearchResponse searchResponse = JsonUtility.FromJson<UserSearchResponse>(response);
 
-                PopulateDropdown(searchResponse.data);
+                Reload(searchResponse.data);
 
                 isSearchAPICalled = false;
             }
         });
     }
 
-    void PopulateDropdown(List<UserSearchModel> searchModels)
+    void Reload(List<UserSearchModel> searchModels)
     {
-        searchContent.DestroyChildrens();
+        dataList = searchModels;
 
-        GameObject cellObject = null;
+        tableView.Data.Clear();
 
-        for (int i = 0; i < searchModels.Count; i++)
-        {
-            cellObject = Instantiate(searchCell, searchContent);
+        tableView.Data.Add(searchModels.Count);
 
-            cellObject.GetComponent<ShareSearchCell>().SetView(searchModels[i], OnSelectMember);
-        }
+        tableView.Refresh();
     }
 
-    void OnSelectMember(object searchModel)
+    public void OnSelectMember(ShareSearchCell selectedCell, object searchModel)
     {
         selectedModel = searchModel as UserSearchModel;
 
-        searchField.text = selectedModel.name;
+        //searchField.text = selectedModel.name;
 
-        searchContent.DestroyChildrens();
+        currentCell?.UpdateDeselectViw();
+
+        currentCell = selectedCell;
+
+        shareButtonObject.SetActive(currentCell != null);
     }
 
     void OnAPIResponse(bool status, string response)
@@ -145,6 +205,8 @@ public class StoryShareView : MonoBehaviour
         versionsView?.OnRemoveVersion(currentVersion);
 
         DataManager.Instance.UpdateFeaturedData(EFeatureType.ShareStoryVersion);
+
+        StoryDetailsController.Instance.OnBackButtonAction(true);
     }
 
     bool CanCallAPI()
@@ -174,12 +236,76 @@ public class StoryShareView : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    public void OnAPICall()
+    {
+        if (isPagingOver)
+            return;
+
+        GetNextPageData();
+    }
+
+    void GetNextPageData()
+    {
+        GameManager.Instance.apiHandler.GetAllUsers(pageNo, sourceFrom, (status, modelsList) =>
+        {
+            if (status)
+            {
+                pageNo++;
+
+                this.dataList = modelsList;
+
+                if (modelsList.Count < MAX_USERS)
+                {
+                    isPagingOver = true;
+
+                    pageNo = 0;
+                }
+                else
+                {
+                    isPagingOver = false;
+
+                    pageNo++;
+                }
+
+                tableView.Data.Clear();
+
+                tableView.Data.Add(modelsList.Count);
+
+                tableView.Refresh();
+            }
+        });
+    }
+
     void Reset()
     {
-        searchField.text = string.Empty;
+        //searchField.text = string.Empty;
 
         selectedModel = null;
 
-        searchContent.DestroyChildrens();
+        pageNo = 1;
+
+        isPagingOver = false;
+
+        noDataView.gameObject.SetActive(false);
+
+        shareButtonObject.SetActive(false);
+    }
+
+    public void OnFilterButtonAction()
+    {
+        filterView.Load(OnFilterAction);
+    }
+
+    void OnFilterAction(object data)
+    {
+        dataList = data as List<UserSearchModel>;
+
+        tableView.Data.Clear();
+
+        tableView.Data.Add(dataList.Count);
+
+        tableView.Refresh();
+
+        noDataView.gameObject.SetActive(dataList.Count == 0);
     }
 }

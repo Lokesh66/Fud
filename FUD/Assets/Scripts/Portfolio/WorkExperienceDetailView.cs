@@ -43,9 +43,9 @@ public class WorkExperienceDetailView : MonoBehaviour
 
     void SetView()
     {
-        List<Genre> genres = DataManager.Instance.genres;
+        List<Craft> genres = DataManager.Instance.crafts;
 
-        Genre genre = genres.Find(item => item.id == experianceModel.role_id);
+        Craft genre = genres.Find(item => item.id == experianceModel.role_id);
 
         roleText.text = genre.name;
 

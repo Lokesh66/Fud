@@ -1,10 +1,16 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
 using System;
+using UMP;
+
 
 public class CreatedPortfolioMediaCell : MonoBehaviour
 {
-    public Image albumImage;
+    public UniversalMediaPlayer mediaPlayer;
+
+    public RawImage albumImage;
+
+    public GameObject pauseObject;
 
     public GameObject deleteObject;
 
@@ -26,36 +32,33 @@ public class CreatedPortfolioMediaCell : MonoBehaviour
 
         mediaType = DataManager.Instance.GetMediaType(albumModel.media_type);
 
+        pauseObject.SetActive(mediaType == EMediaType.Video);
+
         if (mediaType == EMediaType.Image)
         {
-            GameManager.Instance.downLoadManager.DownloadImage(albumModel.content_url, (sprite) =>
+            GameManager.Instance.apiHandler.DownloadImage(albumModel.content_url, (sprite) =>
             {
-                if (this != null)
+                if (this != null && sprite != null)
                 {
-                    albumImage.sprite = sprite;
+                    albumImage.texture = sprite.texture;
                 }
             });
         }
-    }
-
-    public void SetVideoThumbnail(Action OnNext)
-    {
-        if (mediaType == EMediaType.Video)
+        else if (mediaType == EMediaType.Video)
         {
-            VideoStreamer.Instance.GetThumbnailImage(albumModel.content_url, (texture) =>
+            mediaPlayer.Path = albumModel.content_url;
+
+            mediaPlayer.Prepare();
+
+            mediaPlayer.AddEndReachedEvent(() =>
             {
-                Rect rect = new Rect(0, 0, albumImage.rectTransform.rect.width, albumImage.rectTransform.rect.height);
-
-                Sprite sprite = Sprite.Create(texture.ToTexture2D(), rect, new Vector2(0.5f, 0.5f));
-
-                albumImage.sprite = sprite;
-
-                OnNext?.Invoke();
+                VideoStreamer.Instance.updatedRawImage.gameObject.SetActive(false);
             });
-        }
-        else
-        {
-            OnNext?.Invoke();
+
+            mediaPlayer.AddImageReadyEvent((texture) =>
+            {
+                albumImage.texture = texture;
+            });
         }
     }
 
@@ -64,6 +67,10 @@ public class CreatedPortfolioMediaCell : MonoBehaviour
         if (mediaType == EMediaType.Image)
         {
             UIManager.Instance.ShowBigScreen(albumModel.content_url);
+        }
+        else if (mediaType == EMediaType.Video)
+        {
+            UIManager.Instance.topCanvas.PlayVideo(albumImage, mediaPlayer);
         }
     }
 

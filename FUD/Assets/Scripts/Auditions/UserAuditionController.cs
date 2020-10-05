@@ -37,7 +37,7 @@ public class UserAuditionController : MonoBehaviour
 
     List<SearchAudition> activeAuditions;
 
-    SearchAudition selectedAudition;
+    UserAuditionCell selectedAuditionCell;
 
     Action<bool> OnBack;
 
@@ -94,51 +94,19 @@ public class UserAuditionController : MonoBehaviour
         switch (currentType)
         {
             case EAuditionStatusScreen.Live:
-                liveAuditionResponsesView.Load(activeAuditions, auditionId);
+                liveAuditionResponsesView.Load(activeAuditions, auditionId, this);
                 break;
             case EAuditionStatusScreen.Shortlisted:
-                shortListedAuditionView.Load(auditionId);
+                shortListedAuditionView.Load(auditionId, this);
                 break;
         }
     }
 
-    void SetShortListedVideoThumbnails(int index)
+    public void OnAuditionSelectAction(UserAuditionCell audition)
     {
-        //shortListedCellsList[index].SetVideoThumbnail(() => {
+        selectedAuditionCell = audition;
 
-        //    index++;
-
-        //    if (index >= shortListedAudtions.Count)
-        //    {
-        //        return;
-        //    }
-
-        //    SetShortListedVideoThumbnails(index);
-        //});
-    }
-
-    public void OnAuditionSelectAction(SearchAudition audition)
-    {
-        selectedAudition = audition;
-
-        MultimediaModel model = selectedAudition.UserAuditionMultimedia[0];
-
-        EMediaType mediaType = model.GetMediaType(model.media_type);
-
-        Debug.Log("Meida Type : OnVideoComplete Called");
-
-        if (mediaType == EMediaType.Video)
-        {
-            VideoStreamer.Instance.StreamVideo(model.content_url, OnVideoComplete);
-        }
-        if (mediaType == EMediaType.Audio)
-        {
-            AudioStreamer.Instance.AudioStream(model.content_url, OnVideoComplete);
-        }
-        else
-        {
-            buttonsPanel.SetActive(true);
-        }
+        buttonsPanel.SetActive(true);
     }
 
     void OnVideoComplete()
@@ -170,7 +138,7 @@ public class UserAuditionController : MonoBehaviour
     {
         buttonsPanel.SetActive(false);
 
-        GameManager.Instance.apiHandler.AcceptOrRejectAudition(selectedAudition.audition_id, selectedAudition.id, 5, (status, response) =>
+        GameManager.Instance.apiHandler.AcceptOrRejectAudition(selectedAuditionCell.auditionData.audition_id, selectedAuditionCell.auditionData.id, 5, (status, response) =>
         {
             if (status)
             {
@@ -183,7 +151,7 @@ public class UserAuditionController : MonoBehaviour
     {
         buttonsPanel.SetActive(false);
 
-        GameManager.Instance.apiHandler.AcceptOrRejectAudition(selectedAudition.audition_id, selectedAudition.id, 8, (status, response) =>
+        GameManager.Instance.apiHandler.AcceptOrRejectAudition(selectedAuditionCell.auditionData.audition_id, selectedAuditionCell.auditionData.id, 8, (status, response) =>
         {
             if (status)
             {
@@ -196,7 +164,7 @@ public class UserAuditionController : MonoBehaviour
     {
         buttonsPanel.SetActive(false);
 
-        GameManager.Instance.apiHandler.AcceptOrRejectAudition(selectedAudition.audition_id, selectedAudition.id, 1, (status, response) =>
+        GameManager.Instance.apiHandler.AcceptOrRejectAudition(selectedAuditionCell.auditionData.audition_id, selectedAuditionCell.auditionData.id, 1, (status, response) =>
         {
             if (status)
             {

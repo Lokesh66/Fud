@@ -5,8 +5,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
-using TMPro;
+
 
 
 public partial class APIHandler
@@ -27,28 +26,6 @@ public partial class APIHandler
 
     public GameObject o854252G;
 
-    IEnumerator GetCrafts(string url, Action<bool, string> callback)
-    {
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
-        {
-            //webRequest.SetRequestHeader("Authorization", "Bearer " + APIConstants.TOKEN);
-
-            yield return webRequest.SendWebRequest();
-
-            if (webRequest.isNetworkError || webRequest.isHttpError)
-            {
-                Debug.LogErrorFormat("<APIManager/GetRequest> Error ({0})", webRequest.error);
-
-                callback?.Invoke(false, webRequest.error);
-            }
-            else
-            {
-                Debug.LogFormat("<APIManager/GetRequest> Response ({0})", webRequest.downloadHandler.text);
-                string response = webRequest.downloadHandler.text;
-                callback?.Invoke(true, response);
-            }
-        }
-    }
 
     #region GET CraftRoles
     public void GetCraftRoles()
@@ -61,6 +38,41 @@ public partial class APIHandler
             }
         }, false));
     }
+
+    public void GetCastRoles(int id)
+    {
+        string url = APIConstants.GET_CRATFS + "?type=" + id;
+
+        gameManager.StartCoroutine(GetRequest(url, false, (bool status, string response) =>
+        {
+            Debug.Log("response = " + response);
+
+            if (status)
+            {
+                CraftsResponse data = JsonUtility.FromJson<CraftsResponse>(response);
+
+                DataManager.Instance.UpdateCastCrafts(data.data);
+            }
+        }));
+    }
+
+    public void GetCrewRoles(int id)
+    {
+        string url = APIConstants.GET_CRATFS + "?type=" + id;
+
+        gameManager.StartCoroutine(GetRequest(url, false, (bool status, string response) =>
+        {
+            Debug.Log("response = " + response);
+
+            if (status)
+            {
+                CraftsResponse data = JsonUtility.FromJson<CraftsResponse>(response);
+
+                DataManager.Instance.UpdateCrewCrafts(data.data);
+            }
+        }));
+    }
+
     #endregion
 
     #region GET Genres
@@ -81,11 +93,7 @@ public partial class APIHandler
                 DataManager.Instance.UpdateGenres(data.data);
             }
             else {
-                AlertModel alertModel = new AlertModel();
-
-                alertModel.message = data.message;
-
-                UIManager.Instance.ShowAlert(alertModel);
+                CreateAlert(data.message);
             }
         }, false));
 
@@ -220,6 +228,10 @@ public partial class APIHandler
             Debug.LogErrorFormat("<APIManager/GetRequest> Error ({0})", webRequest.error);
 
             OnResponse?.Invoke(false, webRequest.downloadHandler.text);
+
+            BaseResponse responseModel = JsonUtility.FromJson<BaseResponse>(webRequest.downloadHandler.text);
+
+            CreateAlert(responseModel.message);
         }
         else
         {
@@ -254,14 +266,9 @@ public partial class APIHandler
             webRequest.SetRequestHeader("Authorization", GetToken());
         }
 
-        /*Dictionary<string, string> headers = GetHeaders(EHeaderType.Generic, jsonData);
-
-        foreach (KeyValuePair<string, string> header in headers)
-        {
-            webRequest.SetRequestHeader(header.Key, header.Value);
-        }*/
-
         yield return webRequest.SendWebRequest();
+
+        Debug.Log("webRequest.downloadHandler.text  = " + webRequest.downloadHandler.text);
 
         Loader.Instance.StopLoading();
 
@@ -273,6 +280,10 @@ public partial class APIHandler
         {
             Debug.LogErrorFormat("<APIManager/ POST/ ({0})> Error ({1})", webRequest.downloadHandler.text, url);
             callback?.Invoke(false, webRequest.downloadHandler.text);
+
+            BaseResponse responseModel = JsonUtility.FromJson<BaseResponse>(webRequest.downloadHandler.text);
+
+            CreateAlert(responseModel.message);
         }
         else
         {
@@ -324,6 +335,10 @@ public partial class APIHandler
         {
             Debug.LogErrorFormat("<APIManager/ PUT/ ({0})> Error ({1})", webRequest.downloadHandler.text, url);
             callback?.Invoke(false, webRequest.downloadHandler.text);
+
+            BaseResponse responseModel = JsonUtility.FromJson<BaseResponse>(webRequest.downloadHandler.text);
+
+            CreateAlert(responseModel.message);
         }
         else
         {
@@ -332,7 +347,7 @@ public partial class APIHandler
         }
     }
 
-    IEnumerator Upload(string filePath, EMediaType mediaType, string mediaSource, Action<bool, string> responseCallBack)
+    IEnumerator Upload(string filePath, EMediaType mediaType, string mediaSource, string faceId, Action<bool, string> responseCallBack)
     {
         byte[] img = File.ReadAllBytes(filePath);
 
@@ -350,17 +365,49 @@ public partial class APIHandler
         {
             form.AddBinaryData("file", img, filePath, "video/*");
         }
+        else if (mediaType == EMediaType.Document)
+        {
+            form.AddBinaryData("file", img, filePath, "text/pdf");
+        }
 
         form.AddField("image_source", mediaSource);
 
-        UnityWebRequest request = UnityWebRequest.Post(APIConstants.MEDIA_URL, form);
+        string url = string.Empty;
+
+        Debug.Log("mediaSource = " + mediaSource);
+
+        if (mediaSource.Equals("profile"))
+        {
+            if (faceId.IsNOTNullOrEmpty())
+            {
+                form.AddField("face_id", faceId);
+            }
+
+            url = APIConstants.PROFILE_MEDIA_URL;
+        }
+        else {
+            url = APIConstants.MEDIA_URL;
+        }
+
+        Debug.Log("url = " + url);
+
+        Debug.Log("Data = " + MiniJSON.Json.Serialize(form));
+
+        UnityWebRequest request = UnityWebRequest.Post(url, form);
+
+        request.SetRequestHeader("Authorization", GetToken());
 
         yield return request.SendWebRequest();
+
+        Debug.Log("request.downloadHandler.text = " + request.downloadHandler.text);
+
+        BaseResponse responseModel = JsonUtility.FromJson<BaseResponse>(request.downloadHandler.text);
 
         if (request.isNetworkError || request.isHttpError)
         {
             Debug.Log(request.error);
             responseCallBack?.Invoke(false, request.error);
+            CreateAlert(responseModel.message);
             //statusText.text = "StATUS Failed " + request.error;
         }
         else
@@ -369,5 +416,93 @@ public partial class APIHandler
             //statusText.text = "sTatus Success = " + request.downloadHandler.text;
             responseCallBack?.Invoke(true, request.downloadHandler.text);
         }
+    }
+
+    public void DownloadImage(string imageurl, Action<Sprite> CallBack)
+    {
+        Debug.Log("DownloadImage Called");
+
+        if (string.IsNullOrEmpty(imageurl))
+        {
+            CallBack?.Invoke(null);
+        }
+
+        string path = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, Path.GetFileName(imageurl));
+
+
+        if (File.Exists(path))
+        {
+            LoadPNG(path, CallBack);
+        }
+        else
+        {
+            gameManager.StartCoroutine(DownloadImageAndSave(imageurl, CallBack));
+        }
+    }
+
+    public void CreateAlert(string message)
+    {
+        AlertModel alertModel = new AlertModel();
+
+        alertModel.message = message;
+
+        UIManager.Instance.ShowAlert(alertModel);
+    }
+
+    IEnumerator DownloadImageAndSave(string imageURL, Action<Sprite> OnResponse)
+    {
+        Loader.Instance.StartLoading();
+
+        //string url = APIConstants.MEDIA_UPLOAD_BASE_URL + "adam/v1/downloadFile?" + "key_name=" + imageURL;
+
+        UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture(imageURL);
+
+        //webRequest.SetRequestHeader("Authorization", GetToken());
+
+        Debug.LogFormat("URL ({0}) ", imageURL);
+
+        yield return webRequest.SendWebRequest();
+
+        Loader.Instance.StopLoading();
+
+        if (webRequest.responseCode.Equals(401))
+        {
+            GameManager.Instance.SessionExpired();
+        }
+        if (webRequest.error.IsNOTNullOrEmpty())
+        {
+            Debug.LogErrorFormat("<APIManager/GetRequest> Error ({0})", webRequest.error);
+
+            OnResponse?.Invoke(null);
+        }
+        else
+        {
+            string path = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, Path.GetFileName(imageURL));
+
+            Texture2D myTexture = DownloadHandlerTexture.GetContent(webRequest);
+
+            Sprite profileSprite = Sprite.Create(myTexture, new Rect(0f, 0f, myTexture.width, myTexture.height), new Vector2(0.5f, 0f));//creates sprite from the texture of the image
+
+            byte[] texByte = myTexture.EncodeToPNG();//to convert texture to png
+
+            File.WriteAllBytes(path, texByte);
+
+            OnResponse?.Invoke(profileSprite);
+        }
+    }
+
+    void LoadPNG(string filePath, Action<Sprite> CallBack)
+    {
+        Texture2D tex = null;
+        byte[] fileData;
+
+        if (File.Exists(filePath))
+        {
+            fileData = File.ReadAllBytes(filePath);
+            tex = new Texture2D(1024, 1024, TextureFormat.ETC2_RGB, false);
+            tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
+        }
+        Sprite ProfilePic = Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+        CallBack(ProfilePic);
     }
 }

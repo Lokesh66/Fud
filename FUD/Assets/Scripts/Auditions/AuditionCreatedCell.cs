@@ -181,10 +181,14 @@ public class AuditionCreatedCell : MonoBehaviour
     void JoinAudition()
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
+
         parameters.Add("audition_id", auditionData.id);
         parameters.Add("port_album_media", uploadedDict);
+
         GameManager.Instance.apiHandler.JoinAudition(parameters, (status, response) =>
         {
+            Debug.Log("JoinAudition : response = " + response);
+
             if (status)
             {
                 AlertModel alertModel = new AlertModel();
@@ -194,12 +198,6 @@ public class AuditionCreatedCell : MonoBehaviour
                 UIManager.Instance.ShowAlert(alertModel);
 
                 DataManager.Instance.UpdateFeaturedData(EFeatureType.AuditionJoining);
-            }
-            else
-            {
-                AlertModel alertModel = new AlertModel();
-                alertModel.message = "Joining Audition Failed";
-                UIManager.Instance.ShowAlert(alertModel);
             }
         });
     }

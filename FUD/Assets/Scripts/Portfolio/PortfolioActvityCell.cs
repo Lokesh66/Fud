@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class PortfolioActvityCell : MonoBehaviour
 {
@@ -22,17 +23,21 @@ public class PortfolioActvityCell : MonoBehaviour
 
     PortfolioActivityModel activityModel;
 
+    Action<PortfolioActivityModel> OnStatusUpdated;
+
     ETabType tabType;
 
 
     bool isOwnAlbum = false;
 
 
-    public void Load(PortfolioActivityModel model, PortfolioActivityPopUp activityPopUp, ETabType tabType)
+    public void Load(PortfolioActivityModel model, PortfolioActivityPopUp activityPopUp, ETabType tabType, Action<PortfolioActivityModel> OnStatusUpdated) 
     {
         this.activityModel = model;
 
         this.activityPopUp = activityPopUp;
+
+        this.OnStatusUpdated = OnStatusUpdated;
 
         this.tabType = tabType;
 
@@ -56,7 +61,8 @@ public class PortfolioActvityCell : MonoBehaviour
         {
             case 1:
             case 8:
-                Destroy(gameObject);
+                OnStatusUpdated?.Invoke(activityModel);
+                //Destroy(gameObject);
                 break;
         }
     }

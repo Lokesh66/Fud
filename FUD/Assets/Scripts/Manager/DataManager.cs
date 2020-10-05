@@ -29,6 +29,12 @@ public class DataManager : MonoBehaviour
 
     public List<Genre> genres = new List<Genre>();
 
+    List<Craft> castCrafts;
+
+    List<Craft> crewCrafts;
+
+    List<IndustryModel> industryModels;
+
     public UserData userInfo;
 
     public List<FeaturedModel> featuredModels;
@@ -45,6 +51,17 @@ public class DataManager : MonoBehaviour
     {
         crafts = data;
     }
+
+    public void UpdateCastCrafts(List<Craft> data)
+    {
+        castCrafts = data;
+    }
+
+    public void UpdateCrewCrafts(List<Craft> data)
+    {
+        crewCrafts = data;
+    }
+
     public void UpdateGenres(List<Genre> data)
     {
         genres = data;
@@ -58,6 +75,26 @@ public class DataManager : MonoBehaviour
     public void UpdateUserAvailableActvities(List<FeaturedModel> activityModels)
     {
         this.featuredModels = activityModels;
+    }
+
+    public void GetIndustries(Action<List<IndustryModel>> action)
+    {
+        if (industryModels != null)
+        {
+            action?.Invoke(industryModels);
+        }
+        else
+        {
+            GameManager.Instance.apiHandler.GetIndustries((status, activityModels) => {
+
+                if (status)
+                {
+                    this.industryModels = activityModels;
+
+                    action?.Invoke(industryModels);
+                }
+            });
+        }
     }
 
     public void GetAvailableActivities(Action<List<FeaturedModel>> action)
@@ -124,9 +161,18 @@ public class DataManager : MonoBehaviour
             case "video":
                 mediaType = EMediaType.Video;
                 break;
+
+            case "document":
+                mediaType = EMediaType.Document;
+                break;
         }
 
         return mediaType;
+    }
+
+    public List<Craft> GetCraftRolesOnCategery(bool isCastRole)
+    {
+        return isCastRole ? castCrafts : crewCrafts;
     }
 
     #region IAP Order Id
@@ -177,6 +223,9 @@ public class UserData
     public string add_proof_identity;
     public string add_proof_front;
     public string add_proof_back;
+    public int profile_verified;
+    public int is_celebrity;
+    public string face_id;
     public DateTime created_date_time;
     public DateTime updatedAt;
     public CraftRoleModel Craftroles;

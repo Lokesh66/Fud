@@ -180,8 +180,8 @@ public partial class APIHandler
 
     public void GetIndustries(Action<bool, List<IndustryModel>> action)
     {
-        gameManager.StartCoroutine(GetRequest(APIConstants.GET_INDUSTRIES, true, (bool status, string response) => {
-
+        gameManager.StartCoroutine(GetRequest(APIConstants.GET_INDUSTRIES, true, (bool status, string response) =>
+        {
             if (status)
             {
                 IndustriesResponse responseModel = JsonUtility.FromJson<IndustriesResponse>(response);
@@ -192,7 +192,7 @@ public partial class APIHandler
                 action?.Invoke(false, null);
             }
 
-        }));
+        }, false));
     }
 
     public void GetAllExperiances(Action<bool, List<WorkExperianceModel>> action)
@@ -261,7 +261,7 @@ public partial class APIHandler
         }));
     }
 
-    public void ApplyPortfolioAlteredFilter(int roleId, int statusId, int sortId, int orderId,  Action<bool, string> action)
+    public void ApplyPortfolioAlteredFilter(int roleId, int roleCategeryId, int statusId, int sortId, int orderId,  Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -272,6 +272,11 @@ public partial class APIHandler
         if (!roleId.Equals(-1))
         {
             parameters.Add("role_id", roleId);
+        }
+
+        if (!roleCategeryId.Equals(-1))
+        {
+            parameters.Add("role_category_id", roleCategeryId);
         }
 
         if (!sortId.Equals(-1))
@@ -295,7 +300,7 @@ public partial class APIHandler
         }));
     }
 
-    public void ApplyPortfolioOfferedFilter(int sortId, int orderById, string gender, int ageFrom, int ageTo, Action<bool, string> action)
+    public void ApplyPortfolioOfferedFilter(int sortId, int orderById, int roleId, int roleCategeryId, int ageFrom, int ageTo, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -303,9 +308,14 @@ public partial class APIHandler
 
         url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
-        if (gender.IsNOTNullOrEmpty())
+        if (roleId.Equals(-1))
         {
-            parameters.Add("gender", gender);
+            parameters.Add("role_id", roleId);
+        }
+
+        if (!roleCategeryId.Equals(-1))
+        {
+            parameters.Add("role_category_id", roleCategeryId);
         }
 
         if (!sortId.Equals(-1))
@@ -385,6 +395,8 @@ public partial class APIHandler
             parameters.Add("add_proof_back", backAddressProof);
         }
 
+        Debug.Log("profile_image = " + infoModel.profile_image);
+
         if (infoModel.profile_image.IsNOTNullOrEmpty())
         {
             parameters.Add("profile_image", infoModel.profile_image);
@@ -394,6 +406,13 @@ public partial class APIHandler
         {
             parameters.Add("add_proof_identity", infoModel.aadherNumber);
         }
+
+        if (infoModel.faceId.IsNOTNullOrEmpty())
+        {
+            parameters.Add("faceId", infoModel.faceId);
+        }
+
+        parameters.Add("isCeleb", infoModel.isCeleb);
 
         gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_USER_PROFILE, true, parameters, (bool status, string response) =>
         {
@@ -558,8 +577,10 @@ public class ProfileInfoModel
     public string nativeLocation;
     public int roleId;
     public int categeryId;
-    public string profile_image;
+    public string profile_image = "https://dummyimage.com/300.png/09f/fff";
     public string aadherNumber;
+    public string faceId;
+    public bool isCeleb;
 }
 
 [Serializable]

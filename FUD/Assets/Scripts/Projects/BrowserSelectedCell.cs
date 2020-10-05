@@ -40,7 +40,7 @@ public class BrowserSelectedCell : MonoBehaviour
             return;
         }
 
-        GameManager.Instance.downLoadManager.DownloadImage(onScreenModel.content_url, (sprite) => {
+        GameManager.Instance.apiHandler.DownloadImage(onScreenModel.content_url, (sprite) => {
 
             if (this == null)
             {

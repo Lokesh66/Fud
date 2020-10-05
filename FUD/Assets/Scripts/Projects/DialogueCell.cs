@@ -39,7 +39,7 @@ public class DialogueCell : MonoBehaviour
 
     float xLeftdeleteButtonPos = 650f;
 
-    float xRightdeleteButtonPos = 300f;
+    float xRightdeleteButtonPos = 130f;
 
     Action<DialogueCell> OnCellButtonAction;
 

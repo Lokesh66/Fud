@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Runtime.InteropServices;
+using System.Collections.Generic;
 using UnityEngine;
 using System;
 
@@ -19,6 +20,15 @@ public partial class APIHandler
     public const string APP_ID = "1362262b24f262b46ab91599e22631";
 
 
+#if UNITY_IOS
+
+    private delegate void OnIOSPaymentCompletion(string result);
+
+    [DllImport("__Internal")]
+    private static extern float processPayment(string paymentInfo, OnIOSPaymentCompletion onPaymentCompletion);
+#endif
+
+
     public void Example()
     {
         Dictionary<string, object> planIdInfo = new Dictionary<string, object>
@@ -36,15 +46,18 @@ public partial class APIHandler
         {
             Debug.Log ("CashFree CashFreeRequest status = " + status);
 
-       //"data":{ "appId":"1362262b24f262b46ab91599e22631","orderId":8,"orderAmount":1000,"customerEmail":"lmoakm@gmail.com","customerPhone":919133532445,"token":"lb9JCN4MzUIJiOicGbhJCLiQ1VKJiOiAXe0Jye.gV0nIkZWZkRTZhF2MlZTZ1IiOiQHbhN3XiwiN4IDN3gjN4UTM6ICc4VmIsIiUOlkI6ISej5WZyJXdDJXZkJ3biwCMwATM6ICduV3btFkclRmcvJCL4ojIklkclRmcvJye.jmlUm863f1eFUTAx6dPOwjB0vIUXbx2HKcIIUFH-eLbhnkAc-JWG8KDiHt7hFck1x7","stage":"TEST","notifyUrl":"http://18.217.51.190:7004/v1/verify/order"}
-        //})
+            Debug.Log("Response string = " + responseString);
+
+            //"data":{ "appId":"1362262b24f262b46ab91599e22631","orderId":8,"orderAmount":1000,"customerEmail":"lmoakm@gmail.com","customerPhone":919133532445,"token":"lb9JCN4MzUIJiOicGbhJCLiQ1VKJiOiAXe0Jye.gV0nIkZWZkRTZhF2MlZTZ1IiOiQHbhN3XiwiN4IDN3gjN4UTM6ICc4VmIsIiUOlkI6ISej5WZyJXdDJXZkJ3biwCMwATM6ICduV3btFkclRmcvJCL4ojIklkclRmcvJye.jmlUm863f1eFUTAx6dPOwjB0vIUXbx2HKcIIUFH-eLbhnkAc-JWG8KDiHt7hFck1x7","stage":"TEST","notifyUrl":"http://18.217.51.190:7004/v1/verify/order"}
+            //})
 
             if (status)
             {
+                
                 CFPToken response = JsonUtility.FromJson<CFPTokenResponse> (responseString).data;
-                Dictionary<string, string> parameters = response.ConvertToParameters ();
 
 #if UNITY_ANDROID
+                Dictionary<string, string> parameters = response.ConvertToParameters ();
 
                 response.Add (APP_ID, APP_ID_KEY, APP_ID, parameters);
                 response.Add (customerPhone, CUSTOMER_PHONE_KEY, customerPhone, parameters);
@@ -53,39 +66,77 @@ public partial class APIHandler
                 response.Add (orderNote, ORDER_NOTE_KEY, orderNote, parameters);            // Optional
                 response.Add (customerName, CUSTOMER_NAME_KEY, customerName, parameters);   // Optional
                 response.Add (response.notifyUrl, CUSTOMER_NAME_KEY, response.notifyUrl, parameters);   // Optional
-                response.Add(response.returnUrl, CUSTOMER_NAME_KEY, response.returnUrl, parameters);   // Optional
+                //response.Add(response.returnUrl, CUSTOMER_NAME_KEY, response.returnUrl, parameters);   // Optional
 
 
                 AndroidJavaObject paramObj = CreateJavaMapFromDictainary (parameters);
 
                 DataManager.Instance.SetPurchaseOrderId(response.orderId);
 
-                if (string.IsNullOrEmpty (response.token))
+                if (string.IsNullOrEmpty (response.tokenData))
                 { 
-                    response.token = GetCFPToken ();
+                    response.tokenData = GetCFPToken ();
                 }
 
-                if (string.IsNullOrEmpty(response.stage))
-                {
-                    response.stage = "TEST";
-                }
+                //if (string.IsNullOrEmpty(response.))
+                //{
+                //    response.stage = "TEST";
+                //}
                 AndroidJavaObject currentActivity = new AndroidJavaClass ("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject> ("currentActivity");
 
                 AndroidJavaClass paymentActivity = new AndroidJavaClass ("com.phonatoto.cashfree.PaymentActivity");
 
-                paymentActivity.CallStatic ("doPayment", currentActivity, paramObj, response.token, response.stage, new AndroidIAPCallBack());
+                paymentActivity.CallStatic ("doPayment", currentActivity, paramObj, response.tokenData, "TEST", new AndroidIAPCallBack());
 
                 //OnResponse(status, response.orderId);
 
 #else
-        //TODO: iOS is pending
-        Debug.Log("iOS Cash free implementation is pending");
+                //TODO: iOS is pending
+
+                Debug.Log("iOS Cash free implementation is pending");
+
+                string jsonResponse = JsonUtility.ToJson(response);
+
+                Debug.Log("jsonResponse = " + jsonResponse);
+
+                processPayment(jsonResponse, onPaymentCompletion);
 #endif
     }
         }));
     }
 
+    [AOT.MonoPInvokeCallback(typeof(OnIOSPaymentCompletion))]
+    static void onPaymentCompletion(string response)
+    {
+        Debug.Log("response = " + response);
 
+        PaymentCompletionModel responseModel = JsonUtility.FromJson<PaymentCompletionModel>(response);
+
+        if (responseModel.txStatus.Equals("SUCCESS"))
+        {
+            GameManager.Instance.apiHandler.VerifyPurchsedOrderId(responseModel.orderId, (apiStatus) =>
+            {
+                if (apiStatus)
+                {
+                    AlertModel alertModel = new AlertModel();
+
+                    alertModel.message = "Order Verified Success";
+
+                    UIManager.Instance.ShowAlert(alertModel);
+
+                    DataManager.Instance.ClearPurchaseOrderId();
+                }
+                else
+                {
+                    AlertModel alertModel = new AlertModel();
+
+                    alertModel.message = "Order verification Failed";
+
+                    UIManager.Instance.ShowAlert(alertModel);
+                }
+            });
+        }
+    }
 
     string GetCFPToken()
     {
@@ -117,10 +168,8 @@ public partial class APIHandler
 }
 
 [Serializable]
-public class CFPTokenResponse
+public class CFPTokenResponse : BaseResponse
 {
-    public string message;
-    public int status;
     public CFPToken data;
 }
 [Serializable]
@@ -131,19 +180,21 @@ public class CFPToken
     public string orderAmount;
     public string customerEmail;
     public string customerPhone;
-    public string token;
-    public string stage;
+    public string customerName;
+    public string orderCurrency;
+    public string tokenData;
+    public string orderNote;
+    //public string stage;
     public string notifyUrl;
-    public string returnUrl;
 
     public Dictionary<string, string> ConvertToParameters()
     {
         Dictionary<string, string> data = new Dictionary<string, string> ();
         Add (appId, APIHandler.APP_ID_KEY, APIHandler.APP_ID, data);
-        Add (orderId, APIHandler.ORDER_ID_KEY, orderId, data);
-        Add (orderAmount, APIHandler.ORDER_AMOUNT_KEY, orderAmount, data);
-        Add (customerEmail, APIHandler.CUSTOMER_EMAIL_KEY, customerEmail, data);
-        Add (customerPhone, APIHandler.CUSTOMER_PHONE_KEY, customerPhone, data);
+        Add (orderId.ToString(), APIHandler.ORDER_ID_KEY, orderId.ToString(), data);
+        Add (orderAmount.ToString(), APIHandler.ORDER_AMOUNT_KEY, orderAmount.ToString(), data);
+        Add (customerEmail.ToString(), APIHandler.CUSTOMER_EMAIL_KEY, customerEmail.ToString(), data);
+        Add (customerPhone.ToString(), APIHandler.CUSTOMER_PHONE_KEY, customerPhone.ToString(), data);
 
         return data;
     }
@@ -187,10 +238,24 @@ class AndroidIAPCallBack : AndroidJavaProxy
             }
         });
     }
+
     public void onFailure(string errorMessage)
     {
         DataManager.Instance.ClearPurchaseOrderId();
     }
+}
+
+[Serializable]
+public class PaymentCompletionModel
+{
+    public string orderId;
+    public string referenceId;
+    public string orderAmount;
+    public string txStatus;
+    public string txMsg;
+    public string txTime;
+    public string paymentMode;
+    public string signature;
 }
 
 public interface PaymentResponseCallBack

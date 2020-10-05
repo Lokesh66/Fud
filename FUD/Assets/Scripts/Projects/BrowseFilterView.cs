@@ -10,22 +10,18 @@ public class BrowseFilterView : MonoBehaviour
     public List<FilterCell> filterCells;
 
 
-    public RectTransform minFillTrans;
+    public MultiSliderDragHandler dragHandler;
 
     public Slider ageSlider;
 
-    public TMP_InputField ageFromField;
-
-    public TMP_InputField ageToField;
 
     public TextMeshProUGUI ageValueText;
 
 
-    List<Craft> crafts;
-
     Action<List<PortfolioModel>> OnApplyFilter;
 
-    float minAgeValue => ageSlider.minValue;
+    float currentMaxAge = -1;
+
 
 
     public void Load(Action<List<PortfolioModel>> OnApplyFilter)
@@ -33,12 +29,26 @@ public class BrowseFilterView : MonoBehaviour
         gameObject.SetActive(true);
 
         this.OnApplyFilter = OnApplyFilter;
+
+        currentMaxAge = ageSlider.value;
+
+        OnAgeSliderValueChange();
     }
 
- 
+
     public void OnAgeSliderValueChange()
     {
-        ageValueText.text = minAgeValue + "-" + ageSlider.value + " Yrs";
+        Debug.Log("dragHandler.minAgeValue : = " + dragHandler.minAgeValue + " ageSlider.value = " + ageSlider.value);
+
+        if (dragHandler.minAgeValue < ageSlider.value)
+        {
+            currentMaxAge = ageSlider.value;
+        }
+        else {
+            ageSlider.value = currentMaxAge;
+        }
+
+        ageValueText.text =  (int)dragHandler.minAgeValue + "-" + (int)currentMaxAge + " Yrs";
     }
 
     public void OnCancelButtonAction()
@@ -54,22 +64,24 @@ public class BrowseFilterView : MonoBehaviour
 
         int roleId = filterCells[1].GetStatus();
 
-        GameManager.Instance.apiHandler.ApplyBrowseFilter(ageFromField.text, ageToField.text, gender, roleId, (status, data) => {
-
+        GameManager.Instance.apiHandler.ApplyBrowseFilter((int)dragHandler.minAgeValue, (int)currentMaxAge, gender, roleId, (status, data) =>
+        {
             if (status)
             {
                 OnApplyFilter?.Invoke(data);
 
                 OnCancelButtonAction();
-            }   
+            }
         });
     }
 
     void ClearData()
     {
-        ageFromField.text = 3.ToString();
+        currentMaxAge = 100;
 
-        ageToField.text = 100.ToString();
+        dragHandler.ClearData();
+
+        ageSlider.value = currentMaxAge;
 
         for (int i = 0; i < filterCells.Count; i++)
         {
@@ -98,4 +110,7 @@ public class BrowseFilterView : MonoBehaviour
 
         return gender;
     }
+
+    
 }
+

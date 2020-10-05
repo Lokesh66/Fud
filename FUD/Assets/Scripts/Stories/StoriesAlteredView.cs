@@ -5,10 +5,6 @@ using UnityEngine;
 
 public class StoriesAlteredView : MonoBehaviour
 {
-    public RectTransform content;
-
-    public GameObject alteredCell;
-
     public ETabType storiesTab;
 
     public StoriesAlteredPopUpView alteredPopUpView;

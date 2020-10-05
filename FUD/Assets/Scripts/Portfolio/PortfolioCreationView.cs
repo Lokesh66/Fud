@@ -130,17 +130,11 @@ public class PortfolioCreationView : MonoBehaviour
 
     void OnImagesUploaded(bool status, List<string> imageUrls)
     {
-        //Debug.Log("OnImagesUploaded : Status = " + status + " url = " + imageUrls.Count);
-
         if (status)
         {
-            //Debug.Log("Available : = " + DataManager.Instance.CanLoadScreen(EFeatureType.PortfolioAlbums));
-
             if (DataManager.Instance.CanLoadScreen(EFeatureType.PortfolioAlbums))
             {
-                //Debug.Log("Loaded Files Length = " + GalleryManager.Instance.GetLoadedFiles().Length);
-
-                filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+                filesHandler.Load(imageUrls.ToArray(), true, OnDeleteAction: OnDeleteMediaAction);
 
                 for (int i = 0; i < imageUrls.Count; i++)
                 {
@@ -153,21 +147,11 @@ public class PortfolioCreationView : MonoBehaviour
                     kvp.Add("media_type", "image");
 
                     uploadedDict.Add(kvp);
-
-                    Debug.Log("Updating Media Dic");
                 }
             }
             else {
                 UIManager.Instance.CreateUnAvaiableAlert(EFeatureType.PortfolioAlbums);
             }
-        }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString() + imageUrls[0];
-
-            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -175,7 +159,7 @@ public class PortfolioCreationView : MonoBehaviour
     {
         if (status)
         {
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+            filesHandler.Load(audioUrls.ToArray(), true, EMediaType.Audio, OnDeleteMediaAction);
 
             for (int i = 0; i < audioUrls.Count; i++)
             {
@@ -190,21 +174,13 @@ public class PortfolioCreationView : MonoBehaviour
                 uploadedDict.Add(kvp);
             }
         }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString();
-
-            UIManager.Instance.ShowAlert(alertModel);
-        }
     }
 
     void OnVideosUploaded(bool status, List<string> videoUrls)
     {
         if (status)
         {
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+            filesHandler.Load(videoUrls.ToArray(), false, EMediaType.Video, OnDeleteMediaAction);
 
             for (int i = 0; i < videoUrls.Count; i++)
             {
@@ -218,14 +194,6 @@ public class PortfolioCreationView : MonoBehaviour
 
                 uploadedDict.Add(kvp);
             }
-        }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString();
-
-            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -258,6 +226,45 @@ public class PortfolioCreationView : MonoBehaviour
         float targetPostion = panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
 
         galleryPanel.DOAnchorPosY(targetPostion, 0.4f);
+    }
+
+    void OnDeleteMediaAction(object mediaURL)
+    {
+        string url = string.Empty;
+
+        bool isItemRemoved = false;
+
+        
+        foreach (var item in uploadedDict)
+        {
+            Dictionary<string, object> mediaItem = item as Dictionary<string, object>;
+
+            foreach (var kvp in mediaItem)
+            {
+                if (kvp.Key.Equals("content_url"))
+                {
+                    url = kvp.Value as string;
+
+                    if (url.Equals(mediaURL))
+                    {
+                        int modelIndex = uploadedDict.IndexOf(mediaItem);
+
+                        Destroy(filesHandler.content.GetChild(modelIndex).gameObject);
+
+                        uploadedDict.Remove(mediaItem);
+
+                        isItemRemoved = true;
+
+                        break;
+                    }
+                }
+            }
+
+            if (isItemRemoved)
+            {
+                break;
+            }
+        }
     }
 }
 

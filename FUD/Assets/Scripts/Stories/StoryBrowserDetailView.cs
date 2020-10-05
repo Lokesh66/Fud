@@ -61,27 +61,9 @@ public class StoryBrowserDetailView : MonoBehaviour
 
             cellsList.Add(_mediaCell);
         }
-
-        if (mediaList.Count > 0)
-        {
-            SetVideoThumbnails(0);
-        }
     }
 
-    void SetVideoThumbnails(int index)
-    {
-        cellsList[index].SetVideoThumbnail(() => {
-
-            index++;
-
-            if (index >= mediaList.Count)
-            {
-                return;
-            }
-
-            SetVideoThumbnails(index);
-        });
-    }
+    
 
     public void OnBackButtonAction()
     {

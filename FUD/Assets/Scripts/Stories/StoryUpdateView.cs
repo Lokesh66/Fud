@@ -1,9 +1,8 @@
-﻿using frame8.ScrollRectItemsAdapter.MultiplePrefabsExample;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using TMPro;
-
+using UnityEngine.UI;
 
 public class StoryUpdateView : MonoBehaviour
 {
@@ -21,7 +20,7 @@ public class StoryUpdateView : MonoBehaviour
 
     public TMP_InputField descriptionField;
 
-    public RemoteImageBehaviour titlePosterImage;
+    public Image posterImage;
 
 
     List<Genre> genres;
@@ -90,7 +89,7 @@ public class StoryUpdateView : MonoBehaviour
 
     void UpdateTitlePosterImage()
     {
-        titlePosterImage.Load(storyModel.title_poster);
+        UpdateTitlePoster(storyModel.title_poster);
     }
 
     public void OnUploadAction()
@@ -130,15 +129,6 @@ public class StoryUpdateView : MonoBehaviour
         Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
 
         GameManager.Instance.apiHandler.UpdateStory(storyModel.id, storyTitleField.text, subTitleField.text, descriptionField.text, titlePosterURL, selectedGenre.id, accessDropdown.value, uploadedDict, (status, response) => {
-
-            if (status)
-            {                
-                Debug.Log("Story Uploaded Successfully");
-            }
-            else
-            {
-                Debug.LogError("Story Updation Failed");
-            }
 
             OnAPIResponse(status, response);
         });
@@ -212,22 +202,7 @@ public class StoryUpdateView : MonoBehaviour
         {
             titlePosterURL = imageURls[0];
 
-            titlePosterImage.Load(titlePosterURL, onCompleted : (fromCache, success) => {
-
-                if(success)
-                {
-                    titlePosterImage.Load(titlePosterURL);
-                }
-
-            });
-        }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString() + imageUrls[0];
-
-            UIManager.Instance.ShowAlert(alertModel);
+            UpdateTitlePoster(titlePosterURL);
         }
     }
 
@@ -260,7 +235,10 @@ public class StoryUpdateView : MonoBehaviour
                 GalleryManager.Instance.GetAudiosFromGallery(mediaSource, OnAudiosUploaded);
                 break;
             case EMediaType.Video:
-                GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnAudiosUploaded);
+                GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnVideosUploaded);
+                break;
+            case EMediaType.Document:
+                GalleryManager.Instance.GetDocuments(mediaSource, OnDocumentsUploaded);
                 break;
         }
     }
@@ -286,14 +264,6 @@ public class StoryUpdateView : MonoBehaviour
                 uploadedDict.Add(kvp);
             }
         }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString() + imageUrls[0];
-
-            UIManager.Instance.ShowAlert(alertModel);
-        }
     }
 
     void OnAudiosUploaded(bool status, List<string> audioUrls)
@@ -314,14 +284,6 @@ public class StoryUpdateView : MonoBehaviour
 
                 uploadedDict.Add(kvp);
             }
-        }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString() + imageUrls[0];
-
-            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -344,20 +306,43 @@ public class StoryUpdateView : MonoBehaviour
                 uploadedDict.Add(kvp);
             }
         }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString() + imageUrls[0];
-
-            UIManager.Instance.ShowAlert(alertModel);
-        }
     }
 
+    void OnDocumentsUploaded(bool status, List<string> documentURLs)
+    {
+        if (status)
+        {
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Document);
+
+            for (int i = 0; i < documentURLs.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", documentURLs[i]);
+
+                kvp.Add("media_type", "document");
+
+                uploadedDict.Add(kvp);
+            }
+        }
+    }
 
     public void OnCancelAction()
     {
         SlideGalleryView(false);
+    }
+
+    void UpdateTitlePoster(string imageURL)
+    {
+        GameManager.Instance.apiHandler.DownloadImage(imageURL, sprite => {
+
+            if (this != null && sprite != null)
+            {
+                posterImage.sprite = sprite;
+            }
+        });
     }
 
     void Reset()

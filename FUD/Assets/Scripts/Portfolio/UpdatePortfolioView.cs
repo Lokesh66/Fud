@@ -31,6 +31,9 @@ public class UpdatePortfolioView : MonoBehaviour
 
     List<PortfolioAlbumModel> mediaList = new List<PortfolioAlbumModel>();
 
+    List<int> deletedMedia = new List<int>();
+
+
     private string mediaSource = "portfolio";
 
 
@@ -63,13 +66,55 @@ public class UpdatePortfolioView : MonoBehaviour
 
             mediaCells.Add(_mediaCell);
 
-            UpdateMediaDict(portfolioModel.PortfolioMedia[i]);
+            //UpdateMediaDict(portfolioModel.PortfolioMedia[i]);
+        }
+    }
+
+    void OnDeleteMediaAction(PortfolioAlbumModel multimediaModel)
+    {
+        string url = string.Empty;
+
+        bool isItemRemoved = false;
+
+        int modelIndex = mediaList.IndexOf(multimediaModel);
+
+        Destroy(content.GetChild(modelIndex).gameObject);
+
+        if (multimediaModel.id != -1)
+        {
+            deletedMedia.Add(multimediaModel.id);
+        }
+        else
+        {
+            foreach (var item in uploadedDict)
+            {
+                Dictionary<string, object> mediaItem = item as Dictionary<string, object>;
+
+                foreach (var kvp in mediaItem)
+                {
+                    if (kvp.Key.Equals("content_url"))
+                    {
+                        url = kvp.Value as string;
+
+                        if (url.Equals(multimediaModel.content_url))
+                        {
+                            uploadedDict.Remove(mediaItem);
+
+                            isItemRemoved = true;
+
+                            break;
+                        }
+                    }
+                }
+
+                if (isItemRemoved)
+                {
+                    break;
+                }
+            }
         }
 
-        if (mediaList.Count > 0)
-        {
-            SetVideoThumbnails(0);
-        }
+        mediaList.Remove(multimediaModel);
     }
 
     void UpdateMediaDict(PortfolioAlbumModel model)
@@ -83,55 +128,6 @@ public class UpdatePortfolioView : MonoBehaviour
         kvp.Add("media_type", model.media_type);
 
         uploadedDict.Add(kvp);
-    }
-
-    void SetVideoThumbnails(int index)
-    {
-        mediaCells[index].SetVideoThumbnail(() => {
-
-            index++;
-
-            if (index >= portfolioModel.PortfolioMedia.Count)
-            {
-                return;
-            }
-
-            SetVideoThumbnails(index);
-        });
-    }
-
-    void OnDeleteMediaAction(PortfolioAlbumModel multimediaModel)
-    {
-        string url = string.Empty;
-
-        bool isItemRemoved = false;
-
-        foreach (var item in uploadedDict)
-        {
-            Dictionary<string, object> mediaItem = item as Dictionary<string, object>;
-
-            foreach (var kvp in mediaItem)
-            {
-                if (kvp.Key.Equals("content_url"))
-                {
-                    url = kvp.Value as string;
-
-                    if (url.Equals(multimediaModel.content_url))
-                    {
-                        uploadedDict.Remove(mediaItem);
-
-                        isItemRemoved = true;
-
-                        break;
-                    }
-                }
-            }
-
-            if (isItemRemoved)
-            {
-                break;
-            }
-        }
     }
 
     public void OnUploadButtonAction()
@@ -191,14 +187,6 @@ public class UpdatePortfolioView : MonoBehaviour
                 uploadedDict.Add(kvp);
             }
         }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString() + imageUrls[0];
-
-            UIManager.Instance.ShowAlert(alertModel);
-        }
     }
 
     void OnAudiosUploaded(bool status, List<string> audioUrls)
@@ -230,14 +218,6 @@ public class UpdatePortfolioView : MonoBehaviour
                 uploadedDict.Add(kvp);
             }
         }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString();
-
-            UIManager.Instance.ShowAlert(alertModel);
-        }
     }
 
     void OnVideosUploaded(bool status, List<string> videoUrls)
@@ -262,20 +242,12 @@ public class UpdatePortfolioView : MonoBehaviour
 
                 albumModel.content_url = videoUrls[i];
 
-                albumModel.media_type = "audio";
+                albumModel.media_type = "video";
 
                 mediaList.Add(albumModel);
 
                 uploadedDict.Add(kvp);
             }
-        }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString();
-
-            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -288,19 +260,18 @@ public class UpdatePortfolioView : MonoBehaviour
 
         GameManager.Instance.apiHandler.UpdatePortfolio(titleField.text, descriptionField.text, portfolioModel.id, accessDropDown.value, uploadedDict, (status, response) => {
 
-            if (status)
-            {
-                
-            }
-            OnAPIResponse(status);
+            
+            OnAPIResponse(status, response);
         });
     }
 
-    void OnAPIResponse(bool status)
+    void OnAPIResponse(bool status, string apiResponse)
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Update portfolio Success" : "Something went wrong, please try again.";
+        BaseResponse responseModel = JsonUtility.FromJson<BaseResponse>(apiResponse);
+
+        alertModel.message = status ? "Update portfolio Success" : responseModel.message;
 
         if (status)
         {

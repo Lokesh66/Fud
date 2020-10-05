@@ -62,7 +62,6 @@ public class SceneDetailsView : MonoBehaviour
     {
         GameManager.Instance.apiHandler.RemoveProjectScene(sceneModel.id, 8, (status) =>
         {
-
             if (status)
             {
                 scenesPanel.RemoveScene(sceneModel);

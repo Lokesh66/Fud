@@ -162,6 +162,23 @@ public partial class APIHandler
         gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
     }
 
+    public void GetProjectCastDetails(int pageNo, string sourcefrom, int projectId, int castId, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        string url = APIConstants.GET_PROJECT_CASTS;
+
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
+
+        parameters.Add("project_id", projectId);
+
+        parameters.Add("project_cast_id", castId);
+
+        parameters.Add("source_from", sourcefrom);
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
+    }
+
     public void GetProjectAuditions(Action<bool, List<AuditionProjectModel>> OnResponse)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();

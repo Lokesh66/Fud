@@ -9,11 +9,16 @@ public class PortfolioHandler : MonoBehaviour
 
     public PortfolioExperianceView experianceView;
 
-    public ProfileInfoView infoView;    
+    public ProfileInfoView infoView;
 
 
-    public void Load()
+    PortfolioView portfolioView;
+
+
+    public void Load(PortfolioView portfolioView)
     {
+        this.portfolioView = portfolioView;
+
         gameObject.SetActive(true);
 
         ShowMedia();
@@ -30,7 +35,7 @@ public class PortfolioHandler : MonoBehaviour
 
     void ShowMedia()
     {
-        mediaView.Load();
+        mediaView.Load(portfolioView);
     }
 
     void ShowExperianceScreen()

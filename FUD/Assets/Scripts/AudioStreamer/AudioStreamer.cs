@@ -56,17 +56,21 @@ public class AudioStreamer : MonoBehaviour
 
     IEnumerator StartStreaming(string audioURL)
     {
-        UnityWebRequest music = UnityWebRequestMultimedia.GetAudioClip(audioURL, AudioType.UNKNOWN);
+        //string url = APIConstants.MEDIA_UPLOAD_BASE_URL + "adam/v1/downloadFile?" + "key_name=" + audioURL;
 
-        yield return music.SendWebRequest();
+        UnityWebRequest webRequest = UnityWebRequestMultimedia.GetAudioClip(audioURL, AudioType.UNKNOWN);
 
-        if (music.isNetworkError)
+        //webRequest.SetRequestHeader("Authorization", GetToken());
+
+        yield return webRequest.SendWebRequest();
+
+        if (webRequest.isNetworkError || webRequest.isHttpError)
         {
-            Debug.Log(music.error);
+            Debug.Log(webRequest.error);
         }
         else
         {
-            AudioClip clip = DownloadHandlerAudioClip.GetContent(music);
+            AudioClip clip = DownloadHandlerAudioClip.GetContent(webRequest);
 
             if (clip)
             {
@@ -74,5 +78,10 @@ public class AudioStreamer : MonoBehaviour
                 audioSource.Play();
             }
         }
+    }
+
+    string GetToken()
+    {
+        return GameManager.Instance.apiHandler.GetToken();
     }
 }

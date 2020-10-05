@@ -14,7 +14,10 @@ public class ShortListedAuditionView : MonoBehaviour
 
     public GameObject noDataObject;
 
-    SearchAudition selectedAudition;
+
+    UserAuditionController auditionController;
+
+    UserAuditionCell selectedAuditionCell;
 
     bool isInitialized = false;
 
@@ -27,9 +30,11 @@ public class ShortListedAuditionView : MonoBehaviour
     int auditionId = -1;
 
 
-    public void Load(int auditionId)
+    public void Load(int auditionId, UserAuditionController auditionController)
     {
         this.auditionId = auditionId;
+
+        this.auditionController = auditionController;
 
         GetShortListedAuditions();
     }
@@ -78,16 +83,16 @@ public class ShortListedAuditionView : MonoBehaviour
         });
     }
 
-    public void OnAuditionSelectAction(SearchAudition audition)
+    public void OnAuditionSelectAction(UserAuditionCell audition)
     {
-        selectedAudition = audition;
+        selectedAuditionCell = audition;
 
-        buttonsPanel.SetActive(true);
+        auditionController.OnAuditionSelectAction(audition);
     }
 
     public void OnPlayButtonAction()
     {
-        MultimediaModel model = selectedAudition.UserAuditionMultimedia[0];
+        MultimediaModel model = selectedAuditionCell.auditionData.UserAuditionMultimedia[0];
 
         EMediaType mediaType = model.GetMediaType(model.media_type);
 

@@ -1,10 +1,15 @@
 ﻿using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
-using TMPro;
+
 
 public class HomeAlertsView : MonoBehaviour
 {
     public RectTransform alertContent;
+
+    public RectTransform scrollRectTrans;
+
+    public HorizontalLayoutGroup layoutGroup;
 
     public GameObject alertCell;
 
@@ -22,6 +27,8 @@ public class HomeAlertsView : MonoBehaviour
             {
                 alertModels = responseModel.data;
 
+                alertContent.sizeDelta = new Vector2((scrollRectTrans.rect.width + layoutGroup.spacing) * alertModels.Count, alertContent.sizeDelta.y);
+
                 SetView();
             }
         });
@@ -35,7 +42,7 @@ public class HomeAlertsView : MonoBehaviour
         {
             cellObject = Instantiate(alertCell, alertContent);
 
-            cellObject.GetComponent<HomeAlertCell>().Load(alertModels[i]);
+            cellObject.GetComponent<HomeAlertCell>().Load(alertModels[i], scrollRectTrans.rect.width);
         }
     }
 }

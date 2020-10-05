@@ -99,7 +99,7 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 		{
 			var model = Data [viewsHolder.ItemIndex];
 
-			viewsHolder.views.gameObject.transform.parent.GetComponent<PortfolioActvityCell> ().Load (model, adataObject.activityPopUp, adataObject.tabType);
+			viewsHolder.views.gameObject.transform.parent.GetComponent<PortfolioActvityCell> ().Load (model, adataObject.activityPopUp, adataObject.tabType, adataObject.RemoveOffer);
 			
 			if ((viewsHolder.ItemIndex != 0 && viewsHolder.ItemIndex == Data.Count - 12 && _ScrollRect.velocity.y > 10) ||(Data.Count < 12 && viewsHolder.ItemIndex == Data.Count - 1))
 			{

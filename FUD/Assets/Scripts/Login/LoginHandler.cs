@@ -83,15 +83,17 @@ public class LoginHandler : MonoBehaviour
     {
         if (status)
         {
-            Dictionary<string, string> _body = body as Dictionary<string, string>;
+            Dictionary<string, object> _body = body as Dictionary<string, object>;
 
-            contactNumber = long.Parse(_body["number"]);
+            contactNumber = long.Parse(_body["number"] as string);
 
             if (isNewUser)
             {
-                userName = _body["name"];
+                userName = _body["name"] as string;
 
-                GameManager.Instance.apiHandler.SignIn(userName, contactNumber, selectedRole.id, (apiStatus, userInfo) =>
+                int countryId = (int)_body["country_id"];
+
+                GameManager.Instance.apiHandler.SignIn(userName, contactNumber, selectedRole.id, countryId, (apiStatus, userInfo) =>
                 {
                     if (apiStatus)
                     {

@@ -140,14 +140,6 @@ public class HomeAuditionsPanel : MonoBehaviour
             }
             JoinAudition();
         }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString();
-
-            UIManager.Instance.ShowAlert(alertModel);
-        }
     }
 
     void OnAudiosUploaded(bool status, List<string> audioUrls)
@@ -167,14 +159,6 @@ public class HomeAuditionsPanel : MonoBehaviour
                 uploadedDict.Add(kvp);
             }
             JoinAudition();
-        }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString();
-
-            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -196,14 +180,6 @@ public class HomeAuditionsPanel : MonoBehaviour
             }
             JoinAudition();
         }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString();
-
-            UIManager.Instance.ShowAlert(alertModel);
-        }
     }
 
     void JoinAudition()
@@ -218,12 +194,6 @@ public class HomeAuditionsPanel : MonoBehaviour
                 alertModel.message = "Audition Joined Successfully";
                 alertModel.okayButtonAction = GetAuditions;
                 alertModel.canEnableTick = true;
-                UIManager.Instance.ShowAlert(alertModel);
-            }
-            else
-            {
-                AlertModel alertModel = new AlertModel();
-                alertModel.message = "Joining Audition Failed";
                 UIManager.Instance.ShowAlert(alertModel);
             }
         });

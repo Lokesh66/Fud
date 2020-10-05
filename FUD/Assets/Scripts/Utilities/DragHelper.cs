@@ -5,36 +5,31 @@ using System;
 
 public class DragHelper : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    bool isDragged = false;
 
-    public RectTransform rectTransform;
-
-    Vector2 currentPosition;
-
-    Action OnDragging;
-
-
-    public void Init(Action OnDragging)
-    {
-        this.OnDragging = OnDragging;
-    }
-
+  
     public void OnBeginDrag(PointerEventData eventData)
     {
-        currentPosition = eventData.position;
+        isDragged = true;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (eventData.position.y == currentPosition.y)
-        {
-            rectTransform.position = currentPosition;
 
-            OnDragging?.Invoke();
-        }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        
+    }
 
+    public void ResetIsDragged()
+    {
+        isDragged = false;
+    }
+
+    public bool IsDragged()
+    {
+        return isDragged;
     }
 }

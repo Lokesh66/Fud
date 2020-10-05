@@ -249,11 +249,13 @@ public class ProjectHandler : MonoBehaviour
 
     public void RemoveProject(ProjectOfferedModel selectedProject)
     {
-        int projectIndex = offeredModels.IndexOf(selectedProject);
-
-        Destroy(content.GetChild(projectIndex).gameObject);
-
         offeredModels.Remove(selectedProject);
+
+        offeredTableView.Data.Clear();
+
+        offeredTableView.Data.Add(offeredModels.Count);
+
+        offeredTableView.Refresh();
     }
 
     public void OnBackButtonAction()

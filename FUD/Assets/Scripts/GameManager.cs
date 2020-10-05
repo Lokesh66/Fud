@@ -1,6 +1,9 @@
-﻿using UnityEngine;
+﻿using System.Runtime.InteropServices;
+using UnityEngine;
 using System.IO;
 using System;
+using UMP;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,6 +29,12 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+#if UNITY_IOS
+    [DllImport("__Internal")]
+    private static extern float initializeWithAppID(string appId);
+
+#endif
+
     // Start is called before the first frame update
 
     [HideInInspector]
@@ -34,7 +43,10 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public SceneController sceneController;
 
-    public DownLoadManager downLoadManager;    
+    public DownLoadManager downLoadManager;
+
+    public UniversalMediaPlayer mediaPlayer;
+
 
     void Awake()
     {
@@ -45,6 +57,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("Temp Path = " + Application.persistentDataPath);
         //File.Delete(APIConstants.TOKEN_PATH);
 
         StartGame();
@@ -61,7 +74,15 @@ public class GameManager : MonoBehaviour
     {
         apiHandler.GetCraftRoles();
 
+        apiHandler.GetCastRoles(0);
+
+        apiHandler.GetCrewRoles(1);
+
         apiHandler.GetGenres();
+
+#if UNITY_IOS && !UNITY_EDITOR
+        initializeWithAppID(APIHandler.APP_ID);
+#endif
 
         if (File.Exists(APIConstants.TOKEN_PATH))
         {

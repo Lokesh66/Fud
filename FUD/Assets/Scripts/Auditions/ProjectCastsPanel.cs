@@ -51,6 +51,9 @@ public class ProjectCastsPanel : MonoBehaviour
         }
 
         GameManager.Instance.apiHandler.GetProjectCharacters(projectId, (status, response) => {
+
+            Debug.Log("GetProjectCharacters : response = " + response);
+
             if (status)
             {
                 ProjectCharactersResponse projectCharactersResponse = JsonUtility.FromJson<ProjectCharactersResponse>(response);

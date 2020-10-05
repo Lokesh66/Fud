@@ -16,6 +16,8 @@ public class MyStoriesBrowseView : MonoBehaviour
 
     public PublicStoriesTableView tableView;
 
+    public StoryBrowseFilterView filterView;
+
     public StoryPublicPopUp detailView;
 
 
@@ -151,5 +153,23 @@ public class MyStoriesBrowseView : MonoBehaviour
                 tableView.Refresh();
             }
         });
+    }
+
+    public void OnFilterButtonAction()
+    {
+        filterView.Load(OnFilterAction);
+    }
+
+    void OnFilterAction(object data)
+    {
+        storiesList = data as List<StoryModel>;
+
+        tableView.Data.Clear();
+
+        tableView.Data.Add(storiesList.Count);
+
+        tableView.Refresh();
+
+        noDataView.gameObject.SetActive(storiesList.Count == 0);
     }
 }

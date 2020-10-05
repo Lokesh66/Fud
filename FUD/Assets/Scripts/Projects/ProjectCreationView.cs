@@ -117,7 +117,7 @@ public class ProjectCreationView : MonoBehaviour
 
         parameters.Add("story_id", model.story_id);
 
-        parameters.Add("story_version_id", model.StoryVersions.id);
+        parameters.Add("story_version_id", model.story_version_id);
 
         parameters.Add("start_date", startDateText.text);
 

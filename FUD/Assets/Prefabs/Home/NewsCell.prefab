@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1092072625974069204}
   - component: {fileID: 1979067141627952016}
   - component: {fileID: 1168231735490443119}
-  - component: {fileID: 9216997136738651149}
   m_Layer: 5
   m_Name: NewsCell
   m_TagString: Untagged
@@ -67,8 +66,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: f5849fe30393e44a6a280e642c1d6fee, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -89,28 +88,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4311df982a0b3427eb3bd5f0b18028cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rectTransform: {fileID: 6040603747794229675}
   titleText: {fileID: 4577780781635997420}
   commentText: {fileID: 2747061314031114427}
---- !u!114 &9216997136738651149
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2001724276368575544}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: 800
-  m_PreferredHeight: -1
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &6549906536704884645
 GameObject:
   m_ObjectHideFlags: 0

@@ -30,6 +30,34 @@ public partial class APIHandler
         }));
     }
 
+    public void GetAllUsers(int pageNo, string sourceFrom, Action<bool, List<UserSearchModel>> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("source_from", sourceFrom);
+
+        string url = APIConstants.GET_ALL_USERS;
+
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (bool status, string response) => {
+
+            Debug.Log("All users Response = " + response);
+
+            UserSearchResponse searchResponse = JsonUtility.FromJson<UserSearchResponse>(response);
+
+            if (status)
+            {
+                action?.Invoke(true, searchResponse.data);
+            }
+            else
+            {
+                action?.Invoke(false, null);
+            }
+
+        }));
+    }
+
     public void GetAllPublicStories(int pageNo, Action<bool, List<StoryModel>> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -229,7 +257,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateStoryVersion(int storyId, int versionId, string description, int roleId, int accessValue, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
+    public void UpdateStoryVersion(int storyId, int versionId, string description, int roleId, int accessValue, List<Dictionary<string, object>> multimediaModels, List<int> deletedMedia, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -252,6 +280,10 @@ public partial class APIHandler
             parameters.Add("pro_multi_media", multimediaModels);
         }
 
+        if (deletedMedia.Count > 0)
+        {
+            parameters.Add("remove_media", deletedMedia);
+        }
         /*List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
 
         string jsonData = JsonUtility.ToJson(portMultimedias);*/
@@ -276,7 +308,7 @@ public partial class APIHandler
         }));
     }
 
-    public void RemoveStoryVersion(int id, int storyId, int status, Action<bool> action)
+    public void RemoveStoryVersion(int id, int storyId, int status, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -290,7 +322,7 @@ public partial class APIHandler
 
         gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_STORY_VERSION, true, parameters, (apiStatus, response) => {
 
-            action(apiStatus);
+            action(apiStatus, response);
         }));
     }
 
@@ -428,7 +460,7 @@ public partial class APIHandler
         }));
     }
 
-    public void RemoveTeam(int id, int storyId, int status, Action<bool> action)
+    public void RemoveTeam(int id, int storyId, int status, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -440,7 +472,7 @@ public partial class APIHandler
 
         gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_STORY_TEAM, true, parameters, (apiStatus, response) => {
 
-            action(apiStatus);
+            action(apiStatus, response);
         }));
     }
 
@@ -505,6 +537,20 @@ public partial class APIHandler
         parameters.Add("status", postStatus);
 
         gameManager.StartCoroutine(PutRequest(APIConstants.STORY_POST, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
+    public void UpdateStoryBrowseStatus(int storyId, int postStatus, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("story_id", storyId);
+
+        parameters.Add("status", postStatus);
+
+        gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_BROWSE_STATUS, true, parameters, (status, response) => {
 
             action(status, response);
         }));
@@ -586,6 +632,76 @@ public partial class APIHandler
         }));
     }
 
+    public void ApplyStoryBrowseFilter(int genreId, int storyTypeId, int sortId, int orderId, Action<bool, List<StoryModel>> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        if (!sortId.Equals(-1))
+        {
+            parameters.Add("sortBy", sortId);
+        }
+        if (!genreId.Equals(-1))
+        {
+            parameters.Add("genre_id", genreId);
+        }
+        if (!orderId.Equals(-1))
+        {
+            parameters.Add("sortOrder", orderId);
+        }
+        if (!storyTypeId.Equals(-1))
+        {
+            parameters.Add("story_type", storyTypeId);
+        }
+
+        string url = APIConstants.GET_PUBLIC_STORIES;
+
+        url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (apiStatus, response) =>
+        {
+            StoriesResponse stories = JsonUtility.FromJson<StoriesResponse>(response);
+
+            action(apiStatus, stories.data);
+        }));
+    }
+
+    public void ApplyShareStoryFilter(string userName, int roleId, int roleCategeryId, int isCeleb, int industryId, Action<bool, List<UserSearchModel>> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        if (userName.IsNOTNullOrEmpty())
+        {
+            parameters.Add("name", userName);
+        }
+        if (!roleId.Equals(-1))
+        {
+            parameters.Add("role_id", roleId);
+        }
+        if (!roleCategeryId.Equals(-1))
+        {
+            parameters.Add("role_category_id", roleCategeryId);
+        }
+        if (!isCeleb.Equals(-1))
+        {
+            parameters.Add("type", isCeleb);
+        }
+        if (!industryId.Equals(-1))
+        {
+            parameters.Add("industry_id", industryId);
+        }
+
+        string url = APIConstants.GET_ALL_USERS;
+
+        url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (apiStatus, response) =>
+        {
+            UserSearchResponse stories = JsonUtility.FromJson<UserSearchResponse>(response);
+
+            action(apiStatus, stories.data);
+        }));
+    }
+
     public void GetRoleCategeries(int roleId, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -599,9 +715,17 @@ public partial class APIHandler
         }));
     }
 
-    public void UploadFile(string filePath, EMediaType mediaType, string mediaSource, Action<bool, string> OnResposne)
+    public void GetStoryTypes(Action<bool, string> action)
     {
-        gameManager.StartCoroutine(Upload(filePath, mediaType, mediaSource, (status, response) => {
+        gameManager.StartCoroutine(GetRequest(APIConstants.GET_STORY_TYPES, true, (apiStatus, response) =>
+        {
+            action(apiStatus, response);
+        }));
+    }
+
+    public void UploadFile(string filePath, EMediaType mediaType, string mediaSource, Action<bool, string> OnResposne, string faceId = "")
+    {
+        gameManager.StartCoroutine(Upload(filePath, mediaType, mediaSource, faceId, (status, response) => {
 
             OnResposne?.Invoke(status, response);
         }));
@@ -823,7 +947,7 @@ public class StoryDetailsResponseModel : BaseResponse
 [Serializable]
 public class MultimediaModel
 {
-    public int id;
+    public int id = -1;
     public int story_version_id;
     public int source_id;
     public string source_type;
@@ -872,7 +996,8 @@ public class MultiMediaResponse : BaseResponse
 [Serializable]
 public class UserSearchModel : ActivityOwnerModel
 {
-
+    public string email_id;
+    public List<WorkExperianceModel> WorkExperience;
 }
 
 [Serializable]
@@ -952,7 +1077,6 @@ public class StoryVersions
 }
 
 [Serializable]
-
 public class ProjectStory
 {
     public int id;
@@ -968,8 +1092,8 @@ public class ProjectStory
     public int reciever_status;
     public DateTime created_date_time;
     public DateTime updatedAt;
-    public StoryVersions StoryVersions;
-}
+    public StoryModel Stories;
+} 
 
 [Serializable]
 public class ProjectStoriesResponse : BaseResponse
@@ -987,7 +1111,7 @@ public class CreatedStoryVerionModel : StoryVersion
 [Serializable]
 public class UpdatedStoryVersionResponse : BaseResponse
 {
-    public StoryVersion data;
+    public List<StoryVersion> data;
 }
 
 [Serializable]
@@ -1023,16 +1147,27 @@ public class PerformerResponse : BaseResponse
 }
 
 [Serializable]
-public class FileUploadModel
+public class ProfileFileUploadModel
 {
-    public bool success;
-    public string s3_file_path;
+    public string Location;
+    public string Key;
+    public string Bucket;
+    public string ETag;
+    public string faceId;
+    public bool isCeleb;
+}
+
+[Serializable]
+public class ProfileUploadResponseModel : BaseResponse
+{
+    public ProfileFileUploadModel data;
 }
 
 [Serializable]
 public class FileUploadResponseModel : BaseResponse
 {
-    public FileUploadModel data;
+    public string data;
+    public long timestamp;
 }
 
 [Serializable]
@@ -1040,8 +1175,7 @@ public class StoryAlteredModel
 {
     public int id;
     public string title;
-    public int posted_to;
-    public string title_poster;
+    public int posted_to; 
     public int story_id;
     public int story_version_id;
     public int source_id;
@@ -1105,6 +1239,19 @@ public class StoryHistoryResponse : BaseResponse
     public List<HistoryResponses> data;
 }
 
+[Serializable]
+public class StoryTypesResponse
+{
+    public List<StoryTypeModel> data;
+}
+
+[Serializable]
+public class StoryTypeModel
+{
+    public int id;
+    public string name;
+}
+
 public class CreateCharacterModel
 {
     public int id;
@@ -1116,3 +1263,4 @@ public class CreateCharacterModel
     public int craftId;
     public int roleCategeryId;
 }
+

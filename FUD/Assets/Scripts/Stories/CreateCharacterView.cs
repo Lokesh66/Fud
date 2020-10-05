@@ -251,6 +251,9 @@ public class CreateCharacterView : MonoBehaviour
             case EMediaType.Video:
                 GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnVideosUploaded);
                 break;
+            case EMediaType.Document:
+                GalleryManager.Instance.GetDocuments(mediaSource, OnDocumentsUploaded);
+                break;
         }
     }
 
@@ -361,14 +364,6 @@ public class CreateCharacterView : MonoBehaviour
                 uploadedDict.Add(kvp);
             }
         }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString() + imageUrls[0];
-
-            UIManager.Instance.ShowAlert(alertModel);
-        }
     }
 
     void OnAudiosUploaded(bool status, List<string> audioUrls)
@@ -391,14 +386,6 @@ public class CreateCharacterView : MonoBehaviour
 
                 uploadedDict.Add(kvp);
             }
-        }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString() + imageUrls[0];
-
-            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -423,13 +410,26 @@ public class CreateCharacterView : MonoBehaviour
                 uploadedDict.Add(kvp);
             }
         }
-        else
+    }
+
+    void OnDocumentsUploaded(bool status, List<string> documentURLs)
+    {
+        if (status)
         {
-            AlertModel alertModel = new AlertModel();
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Document);
 
-            alertModel.message = status.ToString() + imageUrls[0];
+            for (int i = 0; i < documentURLs.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
 
-            UIManager.Instance.ShowAlert(alertModel);
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", documentURLs[i]);
+
+                kvp.Add("media_type", "document");
+
+                uploadedDict.Add(kvp);
+            }
         }
     }
 

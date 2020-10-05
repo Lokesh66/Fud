@@ -110,6 +110,17 @@ public class PortfolioOfferedView : MonoBehaviour
         });
     }
 
+    public void RemoveOffer(PortfolioActivityModel activityModel)
+    {
+        activityModels.Remove(activityModel);
+
+        tableView.Data.Clear();
+
+        tableView.Data.Add(activityModels.Count);
+
+        tableView.Refresh();
+    }
+
     public void OnFilterButtonAction()
     {
         filterView.Load(OnFilterAction);

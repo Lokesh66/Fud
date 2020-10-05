@@ -74,19 +74,21 @@ public class ProjectTeamDetails : MonoBehaviour
     {
         int projectId = ProjectsDetailedView.Instance.GetCurrentProjectModel().id;
 
-        GameManager.Instance.apiHandler.RemoveProjectTeam(teamModel.id, projectId, 8, (status) => {
+        GameManager.Instance.apiHandler.RemoveProjectTeam(teamModel.id, projectId, 8, (status, response) => {
 
             Debug.Log("status = " + status);
 
-            OnAPIResponse(status);
+            OnAPIResponse(status, response);
         });
     }
 
-    void OnAPIResponse(bool status)
+    void OnAPIResponse(bool status, string apiResponse)
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Team Removed Successfully" : "Something went wrong, please try again.";
+        BaseResponse responseModel = JsonUtility.FromJson<BaseResponse>(apiResponse);
+
+        alertModel.message = status ? "Team Removed Successfully" : responseModel.message;
 
         if (status)
         {

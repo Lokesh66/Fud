@@ -31,7 +31,7 @@ public class UpdateVersionMediaCell : MonoBehaviour
 
         if (mediaType == EMediaType.Image)
         {
-            GameManager.Instance.downLoadManager.DownloadImage(model.content_url, (sprite) =>
+            GameManager.Instance.apiHandler.DownloadImage(model.content_url, (sprite) =>
             {
                 albumImage.sprite = sprite;
             });

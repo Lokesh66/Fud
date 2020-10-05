@@ -1,6 +1,7 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
 using System;
+using UMP;
 
 
 public class TopCanvas : MonoBehaviour
@@ -31,5 +32,10 @@ public class TopCanvas : MonoBehaviour
     public void ShowBigScreen(string imageURL)
     {
         bigScreenView.Load(imageURL);
+    }
+
+    public void PlayVideo(RawImage rawImage, UniversalMediaPlayer mediaPlayer)
+    {
+        VideoStreamer.Instance.Play(rawImage, mediaPlayer);
     }
 }

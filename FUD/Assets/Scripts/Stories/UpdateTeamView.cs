@@ -231,9 +231,16 @@ public class UpdateTeamView : MonoBehaviour
             inputData = memberField.text;
 
             keyword = string.Empty;
-
-            searchContent.DestroyChildrens();
         }
+        else
+        {
+            memberField.text = inputData;
+        }
+
+        searchContent.DestroyChildrens();
+
+        scrollObject.SetActive(false);
+
     }
 
     void GetSearchedUsers()

@@ -47,6 +47,8 @@ public class UpdateExperienceView : MonoBehaviour
 
     Action<WorkExperianceModel> OnUpdate;
 
+    WorkExperianceModel updatedModel;
+
     private string mediaSource = "portfolio";
 
 
@@ -80,16 +82,13 @@ public class UpdateExperienceView : MonoBehaviour
 
         LoadRoles();
 
-        GameManager.Instance.apiHandler.GetIndustries((status, industriesList) => {
+        DataManager.Instance.GetIndustries((industriesList) => {
 
-            if (status) 
-            { 
-                industryModels = industriesList;
+            industryModels = industriesList;
 
-                LoadIndustries();
-            }
+            LoadIndustries();
         });
-           
+
     }
 
     public void OnStartDateSelectedAction()
@@ -202,17 +201,20 @@ public class UpdateExperienceView : MonoBehaviour
 
             GameManager.Instance.apiHandler.UpdateWorkExperiance(experianceModel, workModel.id, uploadedDict, (status, response) =>
             {
-                Debug.Log("Updated Experiance : response = " + response);
-                OnAPIResponse(status);
+                OnAPIResponse(status, response);
             });
         }
     }
 
-    void OnAPIResponse(bool status)
+    void OnAPIResponse(bool status, string apiResponse)
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Experiance Updation Success" : "Something went wrong, please try again.";
+        WorkExperianceResponseModel responseModel = JsonUtility.FromJson<WorkExperianceResponseModel>(apiResponse);
+
+        alertModel.message = status ? "Experiance Updation Success" : responseModel.message;
+
+        updatedModel = responseModel.data[0];
 
         if (status)
         {
@@ -227,6 +229,8 @@ public class UpdateExperienceView : MonoBehaviour
     void OnSuccessResponse()
     {
         OnBackAction();
+
+        OnUpdate?.Invoke(updatedModel);
 
         uploadedDict.Clear();
     }
@@ -328,14 +332,6 @@ public class UpdateExperienceView : MonoBehaviour
                 uploadedDict.Add(kvp);
             }
         }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString();
-
-            UIManager.Instance.ShowAlert(alertModel);
-        }
     }
 
     void OnAudiosUploaded(bool status, List<string> audioUrls)
@@ -343,6 +339,8 @@ public class UpdateExperienceView : MonoBehaviour
         if (status)
         {
             this.imageUrls = audioUrls;
+
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Audio);
 
             for (int i = 0; i < audioUrls.Count; i++)
             {
@@ -357,14 +355,6 @@ public class UpdateExperienceView : MonoBehaviour
                 uploadedDict.Add(kvp);
             }
         }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString() + imageUrls[0];
-
-            UIManager.Instance.ShowAlert(alertModel);
-        }
     }
 
     void OnVideosUploaded(bool status, List<string> videoUrls)
@@ -372,6 +362,8 @@ public class UpdateExperienceView : MonoBehaviour
         if (status)
         {
             this.imageUrls = videoUrls;
+
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Video);
 
             for (int i = 0; i < videoUrls.Count; i++)
             {
@@ -385,14 +377,6 @@ public class UpdateExperienceView : MonoBehaviour
 
                 uploadedDict.Add(kvp);
             }
-        }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString() + imageUrls[0];
-
-            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -415,6 +399,11 @@ public class UpdateExperienceView : MonoBehaviour
         }
 
         filesHandler.Load(_imageURls, true);
+    }
+
+    void OnDeleteButtonAction(object model)
+    {
+        string mediaURL = model as string;
     }
 }
 

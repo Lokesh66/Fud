@@ -43,6 +43,11 @@ public class ProjectCastCell : MonoBehaviour
 
     void UpdateStatusTag()
     {
+        if (castData.cast_status == 1)
+        {
+            castData.cast_status = 0;
+        }
+
         EStatusType statusType = (EStatusType)castData.cast_status;
 
         statusImage.sprite = Resources.Load<Sprite>("Images/StatusTags/" + statusType);

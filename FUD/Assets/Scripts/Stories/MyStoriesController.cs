@@ -157,8 +157,13 @@ public class MyStoriesController : BaseView
         {
             activitiesView.OnFilterButtonAction();
         }
-        else {
+        else if(currentTab == ETabType.Altered)
+        {
             alteredView.OnFilterButtonAction();
+        }
+        else 
+        {
+            browserView.OnFilterButtonAction();
         }
     }
 

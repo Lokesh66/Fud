@@ -10,6 +10,8 @@ public class PortfolioExperianceView : MonoBehaviour
 
     public PortfolioExperienceDetails experienceDetails;
 
+    public GameObject noDataObject;
+
 
     private PortfolioHandler portfolioHandler;
 
@@ -39,6 +41,8 @@ public class PortfolioExperianceView : MonoBehaviour
 
     void SetView()
     {
+        noDataObject.SetActive(experianceModels.Count == 0);
+
         for (int i = 0; i < experianceModels.Count; i++)
         {
             GameObject cellObject = Instantiate(cellCache, content);

@@ -30,7 +30,7 @@ public class DownLoadManager : MonoBehaviour
         }
 
 
-        string path = Path.Combine(Application.persistentDataPath + APIConstants.TEMP_IMAGES_PATH + Path.GetFileName(imageurl));
+        string path = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, Path.GetFileName(imageurl));
 
 
         if (File.Exists(path))
@@ -45,6 +45,8 @@ public class DownLoadManager : MonoBehaviour
 
     IEnumerator DownloadAndSave(string imageurl, Action<Sprite> CallBack)
     {
+        imageurl = APIConstants.PROFILE_UPLOAD_BASE_URL + "adam/v1/downloadFile?" + "key_name=" + imageurl;
+
         if (!string.IsNullOrEmpty(imageurl))
         {
             WWW www = new WWW(imageurl);

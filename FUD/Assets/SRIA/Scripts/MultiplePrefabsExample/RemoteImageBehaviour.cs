@@ -99,7 +99,7 @@ namespace frame8.ScrollRectItemsAdapter.MultiplePrefabsExample
 
 		byte[] LoadTexture(string filePath, string fileName)
 		{
-			byte[] fileData = File.ReadAllBytes(filePath);
+			byte[] fileData = FileSystem.Instance.ReadAllBytes(filePath);
 			return fileData;
 		}
 
@@ -147,6 +147,8 @@ namespace frame8.ScrollRectItemsAdapter.MultiplePrefabsExample
 		/// <summary>Starts the loading, setting the current image to <see cref="_LoadingTexture"/>, if available. If the image is already in cache, and <paramref name="loadCachedIfAvailable"/>==true, will load that instead</summary>
 		public void Load(string imageURL, bool loadCachedIfAvailable = true, Action<bool, bool> onCompleted = null, Action onCanceled = null)
 		{
+			Debug.Log("Load Called");
+
 			if (_RawImage == null)
 			{
 				return;
@@ -204,10 +206,11 @@ namespace frame8.ScrollRectItemsAdapter.MultiplePrefabsExample
 							worker.DoWork += (sender, e) => {
 								if (response.Length > 0)
 								{   
-									File.WriteAllBytes(path, response);
+									//File.WriteAllBytes(path, response);
+									FileSystem.Instance.WriteAllBytesAtomically(path, response);
 									//loadFromLocal(path, imageURL, true, loadCachedIfAvailable, onCompleted, onCanceled);
 									Debug.Log("Calling Load");
-									Load(_CurrentRequestedURL, loadCachedIfAvailable, onCompleted, onCanceled);
+									//Load(_CurrentRequestedURL, loadCachedIfAvailable, onCompleted, onCanceled);
 								}
 								result.removeRequest();
 							};

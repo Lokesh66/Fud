@@ -127,15 +127,18 @@ public class StoryDetailsController : MonoBehaviour
         currentDetailsModel = detailsModel;
     }
 
-    public void OnBackButtonAction()
+    public void OnBackButtonAction(bool isSharedStory)
     {
         creationPanelParent.gameObject.SetActive(false);
 
         Destroy(currentCreateScreen);
 
-        BackAction?.Invoke();
-
         ResetData();
+
+        if (isSharedStory)
+        {
+            BackAction?.Invoke();
+        }
 
         BackAction = null;
     }

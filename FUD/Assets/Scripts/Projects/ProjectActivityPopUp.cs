@@ -34,7 +34,7 @@ public class ProjectActivityPopUp : MonoBehaviour
 
     public void OnViewButtonAction()
     {
-        GameManager.Instance.apiHandler.GetProjectCasts(1, "cast&crew", activityModel.project_id, (status, response) => {
+        GameManager.Instance.apiHandler.GetProjectCastDetails(1, "cast&crew", activityModel.project_id, activityModel.id, (status, response) => {
 
             if (status)
             {

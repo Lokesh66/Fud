@@ -40,12 +40,6 @@ public class AuditionJoinView : MonoBehaviour
 
     public GameObject recordObject;
 
-    public Sprite reviewSprite;
-
-    public Sprite shortListedSprite;
-
-    public Sprite rejectedSprite;
-
 
     System.Action<int> buttonAction;
 
@@ -62,28 +56,6 @@ public class AuditionJoinView : MonoBehaviour
         acceptObject.SetActive(isJoined);
         shortListObject.SetActive(isJoined);
         buttonAction = action;
-    }
-
-    Sprite GetStatusSprite(EAuditionStatus auditionStatus)
-    {
-        Sprite sprite = null;
-
-        switch (auditionStatus)
-        {
-            case EAuditionStatus.Review:
-                sprite = reviewSprite;
-                break;
-
-            case EAuditionStatus.ShortListed:
-                sprite = shortListedSprite;
-                break;
-
-            case EAuditionStatus.Rejected:
-                sprite = rejectedSprite;
-                break;
-        }
-
-        return sprite;
     }
 
     public void OnButtonAction(int buttonIndex)

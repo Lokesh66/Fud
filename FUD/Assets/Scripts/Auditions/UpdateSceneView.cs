@@ -100,18 +100,20 @@ public class UpdateSceneView : MonoBehaviour
             creationModel.scene_order = int.Parse(sceneOrderText.text);
             creationModel.start_time = DateTime.Now.ToString();
 
-            GameManager.Instance.apiHandler.UpdateProjectScene(creationModel, detailsModel.id, dialoguesList, (status, response) =>
+            GameManager.Instance.apiHandler.UpdateProjectScene(creationModel, detailsModel.id, dialoguesView.GetDialogues(true), dialoguesView.GetDialogues(false), (status, response) =>
             {
-                OnAPIResponse(status);
+                OnAPIResponse(status, response);
             });
         }
     }
 
-    void OnAPIResponse(bool status)
+    void OnAPIResponse(bool status, string apiResponse)
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Scene Updation Success" : "Something went wrong, please try again.";
+        BaseResponse responseModel = JsonUtility.FromJson<BaseResponse>(apiResponse);
+
+        alertModel.message = status ? "Scene Updation Success" : responseModel.message;
 
         if (status)
         {
@@ -185,6 +187,6 @@ public class UpdateSceneView : MonoBehaviour
 
     public void OnNextButtonAction()
     {
-        dialoguesView.EnableView(detailsModel.SceneCharacters, this);
+        dialoguesView.Load(detailsModel);
     }
 }

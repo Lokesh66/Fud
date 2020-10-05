@@ -75,17 +75,19 @@ public class VersionDetailsView : MonoBehaviour
     {
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
-        GameManager.Instance.apiHandler.RemoveStoryVersion(storyVersion.id, storyId, 8, (status) => {
+        GameManager.Instance.apiHandler.RemoveStoryVersion(storyVersion.id, storyId, 8, (status, response) => {
 
-            OnAPIResponse(status);
+            OnAPIResponse(status, response);
         });
     }
 
-    void OnAPIResponse(bool status)
+    void OnAPIResponse(bool status, string response)
     {
         AlertModel alertModel = new AlertModel();
 
-        alertModel.message = status ? "Story Version Removed Successfully" : "Something went wrong, please try again.";
+        BaseResponse responseModel = JsonUtility.FromJson<BaseResponse>(response);
+
+        alertModel.message = status ? "Story Version Removed Successfully" : responseModel.message;
 
         if (status)
         {

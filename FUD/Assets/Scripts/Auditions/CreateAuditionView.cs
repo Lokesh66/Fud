@@ -382,14 +382,6 @@ public class CreateAuditionView : MonoBehaviour
                 filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
             }
         }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = "Media upload failed";
-
-            UIManager.Instance.ShowAlert(alertModel);
-        }
     }
 
     public void CreateAuditionButtonAction()

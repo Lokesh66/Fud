@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
+﻿using System.Collections.Generic;
+using System.Collections;
 using UnityEngine.UI;
+using UnityEngine;
+using System;
 
 
 public class FilterCell : MonoBehaviour
@@ -12,12 +12,7 @@ public class FilterCell : MonoBehaviour
         None,
         Genres,
         CraftRoles,
-    }
-
-    public enum ECustomFilterType
-    {
-        AuditionProjects,
-        Producers,
+        CraftRoleCategery,
     }
 
     public RectTransform rectTransform;
@@ -44,14 +39,13 @@ public class FilterCell : MonoBehaviour
     public List<int> filterValues = new List<int>();
 
 
-    Dictionary<string, int> statusDict;
-
-
     FilterSubCell currentCell;
 
-    object selectedModel;
+    Action<object> OnRoleSelectAction;
 
-    private bool isOpened = false;
+    Action<int> OnCastCategeryAction;
+
+    object selectedModel;
 
 
     void Start()
@@ -65,12 +59,19 @@ public class FilterCell : MonoBehaviour
             SetCraftRolesView();
         }
         else {
-            SetSubScrollView();
+            if (subCellParent.childCount == 0)
+            {
+                SetSubScrollView();
+            }
         }
     }
 
     public void Load(List<DropdownModel> modelsList)
     {
+        filterKeys.Clear();
+
+        filterValues.Clear();
+
         for (int i = 0; i < modelsList.Count; i++)
         {
             filterKeys.Add(modelsList[i].text);
@@ -79,6 +80,16 @@ public class FilterCell : MonoBehaviour
         }
 
         SetSubScrollView();
+    }
+
+    public void OnRoleSelection(Action<object> OnRoleSelection)
+    {
+        this.OnRoleSelectAction = OnRoleSelection;
+    }
+
+    public void OnCastCategeryChange(Action<int> OnCastCategeryChange)
+    {
+        this.OnCastCategeryAction = OnCastCategeryChange;
     }
 
     void SetGenresView()
@@ -179,11 +190,23 @@ public class FilterCell : MonoBehaviour
 
     void OnTapAction(object selectedModel, FilterSubCell currentSubCell)
     {
+        if (currentCell == currentSubCell)
+            return;
+
         currentCell?.DeSelect();
 
         this.currentCell = currentSubCell;
 
         this.selectedModel = selectedModel;
+
+        if (contentType == ESubScrollContentType.CraftRoles)
+        {
+            OnRoleSelectAction?.Invoke(selectedModel);
+        }
+        else if (contentType == ESubScrollContentType.CraftRoleCategery)
+        {
+            OnCastCategeryAction?.Invoke(((KeyValuePair<string, int>)selectedModel).Value);
+        }
     }
 
     public int GetStatus()

@@ -73,6 +73,9 @@ public class CreateStoryVersion : MonoBehaviour
             case EMediaType.Video:
                 GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnVideosUploaded);
                 break;
+            case EMediaType.Document:
+                GalleryManager.Instance.GetDocuments(mediaSource, OnDocumentsUploaded);
+                break;
         }
     }
 
@@ -110,15 +113,7 @@ public class CreateStoryVersion : MonoBehaviour
 
         GameManager.Instance.apiHandler.CreateStoryVersion(storyId, descriptionField.text, selectedGenre.id, accessDropdown.value, uploadedDict, (status, response) => {
 
-            if (status)
-            {
-                apiResponse = response;
-                Debug.Log("Story Uploaded Successfully");
-            }
-            else
-            {
-                Debug.LogError("Story Updation Failed");
-            }
+            apiResponse = response;
 
             OnAPIResponse(status);
         });
@@ -147,6 +142,8 @@ public class CreateStoryVersion : MonoBehaviour
     void OnAPIResponse(bool status)
     {
         CreatedStoryVersionResponse responseModel = JsonUtility.FromJson<CreatedStoryVersionResponse>(apiResponse);
+
+        Debug.Log("apiResponse = " + apiResponse + " responseModel = " + responseModel);
 
         AlertModel alertModel = new AlertModel();
 
@@ -205,14 +202,6 @@ public class CreateStoryVersion : MonoBehaviour
                 uploadedDict.Add(kvp);
             }
         }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString() + imageUrls[0];
-
-            UIManager.Instance.ShowAlert(alertModel);
-        }
     }
 
     void OnAudiosUploaded(bool status, List<string> audioUrls)
@@ -235,14 +224,6 @@ public class CreateStoryVersion : MonoBehaviour
 
                 uploadedDict.Add(kvp);
             }
-        }
-        else
-        {
-            AlertModel alertModel = new AlertModel();
-
-            alertModel.message = status.ToString() + imageUrls[0];
-
-            UIManager.Instance.ShowAlert(alertModel);
         }
     }
 
@@ -267,13 +248,26 @@ public class CreateStoryVersion : MonoBehaviour
                 uploadedDict.Add(kvp);
             }
         }
-        else
+    }
+
+    void OnDocumentsUploaded(bool status, List<string> documentURLs)
+    {
+        if (status)
         {
-            AlertModel alertModel = new AlertModel();
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Document);
 
-            alertModel.message = status.ToString() + imageUrls[0];
+            for (int i = 0; i < documentURLs.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
 
-            UIManager.Instance.ShowAlert(alertModel);
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", documentURLs[i]);
+
+                kvp.Add("media_type", "document");
+
+                uploadedDict.Add(kvp);
+            }
         }
     }
 

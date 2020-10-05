@@ -1,18 +1,22 @@
 ﻿using UnityEngine;
 using System;
 using TMPro;
-
+using UnityEngine.UI;
 
 public class PortfolioSearchCell : MonoBehaviour
 {
+    public GameObject selectObject;
+
+    public GameObject selectBG;
+
     public TextMeshProUGUI userNameText;
 
 
-    Action<object> OnButtonPressed;
+    Action<PortfolioSearchCell, object> OnButtonPressed;
 
     UserSearchModel searchModel;
 
-    public void SetView(UserSearchModel searchModel, Action<object> onButtonPressed)
+    public void SetView(UserSearchModel searchModel, Action<PortfolioSearchCell, object> onButtonPressed)
     {
         this.OnButtonPressed = onButtonPressed;
 
@@ -23,6 +27,13 @@ public class PortfolioSearchCell : MonoBehaviour
 
     public void OnButtonAction()
     {
-        OnButtonPressed?.Invoke(searchModel);
+        selectObject.SetActive(true);
+
+        OnButtonPressed?.Invoke(this, searchModel);
+    }
+
+    public void UpdateDeselectViw()
+    {
+        selectObject.SetActive(false);
     }
 }

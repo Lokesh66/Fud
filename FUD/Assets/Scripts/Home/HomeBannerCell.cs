@@ -4,6 +4,8 @@ using TMPro;
 
 public class HomeBannerCell : MonoBehaviour
 {
+    public RectTransform rectTransform;
+
     public UnityEngine.UI.Image bannerImage;
 
     public TextMeshProUGUI storyTitleText;
@@ -23,17 +25,28 @@ public class HomeBannerCell : MonoBehaviour
 
     void SetView()
     {
+        Debug.Log("Screen width = " + CanvasManager.Instance.transform);
+
+        rectTransform.sizeDelta = new Vector2(CanvasManager.Instance.GetCanvasWidth() * 3 / 4, rectTransform.sizeDelta.y);
+
         storyTitleText.text = bannerModel.title;
 
         subTitleText.text = bannerModel.sub_title;
 
+        bannerImage.enabled = false;
+
         Loader.Instance.StartLoading();
 
-        GameManager.Instance.downLoadManager.DownloadImage(bannerModel.image_url, (sprite) => {
+        GameManager.Instance.apiHandler.DownloadImage(bannerModel.image_url, (sprite) => {
 
             Loader.Instance.StopLoading();
 
-            bannerImage.sprite = sprite;
+            if (this != null)
+            {
+                bannerImage.sprite = sprite;
+
+                bannerImage.enabled = true;
+            }
         });
     }
 }

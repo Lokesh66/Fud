@@ -49,7 +49,7 @@ public class GalleryManager : MonoBehaviour
 
     public void GetImageFromGallaery(string mediaSource, Action<bool, List<string>> OnImageUploaded)
     {
-        //string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "banner2.png");
+        //string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "Banner+3.png");
 
         //uploadedURLs.Clear();
 
@@ -108,9 +108,50 @@ public class GalleryManager : MonoBehaviour
         }, preferredCamera: NativeCamera.PreferredCamera.Front);
     }
 
+    public void GetProfilePic(string mediaSource, string faceId, Action<bool, ProfileFileUploadModel> OnImageUploaded)
+    {
+        //string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "Banner+3.png");
+
+        //uploadedURLs.Clear();
+
+        ////this.OnUploaded = OnImageUploaded;
+
+        //Array.Clear(loadedFiles, 0, loadedFiles.Length);
+
+        //loadedFiles[0] = _filePath;
+
+        //selectedImagesCount = 1;
+
+        //for (int i = 0; i < 1; i++)
+        //{
+        //    UploadProfileImage(_filePath, faceId, mediaSource, OnImageUploaded);
+        //}
+
+        //return;
+
+        NativeCamera.Permission permission = NativeCamera.TakePicture((imagePath) => {
+
+            if (imagePath != null)
+            {
+                uploadedURLs.Clear();
+
+                loadedFiles[0] = imagePath;
+
+                selectedImagesCount = 1;
+
+                UploadProfileImage(imagePath, faceId, mediaSource, OnImageUploaded);
+            }
+            else
+            {
+                OnUploaded?.Invoke(false, null);
+            }
+
+        }, preferredCamera: NativeCamera.PreferredCamera.Front);
+    }
+
     public void PickImages(string mediaSource, Action<bool, List<string>> OnUploaded)
     {
-        string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "ajay1.jpeg");
+        string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "Banner+1.png");
 
         uploadedURLs.Clear();
 
@@ -194,6 +235,25 @@ public class GalleryManager : MonoBehaviour
 
     public void GetVideosFromGallery(string mediaSource, Action<bool, List<string>> OnUploaded)
     {
+        string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "ForBiggerMeltdowns.mp4");
+
+        uploadedURLs.Clear();
+
+        this.OnUploaded = OnUploaded;
+
+        Array.Clear(loadedFiles, 0, loadedFiles.Length);
+
+        loadedFiles[0] = _filePath;
+
+        selectedImagesCount = 1;
+
+        for (int i = 0; i < 1; i++)
+        {
+            UploadFile(_filePath, EMediaType.Video, mediaSource);
+        }
+
+        return;
+
 #if UNITY_ANDROID
         NativeGallery.Permission permission = NativeGallery.GetVideosFromGallery((videoPaths) =>
         {
@@ -214,6 +274,37 @@ public class GalleryManager : MonoBehaviour
 #elif UNITY_IOS
     GetVideoFromGallery(mediaSource, OnUploaded);
 #endif
+    }
+
+    public void GetDocuments(string mediaSource, Action<bool, List<string>> OnDocumentsUploaded)
+    {
+        //loadedFiles[0] = Path.Combine(Application.persistentDataPath, "Dummy.pdf");
+
+        //this.OnUploaded = OnDocumentsUploaded;
+
+        //selectedImagesCount = 1;
+
+        //UploadFile(loadedFiles[0], EMediaType.Document, mediaSource);
+
+        //return;
+
+        NativeFilePicker.Permission permission = NativeFilePicker.PickMultipleFiles((documentPaths) =>
+        {
+            if (documentPaths != null && documentPaths.Length > 0)
+            {
+                this.OnUploaded = OnDocumentsUploaded;
+
+                selectedImagesCount = documentPaths.Length;
+
+                loadedFiles = documentPaths;
+
+                for (int i = 0; i < documentPaths.Length; i++)
+                {
+                    UploadFile(documentPaths[i], EMediaType.Document, mediaSource);
+                }
+            }
+
+        }, new string[] { NativeFilePicker.ConvertExtensionToFileType("pdf") });
     }
 
     public void UploadVideoFile(string filePath, string mediaSource, Action<bool, List<string>> OnUploaded)
@@ -238,11 +329,17 @@ public class GalleryManager : MonoBehaviour
 
         GameManager.Instance.apiHandler.UploadFile(filePath, mediaType, mediaSource, (status, response) => {
 
-            if (status) 
+            if (status)
             {
                 FileUploadResponseModel responseModel = JsonUtility.FromJson<FileUploadResponseModel>(response);
 
-                uploadedURLs.Add(responseModel.data.s3_file_path);
+                //responseModel.data = "https://d3d51uhmmm6dej.cloudfront.net/" + responseModel.data;
+
+                //loadingCountText.text = responseModel.data;
+
+                //loadedFiles[0] = responseModel.data;
+
+                uploadedURLs.Add(responseModel.data);
 
                 //Debug.Log("Upoaded URL = " + responseModel.data.s3_file_path);
 
@@ -251,6 +348,8 @@ public class GalleryManager : MonoBehaviour
                 if (uploadedURLs.Count == selectedImagesCount)
                 {
                     UpdateLocalData(uploadedURLs, mediaType);
+
+                    loadedFiles = mediaType == EMediaType.Image ? loadedFiles : uploadedURLs.ToArray();
 
                     OnUploaded?.Invoke(true, uploadedURLs);
 
@@ -267,19 +366,6 @@ public class GalleryManager : MonoBehaviour
                     OnUploaded = null;
                 }
                 else {
-                   /* List<string> responses = new List<string>();
-
-                    responses.Add("imageUrls.Count, selectedImagesCount are not equal");
-
-                    AlertModel alertModel = new AlertModel();
-
-                    alertModel.message = "imageUrls.Count, selectedImagesCount are not equal";
-
-                    //alertModel.okayButtonAction = AlertDismissAction;
-
-                    UIManager.Instance.ShowAlert(alertModel);
-
-                    OnUploaded?.Invoke(false, responses);*/
                 }
             }
             else
@@ -296,6 +382,43 @@ public class GalleryManager : MonoBehaviour
             Loader.Instance.StopLoading();
 
         });
+    }
+
+    void UploadProfileImage(string filePath, string faceId, string mediaSource, Action<bool, ProfileFileUploadModel> OnImageUploaded)
+    {
+        Loader.Instance.StartLoading();
+
+        GameManager.Instance.apiHandler.UploadFile(filePath, EMediaType.Image, mediaSource, (status, response) => {
+
+            if (status)
+            {
+                ProfileUploadResponseModel responseModel = JsonUtility.FromJson<ProfileUploadResponseModel>(response);
+
+                uploadedURLs.Add(responseModel.data.Key);
+
+                if (uploadedURLs.Count == selectedImagesCount)
+                {
+                    OnImageUploaded?.Invoke(true, responseModel.data);
+
+                    selectedImagesCount = 0;
+
+                    OnUploaded = null;
+                }
+            }
+            else
+            {
+                List<string> responses = new List<string>();
+
+                responses.Add(response);
+
+                OnImageUploaded?.Invoke(false, null);
+
+                OnUploaded = null;
+            }
+
+            Loader.Instance.StopLoading();
+
+        }, faceId);
     }
 
     void UpdateLocalData(List<string> imageURls, EMediaType mediaType)
@@ -421,6 +544,11 @@ public class GalleryManager : MonoBehaviour
         });
     }
 
+    public void ClearData()
+    {
+        loadingCountText.text = string.Empty;
+    }
+
     #endregion
 }
 
@@ -428,5 +556,6 @@ public enum EMediaType
 { 
     Image,
     Audio,
-    Video
+    Video,
+    Document
 }

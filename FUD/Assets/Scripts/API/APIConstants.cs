@@ -9,7 +9,9 @@ public class APIConstants
 
     public const string SUBSCRIPTION_BASE_URL = "http://18.223.235.179:7004/";
 
-    public const string MEDIA_UPLOAD_BASE_URL = "http://18.223.235.179:7005/";
+    public const string PROFILE_UPLOAD_BASE_URL = "http://18.223.235.179:7005/";
+
+    public const string MEDIA_UPLOAD_BASE_URL = "http://18.223.235.179:3005/";
 
     public static string PERSISTENT_PATH = Application.persistentDataPath + "/";
 
@@ -21,15 +23,21 @@ public class APIConstants
 
     public const string USER_LOGIN = BASE_URL + "v1/login/";
 
+    public const string GET_COUNTRIES = BASE_URL + "v1/getCountries/";
+
     public const string USER_OTP = BASE_URL + "v1/sendOtp/";
 
-    public const string GET_CRATFS = BASE_URL + "v1/24_craftRoles/";
+    public const string GET_CRATFS = BASE_URL + "v1/24_craftRoles";
 
     public const string GET_GENRES = BASE_URL + "v1/genres/";
 
     public const string GET_ROLE_CATEGERIES = BASE_URL + "v1/searcRoleCategories/";
 
+    public const string GET_ALL_USERS = BASE_URL + "v1/fetchShareProfiles/";
+
     public const string CREATE_STORY = BASE_URL + "v1/story/";
+
+    public const string GET_STORY_TYPES = BASE_URL + "v1/storyTypes/";
 
     public const string GET_PUBLIC_STORIES = BASE_URL + "v1/publicStories";
 
@@ -69,6 +77,8 @@ public class APIConstants
 
     public const string STORY_POST = BASE_URL + "v1/posts/";
 
+    public const string UPDATE_BROWSE_STATUS = BASE_URL + "v1/accept/publicStory/";
+
     public const string GET_ALTERED_STORIES = BASE_URL + "v1/stories/altered/";
 
     public const string SAVE_STORY_CHARACTER = BASE_URL + "v1/storyCharacters/";
@@ -81,7 +91,9 @@ public class APIConstants
 
     public const string SEARCH_TEAM_MEMBER = BASE_URL + "v1/searchUsers/";
 
-    public const string MEDIA_URL = MEDIA_UPLOAD_BASE_URL + "adam/v1/uploadFile/";
+    public const string PROFILE_MEDIA_URL = PROFILE_UPLOAD_BASE_URL + "adam/v1/commonFileUpload/";
+
+    public const string MEDIA_URL = MEDIA_UPLOAD_BASE_URL + "adam/v1/commonFileUpload/";
 
     public const string CREATE_AUDITION = BASE_URL + "v1/audition/";
 

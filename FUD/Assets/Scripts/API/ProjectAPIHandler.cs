@@ -150,7 +150,13 @@ public partial class APIHandler
 
             ProjectBrowserResponse projectsResponse = JsonUtility.FromJson<ProjectBrowserResponse>(response);
 
-            action(status, projectsResponse.data);
+            if (status)
+            {
+                action(status, projectsResponse.data);
+            }
+            else {
+                CreateAlert(projectsResponse.message);
+            }
         }));
     }
 
@@ -242,7 +248,7 @@ public partial class APIHandler
         }));
     }
 
-    public void CreateProjectScene(SceneCreationModel creationModel, List<Dictionary<string, object>> characterScenes, Action<bool, string> action)
+    public void CreateProjectScene(SceneCreationModel creationModel, List<Dictionary<string, object>> characterScenes, List<Dictionary<string, object>> autoScenes, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -267,6 +273,11 @@ public partial class APIHandler
         if (characterScenes.Count > 0)
         {
             parameters.Add("scene_characters", characterScenes);
+        }
+
+        if (autoScenes.Count > 0)
+        {
+            parameters.Add("scene_multi_media", autoScenes);
         }
 
         gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_PROJECT_SCENE, true, parameters, (status, response) =>
@@ -317,7 +328,7 @@ public partial class APIHandler
         }));
     }
 
-    public void RemoveProjectTeam(int teamId, int projectId, int status, Action<bool> action)
+    public void RemoveProjectTeam(int teamId, int projectId, int status, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -329,11 +340,11 @@ public partial class APIHandler
 
         gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_PROJECT_TEAM, true, parameters, (apiStatus, response) => {
 
-            action(apiStatus);
+            action(apiStatus, response);
         }));
     }
 
-    public void UpdateProjectScene(SceneCreationModel creationModel, int sceneId, List<Dictionary<string, object>> characterScenes, Action<bool, string> action)
+    public void UpdateProjectScene(SceneCreationModel creationModel, int sceneId, List<Dictionary<string, object>> characterScenes, List<Dictionary<string, object>> autoDialogues, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -358,6 +369,11 @@ public partial class APIHandler
         parameters.Add("shoot_time", creationModel.shoot_time);
 
         parameters.Add("scene_characters", characterScenes);
+
+        if (autoDialogues.Count > 0)
+        {
+            parameters.Add("scene_multi_media", autoDialogues);
+        }
 
         gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_PROJECT_SCENE, true, parameters, (status, response) =>
         {
@@ -399,7 +415,7 @@ public partial class APIHandler
         }));
     }
 
-    public void ApplyBrowseFilter(string ageFrom, string ageTo, string gender, int roleId, Action<bool, List<PortfolioModel>> action)
+    public void ApplyBrowseFilter(int ageFrom, int ageTo, string gender, int roleId, Action<bool, List<PortfolioModel>> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 

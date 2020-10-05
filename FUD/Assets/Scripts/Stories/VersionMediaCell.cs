@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UMP;
 
 
 public class  VersionMediaCell : MonoBehaviour
 {
-    public Image albumImage;
+    public UniversalMediaPlayer mediaPlayer;
 
-    public RawImage videoIcon;
+    public RawImage albumImage;
 
     public GameObject pauseObject;
 
@@ -27,40 +28,32 @@ public class  VersionMediaCell : MonoBehaviour
 
         if (mediaType == EMediaType.Image)
         {
-            GameManager.Instance.downLoadManager.DownloadImage(model.content_url, (sprite) =>
+            GameManager.Instance.apiHandler.DownloadImage(model.content_url, (sprite) =>
             {
-                if (this != null)
+                if (this != null && sprite != null)
                 {
-                    albumImage.sprite = sprite;
+                    albumImage.texture = sprite.texture;
                 }
             });
         }
-    }
-
-    public void SetVideoThumbnail(Action OnNext)
-    {
-        if (mediaType == EMediaType.Video)
+        else if (mediaType == EMediaType.Video)
         {
-            VideoStreamer.Instance.GetThumbnailImage(albumModel.content_url, (texture) =>
+            mediaPlayer.Path = albumModel.content_url;
+
+            //GalleryManager.Instance.loadingCountText.text += "\n Story Creation : " + imagePath;
+
+            mediaPlayer.Prepare();
+
+            mediaPlayer.AddEndReachedEvent(() =>
             {
-                Rect rect = new Rect(0, 0, albumImage.rectTransform.rect.width, albumImage.rectTransform.rect.height);
+                VideoStreamer.Instance.updatedRawImage.gameObject.SetActive(false);
+            });
 
-                Sprite sprite = Sprite.Create(texture.ToTexture2D(), rect, new Vector2(0.5f, 0.5f));
-
-                albumImage.sprite = sprite;
-
-                OnNext?.Invoke();
+            mediaPlayer.AddImageReadyEvent((texture) =>
+            {
+                albumImage.texture = texture;
             });
         }
-        else
-        {
-            OnNext?.Invoke();
-        }
-    }
-
-    public void OnShareAction()
-    {
-
     }
 
     public void OnButtonAction()
@@ -81,7 +74,8 @@ public class  VersionMediaCell : MonoBehaviour
 
     void PlayVideo()
     {
-        VideoStreamer.Instance.StreamVideo(albumModel.content_url, null);
+        UIManager.Instance.topCanvas.PlayVideo(albumImage, mediaPlayer);
+        //VideoStreamer.Instance.StreamVideo(albumModel.content_url, null);
     }
 
     void PlayAudio()

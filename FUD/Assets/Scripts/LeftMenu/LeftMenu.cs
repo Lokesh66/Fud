@@ -1,15 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System;
-using System.IO;
+
 
 public class LeftMenu : MonoBehaviour
 {
     public SettingsPanel settingsPanel;
     public ProfileView profileView;
+    public HelpView helpView;
+    public AboutUsView aboutUsView;
+    public TermsAndConditionsView conditionsView;
     public SubscriptionController subscriptionController;
 
     public Image profileIcon;
@@ -36,17 +36,10 @@ public class LeftMenu : MonoBehaviour
     {
         if (userData.profile_image.IsNOTNullOrEmpty())
         {
-            DownLoadManager downLoadManager = GameManager.Instance.downLoadManager;
+            GameManager.Instance.apiHandler.DownloadImage(userData.profile_image, sprite => {
 
-            Texture2D texture = downLoadManager.GetLocalTexture(userData.profile_image);
-
-            if (texture == null)
-            {
-                downLoadManager.DownloadImage(userData.profile_image, sprite => {
-
-                    profileIcon.sprite = sprite;
-                });
-            }
+                profileIcon.sprite = sprite;
+            });
         }
     }
 
@@ -67,9 +60,19 @@ public class LeftMenu : MonoBehaviour
         profileView.Load();
     }
 
-    public void OnBasicInfoButtonAction()
-    { 
-    
+    public void OnHelpButtonAction()
+    {
+        helpView.Load();
+    }
+
+    public void OnAboutButtonAction()
+    {
+        aboutUsView.Load();
+    }
+
+    public void OnTermsButtonAction()
+    {
+        conditionsView.Load();
     }
 
     public void OnSubscrptionButtonAction()
