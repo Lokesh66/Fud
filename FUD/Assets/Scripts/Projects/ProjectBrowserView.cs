@@ -14,6 +14,8 @@ public class ProjectBrowserView : MonoBehaviour
 
     public BrowseFilterView filterView;
 
+    public ProfileInfoDetailView profileInfoView;
+
     public ETabType tabType;
 
     public GameObject mediaCell;
@@ -134,32 +136,6 @@ public class ProjectBrowserView : MonoBehaviour
         });
     }
 
-    void SetView()
-    {
-        noDataView.gameObject.SetActive(albumModels.Count == 0);
-
-        selectedAlbumsContent.DestroyChildrens();
-
-        if (noDataView.gameObject.activeSelf)
-        {
-            noDataView.SetView(GetNoDataModel());
-        }
-
-        LoadData();
-    }
-
-    void LoadData()
-    {
-        content.DestroyChildrens();
-
-        for (int i = 0; i < albumModels.Count; i++)
-        {
-            GameObject mediaObject = Instantiate(mediaCell, content);
-
-            mediaObject.GetComponent<BrowserAlbumCell>().SetView(albumModels[i], OnAlbumSelection);
-        }
-    }
-
     NoDataModel GetNoDataModel()
     {
         NoDataModel noDataModel = new NoDataModel();
@@ -184,6 +160,17 @@ public class ProjectBrowserView : MonoBehaviour
         {
             UpdateShortListView(albumModel);
         }
+    }
+
+    public void OnCellButtonAction(PortfolioModel albumModel)
+    {
+        GameManager.Instance.apiHandler.GetUserInfo(albumModel.user_id, (status, userData) => {
+
+            if (status)
+            {
+                profileInfoView.Load(userData);
+            }
+        });
     }
 
     void UpdateShortListView(PortfolioModel albumModel)
@@ -212,7 +199,11 @@ public class ProjectBrowserView : MonoBehaviour
     {
         albumModels = portfolioModels;
 
-        LoadData();
+        tableView.Data.Clear();
+
+        tableView.Data.Add(albumModels.Count);
+
+        tableView.Refresh();
     }
 
     public void OnAPICall()

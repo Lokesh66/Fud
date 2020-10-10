@@ -5,24 +5,21 @@ enum ELoginFlow
 {
     None,
     Launch,
-    RoleSelection,
-    Details,
-    Login
+    SignUp,
+    Login,
+    OTP,
 }
 
 public class LoginHandler : MonoBehaviour
 {
 
     public LaunchScreen launchScreen;
-    public RoleSelectionScreen roleSelectionScreen;
-    public DetailsScreen detailsScreen;
+    public SignUpScreen signInScreen;
     public LoginScreen loginScreen;
+    public LoginOTPScreen otpScreen;
 
-    Craft selectedRole = new Craft();
     long contactNumber;
-    string userName = string.Empty;
-    UserData user;
-    bool isNewUser = true;
+    bool isNewUser = false;
 
     private void Start()
     {
@@ -36,14 +33,14 @@ public class LoginHandler : MonoBehaviour
             case ELoginFlow.Launch:
                 launchScreen.SetView(OnLaunchScreen_CallBack);
                 break;
-            case ELoginFlow.RoleSelection:
-                roleSelectionScreen.SetView(OnRoleSelection_CallBack);
-                break;
-            case ELoginFlow.Details:
-                detailsScreen.SetView(isNewUser, OnDetailsScreen_CallBack);
+            case ELoginFlow.SignUp:
+                signInScreen.SetView(OnDetailsScreen_CallBack);
                 break;
             case ELoginFlow.Login:
-                loginScreen.SetView(userName, contactNumber, selectedRole.id, isNewUser, OnLoginScreen_CallBack);
+                loginScreen.SetView(OnDetailsScreen_CallBack);
+                break;
+            case ELoginFlow.OTP:
+                otpScreen.SetView(contactNumber, isNewUser, OnLoginScreen_CallBack);
                 break;
         }
     }
@@ -52,30 +49,15 @@ public class LoginHandler : MonoBehaviour
     {
         launchScreen.gameObject.SetActive(false);
         switch (loginType) {
-            case ELoginButtonType.Login:
-                isNewUser = false;
-                SetView(ELoginFlow.Details);
-                break;
-
             case ELoginButtonType.SignUp:
                 isNewUser = true;
-                SetView(ELoginFlow.RoleSelection);
+                SetView(ELoginFlow.SignUp);
                 break;
-        }
-    }
 
-    void OnRoleSelection_CallBack(Craft item)
-    {
-        roleSelectionScreen.gameObject.SetActive(false);
-
-        if (item == null)
-        {
-            SetView(ELoginFlow.Launch);
-        }
-        else
-        {
-            selectedRole = item;
-            SetView(ELoginFlow.Details);
+            case ELoginButtonType.Login:
+                isNewUser = false;
+                SetView(ELoginFlow.Login);
+                break;
         }
     }
 
@@ -89,44 +71,35 @@ public class LoginHandler : MonoBehaviour
 
             if (isNewUser)
             {
-                userName = _body["name"] as string;
-
-                int countryId = (int)_body["country_id"];
-
-                GameManager.Instance.apiHandler.SignIn(userName, contactNumber, selectedRole.id, countryId, (apiStatus, userInfo) =>
+                GameManager.Instance.apiHandler.SignIn(_body, (apiStatus, userInfo) =>
                 {
                     if (apiStatus)
                     {
-                        detailsScreen.gameObject.SetActive(false);
+                        signInScreen.gameObject.SetActive(false);
 
-                        SetView(ELoginFlow.Login);
+                        SetView(ELoginFlow.OTP);
                     }
                 });
             }
 
             if (!isNewUser)
             {
-                SetView(ELoginFlow.Login);
+                loginScreen.gameObject.SetActive(false);
+
+                SetView(ELoginFlow.OTP);
             }
         }
         else
         {
-            detailsScreen.gameObject.SetActive(false);
-
-            if (isNewUser)
-            {
-                SetView(ELoginFlow.RoleSelection);
-            }
-            else
-            {
-                SetView(ELoginFlow.Launch);
-            }
+            signInScreen.gameObject.SetActive(false);
+            
+            SetView(ELoginFlow.Launch);
         }
     }
 
     void OnLoginScreen_CallBack(bool status, UserData user)
     {
-        loginScreen.gameObject.SetActive(false);
+        otpScreen.gameObject.SetActive(false);
 
         if (status)
         {
@@ -134,15 +107,13 @@ public class LoginHandler : MonoBehaviour
             {
                 isNewUser = false;
 
-                this.user = user;
-
                 DataManager.Instance.UpdateUserInfo(user);
             }
             GameManager.Instance.sceneController.SwitchScene(ESceneType.HomeScene);
         }
         else
         {
-            SetView(ELoginFlow.Details);
+            SetView(ELoginFlow.SignUp);
         }
     }
 
@@ -154,7 +125,6 @@ public class LoginHandler : MonoBehaviour
     public void OnClickLogin()
     {
         this.gameObject.SetActive(false);
-        loginScreen.gameObject.SetActive(true);
+        otpScreen.gameObject.SetActive(true);
     }
-
 }

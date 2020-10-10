@@ -31,6 +31,8 @@ public class AuditionCreatedDetailsView : MonoBehaviour
 
         parameters.Add("id", auditionModel.id);
 
+        parameters.Add("source_from", 0);
+
 
         GameManager.Instance.apiHandler.SearchAuditions(1, parameters, (status, response) =>
         {

@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 public class ProjectAuditionCell : MonoBehaviour
 {
-    public Image icon;
     public TMP_Text titleText;
-    public TMP_Text ageText;
     public TMP_Text descriptionText;
+    public TMP_Text peopleJoinedText;
+    public TMP_Text projectNameText;
 
     Audition auditionData;
     int index = 0;
@@ -16,19 +16,18 @@ public class ProjectAuditionCell : MonoBehaviour
     public void SetView(int index, Audition audition)
     {
         auditionData = audition;
+
         this.index = index;
+
         if (auditionData != null)
         {
             titleText.text = auditionData.topic;
-            ageText.text = auditionData.age_to.ToString();
-            icon.gameObject.SetActive(false);
-            GameManager.Instance.apiHandler.DownloadImage(audition.image_url, (sprite) => {
-                if (sprite != null)
-                {
-                    icon.sprite = sprite;
-                    icon.gameObject.SetActive(true);
-                }
-            });
+
+            descriptionText.text = auditionData.description;
+
+            peopleJoinedText.text = "Entries : " + auditionData.no_of_persons_joined.ToString();
+
+            projectNameText.text = auditionData.title;
         }
     }
 

@@ -80,6 +80,8 @@ public class GameManager : MonoBehaviour
 
         apiHandler.GetGenres();
 
+        apiHandler.GetMediaEndPoint();
+
 #if UNITY_IOS && !UNITY_EDITOR
         initializeWithAppID(APIHandler.APP_ID);
 #endif

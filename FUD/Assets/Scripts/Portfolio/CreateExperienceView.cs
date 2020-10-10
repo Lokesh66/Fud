@@ -15,6 +15,8 @@ public class CreateExperienceView : MonoBehaviour
 
     public TMP_Dropdown roleDropDown;
 
+    public TMP_Dropdown roleCatageryDropdown;
+
     public TMP_Text startDateText;
 
     public TMP_Text endDateText;
@@ -30,6 +32,10 @@ public class CreateExperienceView : MonoBehaviour
     PortfolioView portfolioView = null;
 
     List<Craft> craftRoles;
+
+    Craft selectedCraft;
+
+    List<RoleCategeryModel> categeryModels;
 
     private bool isShowingGalleryPanel = false;
 
@@ -72,6 +78,37 @@ public class CreateExperienceView : MonoBehaviour
         roleDropDown.AddOptions(options);
     }
 
+    public void OnRoleValueChange()
+    {
+        selectedCraft = craftRoles[roleDropDown.value];
+
+        GameManager.Instance.apiHandler.GetRoleCategeries(selectedCraft.id, (status, response) => {
+
+            RoleCategeryResponse responseModel = JsonUtility.FromJson<RoleCategeryResponse>(response);
+
+            if (status)
+            {
+                categeryModels = responseModel.data;
+
+                UpdateRoleCategeryDropdown();
+            }
+        });
+    }
+
+    void UpdateRoleCategeryDropdown()
+    {
+        List<string> options = new List<string>();
+
+        foreach (var option in categeryModels)
+        {
+            options.Add(option.name);
+        }
+
+        roleCatageryDropdown.ClearOptions();
+
+        roleCatageryDropdown.AddOptions(options);
+    }
+
     void LoadIndustries()
     {
         List<string> options = new List<string>();
@@ -98,17 +135,15 @@ public class CreateExperienceView : MonoBehaviour
         }
         else
         {
-            string selectedGenreText = roleDropDown.options[roleDropDown.value].text;
-
-            Craft selectedGenre = craftRoles.Find(genre => genre.name.Equals(selectedGenreText));
-
             string selectedIndustryText = industryDropDown.options[industryDropDown.value].text;
 
             IndustryModel selectedIndustry = industryModels.Find(industry => industry.name.Equals(selectedIndustryText));
 
             CreateExperianceModel experianceModel = new CreateExperianceModel();
 
-            experianceModel.roleId = selectedGenre.id;
+            experianceModel.roleId = selectedCraft.id;
+
+            experianceModel.roleCategoryId = categeryModels[roleCatageryDropdown.value].id;
 
             experianceModel.description = descriptionField.text;
 

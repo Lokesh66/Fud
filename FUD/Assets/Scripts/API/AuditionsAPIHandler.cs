@@ -6,7 +6,8 @@ public partial class APIHandler
 {
     public void GetAllAuditions(Action<bool, List<Audition>> action)
     {
-        gameManager.StartCoroutine(GetRequest(APIConstants.CREATE_AUDITION, true, (bool status, string response) => {
+        gameManager.StartCoroutine(GetRequest(APIConstants.CREATE_AUDITION, true, (bool status, string response) =>
+        {
             if (status)
             {
                 AuditionsResponse auditions = JsonUtility.FromJson<AuditionsResponse>(response);
@@ -16,7 +17,6 @@ public partial class APIHandler
             {
                 action?.Invoke(false, null);
             }
-
         }));
     }
 
@@ -207,8 +207,6 @@ public partial class APIHandler
     { 
         gameManager.StartCoroutine(PostRequest(APIConstants.USER_AUDITION, true, parameters, (bool status, string response) => {
 
-            Debug.Log("JoinAudition : response = " + response + " statis = " + status);
-
             if (status)
             {
                 DataManager.Instance.UpdateFeaturedData(EFeatureType.AuditionJoining);
@@ -246,7 +244,7 @@ public partial class APIHandler
         gameManager.StartCoroutine(PostRequest(url, true, parameters, action));
     }
 
-    public void AcceptOrRejectAudition(int auditionId, int userAuditionId, int status, Action<bool, string> action)
+    public void UpdateAuditionStatus(int auditionId, int userAuditionId, int status, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -283,6 +281,7 @@ public class Audition
     public int end_date;
     public DateTime created_date_time;
     public DateTime updatedAt;
+    public ActivityOwnerModel Audtion;
 }
 
 [Serializable]

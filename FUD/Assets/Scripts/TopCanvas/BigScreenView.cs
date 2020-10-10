@@ -18,13 +18,16 @@ public class BigScreenView : MonoBehaviour
 
     void SetView(string imageURL)
     {
-        Texture2D texture = GameManager.Instance.downLoadManager.GetLocalTexture(imageURL); 
+        Texture2D texture = GameManager.Instance.downLoadManager.GetLocalTexture(imageURL);
 
-        TextureScale.ThreadedScale(texture, Screen.width, Screen.height, true);
+        if (texture != null)
+        {
+            TextureScale.ThreadedScale(texture, Screen.width, Screen.height, true);
 
-        Sprite targetSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            Sprite targetSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
 
-        selectedImage.sprite = targetSprite;
+            selectedImage.sprite = targetSprite;
+        }
     }
 
     public void OnCloseButtonAction()

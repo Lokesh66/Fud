@@ -1,97 +1,43 @@
-﻿    using UnityEngine;
-using DG.Tweening;
-using UnityEngine.UI;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using TMPro;
 
 public class LoginScreen : MonoBehaviour
 {
-    public TextMeshProUGUI signInText;
-    public TextMeshProUGUI errorText;
-    public TextMeshProUGUI timerText;
-    public TMP_InputField otpInputField;
-    public Button resendOtp;
-    public Toggle toggle;
-    bool isSignIn = false;
-    int roleId;
-    long number;
-    string userName;
-    float timer = 120; //2 Minutes
-    bool updateTimer;
+    public TMP_InputField numberFieldText;
 
-    System.Action<bool, UserData> LoginAction;
 
-    public void SetView(string userName, long number,int roleId ,bool isNewUser, System.Action<bool, UserData> action)
+    System.Action<bool, object> OnButtonAction;
+
+
+    public void SetView(System.Action<bool, object> action)
     {
         gameObject.SetActive(true);
-        this.number = number;
-        this.roleId = roleId;
-        this.userName = name;
-        isSignIn = isNewUser;
-        otpInputField.text = "";
-        LoginAction = action;
-        toggle.gameObject.SetActive(isNewUser);
-        toggle.isOn = false;
-        signInText.text = isSignIn ? "Sign In" : "Login";
 
-        StartTimer();
+        numberFieldText.text = string.Empty;
+        OnButtonAction = action;
     }
 
-    float offset = 0;
-    private void Update()
+    public void OnClick_SendOTP()
     {
-        if (updateTimer)
+        if (string.IsNullOrEmpty(numberFieldText.text))
         {
-            offset += Time.deltaTime;
-            if(offset >= 1)
-            {
-                offset -= 1;
-                timer--;
-                timerText.text = "Resend : "+timer;
-
-                if(timer == 0)
-                {
-                    updateTimer = false;
-                    offset = 0;
-                    timer = 120;
-                    timerText.text = "";
-
-                    resendOtp.gameObject.SetActive(true);
-                }
-            }
+            return;
         }
-    }
-    void StartTimer()
-    {
-        resendOtp.gameObject.SetActive(false);
-        updateTimer = true;
-        timer = 120;
-    }
-    public void OnClick_Login()
-    {
-        Login();
-    }
-
-    void Login()
-    {
-        GameManager.Instance.apiHandler.Login(number, long.Parse(otpInputField.text), (bool status, UserData userData) => {
-
+ 
+        GameManager.Instance.apiHandler.SendOTP(long.Parse(numberFieldText.text), (bool status, string response) =>
+        {
             if (status)
             {
-                LoginAction?.Invoke(true, userData);
+                Dictionary<string, object> body = new Dictionary<string, object>();
+
+                body.Add("number", numberFieldText.text);
+
+                OnButtonAction?.Invoke(true, body);
             }
             else
             {
-
-            }
-        });
-    }
-
-    public void OnClick_ResendOTP()
-    {        
-        GameManager.Instance.apiHandler.SendOTP(number, (bool status, string response) => {
-            if (status)
-            {
-                StartTimer();
+                    
             }
 
             BaseResponse baseResponse = JsonUtility.FromJson<BaseResponse>(response);
@@ -104,7 +50,7 @@ public class LoginScreen : MonoBehaviour
 
     public void OnClick_Back()
     {
-        LoginAction?.Invoke(false, null);
+        OnButtonAction?.Invoke(false, 0);
     }
 
     void ShowValidationMessage(string message)

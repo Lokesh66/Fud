@@ -15,14 +15,18 @@ public class BrowserAlbumCell : MonoBehaviour
 
     Action<bool, PortfolioModel> OnSelectAction;
 
+    Action<PortfolioModel> OnButtonAction;
+
     EMediaType mediaType;
 
 
-    public void SetView(PortfolioModel portfolioModel, Action<bool, PortfolioModel> OnSelectAction)
+    public void SetView(PortfolioModel portfolioModel, Action<bool, PortfolioModel> OnSelectAction, Action<PortfolioModel> OnButtonAction)
     {
         this.portfolioModel = portfolioModel;
 
         this.OnSelectAction = OnSelectAction;
+
+        this.OnButtonAction = OnButtonAction;
 
         //selectBG.SetActive(portfolioModel.onScreenModel.content_url.IsNOTNullOrEmpty());
         
@@ -61,5 +65,10 @@ public class BrowserAlbumCell : MonoBehaviour
         selectObject.SetActive(toggle.isOn);
 
         OnSelectAction?.Invoke(false, portfolioModel);
+    }
+
+    public void OnCellButtonAction()
+    {
+        OnButtonAction?.Invoke(portfolioModel);
     }
 }

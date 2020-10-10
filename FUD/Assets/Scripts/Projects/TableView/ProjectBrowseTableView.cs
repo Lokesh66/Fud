@@ -99,7 +99,7 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 		{
 			var model = Data [viewsHolder.ItemIndex];
 
-			viewsHolder.views.gameObject.transform.parent.GetComponent<BrowserAlbumCell> ().SetView (model, adataObject.OnAlbumSelection);
+			viewsHolder.views.gameObject.transform.parent.GetComponent<BrowserAlbumCell> ().SetView (model, adataObject.OnAlbumSelection, adataObject.OnCellButtonAction);
 
 			PortfolioAlbumModel albumModel = model.PortfolioMedia.Find(item => DataManager.Instance.GetMediaType(item.media_type) == EMediaType.Image);
 

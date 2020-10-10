@@ -15,7 +15,9 @@ public class CreateDialoguesView : MonoBehaviour
 
     public CreateSceneManualView manualView;
 
-    public CreateSceneAutoView autoView; 
+    public CreateSceneAutoView autoView;
+
+    public CreateSceneAlbumView albumView;
 
 
     public Color selectedColor;
@@ -32,11 +34,13 @@ public class CreateDialoguesView : MonoBehaviour
     private ESubTabType currentTab = ESubTabType.Auto;
 
 
-    public void Load()
+    public void Load(int projectId)
     {
-        OnTabAction(0);
+        //OnTabAction(0);
 
         gameObject.SetActive(true);
+
+        albumView.Load(projectId);
     }
 
     #region Button Actions

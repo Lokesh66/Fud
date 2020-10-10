@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+
+
 public class UserAuditionController : MonoBehaviour
 {
-
     public enum EAuditionStatusScreen
-    { 
+    {
         None = -1,
         Live = 0,
         Shortlisted = 1,
+        Viewed = 2,
     }
 
     public GameObject userAuditionCell;
@@ -20,6 +22,8 @@ public class UserAuditionController : MonoBehaviour
     public AuditionResponsesView liveAuditionResponsesView;
 
     public ShortListedAuditionView shortListedAuditionView;
+
+    public ViewedAuditionsView viewedAuditionsView;
 
     public GameObject livePanel;
 
@@ -99,6 +103,9 @@ public class UserAuditionController : MonoBehaviour
             case EAuditionStatusScreen.Shortlisted:
                 shortListedAuditionView.Load(auditionId, this);
                 break;
+            case EAuditionStatusScreen.Viewed:
+                viewedAuditionsView.Load(auditionId, this);
+                break;
         }
     }
 
@@ -138,7 +145,7 @@ public class UserAuditionController : MonoBehaviour
     {
         buttonsPanel.SetActive(false);
 
-        GameManager.Instance.apiHandler.AcceptOrRejectAudition(selectedAuditionCell.auditionData.audition_id, selectedAuditionCell.auditionData.id, 5, (status, response) =>
+        GameManager.Instance.apiHandler.UpdateAuditionStatus(selectedAuditionCell.auditionData.audition_id, selectedAuditionCell.auditionData.id, 5, (status, response) =>
         {
             if (status)
             {
@@ -151,7 +158,7 @@ public class UserAuditionController : MonoBehaviour
     {
         buttonsPanel.SetActive(false);
 
-        GameManager.Instance.apiHandler.AcceptOrRejectAudition(selectedAuditionCell.auditionData.audition_id, selectedAuditionCell.auditionData.id, 8, (status, response) =>
+        GameManager.Instance.apiHandler.UpdateAuditionStatus(selectedAuditionCell.auditionData.audition_id, selectedAuditionCell.auditionData.id, 8, (status, response) =>
         {
             if (status)
             {
@@ -164,13 +171,29 @@ public class UserAuditionController : MonoBehaviour
     {
         buttonsPanel.SetActive(false);
 
-        GameManager.Instance.apiHandler.AcceptOrRejectAudition(selectedAuditionCell.auditionData.audition_id, selectedAuditionCell.auditionData.id, 1, (status, response) =>
+        GameManager.Instance.apiHandler.UpdateAuditionStatus(selectedAuditionCell.auditionData.audition_id, selectedAuditionCell.auditionData.id, 1, (status, response) =>
         {
             if (status)
             {
                 Reload();
             }
         });
+    }
+
+    public void OnFilterButtonAction()
+    {
+        switch (currentType)
+        {
+            case EAuditionStatusScreen.Live:
+                liveAuditionResponsesView.OnFilterButtonAction();
+                break;
+            case EAuditionStatusScreen.Shortlisted:
+                shortListedAuditionView.OnFilterButtonAction();
+                break;
+            case EAuditionStatusScreen.Viewed:
+                viewedAuditionsView.OnFilterButtonAction();
+                break;
+        }
     }
 
     public void OnCancelButtonAction()

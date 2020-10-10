@@ -8,8 +8,6 @@ public class CraftRoleItem : MonoBehaviour
 
     public Image icon;
 
-    public Toggle toggle;
-
     public Image toggleImage;
 
     public Sprite defaultIcon;
@@ -24,15 +22,13 @@ public class CraftRoleItem : MonoBehaviour
     Craft craft;
     System.Action<Craft> OnSelect = null;
 
-    public void SetView(Craft craftInfo, System.Action<Craft> action, ToggleGroup toggleGroup)
+    public void SetView(Craft craftInfo, System.Action<Craft> action)
     {
         craft = craftInfo;
 
         OnSelect = action;
 
         nameText.text = craftInfo.name;
-
-        toggle.group = toggleGroup;
 
         SetImage();
     }
@@ -47,13 +43,8 @@ public class CraftRoleItem : MonoBehaviour
         }
     }
 
-    public void OnClick(Toggle toggle)
+    public void OnClick()
     {
-        if (toggle.isOn)
-        {
-            OnSelect?.Invoke(craft);
-        }
-
-        toggleImage.color = toggle.isOn ? selectedColor : Color.white;
+        OnSelect?.Invoke(craft);
     }
 }

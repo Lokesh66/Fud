@@ -40,7 +40,7 @@ public class ProjectActivityPopUp : MonoBehaviour
             {
                 gameObject.SetActive(false);
 
-                ProjectCast projectCast = JsonUtility.FromJson<ProjectCastDetailsResponse>(response).data;
+                ProjectCast projectCast = JsonUtility.FromJson<ProjectCastDetailsResponse>(response).data[0];
 
                 detailsView.Load(projectCast);
             }

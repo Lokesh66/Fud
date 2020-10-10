@@ -60,6 +60,8 @@ public class UserAuditionCell : MonoBehaviour
 
                         mediaPlayer.AddEndReachedEvent(() =>
                         {
+                            UpdateAuditionStatus();
+
                             VideoStreamer.Instance.updatedRawImage.gameObject.SetActive(false);
                         });
 
@@ -91,5 +93,16 @@ public class UserAuditionCell : MonoBehaviour
     public void OnVideoPlayButtonAction()
     {
         UIManager.Instance.topCanvas.PlayVideo(icon, mediaPlayer);
+    }
+
+    void UpdateAuditionStatus()
+    {
+        GameManager.Instance.apiHandler.UpdateAuditionStatus(auditionData.audition_id, auditionData.id, 10, (status, response) =>
+        {
+            if (status)
+            {
+                
+            }
+        });
     }
 }

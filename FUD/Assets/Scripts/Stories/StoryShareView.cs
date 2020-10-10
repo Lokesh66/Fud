@@ -6,6 +6,8 @@ using TMPro;
 
 public class StoryShareView : MonoBehaviour
 {
+    public ProfileInfoDetailView profileInfoView;
+
     public GameObject shareButtonObject;
 
     public TMP_InputField searchField;
@@ -163,6 +165,20 @@ public class StoryShareView : MonoBehaviour
         tableView.Data.Add(searchModels.Count);
 
         tableView.Refresh();
+    }
+
+    public void OnCellButtonAction(object searchModel)
+    {
+        selectedModel = searchModel as UserSearchModel;
+
+        GameManager.Instance.apiHandler.GetUserInfo(selectedModel.id, (status, userInfo) => {
+
+            if (status)
+            {
+                profileInfoView.Load(userInfo);
+            }
+
+        });        
     }
 
     public void OnSelectMember(ShareSearchCell selectedCell, object searchModel)

@@ -18,6 +18,8 @@ public class UpdateExperienceView : MonoBehaviour
 
     public TMP_Dropdown roleDropDown;
 
+    public TMP_Dropdown roleCatageryDropdown;
+
     public TMP_Text startDateText;
 
     public TMP_Text endDateText;
@@ -36,6 +38,10 @@ public class UpdateExperienceView : MonoBehaviour
     string dateDefaultText = "Select Date";
 
     List<Craft> craftRoles;
+
+    List<RoleCategeryModel> categeryModels;
+
+    Craft selectedCraft;
 
     List<string> imageUrls;
 
@@ -143,6 +149,37 @@ public class UpdateExperienceView : MonoBehaviour
         roleDropDown.value = craftRoles.IndexOf(requiredGenre);
     }
 
+    public void OnRoleValueChange()
+    {
+        selectedCraft = craftRoles[roleDropDown.value];
+
+        GameManager.Instance.apiHandler.GetRoleCategeries(selectedCraft.id, (status, response) => {
+
+            RoleCategeryResponse responseModel = JsonUtility.FromJson<RoleCategeryResponse>(response);
+
+            if (status)
+            {
+                categeryModels = responseModel.data;
+
+                UpdateRoleCategeryDropdown();
+            }
+        });
+    }
+
+    void UpdateRoleCategeryDropdown()
+    {
+        List<string> options = new List<string>();
+
+        foreach (var option in categeryModels)
+        {
+            options.Add(option.name);
+        }
+
+        roleCatageryDropdown.ClearOptions();
+
+        roleCatageryDropdown.AddOptions(options);
+    }
+
     void LoadIndustries()
     {
         IndustryModel requiredGenre = industryModels.Find(industryModel => industryModel.id == workModel.industry_id);
@@ -190,6 +227,8 @@ public class UpdateExperienceView : MonoBehaviour
             CreateExperianceModel experianceModel = new CreateExperianceModel();
 
             experianceModel.roleId = selectedGenre.id;
+
+            experianceModel.roleCategoryId = categeryModels[roleCatageryDropdown.value].id;
 
             experianceModel.description = descriptionField.text;
 

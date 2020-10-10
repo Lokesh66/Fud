@@ -249,7 +249,7 @@ public class StoryUpdateView : MonoBehaviour
         {
             this.imageUrls = imageUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, OnDeleteAction: OnDeleteAction);
 
             for (int i = 0; i < imageUrls.Count; i++)
             {
@@ -272,6 +272,8 @@ public class StoryUpdateView : MonoBehaviour
         {
             this.imageUrls = audioUrls;
 
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, OnDeleteAction: OnDeleteAction);
+
             for (int i = 0; i < audioUrls.Count; i++)
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();
@@ -292,6 +294,8 @@ public class StoryUpdateView : MonoBehaviour
         if (status)
         {
             this.imageUrls = videoUrls;
+
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, OnDeleteAction: OnDeleteAction);
 
             for (int i = 0; i < videoUrls.Count; i++)
             {
@@ -355,5 +359,10 @@ public class StoryUpdateView : MonoBehaviour
         subTitleField.text = string.Empty;
 
         descriptionField.text = string.Empty;
+    }
+
+    void OnDeleteAction(object imageURL)
+    {
+        filesHandler.content.DestroyChildrens(filesHandler.mediaButtonTrans.gameObject);
     }
 }

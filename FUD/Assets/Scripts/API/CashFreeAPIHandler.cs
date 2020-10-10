@@ -105,7 +105,7 @@ public partial class APIHandler
         }));
     }
 
-    [AOT.MonoPInvokeCallback(typeof(OnIOSPaymentCompletion))]
+    //[AOT.MonoPInvokeCallback(typeof(OnIOSPaymentCompletion))]
     static void onPaymentCompletion(string response)
     {
         Debug.Log("response = " + response);

@@ -181,7 +181,7 @@ public class CreateScenesView : MonoBehaviour
 
     void ShowDialougesPanel()
     {
-        dialoguesView.Load();
+        dialoguesView.Load(projectModel.id);
     }
 
     void ClearData()

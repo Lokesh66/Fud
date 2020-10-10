@@ -99,11 +99,9 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 		{
 			var model = Data [viewsHolder.ItemIndex];
 
-			viewsHolder.views.gameObject.transform.parent.GetComponent<PortfolioSearchCell> ().SetView (model, adataObject.OnSelectMember);
+			viewsHolder.views.gameObject.transform.parent.GetComponent<PortfolioSearchCell> ().SetView (model, adataObject.OnSelectMember,adataObject.OnCellButtonAction);
 
 			var imageURLAtRequest = model.profile_image;
-
-			Debug.Log("content_url = " + model.profile_image);
 
 			int itemIndexAtRequest = viewsHolder.ItemIndex;
 

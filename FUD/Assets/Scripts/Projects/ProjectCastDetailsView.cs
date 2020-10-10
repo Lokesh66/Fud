@@ -24,6 +24,8 @@ public class ProjectCastDetailsView : MonoBehaviour
 
         remoteImageBehaviour.Load(projectCast.StoryCharacters.UserInfo?.profile_image);
 
+        Debug.Log("projectCast.StoryCharacters = " + projectCast.StoryCharacters);
+
         roleText.text = projectCast.StoryCharacters.Craftroles.name;
 
         roleCategoryText.text = projectCast.StoryCharacters.RoleCategories.name;

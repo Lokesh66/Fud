@@ -269,7 +269,7 @@ public class StoryCreationView : MonoBehaviour
         {
             this.imageUrls = imageUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, OnDeleteAction: OnDeleteAction);
 
             for (int i = 0; i < imageUrls.Count; i++)
             {
@@ -311,7 +311,7 @@ public class StoryCreationView : MonoBehaviour
     {
         if (status)
         {
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Video);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Video, OnDeleteAction);
 
 
             this.imageUrls = videoUrls;
@@ -384,5 +384,10 @@ public class StoryCreationView : MonoBehaviour
         float targetPostion = panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
 
         galleryPanel.DOAnchorPosY(targetPostion, 0.4f);
+    }
+
+    void OnDeleteAction(object imageURL)
+    {
+        filesHandler.content.DestroyChildrens(filesHandler.mediaButtonTrans.gameObject);
     }
 }

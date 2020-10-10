@@ -14,11 +14,15 @@ public class PortfolioSearchCell : MonoBehaviour
 
     Action<PortfolioSearchCell, object> OnButtonPressed;
 
+    Action<object> _OnButtonAction;
+
     UserSearchModel searchModel;
 
-    public void SetView(UserSearchModel searchModel, Action<PortfolioSearchCell, object> onButtonPressed)
+    public void SetView(UserSearchModel searchModel, Action<PortfolioSearchCell, object> onButtonPressed, Action<object> OnButtonAction)
     {
         this.OnButtonPressed = onButtonPressed;
+
+        this._OnButtonAction = OnButtonAction;
 
         this.searchModel = searchModel;
 
@@ -35,5 +39,10 @@ public class PortfolioSearchCell : MonoBehaviour
     public void UpdateDeselectViw()
     {
         selectObject.SetActive(false);
+    }
+
+    public void OnCellButtonAction()
+    {
+        _OnButtonAction?.Invoke(searchModel);
     }
 }

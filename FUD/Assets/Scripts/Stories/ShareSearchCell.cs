@@ -15,13 +15,17 @@ public class ShareSearchCell : MonoBehaviour
 
     Action<ShareSearchCell, object> OnButtonPressed;
 
+    Action<object> OnButtonAtion;
+
     UserSearchModel searchModel;
 
 
 
-    public void SetView(UserSearchModel searchModel, Action<ShareSearchCell, object> onButtonPressed)
+    public void SetView(UserSearchModel searchModel, Action<ShareSearchCell, object> onButtonPressed, Action<object> OnButtonAtion)
     {
         this.OnButtonPressed = onButtonPressed;
+
+        this.OnButtonAtion = OnButtonAtion;
 
         this.searchModel = searchModel;
 
@@ -30,7 +34,7 @@ public class ShareSearchCell : MonoBehaviour
 
     public void OnSelectButtonAction()
     {
-        selectObject.SetActive(true);
+        selectObject.SetActive(OnButtonPressed != null);
 
         OnButtonPressed?.Invoke(this, searchModel);
     }
@@ -38,5 +42,10 @@ public class ShareSearchCell : MonoBehaviour
     public void UpdateDeselectViw()
     {
         selectObject.SetActive(false);
+    }
+
+    public void OnCellButtonAction()
+    {
+        OnButtonAtion?.Invoke(searchModel);
     }
 }

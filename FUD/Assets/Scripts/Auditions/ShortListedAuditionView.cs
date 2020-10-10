@@ -10,6 +10,8 @@ public class ShortListedAuditionView : MonoBehaviour
 
     public ShortListedAuditionTableView tableView;
 
+    public AuditionResponseModifiedFilterView filterView;
+
     public List<SearchAudition> auditionResponses;
 
     public GameObject noDataObject;
@@ -43,17 +45,22 @@ public class ShortListedAuditionView : MonoBehaviour
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        GameManager.Instance.apiHandler.GetShortListedAuditions(pageNo, parameters, (status, response) => {
+        parameters.Add("id", auditionId);
 
+        parameters.Add("source_from", 1);
+
+
+        GameManager.Instance.apiHandler.SearchAuditions(1, parameters, (status, response) =>
+        {
             if (status)
             {
+                Debug.Log("Short listed Audition Response = " + response);
+
                 SearchAuditionResponse auditionResponse = JsonUtility.FromJson<SearchAuditionResponse>(response);
 
                 auditionResponses = auditionResponse.data;
 
-                noDataObject.SetActive(auditionResponses.Count == 0);
-
-                if (auditionResponse.data.Count > 0)
+                if (auditionResponses.Count > 0)
                 {
                     pageNo++;
 
@@ -78,6 +85,14 @@ public class ShortListedAuditionView : MonoBehaviour
 
                         tableView.Refresh();
                     }
+                }
+                else
+                {
+                    AlertModel alertModel = new AlertModel();
+
+                    alertModel.message = "You have not received any audition responses";
+
+                    UIManager.Instance.ShowAlert(alertModel);
                 }
             }
         });
@@ -125,7 +140,9 @@ public class ShortListedAuditionView : MonoBehaviour
 
         parameters.Add("id", auditionId);
 
-        GameManager.Instance.apiHandler.GetShortListedAuditions(pageNo, parameters, (status, response) =>
+        parameters.Add("source_from", 1);
+
+        GameManager.Instance.apiHandler.SearchAuditions(pageNo, parameters, (status, response) =>
         {
             if (status)
             {
@@ -139,7 +156,7 @@ public class ShortListedAuditionView : MonoBehaviour
                 {
                     isPagingOver = true;
 
-                    pageNo = 0;
+                    pageNo = 1;
                 }
                 else
                 {
@@ -162,5 +179,26 @@ public class ShortListedAuditionView : MonoBehaviour
         Debug.Log("OnVideo Complete Called : ShortListedView");
 
         buttonsPanel.SetActive(true);
+    }
+
+    public void OnFilterButtonAction()
+    {
+        filterView.Load(OnFilterAction);
+    }
+
+    void OnFilterAction(object data)
+    {
+        auditionResponses = data as List<SearchAudition>;
+
+        tableView.Data.Clear();
+
+        if (auditionResponses.Count > 0)
+        {
+            tableView.Data.Add(auditionResponses.Count);
+
+            tableView.Refresh();
+        }
+
+        noDataObject.SetActive(auditionResponses.Count == 0);
     }
 }

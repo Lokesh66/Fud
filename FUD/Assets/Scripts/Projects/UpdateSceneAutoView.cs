@@ -35,7 +35,7 @@ public class UpdateSceneAutoView : MonoBehaviour
 
     public void OnBackButtonAction()
     {
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 
     void OnDocumentsUploaded(bool status, List<string> documentURLs)

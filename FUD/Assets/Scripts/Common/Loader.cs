@@ -56,6 +56,8 @@ public class Loader : MonoBehaviour
 
         if (!loaderPanel.activeSelf)
         {
+            Debug.Log("StartLoading Called");
+
             loaderPanel.SetActive(true);
 
             Sequence mySequence = DOTween.Sequence();
@@ -70,14 +72,19 @@ public class Loader : MonoBehaviour
 
     public void StopLoading()
     {
-        if (mySequence != null)
+        Debug.Log("StopLoading Called");
+
+        if (loaderPanel.activeSelf)
         {
-            mySequence.onKill += OnKill;
+            if (mySequence != null)
+            {
+                mySequence.onKill += OnKill;
 
-            mySequence.Kill(true);
+                mySequence.Kill(true);
+            }
+
+            loaderPanel.SetActive(false);
         }
-
-        loaderPanel.SetActive(false);
 
         //GalleryManager.Instance.loadingCountText.text = "Stop Loading";
     }

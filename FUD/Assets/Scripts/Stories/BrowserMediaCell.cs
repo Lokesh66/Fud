@@ -62,18 +62,19 @@ public class BrowserMediaCell : MonoBehaviour
 
     public void OnButtonAction()
     {
-        switch (mediaType)
-        {
-            case EMediaType.Image:
-                OpenBigScreen();
-                break;
-            case EMediaType.Video:
-                PlayVideo();
-                break;
-            case EMediaType.Audio:
-                PlayAudio();
-                break;
-        }
+
+        //switch (mediaType)
+        //{
+        //    case EMediaType.Image:
+        //        OpenBigScreen();
+        //        break;
+        //    case EMediaType.Video:
+        //        PlayVideo();
+        //        break;
+        //    case EMediaType.Audio:
+        //        PlayAudio();
+        //        break;
+        //}
     }
 
     void PlayVideo()

@@ -42,6 +42,9 @@ public class DataManager : MonoBehaviour
 
     private string currentPurchaseOrderId = string.Empty;
 
+    private string mediaKey = string.Empty;
+
+
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -70,6 +73,11 @@ public class DataManager : MonoBehaviour
     public void UpdateUserInfo(UserData userData)
     {
         userInfo = userData;
+    }
+
+    public void UpdateMediaKey(string mediaKey)
+    {
+        this.mediaKey = mediaKey;
     }
 
     public void UpdateUserAvailableActvities(List<FeaturedModel> activityModels)
@@ -187,6 +195,11 @@ public class DataManager : MonoBehaviour
         return currentPurchaseOrderId;
     }
 
+    public string GetMediaKey()
+    {
+        return mediaKey;
+    }
+
     public void ClearPurchaseOrderId()
     {
         currentPurchaseOrderId = string.Empty;
@@ -231,6 +244,7 @@ public class UserData
     public CraftRoleModel Craftroles;
     public RoleCategeryModel RoleCategories;
     public List<FeaturedModel> UserFeatures;
+    public List<WorkExperianceModel> WorkExperience;
 }
 
 [Serializable]

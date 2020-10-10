@@ -15,6 +15,8 @@ public class APIConstants
 
     public static string PERSISTENT_PATH = Application.persistentDataPath + "/";
 
+    public const string MEDIA_KEY = BASE_URL + "v1/fetch/mediaHostUrl/";
+
     public static string TOKEN_PATH = PERSISTENT_PATH + "/Token";
 
     public static string IMAGES_PATH = PERSISTENT_PATH + "Images";
@@ -30,6 +32,8 @@ public class APIConstants
     public const string GET_CRATFS = BASE_URL + "v1/24_craftRoles";
 
     public const string GET_GENRES = BASE_URL + "v1/genres/";
+
+    public const string GET_USER_INFO = BASE_URL + "v1/userInfo";
 
     public const string GET_ROLE_CATEGERIES = BASE_URL + "v1/searcRoleCategories/";
 
@@ -130,6 +134,10 @@ public class APIConstants
     public const string GET_ALTERED_PORTFOLIOS = BASE_URL + "v1/portfolio/altered/";
 
     public const string CREATE_PROJECT_SCENE = BASE_URL + "v1/project/storyScene/";
+
+    public const string GET_SCENE_MEMBERS = BASE_URL + "v1/project/profiles/";
+
+    public const string SHARE_SCENE = BASE_URL + "v1/projects/scene/access/";
 
     public const string GET_OFFERED_PROJECTS = BASE_URL + "v1/projects/offered/";
 

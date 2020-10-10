@@ -23,6 +23,23 @@ public partial class APIHandler
         }));
     }
 
+    public void GetUserInfo(int userId, Action<bool, UserData> action)
+    {
+        string url = APIConstants.GET_USER_INFO + "?user_id=" + userId;
+
+        gameManager.StartCoroutine(GetRequest(url, true, (status, response) => {
+
+            Debug.Log("GetUserInfo : response = " + response);
+
+            if (status)
+            {
+                UserData responseModel = JsonUtility.FromJson<UserDetailResponse>(response).data;
+
+                action(status, responseModel);
+            }
+        }));
+    }
+
     public void GetOfferedProjects(int pageNo, Action<bool, ProjectOfferedResponse> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -170,6 +187,8 @@ public partial class APIHandler
         {
             if (status)
             {
+                Debug.Log("GetProjectDetails : response = " + response);
+
                 ProjectDetailResponse projectsResponse = JsonUtility.FromJson<ProjectDetailResponse>(response);
 
                 if (projectsResponse.data != null)
@@ -209,6 +228,14 @@ public partial class APIHandler
         gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_OFFERED_PROJECT_STATUS, true, parameters, (apiStatus, response) =>
         {
             action(apiStatus, response);
+        }));
+    }
+
+    public void ShareProjectScene(Dictionary<string, object> parameters, Action<bool, string> action)
+    {
+        gameManager.StartCoroutine(PutRequest(APIConstants.SHARE_SCENE, true, parameters, (status, response) => {
+
+            action(status, response);
         }));
     }
 
@@ -381,6 +408,23 @@ public partial class APIHandler
         }));
     }
 
+    public void GetSceneMembers(int projectId, Action<bool, List<SceneAlbumModel>> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("project_id", projectId);
+
+        gameManager.StartCoroutine(PostRequest(APIConstants.GET_SCENE_MEMBERS, true, parameters, (status, response) =>
+        {
+            if (status)
+            {
+                SceneCharacterAlbumResponse responseModel = JsonUtility.FromJson<SceneCharacterAlbumResponse>(response);
+
+                action(status, responseModel.data);
+            }
+        }));
+    }
+
     public void CreateProjectCast(Dictionary<string, object> parameters, Action<bool, string> action)
     {
         gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_PROJECT_CAST, true, parameters, (status, response) => {
@@ -532,6 +576,7 @@ public class ProjectOfferedModel
     public DateTime created_date_time;
     public DateTime updatedAt;
     public Project Projects;
+    public ActivityOwnerModel Users;
     public ProjectCast Project_cast;
 }
 
@@ -653,7 +698,7 @@ public class ProjectCharacterModel : StoryCharacterModel
 [Serializable]
 public class ProjectCastDetailsResponse : BaseResponse
 {
-    public ProjectCast data;
+    public List<ProjectCast> data;
 }
 
 [Serializable]
@@ -668,4 +713,24 @@ public class ProjectTeamModel : StoryTeamModel
     public int project_id;
 
     public TeamMembersItem ProjectTeamMembers;
+}
+
+[Serializable]
+public class UserDetailResponse : BaseResponse
+{
+    public UserData data;
+}
+
+[Serializable]
+public class SceneCharacterAlbumResponse : BaseResponse
+{
+    public List<SceneAlbumModel> data;
+}
+
+[Serializable]
+public class SceneAlbumModel : ProjectOfferedModel
+{
+    public SceneAlbumModel data;
+
+    public bool isSeeAllSelected = false;
 }

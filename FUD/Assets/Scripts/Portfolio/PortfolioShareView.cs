@@ -7,6 +7,8 @@ using System;
 
 public class PortfolioShareView : MonoBehaviour
 {
+    public ProfileInfoDetailView profileInfoView;
+
     public GameObject shareButtonObject;
 
     public TMP_InputField searchField;
@@ -164,7 +166,20 @@ public class PortfolioShareView : MonoBehaviour
         }
     }
 
-    
+    public void OnCellButtonAction(object searchModel)
+    {
+        selectedModel = searchModel as UserSearchModel;
+
+        GameManager.Instance.apiHandler.GetUserInfo(selectedModel.id, (status, userInfo) => {
+
+            if (status)
+            {
+                profileInfoView.Load(userInfo);
+            }
+
+        });
+    }
+
     public void OnShareButtonAction()
     {
         if (!CanCallAPI())

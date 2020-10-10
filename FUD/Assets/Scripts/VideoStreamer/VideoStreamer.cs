@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using DG.Tweening;
+using TMPro;
 using UMP;
 
 
@@ -79,6 +80,8 @@ public class VideoStreamer : MonoBehaviour
 
     public Slider volumeSlider;
 
+    public TextMeshProUGUI volumeText;
+
 
     UniversalMediaPlayer currentPlayer;
 
@@ -104,12 +107,12 @@ public class VideoStreamer : MonoBehaviour
 
         positionSlider.value = 0;
 
-        //if (prevImage != null)
-        //{
-        //    StopCoroutine(UpdateVideoCanvasRatio(prevImage));
-        //}
-
         mediaPlayer.Play();
+
+        mediaPlayer.AddEndReachedEvent(() => {
+
+            updatedRawImage.gameObject.SetActive(false);
+        });
 
         mediaPlayer.AddPositionChangedEvent((positon) =>
         {
@@ -117,7 +120,11 @@ public class VideoStreamer : MonoBehaviour
             {
                 currentPosValue = positionSlider.value = positon;
             }
+
+            Loader.Instance.StopLoading();
         });
+
+        mediaPlayer.AddBufferingEvent(OnBuffering);
 
         StopAllCoroutines();
 
@@ -128,11 +135,14 @@ public class VideoStreamer : MonoBehaviour
         currentPlayer = mediaPlayer;
     }
 
+    void OnBuffering(float percentage)
+    {
+        Loader.Instance.StartLoading();
+    }
+
     private IEnumerator UpdateVideoCanvasRatio(RawImage rawImage)
     {
         _objectMaterial = rawImage.material;
-
-        Debug.Log("UpdateVideoCanvasRatio Called");
 
         while (true)
         {
@@ -177,7 +187,9 @@ public class VideoStreamer : MonoBehaviour
 
     public void OnVolumeValueChange()
     {
-        //currentPlayer.
+        currentPlayer.Volume = (int)volumeSlider.value;
+
+        volumeText.text = currentPlayer.Volume + "%";
     }
 
     public void OnPauseButtonAction()

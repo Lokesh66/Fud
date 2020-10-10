@@ -33,7 +33,7 @@ public class UploadedFileCell : MonoBehaviour
     Action<object> _OnDeleteButtonAction;
 
 
-    public void Load(string imagePath, bool isDownloadedImage, EMediaType mediaType, Action<object> OnDeleteAction = null)
+    public void Load(string imageURL, EMediaType mediaType, Action<object> OnDeleteAction = null)
     {
         this._OnDeleteButtonAction = OnDeleteAction;
 
@@ -41,59 +41,15 @@ public class UploadedFileCell : MonoBehaviour
 
         this.mediaType = mediaType;
 
-        this.imageURL = imagePath;
-        
-        Debug.Log("imageURL = " + imageURL + " isDownloadedImage = " + isDownloadedImage);
+        this.imageURL = imageURL;
 
-        if (isDownloadedImage)
+        if (mediaType == EMediaType.Image)
         {
-            GameManager.Instance.apiHandler.DownloadImage(imageURL, (sprite) =>
-            {
-                if (this != null)
-                {
-                    selectedImage.texture = sprite.texture;
-                }
-            });
+            SetImageView();
         }
-        else {
-            if (mediaType == EMediaType.Image)
-            {
-                Texture2D texture = NativeGallery.LoadImageAtPath(imagePath, markTextureNonReadable: false);
-
-                TextureScale.ThreadedScale(texture, 300, 400, true);
-
-                selectedImage.texture = texture;
-
-                //selectedImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-            }
-            else if (mediaType == EMediaType.Video)
-            {
-                //mediaPlayer.Path = imagePath;
-
-                //GalleryManager.Instance.loadingCountText.text += "\n Story Creation : " + imagePath;
-
-                //mediaPlayer.Path = "https://d3d51uhmmm6dej.cloudfront.net/90/cc-stories/1601562494893.mp4";
-
-                mediaPlayer.Prepare();
-
-                mediaPlayer.AddEndReachedEvent(() =>
-                {
-                    VideoStreamer.Instance.updatedRawImage.gameObject.SetActive(false);
-
-                    Invoke("UpdateVideoTexture", 2.0f);
-                });
-
-                mediaPlayer.AddImageReadyEvent((texture) =>
-                {
-                    imageTexture = texture;
-
-                    selectedSprite = Sprite.Create(imageTexture, selectedImage.rectTransform.rect, new Vector2(0.5f, 0.5f));
-
-                    Debug.Log("AddImageReadyEvent : imageTexture " + imageTexture);
-
-                    selectedImage.texture = texture;
-                });
-            }
+        else if (mediaType == EMediaType.Video)
+        {
+            SetVideoView();
         }
     }
 
@@ -111,6 +67,10 @@ public class UploadedFileCell : MonoBehaviour
         else if (mediaType == EMediaType.Video)
         {
             UIManager.Instance.topCanvas.PlayVideo(selectedImage, mediaPlayer);
+        }
+        else if (mediaType == EMediaType.Document)
+        {
+            //Open Pdf document with imageURL
         }
     }
 
@@ -132,10 +92,42 @@ public class UploadedFileCell : MonoBehaviour
         _OnDeleteButtonAction?.Invoke(imageURL);
     }
 
-    void UpdateVideoTexture()
-    {
-        Debug.Log("UpdateVideoTexture : selectedSprite.texture " + selectedSprite.texture);
+    #region Update View
 
-        selectedImage.texture = selectedSprite.texture;
+    void SetImageView()
+    {
+        GameManager.Instance.apiHandler.DownloadImage(this.imageURL, (sprite) =>
+        {
+            if (this != null)
+            {
+                selectedImage.texture = sprite.texture;
+            }
+        });
     }
+
+    void SetVideoView()
+    {
+        mediaPlayer.Prepare();
+
+        mediaPlayer.AddImageReadyEvent((texture) =>
+        {
+            imageTexture = texture;
+
+            selectedSprite = Sprite.Create(imageTexture, selectedImage.rectTransform.rect, new Vector2(0.5f, 0.5f));
+
+            selectedImage.texture = texture;
+        });
+    }
+
+    void SetAudioView()
+    {
+        
+    }
+
+    void SetDocumentView()
+    {
+        
+    }
+
+    #endregion
 }

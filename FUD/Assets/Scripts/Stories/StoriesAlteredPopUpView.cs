@@ -44,7 +44,7 @@ public class StoriesAlteredPopUpView : MonoBehaviour
 
         EStatusType statusType = (EStatusType)statusValue;
 
-        shareObject.SetActive(statusType == EStatusType.Accepted && !isOwnStory);
+        //shareObject.SetActive(statusType == EStatusType.Accepted && !isOwnStory);
 
         rejectObject.SetActive(!isOwnStory);
 

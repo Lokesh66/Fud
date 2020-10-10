@@ -5,6 +5,7 @@ using TMPro;
 
 public class SceneDetailsView : MonoBehaviour
 {
+    public ProjectSceneShareView shareView;
 
     SceneModel sceneModel;
 
@@ -38,6 +39,9 @@ public class SceneDetailsView : MonoBehaviour
             case 3:
                 OnCancelButtonAction();
                 break;
+            case 4:
+                OnShareButtonAction();
+                break;
         }
     }
 
@@ -56,6 +60,11 @@ public class SceneDetailsView : MonoBehaviour
     void OnViewButtonAction()
     {
         scenesPanel.OnViewButtonAction(sceneModel);
+    }
+
+    void OnShareButtonAction()
+    {
+        shareView.Load(sceneModel);
     }
 
     void OnDeleteButtonAction()

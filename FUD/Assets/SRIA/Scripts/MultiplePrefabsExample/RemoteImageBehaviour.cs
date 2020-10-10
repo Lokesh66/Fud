@@ -111,7 +111,6 @@ namespace frame8.ScrollRectItemsAdapter.MultiplePrefabsExample
 		void loadFromLocal(string filePath, string imageURL, bool refreshResources, bool loadCachedIfAvailable = true, Action<bool, bool> onCompleted = null, Action onCanceled = null)
 		{
 			LoadSprite(filePath, Path.GetFileName(imageURL), (byte[] obj) => {
-				Debug.Log("CallBack");
 				//UnityMainThreadDispatcher.Instance().Enqueue(() => {
 					if (this != null && _RawImage != null)
 					{

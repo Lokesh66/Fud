@@ -8,7 +8,11 @@ public class AuditionResponsesView : MonoBehaviour
 {
     public GameObject buttonsPanel;
 
+    public GameObject noDataObject;
+
     public AuditionResponsesTableView tableView;
+
+    public AuditionLiveFilterView filterView;
 
     public List<SearchAudition> auditionResponses;
 
@@ -134,6 +138,27 @@ public class AuditionResponsesView : MonoBehaviour
                 tableView.Refresh();
             }
         });
+    }
+
+    public void OnFilterButtonAction()
+    {
+        filterView.Load(OnFilterAction);
+    }
+
+    void OnFilterAction(object data)
+    {
+        auditionResponses = data as List<SearchAudition>;
+
+        tableView.Data.Clear();
+
+        if (auditionResponses.Count > 0)
+        {
+            tableView.Data.Add(auditionResponses.Count);
+
+            tableView.Refresh();
+        }
+
+        noDataObject.SetActive(auditionResponses.Count == 0);
     }
 
     void OnVideoComplete()

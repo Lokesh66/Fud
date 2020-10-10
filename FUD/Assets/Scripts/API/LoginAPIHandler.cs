@@ -20,18 +20,12 @@ public partial class APIHandler
         }));
     }
 
-    public void SignIn(string name, long phoneNumber, int roleId, int countryId, Action<bool, UserData> action)
+    public void SignIn(Dictionary<string, object> parameters, Action<bool, UserData> action)
     {
-        Dictionary<string, object> parameters = new Dictionary<string, object>();
-
-        parameters.Add("name", name);
-        parameters.Add("phone", phoneNumber);
-        parameters.Add("role_id", roleId);
-        parameters.Add("country_id", countryId);
         //parameters.Add("login_code", "1234");// code);
         Debug.Log("device_token : "+SystemInfo.deviceUniqueIdentifier);
         parameters.Add("device_token", SystemInfo.deviceUniqueIdentifier);
-        parameters.Add("agree_terms_condition", 1);
+
         gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_USER, false, parameters, (bool status, string response) => {
 
             if (status)

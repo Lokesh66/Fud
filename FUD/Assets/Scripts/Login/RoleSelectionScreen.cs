@@ -35,7 +35,7 @@ public class RoleSelectionScreen : MonoBehaviour
         {
             CraftRoleItem item = Instantiate(roleItemPrefab, parentTransform);
 
-            item.SetView(craftsList[i], OnItemSelected, toggleGroup);
+            //item.SetView(craftsList[i], OnItemSelected, toggleGroup);
 
             itemList.Add(item);
         }

@@ -20,6 +20,8 @@ public class GalleryManager : MonoBehaviour
 
     private int selectedImagesCount;
 
+    List<string> mediaURLsWithKey = new List<string>();
+
     #region Singleton
 
     private static GalleryManager instance = null;
@@ -49,29 +51,33 @@ public class GalleryManager : MonoBehaviour
 
     public void GetImageFromGallaery(string mediaSource, Action<bool, List<string>> OnImageUploaded)
     {
-        //string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "Banner+3.png");
+        string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "Banner+3.png");
 
-        //uploadedURLs.Clear();
+        uploadedURLs.Clear();
 
-        //this.OnUploaded = OnImageUploaded;
+        mediaURLsWithKey.Clear();
 
-        //Array.Clear(loadedFiles, 0, loadedFiles.Length);
+        this.OnUploaded = OnImageUploaded;
 
-        //loadedFiles[0] = _filePath;
+        Array.Clear(loadedFiles, 0, loadedFiles.Length);
 
-        //selectedImagesCount = 1;
+        loadedFiles[0] = _filePath;
 
-        //for (int i = 0; i < 1; i++)
-        //{
-        //    UploadFile(_filePath, EMediaType.Image, mediaSource);
-        //}
+        selectedImagesCount = 1;
 
-        //return;
+        for (int i = 0; i < 1; i++)
+        {
+            UploadFile(_filePath, EMediaType.Image, mediaSource);
+        }
+
+        return;
 
         NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((imagesPath) => {
             if (imagesPath != null)
             {
                 uploadedURLs.Clear();
+
+                mediaURLsWithKey.Clear();
 
                 this.OnUploaded = OnImageUploaded;
                 selectedImagesCount = 1;
@@ -93,6 +99,8 @@ public class GalleryManager : MonoBehaviour
             {
                 uploadedURLs.Clear();
 
+                mediaURLsWithKey.Clear();
+
                 this.OnUploaded = OnImageUploaded;
 
                 loadedFiles[0] = imagePath;
@@ -110,30 +118,34 @@ public class GalleryManager : MonoBehaviour
 
     public void GetProfilePic(string mediaSource, string faceId, Action<bool, ProfileFileUploadModel> OnImageUploaded)
     {
-        //string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "Banner+3.png");
+        string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "Banner+3.png");
 
-        //uploadedURLs.Clear();
+        uploadedURLs.Clear();
 
-        ////this.OnUploaded = OnImageUploaded;
+        mediaURLsWithKey.Clear();
 
-        //Array.Clear(loadedFiles, 0, loadedFiles.Length);
+        //this.OnUploaded = OnImageUploaded;
 
-        //loadedFiles[0] = _filePath;
+        Array.Clear(loadedFiles, 0, loadedFiles.Length);
 
-        //selectedImagesCount = 1;
+        loadedFiles[0] = _filePath;
 
-        //for (int i = 0; i < 1; i++)
-        //{
-        //    UploadProfileImage(_filePath, faceId, mediaSource, OnImageUploaded);
-        //}
+        selectedImagesCount = 1;
 
-        //return;
+        for (int i = 0; i < 1; i++)
+        {
+            UploadProfileImage(_filePath, faceId, mediaSource, OnImageUploaded);
+        }
+
+        return;
 
         NativeCamera.Permission permission = NativeCamera.TakePicture((imagePath) => {
 
             if (imagePath != null)
             {
                 uploadedURLs.Clear();
+
+                mediaURLsWithKey.Clear();
 
                 loadedFiles[0] = imagePath;
 
@@ -154,6 +166,8 @@ public class GalleryManager : MonoBehaviour
         string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "Banner+1.png");
 
         uploadedURLs.Clear();
+
+        mediaURLsWithKey.Clear();
 
         this.OnUploaded = OnUploaded;
 
@@ -181,6 +195,8 @@ public class GalleryManager : MonoBehaviour
             if (imagesPath != null && imagesPath.Length > 0)
             {
                 uploadedURLs.Clear();
+
+                mediaURLsWithKey.Clear();
 
                 loadedFiles = imagesPath;
 
@@ -218,6 +234,10 @@ public class GalleryManager : MonoBehaviour
             {
                 this.OnUploaded = OnUploaded;
 
+                uploadedURLs.Clear();
+
+                mediaURLsWithKey.Clear();
+
                 selectedImagesCount = audiosPaths.Length;
 
                 loadedFiles = audiosPaths;
@@ -238,6 +258,8 @@ public class GalleryManager : MonoBehaviour
         string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "ForBiggerMeltdowns.mp4");
 
         uploadedURLs.Clear();
+
+        mediaURLsWithKey.Clear();
 
         this.OnUploaded = OnUploaded;
 
@@ -260,6 +282,10 @@ public class GalleryManager : MonoBehaviour
             if (videoPaths != null && videoPaths.Length > 0)
             {
                 this.OnUploaded = OnUploaded;
+
+                uploadedURLs.Clear();
+
+                mediaURLsWithKey.Clear();
 
                 selectedImagesCount = videoPaths.Length;
 
@@ -293,6 +319,10 @@ public class GalleryManager : MonoBehaviour
             if (documentPaths != null && documentPaths.Length > 0)
             {
                 this.OnUploaded = OnDocumentsUploaded;
+
+                uploadedURLs.Clear();
+
+                mediaURLsWithKey.Clear();
 
                 selectedImagesCount = documentPaths.Length;
 
@@ -333,17 +363,9 @@ public class GalleryManager : MonoBehaviour
             {
                 FileUploadResponseModel responseModel = JsonUtility.FromJson<FileUploadResponseModel>(response);
 
-                //responseModel.data = "https://d3d51uhmmm6dej.cloudfront.net/" + responseModel.data;
-
-                //loadingCountText.text = responseModel.data;
-
-                //loadedFiles[0] = responseModel.data;
-
                 uploadedURLs.Add(responseModel.data);
 
-                //Debug.Log("Upoaded URL = " + responseModel.data.s3_file_path);
-
-                //Debug.Log("Upoaded Count = " + uploadedURLs.Count + " selectedImagesCount = " + selectedImagesCount);
+                mediaURLsWithKey.Add(DataManager.Instance.GetMediaKey() + responseModel.data);
 
                 if (uploadedURLs.Count == selectedImagesCount)
                 {
@@ -354,12 +376,6 @@ public class GalleryManager : MonoBehaviour
                     OnUploaded?.Invoke(true, uploadedURLs);
 
                     selectedImagesCount = 0;
-
-                    //AlertModel alertModel = new AlertModel();
-
-                    //alertModel.message = responseModel.message;
-
-                    //UIManager.Instance.ShowAlert(alertModel);
 
                     uploadedURLs.Clear();
 
@@ -395,6 +411,8 @@ public class GalleryManager : MonoBehaviour
                 ProfileUploadResponseModel responseModel = JsonUtility.FromJson<ProfileUploadResponseModel>(response);
 
                 uploadedURLs.Add(responseModel.data.Key);
+
+                mediaURLsWithKey.Add(DataManager.Instance.GetMediaKey() + responseModel.data.Key);
 
                 if (uploadedURLs.Count == selectedImagesCount)
                 {
@@ -456,7 +474,7 @@ public class GalleryManager : MonoBehaviour
 
     public string[] GetLoadedFiles()
     {
-        return loadedFiles;
+        return mediaURLsWithKey.ToArray();
     }
 
     public void PickImage(string mediaSource, Action<bool, List<string>> OnUploaded)
@@ -486,6 +504,8 @@ public class GalleryManager : MonoBehaviour
             {
                 uploadedURLs.Clear();
 
+                mediaURLsWithKey.Clear();
+
                 loadedFiles[0] = imagePath;
 
                 this.OnUploaded = OnUploaded;
@@ -508,6 +528,8 @@ public class GalleryManager : MonoBehaviour
             {
                 uploadedURLs.Clear();
 
+                mediaURLsWithKey.Clear();
+
                 loadedFiles[0] = imagePath;
 
                 this.OnUploaded = OnUploaded;
@@ -529,6 +551,8 @@ public class GalleryManager : MonoBehaviour
             if (imagePath != null)
             {
                 uploadedURLs.Clear();
+
+                mediaURLsWithKey.Clear();
 
                 loadedFiles[0] = imagePath;
 

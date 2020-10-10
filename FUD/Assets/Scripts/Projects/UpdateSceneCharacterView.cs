@@ -19,6 +19,8 @@ public class UpdateSceneCharacterView : MonoBehaviour
 
     public UpdateSceneAutoView autoView;
 
+    public CreateSceneAlbumView albumView;
+
 
     public Color selectedColor;
 
@@ -40,9 +42,11 @@ public class UpdateSceneCharacterView : MonoBehaviour
     {
         this.detailsModel = detailsModel;
 
-        OnTabAction(0);
+        //OnTabAction(0);
 
         gameObject.SetActive(true);
+
+        albumView.Load(detailsModel.project_id);
     }
 
     #region Button Actions

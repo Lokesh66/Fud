@@ -97,6 +97,8 @@ public partial class APIHandler
 
         parameters.Add("role_id", experianceModel.roleId);
 
+        parameters.Add("role_category_id", experianceModel.roleCategoryId);
+
         if (multimediaModels.Count > 0)
         {
             parameters.Add("work_exp_media", multimediaModels);
@@ -127,6 +129,8 @@ public partial class APIHandler
         parameters.Add("industry_id", experianceModel.industryId);
 
         parameters.Add("role_id", experianceModel.roleId);
+
+        parameters.Add("role_category_id", experianceModel.roleCategoryId);
 
         if (multimediaModels.Count > 0)
         {
@@ -543,6 +547,7 @@ public class CreateExperianceModel
     public string description;
     public int industryId;
     public int roleId;
+    public int roleCategoryId;
     public string startDate;
     public string endDate;
     public List<Dictionary<string, object>> multimediaModels;

@@ -103,7 +103,7 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 
 			viewsHolder.views.gameObject.transform.parent.GetComponent<AuditionOfferedCell> ().SetView (adataObject, model);
 
-			var imageURLAtRequest = model.image_url;
+			var imageURLAtRequest = model.Audtion.profile_image;
 
 			int itemIndexAtRequest = viewsHolder.ItemIndex;
 

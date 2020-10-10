@@ -78,12 +78,6 @@ public partial class APIHandler
     #region GET Genres
     public void GetGenres()
     {
-        /*        string path = Application.streamingAssetsPath + "/GenreResponse";
-                string response = File.ReadAllText(path);
-
-                GenreResponse data = JsonUtility.FromJson<GenreResponse>(response);
-                DataManager.Instance.UpdateGenres(data.data);*/
-
         gameManager.StartCoroutine(GetRequest(APIConstants.GET_GENRES, false, (bool status, string response) =>
         {
             GenreResponse data = JsonUtility.FromJson<GenreResponse>(response);
@@ -99,6 +93,20 @@ public partial class APIHandler
 
     }
     #endregion
+
+    public void GetMediaEndPoint()
+    {
+        gameManager.StartCoroutine(GetRequest(APIConstants.MEDIA_KEY, false, (bool status, string response) =>
+        {
+            if (status)
+            {
+                MediaEndPointResponse responseModel = JsonUtility.FromJson<MediaEndPointResponse>(response);
+
+                DataManager.Instance.UpdateMediaKey(responseModel.data.name);
+            }
+        }, false));
+
+    }
 
     public enum ImageFilterMode : int
     {
@@ -505,4 +513,21 @@ public partial class APIHandler
         Sprite ProfilePic = Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(0.5f, 0.5f));
         CallBack(ProfilePic);
     }
+}
+
+[Serializable]
+public class MediaEndPointResponse : BaseResponse
+{
+    public MediaEndPointModel data;
+}
+
+public class MediaEndPointModel
+{
+    public int id;
+    public string name;
+    public string type;
+    public object image_url;
+    public object created_date_time;
+    public object update_date_time;
+    public int status;
 }
