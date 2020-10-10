@@ -521,6 +521,7 @@ public class MediaEndPointResponse : BaseResponse
     public MediaEndPointModel data;
 }
 
+[Serializable]
 public class MediaEndPointModel
 {
     public int id;

@@ -15,7 +15,7 @@ public class ScenesDocumentHandler : MonoBehaviour
     EMediaType mediaType;
 
 
-    public void Load(string[] paths, bool isDownloadedFile, EMediaType mediaType = EMediaType.Image, Action<object> OnDeleteAction = null)
+    public void Load(string[] paths, EMediaType mediaType = EMediaType.Image, Action<object> OnDeleteAction = null)
     {
         //content.DestroyChildrens();
 
@@ -31,7 +31,7 @@ public class ScenesDocumentHandler : MonoBehaviour
 
                 fileCell = cellObject.GetComponent<UploadedFileCell>();
 
-                fileCell.Load(path, isDownloadedFile, mediaType, OnDeleteAction);
+                fileCell.Load(path, mediaType, OnDeleteAction);
             }
         }
 

@@ -44,7 +44,7 @@ public class CreateSceneAutoView : MonoBehaviour
     {
         if (status)
         {
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Document);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Document);
 
             for (int i = 0; i < documentURLs.Count; i++)
             {

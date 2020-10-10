@@ -367,6 +367,8 @@ public class GalleryManager : MonoBehaviour
 
                 mediaURLsWithKey.Add(DataManager.Instance.GetMediaKey() + responseModel.data);
 
+                Debug.Log("DataManager.Instance.GetMediaKey() + responseModel.data = " + DataManager.Instance.GetMediaKey() + responseModel.data);
+
                 if (uploadedURLs.Count == selectedImagesCount)
                 {
                     UpdateLocalData(uploadedURLs, mediaType);

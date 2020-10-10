@@ -34,7 +34,7 @@ public class UploadedFilesHandler : MonoBehaviour
 
                 fileCell = cellObject.GetComponent<UploadedFileCell>();
 
-                fileCell.Load(path, isDownloadedFile, mediaType, OnDeleteAction);
+                fileCell.Load(path, mediaType, OnDeleteAction);
             }
         }
 

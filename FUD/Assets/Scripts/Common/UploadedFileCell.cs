@@ -96,9 +96,11 @@ public class UploadedFileCell : MonoBehaviour
 
     void SetImageView()
     {
+        Debug.Log("imageURL = " + imageURL);
+
         GameManager.Instance.apiHandler.DownloadImage(this.imageURL, (sprite) =>
         {
-            if (this != null)
+            if (this != null && sprite != null)
             {
                 selectedImage.texture = sprite.texture;
             }
