@@ -3,7 +3,7 @@ using UnityEngine;
 using TMPro;
 using System;
 using UMP;
-
+using Paroxe.PdfRenderer;
 
 public class UploadedFileCell : MonoBehaviour
 {
@@ -19,6 +19,8 @@ public class UploadedFileCell : MonoBehaviour
 
     public GameObject pauseObject;
 
+    private PDFViewer viewer;
+
     Sprite selectedSprite;
 
     //Action<MultimediaModel> OnDeleteAction;
@@ -33,9 +35,12 @@ public class UploadedFileCell : MonoBehaviour
     Action<object> _OnDeleteButtonAction;
 
 
-    public void Load(MultimediaModel multimediaModel, EMediaType mediaType, Action<object> OnDeleteAction = null)
+    public void Load(MultimediaModel multimediaModel, EMediaType mediaType, Action<object> OnDeleteAction = null, PDFViewer pdfViewer = null)
     {
         this._OnDeleteButtonAction = OnDeleteAction;
+
+        if (pdfViewer)
+            viewer = pdfViewer;
 
         pauseObject.SetActive(mediaType == EMediaType.Video);
 
@@ -55,7 +60,7 @@ public class UploadedFileCell : MonoBehaviour
 
     public void OnButtonAction()
     {
-        Debug.Log("OnButtonAction : Media Type = " + mediaType);
+        Debug.Log("OnButtonAction : Media Type = " + mediaType + " content_url = " + multimediaModel.content_url);
 
         if (mediaType == EMediaType.Image)
         {
@@ -68,6 +73,11 @@ public class UploadedFileCell : MonoBehaviour
         else if (mediaType == EMediaType.Document)
         {
             //Open Pdf document with imageURL
+            if (!string.IsNullOrEmpty(multimediaModel.content_url))
+            {
+                viewer.gameObject.SetActive(true);
+                viewer.LoadDocumentFromWeb(multimediaModel.content_url);
+            }
         }
     }
 
