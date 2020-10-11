@@ -24,7 +24,7 @@ public class UploadedFileCell : MonoBehaviour
     //Action<MultimediaModel> OnDeleteAction;
 
 
-    string imageURL;
+    MultimediaModel multimediaModel;
 
     Texture2D imageTexture;
 
@@ -33,7 +33,7 @@ public class UploadedFileCell : MonoBehaviour
     Action<object> _OnDeleteButtonAction;
 
 
-    public void Load(string imageURL, EMediaType mediaType, Action<object> OnDeleteAction = null)
+    public void Load(MultimediaModel multimediaModel, EMediaType mediaType, Action<object> OnDeleteAction = null)
     {
         this._OnDeleteButtonAction = OnDeleteAction;
 
@@ -41,7 +41,7 @@ public class UploadedFileCell : MonoBehaviour
 
         this.mediaType = mediaType;
 
-        this.imageURL = imageURL;
+        this.multimediaModel = multimediaModel;
 
         if (mediaType == EMediaType.Image)
         {
@@ -59,10 +59,7 @@ public class UploadedFileCell : MonoBehaviour
 
         if (mediaType == EMediaType.Image)
         {
-            if (imageURL.IsNOTNullOrEmpty())
-            {
-                UIManager.Instance.ShowBigScreen(imageURL);
-            }
+            UIManager.Instance.ShowBigScreen(multimediaModel.content_url);
         }
         else if (mediaType == EMediaType.Video)
         {
@@ -89,16 +86,16 @@ public class UploadedFileCell : MonoBehaviour
 
     void OnDeleteMedia()
     {
-        _OnDeleteButtonAction?.Invoke(imageURL);
+        _OnDeleteButtonAction?.Invoke(multimediaModel);
     }
 
     #region Update View
 
     void SetImageView()
     {
-        Debug.Log("imageURL = " + imageURL);
+        Debug.Log("imageURL = " + multimediaModel);
 
-        GameManager.Instance.apiHandler.DownloadImage(this.imageURL, (sprite) =>
+        GameManager.Instance.apiHandler.DownloadImage(multimediaModel.content_url, (sprite) =>
         {
             if (this != null && sprite != null)
             {

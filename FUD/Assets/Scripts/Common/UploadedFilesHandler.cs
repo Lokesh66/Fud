@@ -18,7 +18,7 @@ public class UploadedFilesHandler : MonoBehaviour
     EMediaType mediaType;
 
 
-    public void Load(string[] paths, bool isDownloadedFile, EMediaType mediaType = EMediaType.Image, Action<object> OnDeleteAction = null)
+    public void Load(List<MultimediaModel> mediaList, EMediaType mediaType = EMediaType.Image, Action<object> OnDeleteAction = null)
     {
         //content.DestroyChildrens();
 
@@ -26,16 +26,13 @@ public class UploadedFilesHandler : MonoBehaviour
 
         UploadedFileCell fileCell = null;
 
-        foreach (var path in paths)
-        {
-            if (path.IsNOTNullOrEmpty())
-            {
-                GameObject cellObject = Instantiate(cellCache, content);
+        for(int i = 0; i < mediaList.Count; i++)
+        { 
+            GameObject cellObject = Instantiate(cellCache, content);
 
-                fileCell = cellObject.GetComponent<UploadedFileCell>();
+            fileCell = cellObject.GetComponent<UploadedFileCell>();
 
-                fileCell.Load(path, mediaType, OnDeleteAction);
-            }
+            fileCell.Load(mediaList[i], mediaType, OnDeleteAction);
         }
 
         if (mediaButtonTrans != null)
