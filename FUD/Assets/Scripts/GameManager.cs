@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
 
 #if UNITY_IOS
     [DllImport("__Internal")]
-    private static extern float initializeWithAppID(string appId);
+    private static extern float initializeWithAppID(string appId, EPurchaseType purchaseType);
 
 #endif
 
@@ -44,8 +44,6 @@ public class GameManager : MonoBehaviour
     public SceneController sceneController;
 
     public DownLoadManager downLoadManager;
-
-    public UniversalMediaPlayer mediaPlayer;
 
 
     void Awake()
@@ -83,7 +81,7 @@ public class GameManager : MonoBehaviour
         apiHandler.GetMediaEndPoint();
 
 #if UNITY_IOS && !UNITY_EDITOR
-        initializeWithAppID(APIHandler.APP_ID);
+        initializeWithAppID(APIHandler.APP_ID, EPurchaseType.Test);
 #endif
 
         if (File.Exists(APIConstants.TOKEN_PATH))

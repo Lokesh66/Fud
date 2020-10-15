@@ -215,6 +215,14 @@ public partial class APIHandler
         }));
     }
 
+    public void UpdateProject(Dictionary<string, object> parameters, Action<bool, string> action)
+    {
+        gameManager.StartCoroutine(PutRequest(APIConstants.CREATE_PROJECT, true, parameters, (status, response) => {
+
+            action(status, response);
+        }));
+    }
+
     public void UpdateProjectStauts(int projectId, int castId, int status, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -275,7 +283,7 @@ public partial class APIHandler
         }));
     }
 
-    public void CreateProjectScene(SceneCreationModel creationModel, List<Dictionary<string, object>> characterScenes, List<Dictionary<string, object>> autoScenes, Action<bool, string> action)
+    public void CreateProjectScene(SceneCreationModel creationModel, List<int> characterScenes, List<Dictionary<string, object>> autoScenes, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -553,6 +561,7 @@ public class SceneModel
     public string location;
     public DateTime start_time;
     public int status;
+    public List<int> scene_characters;
     public DateTime updatedAt;
 }
 
@@ -670,6 +679,7 @@ public class SceneDetailsModel
     public DateTime created_date_time;
     public string updatedAt;
     public List<SceneCharacter> SceneCharacters;
+    public List<MultimediaModel> ScenesMultimedia;
 }
 
 [Serializable]

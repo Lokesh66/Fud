@@ -8,7 +8,7 @@ public class BrowserSelectedCell : MonoBehaviour
     public Image albumImage;
 
 
-    PortfolioAlbumModel onScreenModel;
+    MultimediaModel onScreenModel;
 
     PortfolioModel portfolioModel;
 

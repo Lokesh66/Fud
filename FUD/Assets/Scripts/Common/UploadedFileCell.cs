@@ -3,7 +3,7 @@ using UnityEngine;
 using TMPro;
 using System;
 using UMP;
-using Paroxe.PdfRenderer;
+
 
 public class UploadedFileCell : MonoBehaviour
 {
@@ -19,14 +19,12 @@ public class UploadedFileCell : MonoBehaviour
 
     public GameObject pauseObject;
 
-    private PDFViewer viewer;
-
     Sprite selectedSprite;
 
     //Action<MultimediaModel> OnDeleteAction;
 
 
-    MultimediaModel multimediaModel;
+    public MultimediaModel multimediaModel;
 
     Texture2D imageTexture;
 
@@ -35,12 +33,9 @@ public class UploadedFileCell : MonoBehaviour
     Action<object> _OnDeleteButtonAction;
 
 
-    public void Load(MultimediaModel multimediaModel, EMediaType mediaType, Action<object> OnDeleteAction = null, PDFViewer pdfViewer = null)
+    public void Load(MultimediaModel multimediaModel, EMediaType mediaType, Action<object> OnDeleteAction = null)
     {
         this._OnDeleteButtonAction = OnDeleteAction;
-
-        if (pdfViewer)
-            viewer = pdfViewer;
 
         pauseObject.SetActive(mediaType == EMediaType.Video);
 
@@ -52,9 +47,17 @@ public class UploadedFileCell : MonoBehaviour
         {
             SetImageView();
         }
+        else if (mediaType == EMediaType.Audio)
+        {
+            SetAudioView();
+        }
         else if (mediaType == EMediaType.Video)
         {
             SetVideoView();
+        }
+        else if (mediaType == EMediaType.Document)
+        {
+            SetDocumentView();
         }
     }
 
@@ -66,18 +69,14 @@ public class UploadedFileCell : MonoBehaviour
         {
             UIManager.Instance.ShowBigScreen(multimediaModel.content_url);
         }
-        else if (mediaType == EMediaType.Video)
+        else if (mediaType == EMediaType.Video || mediaType == EMediaType.Audio)
         {
-            UIManager.Instance.topCanvas.PlayVideo(selectedImage, mediaPlayer);
+            UIManager.Instance.topCanvas.PlayVideo(selectedImage, mediaPlayer, mediaType);
         }
         else if (mediaType == EMediaType.Document)
         {
             //Open Pdf document with imageURL
-            if (!string.IsNullOrEmpty(multimediaModel.content_url))
-            {
-                viewer.gameObject.SetActive(true);
-                viewer.LoadDocumentFromWeb(multimediaModel.content_url);
-            }
+            PDFManager.Instance.LoadDocument(multimediaModel.content_url);
         }
     }
 
@@ -103,8 +102,6 @@ public class UploadedFileCell : MonoBehaviour
 
     void SetImageView()
     {
-        Debug.Log("imageURL = " + multimediaModel);
-
         GameManager.Instance.apiHandler.DownloadImage(multimediaModel.content_url, (sprite) =>
         {
             if (this != null && sprite != null)
@@ -118,6 +115,10 @@ public class UploadedFileCell : MonoBehaviour
     {
         mediaPlayer.Prepare();
 
+        mediaPlayer.Path = multimediaModel.content_url;
+
+        selectedImage.texture = DataManager.Instance.GetVideoThumbnailSprite().texture;
+
         mediaPlayer.AddImageReadyEvent((texture) =>
         {
             imageTexture = texture;
@@ -130,12 +131,16 @@ public class UploadedFileCell : MonoBehaviour
 
     void SetAudioView()
     {
-        
+        selectedImage.texture = DataManager.Instance.GetAudioThumbnailSprite().texture;
+
+        mediaPlayer.Prepare();
+
+        mediaPlayer.Path = multimediaModel.content_url;
     }
 
     void SetDocumentView()
     {
-        
+        selectedImage.texture = DataManager.Instance.GetPDFThumbnailSprite().texture;
     }
 
     #endregion

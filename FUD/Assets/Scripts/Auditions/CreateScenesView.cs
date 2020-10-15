@@ -111,7 +111,7 @@ public class CreateScenesView : MonoBehaviour
             creationModel.scene_order = int.Parse(sceneOrderText.text);
             creationModel.start_time = startDateText.text;
 
-            GameManager.Instance.apiHandler.CreateProjectScene(creationModel, dialoguesView.GetDialogues(true), dialoguesView.GetDialogues(false), (status, response) =>
+            GameManager.Instance.apiHandler.CreateProjectScene(creationModel, dialoguesView.GetSceneCharacters(), dialoguesView.GetDialogues(false), (status, response) =>
             {
                 OnAPIResponse(status, response);
             });
@@ -191,5 +191,7 @@ public class CreateScenesView : MonoBehaviour
         sceneOrderText.text = locationText.text = descriptionText.text = string.Empty;
 
         errorText.text = startDateText.text = string.Empty;
+
+        dialoguesView.projectCharactersView.ClearData();
     }
 }

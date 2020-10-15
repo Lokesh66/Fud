@@ -379,7 +379,7 @@ public class CreateAuditionView : MonoBehaviour
 
                 uploadedImageUrl = imagesList[0];
 
-                filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+                filesHandler.Load(GalleryManager.Instance.GetLoadedFiles());
             }
         }
     }

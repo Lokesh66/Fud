@@ -56,8 +56,6 @@ public class Loader : MonoBehaviour
 
         if (!loaderPanel.activeSelf)
         {
-            Debug.Log("StartLoading Called");
-
             loaderPanel.SetActive(true);
 
             Sequence mySequence = DOTween.Sequence();
@@ -72,8 +70,6 @@ public class Loader : MonoBehaviour
 
     public void StopLoading()
     {
-        Debug.Log("StopLoading Called");
-
         if (loaderPanel.activeSelf)
         {
             if (mySequence != null)

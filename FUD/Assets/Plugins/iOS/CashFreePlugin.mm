@@ -6,9 +6,9 @@
 //  Copyright © 2020 Sample. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
-#import "CashFreeHelper/CashFreeHelper.h"
-#import "CashFreeHelper/CashFreeHelper-Swift.h"
+#import "cinechances-Swift.h"
 
 typedef void (*PaymentCompletionHandler)(const char*);
 

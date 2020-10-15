@@ -24,6 +24,8 @@ public class UserAuditionCell : MonoBehaviour
 
     Action<UserAuditionCell> OnSelect;
 
+    EMediaType mediaType;
+
 
     public void SetView(SearchAudition audition, Action<UserAuditionCell> action)
     {
@@ -41,18 +43,16 @@ public class UserAuditionCell : MonoBehaviour
             {
                 MultimediaModel model = modelsList.Find(item => item.GetMediaType(item.media_type) == EMediaType.Image);
 
-                Debug.Log("model = " + model);
-
                 if (model != null)
                 {
+                    this.mediaType = EMediaType.Image;
+
                     auditionData.onScreenModel = model;
                 }
                 else {
                     EMediaType mediaType = modelsList[0].GetMediaType(modelsList[0].media_type);
 
-                    Debug.Log("mediaType = " + mediaType);
-
-                    if (mediaType == EMediaType.Video)
+                    if (mediaType == EMediaType.Video || mediaType == EMediaType.Audio)
                     {
                         mediaPlayer.Path = modelsList[0].content_url;
 
@@ -61,14 +61,15 @@ public class UserAuditionCell : MonoBehaviour
                         mediaPlayer.AddEndReachedEvent(() =>
                         {
                             UpdateAuditionStatus();
-
-                            VideoStreamer.Instance.updatedRawImage.gameObject.SetActive(false);
                         });
 
-                        mediaPlayer.AddImageReadyEvent((texture) =>
+                        if (mediaType == EMediaType.Video)
                         {
-                            icon.texture = texture;
-                        });
+                            mediaPlayer.AddImageReadyEvent((texture) =>
+                            {
+                                icon.texture = texture;
+                            });
+                        }
                     }
                 }
             }
@@ -90,9 +91,12 @@ public class UserAuditionCell : MonoBehaviour
         });*/
     }
 
-    public void OnVideoPlayButtonAction()
+    public void OnPlayButtonAction()
     {
-        UIManager.Instance.topCanvas.PlayVideo(icon, mediaPlayer);
+        if (mediaType == EMediaType.Video || mediaType == EMediaType.Audio)
+        {
+            UIManager.Instance.topCanvas.PlayVideo(icon, mediaPlayer, mediaType);
+        }
     }
 
     void UpdateAuditionStatus()

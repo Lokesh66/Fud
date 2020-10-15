@@ -7,9 +7,6 @@ using UnityEngine;
 
 public class UploadedFilesHandler : MonoBehaviour
 {
-    [Tooltip("Provide the PDFViewer prefab reference")]
-    public PDFViewer m_Viewer;
-
     public RectTransform content;
 
     public GameObject cellCache;
@@ -36,7 +33,7 @@ public class UploadedFilesHandler : MonoBehaviour
 
             fileCell = cellObject.GetComponent<UploadedFileCell>();
 
-            fileCell.Load(mediaList[i], mediaType, OnDeleteAction, m_Viewer);
+            fileCell.Load(mediaList[i], mediaType, OnDeleteAction);
         }
 
         if (mediaButtonTrans != null)

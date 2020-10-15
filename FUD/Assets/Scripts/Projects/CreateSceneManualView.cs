@@ -240,8 +240,6 @@ public class CreateSceneManualView : MonoBehaviour
 
     public void OnSaveButtonAction()
     {
-        dialoguesView.SetManualDialogues(dialogues);
-
         OnBackButtonAction();
     }
 

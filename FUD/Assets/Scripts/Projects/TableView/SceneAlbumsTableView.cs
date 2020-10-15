@@ -30,6 +30,9 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 		public CreateSceneAlbumView adataObject;
 
 
+		Action<SceneAlbumCell, object> OnSelectCell;
+
+
 		#region GridAdapter implementation
 
 		/// <inheritdoc/>
@@ -99,7 +102,9 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 		{
 			var model = Data [viewsHolder.ItemIndex];
 
-			viewsHolder.views.gameObject.transform.parent.GetComponent<SceneAlbumCell> ().SetView (model, adataObject.OnCellButtonAction, null);
+			OnSelectCell = adataObject.canAddCharacters ? (Action<SceneAlbumCell, object>)adataObject.OnSelectMember : null;
+
+			viewsHolder.views.gameObject.transform.parent.GetComponent<SceneAlbumCell> ().SetView (model, adataObject.OnCellButtonAction, OnSelectCell, adataObject.canAddCharacters);
 
 			var imageURLAtRequest = model.Users.profile_image;
 

@@ -149,7 +149,7 @@ public class UpdateTeamView : MonoBehaviour
 
         string title = StoryDetailsController.Instance.GetStoryTitle();
 
-        GameManager.Instance.apiHandler.UpdateStoryTeam(teamModel.story_id, teamNameField.text, teamModel.id, descriptionField.text, members, accessDropdown.value, (status, response) =>
+        GameManager.Instance.apiHandler.UpdateStoryTeam(teamModel.story_id, teamNameField.text, teamModel.id, descriptionField.text, members, 1 + accessDropdown.value, (status, response) =>
         {
             if (status)
             {
@@ -203,6 +203,10 @@ public class UpdateTeamView : MonoBehaviour
         else if (string.IsNullOrEmpty(memberField.text))
         {
             errorMessage = "Add the team members";
+        }
+        else if (addedModels.Count <= 0)
+        {
+            errorMessage = "Invalid member name";
         }
 
         if (!string.IsNullOrEmpty(errorMessage))

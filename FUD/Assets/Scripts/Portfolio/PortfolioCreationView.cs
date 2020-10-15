@@ -93,7 +93,10 @@ public class PortfolioCreationView : MonoBehaviour
         {
             return;
         }
-        GameManager.Instance.apiHandler.CreatePortfolio(titleField.text, descriptionField.text, 1 - accessDropDown.value, uploadedDict, (status, response) => {
+
+        int accessStatus = accessDropDown.value == 0 ? 2 : 1;
+
+        GameManager.Instance.apiHandler.CreatePortfolio(titleField.text, descriptionField.text, accessStatus, uploadedDict, (status, response) => {
 
             OnAPIResponse(status, response);
         });
@@ -134,7 +137,7 @@ public class PortfolioCreationView : MonoBehaviour
         {
             if (DataManager.Instance.CanLoadScreen(EFeatureType.PortfolioAlbums))
             {
-                filesHandler.Load(imageUrls.ToArray(), true, OnDeleteAction: OnDeleteMediaAction);
+                filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), OnDeleteAction: OnDeleteMediaAction);
 
                 for (int i = 0; i < imageUrls.Count; i++)
                 {
@@ -159,7 +162,7 @@ public class PortfolioCreationView : MonoBehaviour
     {
         if (status)
         {
-            filesHandler.Load(audioUrls.ToArray(), true, EMediaType.Audio, OnDeleteMediaAction);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Audio, OnDeleteMediaAction);
 
             for (int i = 0; i < audioUrls.Count; i++)
             {
@@ -180,7 +183,7 @@ public class PortfolioCreationView : MonoBehaviour
     {
         if (status)
         {
-            filesHandler.Load(videoUrls.ToArray(), false, EMediaType.Video, OnDeleteMediaAction);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Video, OnDeleteMediaAction);
 
             for (int i = 0; i < videoUrls.Count; i++)
             {

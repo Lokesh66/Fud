@@ -187,7 +187,7 @@ public class CreateStoryVersion : MonoBehaviour
         {
             this.imageUrls = imageUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles());
 
             for (int i = 0; i < imageUrls.Count; i++)
             {
@@ -210,7 +210,7 @@ public class CreateStoryVersion : MonoBehaviour
         {
             this.imageUrls = audioUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Audio, OnDeleteAction);
 
             for (int i = 0; i < audioUrls.Count; i++)
             {
@@ -233,7 +233,7 @@ public class CreateStoryVersion : MonoBehaviour
         {
             this.imageUrls = videoUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Video);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Video, OnDeleteAction);
 
             for (int i = 0; i < videoUrls.Count; i++)
             {
@@ -254,7 +254,7 @@ public class CreateStoryVersion : MonoBehaviour
     {
         if (status)
         {
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Document);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Document, OnDeleteAction);
 
             for (int i = 0; i < documentURLs.Count; i++)
             {
@@ -293,4 +293,48 @@ public class CreateStoryVersion : MonoBehaviour
         galleryPanel.DOAnchorPosY(targetPostion, 0.4f);
     }
 
+    void OnDeleteAction(object mediaModel)
+    {
+        MultimediaModel multimediaModel = mediaModel as MultimediaModel;
+
+        Debug.Log("multimediaModel = " + multimediaModel.content_url);
+
+        string url = string.Empty;
+
+        bool isItemRemoved = false;
+
+        //int modelIndex = mediaList.IndexOf(mediaModel);
+
+
+        foreach (var item in uploadedDict)
+        {
+            Dictionary<string, object> mediaItem = item as Dictionary<string, object>;
+
+            foreach (var kvp in mediaItem)
+            {
+                if (kvp.Key.Equals("content_url"))
+                {
+                    url = kvp.Value as string;
+
+                    Debug.Log("url = " + url);
+
+                    if (multimediaModel.content_url.Contains(url))
+                    {
+                        Destroy(filesHandler.content.GetChild(uploadedDict.IndexOf(mediaItem)).gameObject);
+
+                        uploadedDict.Remove(mediaItem);
+
+                        isItemRemoved = true;
+
+                        break;
+                    }
+                }
+            }
+
+            if (isItemRemoved)
+            {
+                break;
+            }
+        }
+    }
 }

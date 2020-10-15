@@ -23,7 +23,7 @@ public class PortfolioOfferedDetailView : MonoBehaviour
 
     PortfolioActivityModel activityModel;
 
-    List<PortfolioAlbumModel> mediaList;
+    List<MultimediaModel> mediaList;
 
     List<CreatedPortfolioMediaCell> mediaCells = new List<CreatedPortfolioMediaCell>();
 

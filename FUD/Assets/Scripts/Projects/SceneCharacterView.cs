@@ -38,7 +38,9 @@ public class SceneCharacterView : MonoBehaviour
 
         gameObject.SetActive(true);
 
-        UpdateCurrentView();
+        autoView.Load(scenesList);
+
+        //UpdateCurrentView();
     }
 
     public void OnTabAction(int tabIndex)

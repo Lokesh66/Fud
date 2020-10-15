@@ -151,7 +151,7 @@ public class ProjectTeamUpdateView : MonoBehaviour
 
         int projectId = currentProjectModel.id;
 
-        GameManager.Instance.apiHandler.UpdateProjectTeam(projectId, title, teamModel.id, descriptionField.text, members, accessDropdown.value, (status, response) =>
+        GameManager.Instance.apiHandler.UpdateProjectTeam(projectId, title, teamModel.id, descriptionField.text, members, 1 + accessDropdown.value, (status, response) =>
         {
             if (status)
             {

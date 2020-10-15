@@ -758,40 +758,6 @@ public class StoriesResponse : BaseResponse
 }
 
 [Serializable]
-public class ProMultiMedia
-{
-    public int content_id;
-    public string content_url;
-    public string media_type;
-}
-
-public class attrbutes
-{
-public string title;
-public string sub_title;
-public string description;
-public int genre_id;
-public int price;
-public int type_id;
-public string image_url;
-public List<ProMultiMedia> pro_multi_media;
-public string producername;
-public int ratings;
-public string release_date;
-public string capabilities;
-public string redeem_code;
-public string developers;
-public string release_note;
-public string report;
-public string privacy_policy;
-public string terms_and_conditions;
-public string Information;
-public string url;
-public string producers;
-}
-
-
-[Serializable]
 public class StoryVersion
 {
     public int id;
@@ -949,6 +915,8 @@ public class MultimediaModel
 {
     public int id = -1;
     public int story_version_id;
+    public int work_exp_id;
+    public int port_album_id;
     public int source_id;
     public string source_type;
     public string media_type;

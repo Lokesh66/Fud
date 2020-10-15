@@ -9,10 +9,6 @@ public partial class APIHandler
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
-
-        string jsonData = JsonUtility.ToJson(portMultimedias);
-
         parameters.Add("title", title);
 
         parameters.Add("description", description);
@@ -30,7 +26,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdatePortfolio(string title, string description, int id, int accessValue, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
+    public void UpdatePortfolio(string title, string description, int id, int accessValue, List<Dictionary<string, object>> multimediaModels, List<int> deletedMedia, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -45,6 +41,11 @@ public partial class APIHandler
         if (multimediaModels.Count > 0)
         {
             parameters.Add("port_multi_media", multimediaModels);
+        }
+
+        if (deletedMedia.Count > 0)
+        {
+            parameters.Add("remove_media", deletedMedia);
         }
 
         gameManager.StartCoroutine(PutRequest(APIConstants.USER_PORTFOLIO, true, parameters, (status, response) => {
@@ -83,10 +84,6 @@ public partial class APIHandler
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
-
-        string jsonData = JsonUtility.ToJson(portMultimedias);
-
         parameters.Add("description", experianceModel.description);
 
         parameters.Add("start_date", experianceModel.startDate);
@@ -110,13 +107,9 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateWorkExperiance(CreateExperianceModel experianceModel, int id, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
+    public void UpdateWorkExperiance(CreateExperianceModel experianceModel, int id, List<int> deletedMedia, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
-
-        List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
-
-        string jsonData = JsonUtility.ToJson(portMultimedias);
 
         parameters.Add("id", id);
 
@@ -135,6 +128,11 @@ public partial class APIHandler
         if (multimediaModels.Count > 0)
         {
             parameters.Add("work_exp_media", multimediaModels);
+        }
+
+        if (deletedMedia.Count > 0)
+        {
+            parameters.Add("remove_media", deletedMedia);
         }
 
         gameManager.StartCoroutine(PutRequest(APIConstants.UPDATE_EXPERIANCE, true, parameters, (status, response) => {
@@ -169,10 +167,7 @@ public partial class APIHandler
             {
                 PortfolioResponseModel responseModel = JsonUtility.FromJson<PortfolioResponseModel>(response);
 
-                if (responseModel.data.Count > 0)
-                {
-                    action?.Invoke(true, responseModel.data);
-                }
+                action?.Invoke(true, responseModel.data);
             }
             else
             {
@@ -359,10 +354,6 @@ public partial class APIHandler
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        List<PortMultiMediaModel> portMultimedias = new List<PortMultiMediaModel>();
-
-        string jsonData = JsonUtility.ToJson(portMultimedias);
-
         UserData user = DataManager.Instance.userInfo;
 
         parameters.Add("agree_terms_condition", 1);
@@ -465,27 +456,6 @@ public partial class APIHandler
 }
 
 [Serializable]
-public class PortMultiMediaModel
-{
-    public int content_id;
-    public string content_url;
-    public string media_type;
-}
-
-[Serializable]
-public class PortMultimediaModels
-{
-    public List<PortMultiMediaModel> port_multi_media = new List<PortMultiMediaModel>();
-}
-
-
-[Serializable]
-public class PortfolioAlbumModel : MultimediaModel
-{
-    public int port_album_id;
-}
-
-[Serializable]
 public class PortfolioModel
 {
     public int id;
@@ -497,9 +467,9 @@ public class PortfolioModel
     public string description;
     public DateTime created_date_time;
     public DateTime updatedAt;
-    public List<PortfolioAlbumModel> PortfolioMedia;
+    public List<MultimediaModel> PortfolioMedia;
 
-    public PortfolioAlbumModel onScreenModel;
+    public MultimediaModel onScreenModel;
 }
 
 
@@ -507,12 +477,6 @@ public class PortfolioModel
 public class PortfolioResponseModel : BaseResponse
 {
     public List<PortfolioModel> data;
-}
-
-[Serializable]
-public class WorkExpMedia : PortfolioAlbumModel
-{
-    public int work_exp_id;    
 }
 
 
@@ -530,7 +494,7 @@ public class WorkExperianceModel
     public int end_date;
     public DateTime created_date_time;
     public DateTime updatedAt;
-    public List<WorkExpMedia> WorkExpMedia;
+    public List<MultimediaModel> WorkExpMedia;
     public IndustryModel MasterData;
 }
 
@@ -600,7 +564,7 @@ public class PortfolioMediaModel
     public DateTime created_date_time;
     public DateTime updatedAt;
     public ActivityOwnerModel Users;
-    public List<PortfolioAlbumModel> PortfolioMedia;
+    public List<MultimediaModel> PortfolioMedia;
 }
 
 [Serializable]

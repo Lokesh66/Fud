@@ -85,7 +85,8 @@ public class AuditionResponsesView : MonoBehaviour
         }
         else if (mediaType == EMediaType.Audio)
         {
-            AudioStreamer.Instance.AudioStream(model.content_url, OnVideoComplete);
+            UIManager.Instance.topCanvas.PlayVideo(selectedAuditionCell.icon, selectedAuditionCell.mediaPlayer, EMediaType.Audio);
+            //AudioStreamer.Instance.AudioStream(model.content_url, OnVideoComplete);
         }
         else
         {

@@ -30,6 +30,8 @@ public class SignUpScreen : MonoBehaviour
 
     Craft selectedModel;
 
+    CountryModel selectedCountryModel;
+
     string keyword = string.Empty;
 
     bool isSearchAPICalled = false;
@@ -51,6 +53,8 @@ public class SignUpScreen : MonoBehaviour
         rolesContent.DestroyChildrens();
 
         roleScrollObject.SetActive(craftsList.Count > 0);
+
+        Debug.Log("SetRoleSelectionScroll Enabling = " + craftsList.Count);
 
 
         for (int i = 0; i < craftsList.Count; i++)
@@ -80,16 +84,15 @@ public class SignUpScreen : MonoBehaviour
             {
                 countryModels = modelsList;
 
-                List<string> options = new List<string>();
+                CountryModel countryModel = new CountryModel();
 
-                foreach (var option in countryModels)
-                {
-                    options.Add(option.name);
-                }
+                countryModel.name = "Country";
 
-                countryDropdown.ClearOptions();
+                countryModel.id = -1;
 
-                countryDropdown.AddOptions(options);
+                countryModels.Insert(0, countryModel);
+
+                UpdateCountryDropdown(countryModels);
             }
         });
     }
@@ -103,11 +106,42 @@ public class SignUpScreen : MonoBehaviour
         isSearchAPICalled = false;
     }
 
+    void GetSearchedCountries()
+    {
+        List<CountryModel> searchedCountryModels = countryModels.FindAll(item => item.name.ToLower().Contains(keyword.ToLower()) || keyword.ToLower().Contains(item.name.ToLower()));
+
+        UpdateCountryDropdown(searchedCountryModels);
+
+        isSearchAPICalled = false;
+    }
+
+    void UpdateCountryDropdown(List<CountryModel> countryModels)
+    {
+        List<string> options = new List<string>();
+
+        foreach (var option in countryModels)
+        {
+            options.Add(option.name);
+        }
+
+        countryDropdown.ClearOptions();
+
+        countryDropdown.AddOptions(options);
+    }
+
     public void OnRoleFieldSelect()
     {
         if (!roleField.text.IsNOTNullOrEmpty())
         {
             SetRoleSelectionScroll(craftsList);
+        }
+    }
+
+    public void OnCountryFieldSelect()
+    {
+        if (selectedCountryModel == null)
+        {
+            UpdateCountryDropdown(countryModels);
         }
     }
 
@@ -149,6 +183,44 @@ public class SignUpScreen : MonoBehaviour
         }
     }
 
+    public void OnCountryValueChange()
+    {
+        return;
+
+        if (selectedCountryModel == null)
+        {
+            if (countryDropdown.captionText.text.Length > 2 && !isSearchAPICalled)
+            {
+                //Call Search API
+                isSearchAPICalled = true;
+
+                keyword = countryDropdown.captionText.text;
+
+                GetSearchedCountries();
+            }
+            else
+            {
+                if (!countryDropdown.captionText.text.IsNOTNullOrEmpty())
+                {
+                    UpdateCountryDropdown(countryModels);
+                }
+                else
+                {
+                    countryDropdown.options.Clear();
+                }
+            }
+        }
+        else
+        {
+            if (!countryDropdown.captionText.text.Equals(selectedCountryModel.name))
+            {
+                selectedModel = null;
+
+                OnCountryValueChange();
+            }
+        }
+    }
+
     public void OnClick_SendOTP()
     {
         if (string.IsNullOrEmpty(numberFieldText.text))
@@ -159,10 +231,14 @@ public class SignUpScreen : MonoBehaviour
         {
             ShowValidationMessage("Please accept terms and conditions to continue");
         }
+        else if (countryDropdown.value == 0)
+        {
+            ShowValidationMessage("Please select your country");
+        }
 
         Dictionary<string, object> body = new Dictionary<string, object>();
 
-        CountryModel selectedModel = countryModels[countryDropdown.value];
+        CountryModel selectedModel = countryModels[countryDropdown.value + 1];
 
         body.Add("name", nameFieldText.text);
 
@@ -195,11 +271,15 @@ public class SignUpScreen : MonoBehaviour
     {
         termsToggle.isOn = false;
 
+        selectedCountryModel = null;
+
+        roleField.text = keyword = nameFieldText.text = numberFieldText.text = string.Empty;
+
         rolesContent.DestroyChildrens();
 
         roleScrollObject.SetActive(false);
 
-        roleField.text = keyword = nameFieldText.text = numberFieldText.text = string.Empty;
+        Debug.Log("Disabling");
 
         selectedModel = null;
 

@@ -30,7 +30,7 @@ public class BrowserAlbumCell : MonoBehaviour
 
         //selectBG.SetActive(portfolioModel.onScreenModel.content_url.IsNOTNullOrEmpty());
         
-        //PortfolioAlbumModel _albumModel = portfolioModel.PortfolioMedia.Find(item => DataManager.Instance.GetMediaType(item.media_type) == EMediaType.Video);
+        //MultimediaModel _albumModel = portfolioModel.PortfolioMedia.Find(item => DataManager.Instance.GetMediaType(item.media_type) == EMediaType.Video);
 
         //if (_albumModel != null)
         //{
@@ -40,7 +40,7 @@ public class BrowserAlbumCell : MonoBehaviour
         //}
     }
 
-    public void SetVideoThumbnail(PortfolioAlbumModel portfolioModel)
+    public void SetVideoThumbnail(MultimediaModel portfolioModel)
     {
         if (mediaType == EMediaType.Video)
         {

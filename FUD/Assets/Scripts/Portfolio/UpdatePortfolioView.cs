@@ -29,7 +29,7 @@ public class UpdatePortfolioView : MonoBehaviour
 
     List<CreatedPortfolioMediaCell> mediaCells = new List<CreatedPortfolioMediaCell>();
 
-    List<PortfolioAlbumModel> mediaList = new List<PortfolioAlbumModel>();
+    List<MultimediaModel> mediaList = new List<MultimediaModel>();
 
     List<int> deletedMedia = new List<int>();
 
@@ -65,12 +65,10 @@ public class UpdatePortfolioView : MonoBehaviour
             _mediaCell.SetView(portfolioModel.PortfolioMedia[i], OnDeleteMediaAction);
 
             mediaCells.Add(_mediaCell);
-
-            //UpdateMediaDict(portfolioModel.PortfolioMedia[i]);
         }
     }
 
-    void OnDeleteMediaAction(PortfolioAlbumModel multimediaModel)
+    void OnDeleteMediaAction(MultimediaModel multimediaModel)
     {
         string url = string.Empty;
 
@@ -117,19 +115,6 @@ public class UpdatePortfolioView : MonoBehaviour
         mediaList.Remove(multimediaModel);
     }
 
-    void UpdateMediaDict(PortfolioAlbumModel model)
-    {
-        Dictionary<string, object> kvp = new Dictionary<string, object>();
-
-        kvp.Add("content_id", 1);
-
-        kvp.Add("content_url", model.content_url);
-
-        kvp.Add("media_type", model.media_type);
-
-        uploadedDict.Add(kvp);
-    }
-
     public void OnUploadButtonAction()
     {
         if (!isShowingGalleryPanel)
@@ -162,15 +147,15 @@ public class UpdatePortfolioView : MonoBehaviour
     {
         if (status)
         {
-            PortfolioAlbumModel albumModel;
+            MultimediaModel albumModel;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles());
 
             for (int i = 0; i < imageUrls.Count; i++)
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();
 
-                albumModel = new PortfolioAlbumModel();
+                albumModel = new MultimediaModel();
 
                 kvp.Add("content_id", 1);
 
@@ -193,15 +178,15 @@ public class UpdatePortfolioView : MonoBehaviour
     {
         if (status)
         {
-            PortfolioAlbumModel albumModel;
+            MultimediaModel albumModel;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Audio);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Audio);
 
             for (int i = 0; i < audioUrls.Count; i++)
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();
 
-                albumModel = new PortfolioAlbumModel();
+                albumModel = new MultimediaModel();
 
                 kvp.Add("content_id", 1);
 
@@ -224,15 +209,15 @@ public class UpdatePortfolioView : MonoBehaviour
     {
         if (status)
         {
-            PortfolioAlbumModel albumModel;
+            MultimediaModel albumModel;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Video);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Video);
 
             for (int i = 0; i < videoUrls.Count; i++)
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();
 
-                albumModel = new PortfolioAlbumModel();
+                albumModel = new MultimediaModel();
 
                 kvp.Add("content_id", 1);
 
@@ -258,9 +243,10 @@ public class UpdatePortfolioView : MonoBehaviour
             return;
         }
 
-        GameManager.Instance.apiHandler.UpdatePortfolio(titleField.text, descriptionField.text, portfolioModel.id, accessDropDown.value, uploadedDict, (status, response) => {
+        int accessStatus = accessDropDown.value == 0 ? 2 : 1;
 
-            
+        GameManager.Instance.apiHandler.UpdatePortfolio(titleField.text, descriptionField.text, portfolioModel.id, accessStatus, uploadedDict, deletedMedia, (status, response) => {
+
             OnAPIResponse(status, response);
         });
     }

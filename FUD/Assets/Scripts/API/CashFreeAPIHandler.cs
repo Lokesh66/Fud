@@ -136,6 +136,13 @@ public partial class APIHandler
                 }
             });
         }
+        else {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = responseModel.txMsg;
+
+            UIManager.Instance.ShowAlert(alertModel);
+        }
     }
 
     string GetCFPToken()

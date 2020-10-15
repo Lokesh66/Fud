@@ -8,6 +8,8 @@ public class ProjectBrowserView : MonoBehaviour
 {
     public RectTransform content;
 
+    public RectTransform scrollTrans;
+
     public RectTransform selectedAlbumsContent;
 
     public BrowseAlbumView albumView;
@@ -193,6 +195,10 @@ public class ProjectBrowserView : MonoBehaviour
         }
 
         shortListButton.SetActive(selectedAlbums.Count != 0);
+
+        float yTargetPos = selectedAlbums.Count > 0 ? -300.0f : 0.0f;
+
+        scrollTrans.anchoredPosition = new Vector2(scrollTrans.anchoredPosition.x, yTargetPos);
     }
 
     void OnApplyFilter(List<PortfolioModel> portfolioModels)

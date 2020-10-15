@@ -36,7 +36,7 @@ public class CreatedPortfolioView : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    void OnDeleteAction(PortfolioAlbumModel albumModel)
+    void OnDeleteAction(MultimediaModel albumModel)
     {
 
     }

@@ -22,7 +22,7 @@ public class SceneAlbumCell : MonoBehaviour
 
 
 
-    public void SetView(SceneAlbumModel searchModel, Action<object> OnButtonAtion, Action<SceneAlbumCell, object> OnSelectAction)
+    public void SetView(SceneAlbumModel searchModel, Action<object> OnButtonAtion, Action<SceneAlbumCell, object> OnSelectAction, bool canAddCharacters = false)
     {
         this.OnButtonAtion = OnButtonAtion;
 
@@ -38,6 +38,8 @@ public class SceneAlbumCell : MonoBehaviour
         {
             selectActiveObject.SetActive(searchModel.isSeeAllSelected);
         }
+
+        selectInActiveObject.SetActive(canAddCharacters);
     }
 
     public void UpdateDeselectView()

@@ -51,6 +51,12 @@ public class ProjectCreationView : MonoBehaviour
 
     bool isDataUpdated = false;
 
+    bool isEditView;
+
+    Project projectModel;
+
+    DateTime selectedDate;
+
     List<ProjectStory> stories = new List<ProjectStory>();
 
 
@@ -60,6 +66,8 @@ public class ProjectCreationView : MonoBehaviour
         this.stories = stories;
 
         storySelectionDropdown.options.Clear();
+
+        storySelectionDropdown.interactable = true;
 
         foreach (ProjectStory story in stories)
         {
@@ -71,9 +79,29 @@ public class ProjectCreationView : MonoBehaviour
         isDataUpdated = false;
     }
 
-    public void EditSetView()
+    public void EditSetView(Project projectModel)
     {
+        this.projectModel = projectModel;
 
+        parentPanel.gameObject.SetActive(true);
+
+        isEditView = true;
+
+        DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0);
+
+        selectedDate = dateTime.AddSeconds(projectModel.start_date);
+
+        titleField.text = projectModel.title;
+
+        descriptionField.text = projectModel.description;
+
+        startDateText.text = DatePicker.Instance.GetDateString(selectedDate);
+
+        selectedDate = dateTime.AddSeconds(projectModel.release_date);
+
+        releaseDateText.text = DatePicker.Instance.GetDateString(selectedDate);
+
+        storySelectionDropdown.interactable = false;
     }
 
     public void OnStartDateAction()
@@ -109,15 +137,23 @@ public class ProjectCreationView : MonoBehaviour
             return;
         }
 
+
+
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
+        if (isEditView)
+        {
+            parameters.Add("id", projectModel.id);
+        }
+        else {
+            ProjectStory model = stories.Find(item => item.title.Equals(storySelectionDropdown.captionText.text));
+
+            parameters.Add("story_id", model.story_id);
+
+            parameters.Add("story_version_id", model.story_version_id);
+        }
+
         parameters.Add("title", titleField.text);
-
-        ProjectStory model = stories.Find(item => item.title.Equals(storySelectionDropdown.captionText.text));
-
-        parameters.Add("story_id", model.story_id);
-
-        parameters.Add("story_version_id", model.story_version_id);
 
         parameters.Add("start_date", startDateText.text);
 
@@ -156,7 +192,7 @@ public class ProjectCreationView : MonoBehaviour
         {
             errorMessage = "Name your project, should not be empty";
         }
-        else if (string.IsNullOrEmpty(storySelectionDropdown.captionText.text))
+        else if (string.IsNullOrEmpty(storySelectionDropdown.captionText.text) && !isEditView)
         {
             errorMessage = "Select Stroy for your story";
         }
@@ -185,5 +221,7 @@ public class ProjectCreationView : MonoBehaviour
         titleField.text = descriptionField.text = string.Empty;
 
         storySelectionDropdown.value = 0;
+
+        isEditView = false;
     }
 }

@@ -88,6 +88,8 @@ public class ProjectTeamCreationView : MonoBehaviour
             return;
         }
 
+        memberField.text = inputData;
+
         string[] membersList = memberField.text.Split(',');
 
         List<string> member = new List<string>(membersList);
@@ -96,7 +98,7 @@ public class ProjectTeamCreationView : MonoBehaviour
 
         int projectId = ProjectsDetailedView.Instance.GetCurrentProjectModel().id;
 
-        GameManager.Instance.apiHandler.CreateProjectTeam(projectId, teamNameField.text, descriptionField.text, members, accessDropdown.value, (status, response) =>
+        GameManager.Instance.apiHandler.CreateProjectTeam(projectId, teamNameField.text, descriptionField.text, members, 1 + accessDropdown.value, (status, response) =>
         {
             if (status)
             {
@@ -149,6 +151,10 @@ public class ProjectTeamCreationView : MonoBehaviour
         else if (string.IsNullOrEmpty(memberField.text))
         {
             errorMessage = "Add the team members";
+        }
+        else if (addedModels.Count <= 0)
+        {
+            errorMessage = "Invalid member name";
         }
 
         if (!string.IsNullOrEmpty(errorMessage))

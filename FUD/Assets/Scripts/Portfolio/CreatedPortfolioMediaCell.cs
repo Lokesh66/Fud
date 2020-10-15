@@ -15,14 +15,14 @@ public class CreatedPortfolioMediaCell : MonoBehaviour
     public GameObject deleteObject;
 
 
-    PortfolioAlbumModel albumModel;
+    MultimediaModel albumModel;
 
-    Action<PortfolioAlbumModel> OnDeleteAction;
+    Action<MultimediaModel> OnDeleteAction;
 
     EMediaType mediaType;
 
 
-    public void SetView(PortfolioAlbumModel albumModel, Action<PortfolioAlbumModel> OnDeleteAction, bool canDelete = false)
+    public void SetView(MultimediaModel albumModel, Action<MultimediaModel> OnDeleteAction, bool canDelete = false)
     {
         this.albumModel = albumModel;
 
@@ -44,21 +44,25 @@ public class CreatedPortfolioMediaCell : MonoBehaviour
                 }
             });
         }
-        else if (mediaType == EMediaType.Video)
+        else if (mediaType == EMediaType.Video || mediaType == EMediaType.Audio)
         {
             mediaPlayer.Path = albumModel.content_url;
 
             mediaPlayer.Prepare();
 
-            mediaPlayer.AddEndReachedEvent(() =>
-            {
-                VideoStreamer.Instance.updatedRawImage.gameObject.SetActive(false);
-            });
+            albumImage.texture = mediaType == EMediaType.Audio ? DataManager.Instance.audioThumbnailSprite.texture : DataManager.Instance.videoThumbnailSprite.texture;
 
-            mediaPlayer.AddImageReadyEvent((texture) =>
+            if (mediaType == EMediaType.Video)
             {
-                albumImage.texture = texture;
-            });
+                mediaPlayer.AddImageReadyEvent((texture) =>
+                {
+                    albumImage.texture = texture;
+                });
+            }
+        }
+        else
+        {
+            albumImage.texture = DataManager.Instance.pdfThumbnailSprite.texture;
         }
     }
 
@@ -68,9 +72,17 @@ public class CreatedPortfolioMediaCell : MonoBehaviour
         {
             UIManager.Instance.ShowBigScreen(albumModel.content_url);
         }
+        else if (mediaType == EMediaType.Audio)
+        {
+            UIManager.Instance.topCanvas.PlayVideo(albumImage, mediaPlayer, EMediaType.Audio);
+        }
         else if (mediaType == EMediaType.Video)
         {
             UIManager.Instance.topCanvas.PlayVideo(albumImage, mediaPlayer);
+        }
+        else
+        {
+            PDFManager.Instance.LoadDocument(albumModel.content_url);
         }
     }
 

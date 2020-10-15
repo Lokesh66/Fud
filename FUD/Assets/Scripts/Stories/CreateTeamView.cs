@@ -93,13 +93,15 @@ public class CreateTeamView : MonoBehaviour
             return;
         }
 
+        memberField.text = inputData;
+
         string[] membersList = memberField.text.Split(',');
 
         List<string> member = new List<string>(membersList);
 
         string members = GetMemberIds(member);
 
-        GameManager.Instance.apiHandler.CreateStoryTeam(detailsModel.id, teamNameField.text, descriptionField.text, members, accessDropdown.value, (status, response) =>
+        GameManager.Instance.apiHandler.CreateStoryTeam(detailsModel.id, teamNameField.text, descriptionField.text, members, 1 + accessDropdown.value, (status, response) =>
         {
             if (status)
             {
@@ -152,6 +154,10 @@ public class CreateTeamView : MonoBehaviour
         else if (string.IsNullOrEmpty(memberField.text))
         {
             errorMessage = "Add the team members";
+        }
+        else if (addedModels.Count <= 0)
+        {
+            errorMessage = "Invalid member name";
         }
 
         if (!string.IsNullOrEmpty(errorMessage))
@@ -212,6 +218,8 @@ public class CreateTeamView : MonoBehaviour
         string memberIds = string.Empty;
 
         string appendString = string.Empty;
+
+        Debug.Log("GetMemberIds : members.Count = " + members.Count);
 
         for (int i = 0; i < members.Count; i++)
         {

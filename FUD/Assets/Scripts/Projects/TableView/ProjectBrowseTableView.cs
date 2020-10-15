@@ -101,7 +101,7 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 
 			viewsHolder.views.gameObject.transform.parent.GetComponent<BrowserAlbumCell> ().SetView (model, adataObject.OnAlbumSelection, adataObject.OnCellButtonAction);
 
-			PortfolioAlbumModel albumModel = model.PortfolioMedia.Find(item => DataManager.Instance.GetMediaType(item.media_type) == EMediaType.Image);
+			MultimediaModel albumModel = model.PortfolioMedia.Find(item => DataManager.Instance.GetMediaType(item.media_type) == EMediaType.Image);
 
 			if (albumModel != null)
 			{

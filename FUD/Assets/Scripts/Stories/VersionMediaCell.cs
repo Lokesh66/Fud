@@ -22,6 +22,8 @@ public class  VersionMediaCell : MonoBehaviour
     {
         this.albumModel = model;
 
+        Debug.Log("url = " + model.content_url);
+
         mediaType = DataManager.Instance.GetMediaType(albumModel.media_type);
 
         pauseObject.SetActive(mediaType == EMediaType.Video);
@@ -36,7 +38,7 @@ public class  VersionMediaCell : MonoBehaviour
                 }
             });
         }
-        else if (mediaType == EMediaType.Video)
+        else if (mediaType == EMediaType.Video || mediaType == EMediaType.Audio)
         {
             mediaPlayer.Path = albumModel.content_url;
 
@@ -44,15 +46,21 @@ public class  VersionMediaCell : MonoBehaviour
 
             mediaPlayer.Prepare();
 
-            mediaPlayer.AddEndReachedEvent(() =>
-            {
-                VideoStreamer.Instance.updatedRawImage.gameObject.SetActive(false);
-            });
+            albumImage.texture = mediaType == EMediaType.Audio ? DataManager.Instance.audioThumbnailSprite.texture : DataManager.Instance.videoThumbnailSprite.texture;
 
-            mediaPlayer.AddImageReadyEvent((texture) =>
+            if (mediaType == EMediaType.Video)
             {
-                albumImage.texture = texture;
-            });
+                mediaPlayer.AddImageReadyEvent((texture) =>
+                {
+                    if (texture != null)
+                    {
+                        albumImage.texture = texture;
+                    }
+                });
+            }
+        }
+        else {
+            albumImage.texture = DataManager.Instance.pdfThumbnailSprite.texture;
         }
     }
 
@@ -69,22 +77,29 @@ public class  VersionMediaCell : MonoBehaviour
             case EMediaType.Audio:
                 PlayAudio();
                 break;
+            case EMediaType.Document:
+                OpenDocument();
+                break;
         }
     }
 
     void PlayVideo()
     {
         UIManager.Instance.topCanvas.PlayVideo(albumImage, mediaPlayer);
-        //VideoStreamer.Instance.StreamVideo(albumModel.content_url, null);
     }
 
     void PlayAudio()
     {
-        AudioStreamer.Instance.AudioStream(albumModel.content_url, null);
+        UIManager.Instance.topCanvas.PlayVideo(albumImage, mediaPlayer, EMediaType.Audio);
     }
 
     void OpenBigScreen()
     {
         UIManager.Instance.ShowBigScreen(albumModel.content_url);
+    }
+
+    void OpenDocument()
+    {
+        PDFManager.Instance.LoadDocument(albumModel.content_url);
     }
 }

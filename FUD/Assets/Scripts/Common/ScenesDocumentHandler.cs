@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using System;
 
 
@@ -15,7 +16,7 @@ public class ScenesDocumentHandler : MonoBehaviour
     EMediaType mediaType;
 
 
-    public void Load(string[] paths, EMediaType mediaType = EMediaType.Image, Action<object> OnDeleteAction = null)
+    public void Load(List<MultimediaModel> mediaList, EMediaType mediaType = EMediaType.Image, Action<object> OnDeleteAction = null)
     {
         //content.DestroyChildrens();
 
@@ -23,16 +24,13 @@ public class ScenesDocumentHandler : MonoBehaviour
 
         UploadedFileCell fileCell = null;
 
-        foreach (var path in paths)
+        for (int i = 0; i < mediaList.Count; i++)
         {
-            if (path.IsNOTNullOrEmpty())
-            {
-                GameObject cellObject = Instantiate(cellCache, content);
+            GameObject cellObject = Instantiate(cellCache, content);
 
-                fileCell = cellObject.GetComponent<UploadedFileCell>();
+            fileCell = cellObject.GetComponent<UploadedFileCell>();
 
-                fileCell.Load(path, mediaType, OnDeleteAction);
-            }
+            fileCell.Load(mediaList[i], mediaType, OnDeleteAction);
         }
 
         if (mediaButtonTrans != null)

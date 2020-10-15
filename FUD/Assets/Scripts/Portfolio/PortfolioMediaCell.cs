@@ -17,7 +17,7 @@ public class PortfolioMediaCell : MonoBehaviour
 
         if (model.PortfolioMedia.Count > 0)
         {
-            PortfolioAlbumModel albumModel = model.PortfolioMedia.Find(item => item.GetMediaType(item.media_type) == EMediaType.Image);
+            MultimediaModel albumModel = model.PortfolioMedia.Find(item => item.GetMediaType(item.media_type) == EMediaType.Image);
 
             if (albumModel != null)
             {

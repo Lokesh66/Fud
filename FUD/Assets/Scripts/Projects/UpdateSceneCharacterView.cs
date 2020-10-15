@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
-using System.Linq;
+
 
 public class UpdateSceneCharacterView : MonoBehaviour
 {
@@ -19,7 +18,9 @@ public class UpdateSceneCharacterView : MonoBehaviour
 
     public UpdateSceneAutoView autoView;
 
-    public CreateSceneAlbumView albumView;
+    public UpdateSceneAlbumView sceneCharactersView;
+
+    public UpdateSceneAlbumView projectCharactersView;
 
 
     public Color selectedColor;
@@ -37,6 +38,8 @@ public class UpdateSceneCharacterView : MonoBehaviour
 
     private ESubTabType currentTab = ESubTabType.Auto;
 
+    int projectId;
+
 
     public void Load(SceneDetailsModel detailsModel)
     {
@@ -44,9 +47,11 @@ public class UpdateSceneCharacterView : MonoBehaviour
 
         //OnTabAction(0);
 
-        gameObject.SetActive(true);
+        this.projectId = detailsModel.project_id;
 
-        albumView.Load(detailsModel.project_id);
+        autoView.EnableView(this, detailsModel.ScenesMultimedia);
+
+        gameObject.SetActive(true);
     }
 
     #region Button Actions
@@ -80,7 +85,7 @@ public class UpdateSceneCharacterView : MonoBehaviour
 
             case ESubTabType.Auto:
                 currentObject = autoView.gameObject;
-                autoView.EnableView(this);
+                autoView.EnableView(this, null);
                 break;
         }
     }
@@ -111,6 +116,13 @@ public class UpdateSceneCharacterView : MonoBehaviour
     public List<Dictionary<string, object>> GetDialogues(bool isManual)
     {
         return isManual ? manualDialogues : autoDialogues;
+    }
+
+    public void OnAlbumCloseAction()
+    {
+        sceneCharactersView.SetSceneCharactersView(projectId);
+
+        projectCharactersView.OnCloseButtonAction();
     }
 
     public void ClearData()

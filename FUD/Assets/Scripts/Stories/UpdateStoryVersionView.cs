@@ -207,6 +207,9 @@ public class UpdateStoryVersionView : MonoBehaviour
             case EMediaType.Video:
                 GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnVideosUploaded);
                 break;
+            case EMediaType.Document:
+                GalleryManager.Instance.GetDocuments(mediaSource, OnDocumentsUploaded);
+                break;
         }
     }
 
@@ -318,7 +321,7 @@ public class UpdateStoryVersionView : MonoBehaviour
 
             MultimediaModel model = null;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles());
 
             for (int i = 0; i < imageUrls.Count; i++)
             {
@@ -347,7 +350,7 @@ public class UpdateStoryVersionView : MonoBehaviour
     {
         if (status)
         {
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Audio);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Audio);
 
             MultimediaModel model = null;
 
@@ -380,7 +383,7 @@ public class UpdateStoryVersionView : MonoBehaviour
     {
         if (status)
         {
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Video);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Video);
 
             MultimediaModel model = null;
 
@@ -399,6 +402,39 @@ public class UpdateStoryVersionView : MonoBehaviour
                 kvp.Add("media_type", "video");
 
                 model.media_type = "video";
+
+                model.content_url = videoUrls[i];
+
+                uploadedDict.Add(kvp);
+
+                mediaList.Add(model);
+            }
+        }
+    }
+
+    void OnDocumentsUploaded(bool status, List<string> videoUrls)
+    {
+        if (status)
+        {
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Document);
+
+            MultimediaModel model = null;
+
+            this.imageUrls = videoUrls;
+
+            for (int i = 0; i < videoUrls.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                model = new MultimediaModel();
+
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", videoUrls[i]);
+
+                kvp.Add("media_type", "document");
+
+                model.media_type = "document";
 
                 model.content_url = videoUrls[i];
 

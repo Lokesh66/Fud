@@ -11,7 +11,7 @@ public class BrowseAlbumView : MonoBehaviour
 
     PortfolioModel portfolioModel;
 
-    List<PortfolioAlbumModel> albumModels;
+    List<MultimediaModel> albumModels;
 
     List<BrowserMediaCell> mediaCells = new List<BrowserMediaCell>();
 

@@ -16,7 +16,7 @@ public class GalleryManager : MonoBehaviour
 
     private List<string> uploadedURLs = new List<string>();
 
-    string[] loadedFiles = new string[10];
+    List<MultimediaModel> mediaList = new List<MultimediaModel>();
 
     private int selectedImagesCount;
 
@@ -25,6 +25,7 @@ public class GalleryManager : MonoBehaviour
     #region Singleton
 
     private static GalleryManager instance = null;
+
     private GalleryManager()
     {
 
@@ -51,26 +52,24 @@ public class GalleryManager : MonoBehaviour
 
     public void GetImageFromGallaery(string mediaSource, Action<bool, List<string>> OnImageUploaded)
     {
-        string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "Banner+3.png");
+        //string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "Banner+3.png");
 
-        uploadedURLs.Clear();
+        //uploadedURLs.Clear();
 
-        mediaURLsWithKey.Clear();
+        //mediaURLsWithKey.Clear();
 
-        this.OnUploaded = OnImageUploaded;
+        //this.OnUploaded = OnImageUploaded;
 
-        Array.Clear(loadedFiles, 0, loadedFiles.Length);
+        //mediaList.Clear();
 
-        loadedFiles[0] = _filePath;
+        //selectedImagesCount = 1;
 
-        selectedImagesCount = 1;
+        //for (int i = 0; i < 1; i++)
+        //{
+        //    UploadFile(_filePath, EMediaType.Image, mediaSource);
+        //}
 
-        for (int i = 0; i < 1; i++)
-        {
-            UploadFile(_filePath, EMediaType.Image, mediaSource);
-        }
-
-        return;
+        //return;
 
         NativeGallery.Permission permission = NativeGallery.GetImageFromGallery((imagesPath) => {
             if (imagesPath != null)
@@ -78,6 +77,8 @@ public class GalleryManager : MonoBehaviour
                 uploadedURLs.Clear();
 
                 mediaURLsWithKey.Clear();
+
+                mediaList.Clear();
 
                 this.OnUploaded = OnImageUploaded;
                 selectedImagesCount = 1;
@@ -101,9 +102,9 @@ public class GalleryManager : MonoBehaviour
 
                 mediaURLsWithKey.Clear();
 
-                this.OnUploaded = OnImageUploaded;
+                mediaList.Clear();
 
-                loadedFiles[0] = imagePath;
+                this.OnUploaded = OnImageUploaded;
 
                 selectedImagesCount = 1;
                 UploadFile(imagePath, EMediaType.Image, mediaSource);
@@ -118,26 +119,22 @@ public class GalleryManager : MonoBehaviour
 
     public void GetProfilePic(string mediaSource, string faceId, Action<bool, ProfileFileUploadModel> OnImageUploaded)
     {
-        string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "Banner+3.png");
+        //string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "Banner+3.png");
 
-        uploadedURLs.Clear();
+        //uploadedURLs.Clear();
 
-        mediaURLsWithKey.Clear();
+        //mediaURLsWithKey.Clear();
 
-        //this.OnUploaded = OnImageUploaded;
+        ////this.OnUploaded = OnImageUploaded;
 
-        Array.Clear(loadedFiles, 0, loadedFiles.Length);
+        //selectedImagesCount = 1;
 
-        loadedFiles[0] = _filePath;
+        //for (int i = 0; i < 1; i++)
+        //{
+        //    UploadProfileImage(_filePath, faceId, mediaSource, OnImageUploaded);
+        //}
 
-        selectedImagesCount = 1;
-
-        for (int i = 0; i < 1; i++)
-        {
-            UploadProfileImage(_filePath, faceId, mediaSource, OnImageUploaded);
-        }
-
-        return;
+        //return;
 
         NativeCamera.Permission permission = NativeCamera.TakePicture((imagePath) => {
 
@@ -147,7 +144,7 @@ public class GalleryManager : MonoBehaviour
 
                 mediaURLsWithKey.Clear();
 
-                loadedFiles[0] = imagePath;
+                mediaList.Clear();
 
                 selectedImagesCount = 1;
 
@@ -163,42 +160,33 @@ public class GalleryManager : MonoBehaviour
 
     public void PickImages(string mediaSource, Action<bool, List<string>> OnUploaded)
     {
-        string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "Banner+1.png");
+        //string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "Banner+1.png");
 
-        uploadedURLs.Clear();
+        //uploadedURLs.Clear();
 
-        mediaURLsWithKey.Clear();
+        //mediaURLsWithKey.Clear();
 
-        this.OnUploaded = OnUploaded;
+        //this.OnUploaded = OnUploaded;
 
-        Array.Clear(loadedFiles, 0, loadedFiles.Length);
+        //selectedImagesCount = 1;
 
-        loadedFiles[0] = _filePath;
+        //for (int i = 0; i < 1; i++)
+        //{
+        //    UploadFile(_filePath, EMediaType.Image, mediaSource);
+        //}
 
-        selectedImagesCount = 1;
-
-        for (int i = 0; i < 1; i++)
-        {
-            UploadFile(_filePath, EMediaType.Image, mediaSource);
-        }
-
-        return;
+        //return;
 
 #if UNITY_ANDROID
         NativeGallery.Permission permission = NativeGallery.GetImagesFromGallery((imagesPath) =>
         {
-            if (loadedFiles != null && loadedFiles.Length > 0)
-            {
-                Array.Clear(loadedFiles, 0, loadedFiles.Length);
-            }
-
             if (imagesPath != null && imagesPath.Length > 0)
             {
                 uploadedURLs.Clear();
 
                 mediaURLsWithKey.Clear();
 
-                loadedFiles = imagesPath;
+                mediaList.Clear();
 
                 this.OnUploaded = OnUploaded;
 
@@ -227,6 +215,25 @@ public class GalleryManager : MonoBehaviour
 
     public void GetAudiosFromGallery(string mediaSource, Action<bool, List<string>> OnUploaded)
     {
+        //string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "AudioFile.mp3");
+
+        //uploadedURLs.Clear();
+
+        //mediaURLsWithKey.Clear();
+
+        //mediaList.Clear();
+
+        //this.OnUploaded = OnUploaded;
+
+        //selectedImagesCount = 1;
+
+        //for (int i = 0; i < 1; i++)
+        //{
+        //    UploadFile(_filePath, EMediaType.Image, mediaSource);
+        //}
+
+        //return;
+
 #if UNITY_ANDROID
         NativeGallery.Permission permission = NativeGallery.GetAudiosFromGallery((audiosPaths) =>
         {
@@ -238,9 +245,9 @@ public class GalleryManager : MonoBehaviour
 
                 mediaURLsWithKey.Clear();
 
-                selectedImagesCount = audiosPaths.Length;
+                mediaList.Clear();
 
-                loadedFiles = audiosPaths;
+                selectedImagesCount = audiosPaths.Length;
 
                 for (int i = 0; i < audiosPaths.Length; i++)
                 {
@@ -255,26 +262,24 @@ public class GalleryManager : MonoBehaviour
 
     public void GetVideosFromGallery(string mediaSource, Action<bool, List<string>> OnUploaded)
     {
-        string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "ForBiggerMeltdowns.mp4");
+        //string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "ForBiggerMeltdowns.mp4");
 
-        uploadedURLs.Clear();
+        //uploadedURLs.Clear();
 
-        mediaURLsWithKey.Clear();
+        //mediaURLsWithKey.Clear();
 
-        this.OnUploaded = OnUploaded;
+        //mediaList.Clear();
 
-        Array.Clear(loadedFiles, 0, loadedFiles.Length);
+        //this.OnUploaded = OnUploaded;
 
-        loadedFiles[0] = _filePath;
+        //selectedImagesCount = 1;
 
-        selectedImagesCount = 1;
+        //for (int i = 0; i < 1; i++)
+        //{
+        //    UploadFile(_filePath, EMediaType.Video, mediaSource);
+        //}
 
-        for (int i = 0; i < 1; i++)
-        {
-            UploadFile(_filePath, EMediaType.Video, mediaSource);
-        }
-
-        return;
+        //return;
 
 #if UNITY_ANDROID
         NativeGallery.Permission permission = NativeGallery.GetVideosFromGallery((videoPaths) =>
@@ -287,9 +292,9 @@ public class GalleryManager : MonoBehaviour
 
                 mediaURLsWithKey.Clear();
 
-                selectedImagesCount = videoPaths.Length;
+                mediaList.Clear();
 
-                loadedFiles = videoPaths;
+                selectedImagesCount = videoPaths.Length;
 
                 for (int i = 0; i < videoPaths.Length; i++)
                 {
@@ -298,19 +303,17 @@ public class GalleryManager : MonoBehaviour
             }
         });
 #elif UNITY_IOS
-    GetVideoFromGallery(mediaSource, OnUploaded);
+        GetVideoFromGallery(mediaSource, OnUploaded);
 #endif
     }
 
     public void GetDocuments(string mediaSource, Action<bool, List<string>> OnDocumentsUploaded)
     {
-        //loadedFiles[0] = Path.Combine(Application.persistentDataPath, "Dummy.pdf");
-
         //this.OnUploaded = OnDocumentsUploaded;
 
         //selectedImagesCount = 1;
 
-        //UploadFile(loadedFiles[0], EMediaType.Document, mediaSource);
+        //UploadFile(Path.Combine(Application.persistentDataPath, "Dummy.pdf"), EMediaType.Document, mediaSource);
 
         //return;
 
@@ -324,9 +327,9 @@ public class GalleryManager : MonoBehaviour
 
                 mediaURLsWithKey.Clear();
 
-                selectedImagesCount = documentPaths.Length;
+                mediaList.Clear();
 
-                loadedFiles = documentPaths;
+                selectedImagesCount = documentPaths.Length;
 
                 for (int i = 0; i < documentPaths.Length; i++)
                 {
@@ -365,15 +368,13 @@ public class GalleryManager : MonoBehaviour
 
                 uploadedURLs.Add(responseModel.data);
 
-                mediaURLsWithKey.Add(DataManager.Instance.GetMediaKey() + responseModel.data);
+                mediaList.Add(GetMediaModel(responseModel.data, mediaType));
 
                 Debug.Log("DataManager.Instance.GetMediaKey() + responseModel.data = " + DataManager.Instance.GetMediaKey() + responseModel.data);
 
                 if (uploadedURLs.Count == selectedImagesCount)
                 {
                     UpdateLocalData(uploadedURLs, mediaType);
-
-                    loadedFiles = mediaType == EMediaType.Image ? loadedFiles : uploadedURLs.ToArray();
 
                     OnUploaded?.Invoke(true, uploadedURLs);
 
@@ -414,7 +415,7 @@ public class GalleryManager : MonoBehaviour
 
                 uploadedURLs.Add(responseModel.data.Key);
 
-                mediaURLsWithKey.Add(DataManager.Instance.GetMediaKey() + responseModel.data.Key);
+                mediaList.Add(GetMediaModel(responseModel.data.Key, EMediaType.Image));
 
                 if (uploadedURLs.Count == selectedImagesCount)
                 {
@@ -474,9 +475,9 @@ public class GalleryManager : MonoBehaviour
         }
     }
 
-    public string[] GetLoadedFiles()
+    public List<MultimediaModel> GetLoadedFiles()
     {
-        return mediaURLsWithKey.ToArray();
+        return mediaList;
     }
 
     public void PickImage(string mediaSource, Action<bool, List<string>> OnUploaded)
@@ -508,7 +509,7 @@ public class GalleryManager : MonoBehaviour
 
                 mediaURLsWithKey.Clear();
 
-                loadedFiles[0] = imagePath;
+                mediaList.Clear();
 
                 this.OnUploaded = OnUploaded;
 
@@ -532,7 +533,7 @@ public class GalleryManager : MonoBehaviour
 
                 mediaURLsWithKey.Clear();
 
-                loadedFiles[0] = imagePath;
+                mediaList.Clear();
 
                 this.OnUploaded = OnUploaded;
 
@@ -556,7 +557,7 @@ public class GalleryManager : MonoBehaviour
 
                 mediaURLsWithKey.Clear();
 
-                loadedFiles[0] = imagePath;
+                mediaList.Clear();
 
                 this.OnUploaded = OnUploaded;
 
@@ -573,6 +574,17 @@ public class GalleryManager : MonoBehaviour
     public void ClearData()
     {
         loadingCountText.text = string.Empty;
+    }
+
+    MultimediaModel GetMediaModel(string mediaURL, EMediaType mediaType)
+    {
+        MultimediaModel multimediaModel = new MultimediaModel();
+
+        multimediaModel.content_url = DataManager.Instance.GetMediaKey() + mediaURL;
+
+        multimediaModel.media_type = mediaType.ToString().ToLower();
+
+        return multimediaModel;
     }
 
     #endregion

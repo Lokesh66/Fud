@@ -349,7 +349,7 @@ public class CreateCharacterView : MonoBehaviour
         {
             this.imageUrls = imageUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles());
 
             for (int i = 0; i < imageUrls.Count; i++)
             {
@@ -372,7 +372,7 @@ public class CreateCharacterView : MonoBehaviour
         {
             this.imageUrls = audioUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Audio);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Audio);
 
             for (int i = 0; i < audioUrls.Count; i++)
             {
@@ -395,7 +395,7 @@ public class CreateCharacterView : MonoBehaviour
         {
             this.imageUrls = videoUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Video);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Video);
 
             for (int i = 0; i < videoUrls.Count; i++)
             {
@@ -416,7 +416,7 @@ public class CreateCharacterView : MonoBehaviour
     {
         if (status)
         {
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Document);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Document);
 
             for (int i = 0; i < documentURLs.Count; i++)
             {

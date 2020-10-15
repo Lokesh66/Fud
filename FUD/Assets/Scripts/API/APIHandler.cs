@@ -481,7 +481,7 @@ public partial class APIHandler
         {
             Debug.LogErrorFormat("<APIManager/GetRequest> Error ({0})", webRequest.error);
 
-            OnResponse?.Invoke(null);
+            OnResponse?.Invoke(DataManager.Instance.GetImageThumbnailSprite());
         }
         else
         {
@@ -531,4 +531,10 @@ public class MediaEndPointModel
     public object created_date_time;
     public object update_date_time;
     public int status;
+}
+
+public enum EPurchaseType
+{
+    Test,
+    Production,
 }

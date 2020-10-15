@@ -74,6 +74,8 @@ public class UpdateSceneView : MonoBehaviour
     public void BackButtonAction()
     {
         gameObject.SetActive(false);
+
+        dialoguesView.projectCharactersView.ClearData();
     }
 
     public void OnUpdateButtonAction()

@@ -14,9 +14,11 @@ public class UpdateSceneAutoView : MonoBehaviour
     string mediaSource = "scenes";
 
 
-    public void EnableView(UpdateSceneCharacterView dialoguesView)
+    public void EnableView(UpdateSceneCharacterView dialoguesView, List<MultimediaModel> multimediaModels)
     {
         this.dialoguesView = dialoguesView;
+
+        filesHandler.Load(multimediaModels, EMediaType.Document);
 
         gameObject.SetActive(true);
     }

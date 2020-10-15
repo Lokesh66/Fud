@@ -34,8 +34,8 @@ public class TopCanvas : MonoBehaviour
         bigScreenView.Load(imageURL);
     }
 
-    public void PlayVideo(RawImage rawImage, UniversalMediaPlayer mediaPlayer)
+    public void PlayVideo(RawImage rawImage, UniversalMediaPlayer mediaPlayer, EMediaType mediaType = EMediaType.Video)
     {
-        VideoStreamer.Instance.Play(rawImage, mediaPlayer);
+        VideoStreamer.Instance.Play(rawImage, mediaPlayer, mediaType);
     }
 }

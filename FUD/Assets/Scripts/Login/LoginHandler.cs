@@ -92,7 +92,9 @@ public class LoginHandler : MonoBehaviour
         else
         {
             signInScreen.gameObject.SetActive(false);
-            
+
+            loginScreen.gameObject.SetActive(false);
+
             SetView(ELoginFlow.Launch);
         }
     }

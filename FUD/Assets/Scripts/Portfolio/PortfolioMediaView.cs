@@ -45,38 +45,42 @@ public class PortfolioMediaView : MonoBehaviour
 
         GameManager.Instance.apiHandler.GetAllAlbums(pageNo, (status, models) =>
         {
+
             if (portfolioModels == null)
                 return;
 
             portfolioModels = models;
 
-            pageNo++;
-
-            if (portfolioModels.Count < MAX_PORTFOLIO_ALBUMS)
+            if (status)
             {
-                isPagingOver = true;
+                pageNo++;
 
-                pageNo = 1;
-            }
+                if (portfolioModels.Count < MAX_PORTFOLIO_ALBUMS)
+                {
+                    isPagingOver = true;
 
-            if (!isInitialized)
-            {
+                    pageNo = 1;
+                }
+
+                if (!isInitialized)
+                {
+                    tableView.gameObject.SetActive(true);
+
+                    isInitialized = true;
+                }
+                else
+                {
+                    tableView.Data.Clear();
+
+                    tableView.Data.Add(portfolioModels.Count);
+
+                    tableView.Refresh();
+                }
+
                 tableView.gameObject.SetActive(true);
 
-                isInitialized = true;
+                noDataObject.SetActive(portfolioModels.Count == 0);
             }
-            else
-            {
-                tableView.Data.Clear();
-
-                tableView.Data.Add(portfolioModels.Count);
-
-                tableView.Refresh();
-            }
-
-            tableView.gameObject.SetActive(true);
-
-            noDataObject.SetActive(portfolioModels.Count == 0);
         });
     }
 

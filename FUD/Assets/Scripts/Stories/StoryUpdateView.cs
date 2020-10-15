@@ -128,7 +128,9 @@ public class StoryUpdateView : MonoBehaviour
 
         Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
 
-        GameManager.Instance.apiHandler.UpdateStory(storyModel.id, storyTitleField.text, subTitleField.text, descriptionField.text, titlePosterURL, selectedGenre.id, accessDropdown.value, uploadedDict, (status, response) => {
+        int accessStatus = accessDropdown.value == 0 ? 2 : 1;
+
+        GameManager.Instance.apiHandler.UpdateStory(storyModel.id, storyTitleField.text, subTitleField.text, descriptionField.text, titlePosterURL, selectedGenre.id, accessStatus, uploadedDict, (status, response) => {
 
             OnAPIResponse(status, response);
         });
@@ -249,7 +251,7 @@ public class StoryUpdateView : MonoBehaviour
         {
             this.imageUrls = imageUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, OnDeleteAction: OnDeleteAction);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), OnDeleteAction: OnDeleteAction);
 
             for (int i = 0; i < imageUrls.Count; i++)
             {
@@ -272,7 +274,7 @@ public class StoryUpdateView : MonoBehaviour
         {
             this.imageUrls = audioUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, OnDeleteAction: OnDeleteAction);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), OnDeleteAction: OnDeleteAction);
 
             for (int i = 0; i < audioUrls.Count; i++)
             {
@@ -295,7 +297,7 @@ public class StoryUpdateView : MonoBehaviour
         {
             this.imageUrls = videoUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, OnDeleteAction: OnDeleteAction);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), OnDeleteAction: OnDeleteAction);
 
             for (int i = 0; i < videoUrls.Count; i++)
             {
@@ -316,7 +318,7 @@ public class StoryUpdateView : MonoBehaviour
     {
         if (status)
         {
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Document);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Document);
 
             for (int i = 0; i < documentURLs.Count; i++)
             {

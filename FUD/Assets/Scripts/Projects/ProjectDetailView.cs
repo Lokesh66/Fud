@@ -5,6 +5,8 @@ using TMPro;
 
 public class ProjectDetailView : MonoBehaviour
 {
+    public UploadedFilesHandler filesHandler;
+
 
     public TextMeshProUGUI titleText;
 

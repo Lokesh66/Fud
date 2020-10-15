@@ -131,7 +131,9 @@ public class StoryCreationView : MonoBehaviour
 
             Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
 
-            GameManager.Instance.apiHandler.CreateStory(storyTitleField.text, subTitleField.text, descriptionField.text, titlePosterURL, selectedGenre.id, 1 - accessDropdown.value, uploadedDict, (status, response) =>
+            int accessStatus = accessDropdown.value == 0 ? 2 : 1;
+
+            GameManager.Instance.apiHandler.CreateStory(storyTitleField.text, subTitleField.text, descriptionField.text, titlePosterURL, selectedGenre.id, accessStatus, uploadedDict, (status, response) =>
             {
                 OnAPIResponse(status, response);
             });
@@ -269,7 +271,7 @@ public class StoryCreationView : MonoBehaviour
         {
             this.imageUrls = imageUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, OnDeleteAction: OnDeleteAction);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), OnDeleteAction: OnDeleteAction);
 
             for (int i = 0; i < imageUrls.Count; i++)
             {
@@ -292,6 +294,8 @@ public class StoryCreationView : MonoBehaviour
         {
             this.imageUrls = audioUrls;
 
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Audio, OnDeleteAction: OnDeleteAction);
+
             for (int i = 0; i < audioUrls.Count; i++)
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();
@@ -311,7 +315,7 @@ public class StoryCreationView : MonoBehaviour
     {
         if (status)
         {
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Video, OnDeleteAction);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Video, OnDeleteAction);
 
 
             this.imageUrls = videoUrls;
@@ -335,7 +339,7 @@ public class StoryCreationView : MonoBehaviour
     {
         if (status)
         {
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Document);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Document);
 
             for (int i = 0; i < documentURLs.Count; i++)
             {
@@ -386,8 +390,48 @@ public class StoryCreationView : MonoBehaviour
         galleryPanel.DOAnchorPosY(targetPostion, 0.4f);
     }
 
-    void OnDeleteAction(object imageURL)
+    void OnDeleteAction(object mediaModel)
     {
-        filesHandler.content.DestroyChildrens(filesHandler.mediaButtonTrans.gameObject);
+        MultimediaModel multimediaModel = mediaModel as MultimediaModel;
+
+        Debug.Log("multimediaModel = " + multimediaModel.content_url);
+
+        string url = string.Empty;
+
+        bool isItemRemoved = false;
+
+        //int modelIndex = mediaList.IndexOf(mediaModel);
+
+        
+        foreach (var item in uploadedDict)
+        {
+            Dictionary<string, object> mediaItem = item as Dictionary<string, object>;
+
+            foreach (var kvp in mediaItem)
+            {
+                if (kvp.Key.Equals("content_url"))
+                {
+                    url = kvp.Value as string;
+
+                    Debug.Log("url = " + url);
+
+                    if (multimediaModel.content_url.Contains(url))
+                    {
+                        Destroy(filesHandler.content.GetChild(uploadedDict.IndexOf(mediaItem)).gameObject);
+
+                        uploadedDict.Remove(mediaItem);
+
+                        isItemRemoved = true;
+
+                        break;
+                    }
+                }
+            }
+
+            if (isItemRemoved)
+            {
+                break;
+            }
+        }
     }
 }

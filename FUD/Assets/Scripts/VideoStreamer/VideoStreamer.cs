@@ -56,7 +56,7 @@ public class VideoStreamer : MonoBehaviour
     #endregion
 
     #region Events
-    private System.Action OnComplete = null;
+    private Action OnComplete = null;
     #endregion
 
 
@@ -82,6 +82,8 @@ public class VideoStreamer : MonoBehaviour
 
     public TextMeshProUGUI volumeText;
 
+    public TextMeshProUGUI mediaLengthText;
+
 
     UniversalMediaPlayer currentPlayer;
 
@@ -97,7 +99,7 @@ public class VideoStreamer : MonoBehaviour
     float currentPosValue = -1;
 
 
-    public void Play(RawImage rawImage, UniversalMediaPlayer mediaPlayer)
+    public void Play(RawImage rawImage, UniversalMediaPlayer mediaPlayer, EMediaType mediaType)
     {
         updatedRawImage.texture = rawImage.texture;
 
@@ -128,9 +130,38 @@ public class VideoStreamer : MonoBehaviour
 
         StopAllCoroutines();
 
-        StartCoroutine(UpdateVideoCanvasRatio(rawImage));
+        updatedRawImage.color = mediaType == EMediaType.Video ? Color.white : Color.black;
 
-        //prevImage = rawImage;
+        if (mediaType == EMediaType.Video)
+        {
+            StartCoroutine(UpdateVideoCanvasRatio(rawImage));
+        }
+        else
+        {
+            mediaPlayer.AddPreparedEvent((width, height) => {
+
+                if (!mediaPlayer.IsPlaying)
+                {
+                    mediaPlayer.Play();
+                }
+            });
+        }
+
+        int hours = (int)TimeSpan.FromMilliseconds(mediaPlayer.Length).TotalHours;
+
+        int minutes = (int)TimeSpan.FromMilliseconds(mediaPlayer.Length).TotalMinutes % 60;
+
+        int seconds = (int)TimeSpan.FromMilliseconds(mediaPlayer.Length).TotalHours % 3600;
+
+        Debug.Log("Milliseconds = " + mediaPlayer.Length);
+            
+        Debug.Log("seconds = " + seconds);
+
+        Debug.Log("minutes = " + minutes);
+
+        Debug.Log("hours = " + hours);
+
+        mediaLengthText.text = hours > 0 ? string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds) : string.Format("{0:00}:{1:00}", minutes, seconds);
 
         currentPlayer = mediaPlayer;
     }
@@ -143,6 +174,8 @@ public class VideoStreamer : MonoBehaviour
     private IEnumerator UpdateVideoCanvasRatio(RawImage rawImage)
     {
         _objectMaterial = rawImage.material;
+
+        Debug.Log("UpdateVideoCanvasRatio Called = " + rawImage.material);
 
         while (true)
         {

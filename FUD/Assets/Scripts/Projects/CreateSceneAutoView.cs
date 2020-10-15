@@ -7,6 +7,12 @@ public class CreateSceneAutoView : MonoBehaviour
     public ScenesDocumentHandler filesHandler;
 
 
+    public RectTransform albumContent;
+
+    public GameObject profileObject;
+
+
+
     CreateDialoguesView dialoguesView;
 
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();

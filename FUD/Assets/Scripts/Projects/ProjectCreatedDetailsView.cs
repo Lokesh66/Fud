@@ -36,7 +36,7 @@ public class ProjectCreatedDetailsView : MonoBehaviour
     {
         gameObject.SetActive(false);
 
-        //CreateAuditionView.Instance.EditView(projectModel, Refresh);
+        ProjectCreationView.Instance.EditSetView(projectModel);
     }
 
     void Refresh(bool isDataUpdated)

@@ -25,6 +25,15 @@ public class DataManager : MonoBehaviour
     }
 
     #endregion
+
+    public Sprite pdfThumbnailSprite;
+
+    public Sprite imageThumbnailSprite;
+
+    public Sprite audioThumbnailSprite;
+
+    public Sprite videoThumbnailSprite;
+
     public List<Craft> crafts = new List<Craft>();
 
     public List<Genre> genres = new List<Genre>();
@@ -181,6 +190,26 @@ public class DataManager : MonoBehaviour
     public List<Craft> GetCraftRolesOnCategery(bool isCastRole)
     {
         return isCastRole ? castCrafts : crewCrafts;
+    }
+
+    public Sprite GetPDFThumbnailSprite()
+    {
+        return pdfThumbnailSprite;
+    }
+
+    public Sprite GetImageThumbnailSprite()
+    {
+        return imageThumbnailSprite;
+    }
+
+    public Sprite GetAudioThumbnailSprite()
+    {
+        return audioThumbnailSprite;
+    }
+
+    public Sprite GetVideoThumbnailSprite()
+    {
+        return videoThumbnailSprite;
     }
 
     #region IAP Order Id

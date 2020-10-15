@@ -357,7 +357,7 @@ public class ProfileInfoView : MonoBehaviour
     {
         if (status)
         {
-            string[] imagePaths = GalleryManager.Instance.GetLoadedFiles();
+            List<MultimediaModel> modelsList = GalleryManager.Instance.GetLoadedFiles();
 
             switch (idProofType)
             {
@@ -372,7 +372,7 @@ public class ProfileInfoView : MonoBehaviour
                     break;
             }
 
-            UpdateProofImage(idProofType, imagePaths[0]);
+            UpdateProofImage(idProofType, modelsList[0]);
         }
         else
         {
@@ -386,13 +386,13 @@ public class ProfileInfoView : MonoBehaviour
 
     void OnProfileImageUploaded(bool status, ProfileFileUploadModel fileUploadModel)
     {
-        string[] imagePaths = GalleryManager.Instance.GetLoadedFiles();
+        List<MultimediaModel> modelsList = GalleryManager.Instance.GetLoadedFiles();
 
         if (status)
         {
             profilePicUploadModel = fileUploadModel;
 
-            UpdateProfileImage(imagePaths[0]);
+            UpdateProfileImage(modelsList[0]);
         }
     }
 
@@ -427,37 +427,39 @@ public class ProfileInfoView : MonoBehaviour
         roleCatageryDropdown.AddOptions(options);
     }
 
-    void UpdateProfileImage(string imagePath)
+    void UpdateProfileImage(MultimediaModel model)
     {
-        Texture2D texture = NativeGallery.LoadImageAtPath(imagePath, markTextureNonReadable: false);
+        GameManager.Instance.apiHandler.DownloadImage(model.content_url, (sprite) => {
 
-        TextureScale.ThreadedScale(texture, 250, 250, true);
+            if (sprite != null)
+            {
+                profileImage.sprite = sprite;
+            }
 
-        profileImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+        });
     }
 
-    void UpdateProofImage(EProofType proofType, string imagePath)
+    void UpdateProofImage(EProofType proofType, MultimediaModel model)
     {
-        Texture2D texture = NativeGallery.LoadImageAtPath(imagePath, markTextureNonReadable: false);
-
-        TextureScale.ThreadedScale(texture, 200, 200, true);
-
-        switch (proofType)
+        GameManager.Instance.apiHandler.DownloadImage(model.content_url, (sprite) =>
         {
-            case EProofType.IdProof:
-                idProof.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-                idProof.transform.GetChild(0).gameObject.SetActive(false);
-                break;
+            switch (proofType)
+            {
+                case EProofType.IdProof:
+                    idProof.sprite = sprite;
+                    idProof.transform.GetChild(0).gameObject.SetActive(false);
+                    break;
 
-            case EProofType.FrontAddress:
-                frontAddressProof.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-                frontAddressProof.transform.GetChild(0).gameObject.SetActive(false);
-                break;
+                case EProofType.FrontAddress:
+                    frontAddressProof.sprite = sprite;
+                    frontAddressProof.transform.GetChild(0).gameObject.SetActive(false);
+                    break;
 
-            case EProofType.BackAddress:
-                backAddressProof.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-                backAddressProof.transform.GetChild(0).gameObject.SetActive(false);
-                break;
-        }
+                case EProofType.BackAddress:
+                    backAddressProof.sprite = sprite;
+                    backAddressProof.transform.GetChild(0).gameObject.SetActive(false);
+                    break;
+            }
+        });
     }
 }

@@ -293,6 +293,9 @@ public class CreateExperienceView : MonoBehaviour
             case EMediaType.Video:
                 GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnVideosUploaded);
                 break;
+            case EMediaType.Document:
+                GalleryManager.Instance.GetDocuments(mediaSource, OnDocumentsUploaded);
+                break;
         }
     }
 
@@ -307,7 +310,7 @@ public class CreateExperienceView : MonoBehaviour
         {
             this.imageUrls = imageUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles());
 
             for (int i = 0; i < imageUrls.Count; i++)
             {
@@ -330,7 +333,7 @@ public class CreateExperienceView : MonoBehaviour
         {
             this.imageUrls = audioUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Audio);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Audio);
 
             for (int i = 0; i < audioUrls.Count; i++)
             {
@@ -353,7 +356,7 @@ public class CreateExperienceView : MonoBehaviour
         {
             this.imageUrls = videoUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Video);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Video);
 
             for (int i = 0; i < videoUrls.Count; i++)
             {
@@ -364,6 +367,29 @@ public class CreateExperienceView : MonoBehaviour
                 kvp.Add("content_url", videoUrls[i]);
 
                 kvp.Add("media_type", "video");
+
+                uploadedDict.Add(kvp);
+            }
+        }
+    }
+
+    void OnDocumentsUploaded(bool status, List<string> documentURLs)
+    {
+        if (status)
+        {
+            this.imageUrls = documentURLs;
+
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Document);
+
+            for (int i = 0; i < documentURLs.Count; i++)
+            {
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", documentURLs[i]);
+
+                kvp.Add("media_type", "document");
 
                 uploadedDict.Add(kvp);
             }

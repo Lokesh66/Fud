@@ -11,12 +11,12 @@ public class SceneAutoView : MonoBehaviour
     {
         gameObject.SetActive(true);
 
-        //filesHandler.Load(sceneCharacters, false, EMediaType.Document);
+        //filesHandler.Load(sceneCharacters, EMediaType.Document);
     }
 
     public void OnBackButtonAction()
     {
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 
     public void ClearData()

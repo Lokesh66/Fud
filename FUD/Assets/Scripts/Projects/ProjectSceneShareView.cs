@@ -27,12 +27,6 @@ public class ProjectSceneShareView : MonoBehaviour
     public List<SceneAlbumCell> cellsList;
 
 
-    StoryVersionsView versionsView;
-
-    StoryVersion currentVersion;
-
-    SceneAlbumCell currentCell;
-
     SceneAlbumModel selectedModel = null;
 
     SceneModel sceneModel;
@@ -199,7 +193,7 @@ public class ProjectSceneShareView : MonoBehaviour
 
         OnBackAction();
 
-        DataManager.Instance.UpdateFeaturedData(EFeatureType.ShareStoryVersion);
+        //DataManager.Instance.UpdateFeaturedData(EFeatureType.ShareStoryVersion);
     }
 
     public void OnBackAction()

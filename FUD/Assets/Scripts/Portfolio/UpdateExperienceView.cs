@@ -4,13 +4,15 @@ using System.IO;
 using System.Collections.Generic;
 using System;
 using DG.Tweening;
-using System.Xml.Linq;
+
 
 public class UpdateExperienceView : MonoBehaviour
 {
     public UploadedFilesHandler filesHandler;
 
     public Transform mediaContent;
+
+    public GameObject mediaCell;
 
     public RectTransform galleryPanel;
 
@@ -26,6 +28,8 @@ public class UpdateExperienceView : MonoBehaviour
 
     public TMP_InputField descriptionField;
 
+
+    MultimediaModel albumModel;
 
     WorkExperianceModel workModel = null;
 
@@ -54,6 +58,10 @@ public class UpdateExperienceView : MonoBehaviour
     Action<WorkExperianceModel> OnUpdate;
 
     WorkExperianceModel updatedModel;
+
+    List<MultimediaModel> mediaList;
+
+    List<int> deletedMedia = new List<int>();
 
     private string mediaSource = "portfolio";
 
@@ -84,6 +92,8 @@ public class UpdateExperienceView : MonoBehaviour
             endDateText.text = DatePicker.Instance.GetDateString(endDate);
         }
 
+        mediaList = workModel.WorkExpMedia;
+
         UpdateMediaView();
 
         LoadRoles();
@@ -94,7 +104,6 @@ public class UpdateExperienceView : MonoBehaviour
 
             LoadIndustries();
         });
-
     }
 
     public void OnStartDateSelectedAction()
@@ -238,7 +247,7 @@ public class UpdateExperienceView : MonoBehaviour
 
             experianceModel.endDate = endDateText.text;
 
-            GameManager.Instance.apiHandler.UpdateWorkExperiance(experianceModel, workModel.id, uploadedDict, (status, response) =>
+            GameManager.Instance.apiHandler.UpdateWorkExperiance(experianceModel, workModel.id, deletedMedia, uploadedDict, (status, response) =>
             {
                 OnAPIResponse(status, response);
             });
@@ -347,6 +356,9 @@ public class UpdateExperienceView : MonoBehaviour
             case EMediaType.Video:
                 GalleryManager.Instance.GetVideosFromGallery(mediaSource, OnVideosUploaded);
                 break;
+            case EMediaType.Document:
+                GalleryManager.Instance.GetDocuments(mediaSource, OnDocumentsUploaded);
+                break;
         }
     }
 
@@ -356,7 +368,7 @@ public class UpdateExperienceView : MonoBehaviour
         {
             this.imageUrls = imageUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), OnDeleteAction: OnDeleteButtonAction);
 
             for (int i = 0; i < imageUrls.Count; i++)
             {
@@ -379,11 +391,19 @@ public class UpdateExperienceView : MonoBehaviour
         {
             this.imageUrls = audioUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Audio);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Audio, OnDeleteButtonAction);
 
             for (int i = 0; i < audioUrls.Count; i++)
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                albumModel = new MultimediaModel();
+
+                albumModel.content_url = audioUrls[i];
+
+                albumModel.media_type = "audio";
+
+                mediaList.Add(albumModel);
 
                 kvp.Add("content_id", 1);
 
@@ -402,11 +422,19 @@ public class UpdateExperienceView : MonoBehaviour
         {
             this.imageUrls = videoUrls;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), false, EMediaType.Video);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Video, OnDeleteButtonAction);
 
             for (int i = 0; i < videoUrls.Count; i++)
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                albumModel = new MultimediaModel();
+
+                albumModel.content_url = videoUrls[i];
+
+                albumModel.media_type = "video";
+
+                mediaList.Add(albumModel);
 
                 kvp.Add("content_id", 1);
 
@@ -419,30 +447,100 @@ public class UpdateExperienceView : MonoBehaviour
         }
     }
 
-    void UpdateMediaView()
+    void OnDocumentsUploaded(bool status, List<string> documentURLs)
     {
-        string[] _imageURls = new string[workModel.WorkExpMedia.Count];
-
-        int totalCount = workModel.WorkExpMedia.Count;
-
-        EMediaType mediaType;
-
-        for (int i = 0; i < totalCount; i++)
+        if (status)
         {
-            mediaType = DataManager.Instance.GetMediaType(workModel.WorkExpMedia[i].media_type);
+            this.imageUrls = documentURLs;
 
-            if (mediaType == EMediaType.Image)
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Document, OnDeleteButtonAction);
+
+            for (int i = 0; i < documentURLs.Count; i++)
             {
-                _imageURls[i] = workModel.WorkExpMedia[i].content_url;
+                Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                albumModel = new MultimediaModel();
+
+                albumModel.content_url = documentURLs[i];
+
+                albumModel.media_type = "document";
+
+                mediaList.Add(albumModel);
+
+                kvp.Add("content_id", 1);
+
+                kvp.Add("content_url", documentURLs[i]);
+
+                kvp.Add("media_type", "document");
+
+                uploadedDict.Add(kvp);
             }
         }
+    }
 
-        filesHandler.Load(_imageURls, true);
+    void UpdateMediaView()
+    {
+        GameObject cellObject;
+
+        EMediaType mediaType = EMediaType.Image;
+
+        for(int i = 0; i < mediaList.Count; i++)
+        {
+            cellObject = Instantiate(mediaCell, mediaContent);
+
+            mediaType = DataManager.Instance.GetMediaType(mediaList[i].media_type);
+
+            cellObject.GetComponent<UploadedFileCell>().Load(workModel.WorkExpMedia[i], mediaType, OnDeleteButtonAction);
+        }
     }
 
     void OnDeleteButtonAction(object model)
     {
-        string mediaURL = model as string;
+        MultimediaModel multimediaModel = model as MultimediaModel;
+
+        string url = string.Empty;
+
+        bool isItemRemoved = false;
+
+        int modelIndex = mediaList.IndexOf(multimediaModel) + 1;
+
+        Destroy(mediaContent.GetChild(modelIndex).gameObject);
+
+        if (multimediaModel.id != -1)
+        {
+            deletedMedia.Add(multimediaModel.id);
+        }
+        else
+        {
+            foreach (var item in uploadedDict)
+            {
+                Dictionary<string, object> mediaItem = item as Dictionary<string, object>;
+
+                foreach (var kvp in mediaItem)
+                {
+                    if (kvp.Key.Equals("content_url"))
+                    {
+                        url = kvp.Value as string;
+
+                        if (url.Equals(multimediaModel.content_url))
+                        {
+                            uploadedDict.Remove(mediaItem);
+
+                            isItemRemoved = true;
+
+                            break;
+                        }
+                    }
+                }
+
+                if (isItemRemoved)
+                {
+                    break;
+                }
+            }
+        }
+
+        mediaList.Remove(multimediaModel);
     }
 }
 

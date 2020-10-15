@@ -88,7 +88,7 @@ public class ProfileView : MonoBehaviour
 
     void ClearData()
     {
-        currentTab = EProfileTabType.Info;
+        currentTab = EProfileTabType.Features;
 
         currentObject?.SetActive(false);
 

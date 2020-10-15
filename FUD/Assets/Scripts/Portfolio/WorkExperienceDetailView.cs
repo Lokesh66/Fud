@@ -68,22 +68,18 @@ public class WorkExperienceDetailView : MonoBehaviour
 
     void UpdateMediaView()
     {
-        string[] _imageURls = new string[experianceModel.WorkExpMedia.Count];
-
-        int totalCount = experianceModel.WorkExpMedia.Count;
-
-        EMediaType mediaType;
-
-        for (int i = 0; i < totalCount; i++)
+        for (int i = 0; i < 4; i++)
         {
-            mediaType = DataManager.Instance.GetMediaType(experianceModel.WorkExpMedia[i].media_type);
-
-            if (mediaType == EMediaType.Image)
-            {
-                _imageURls[i] = experianceModel.WorkExpMedia[i].content_url;
-            }
+            filesHandler.Load(GetMediaModels(i), (EMediaType)i);
         }
+    }
 
-        filesHandler.Load(_imageURls, true);
+    List<MultimediaModel> GetMediaModels(int index)
+    {
+        EMediaType mediaType = (EMediaType)index;
+
+        List<MultimediaModel> multimediaModels = experianceModel.WorkExpMedia.FindAll(item => DataManager.Instance.GetMediaType(item.media_type) == mediaType);
+
+        return multimediaModels;
     }
 }
