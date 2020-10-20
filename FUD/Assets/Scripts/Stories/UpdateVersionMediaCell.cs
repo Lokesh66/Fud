@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UMP;
 
 
 public class UpdateVersionMediaCell : MonoBehaviour
 {
-    public Image albumImage;
+    public UniversalMediaPlayer mediaPlayer;
 
-    public RawImage videoIcon;
+    public RawImage albumImage;
 
     public GameObject pauseObject;
 
@@ -17,6 +18,10 @@ public class UpdateVersionMediaCell : MonoBehaviour
 
     Action<MultimediaModel> OnDeleteAction;
 
+
+    Sprite selectedSprite;
+
+    Texture2D imageTexture;
 
 
     public void SetView(MultimediaModel model, Action<MultimediaModel> OnDeleteAction)
@@ -31,34 +36,19 @@ public class UpdateVersionMediaCell : MonoBehaviour
 
         if (mediaType == EMediaType.Image)
         {
-            GameManager.Instance.apiHandler.DownloadImage(model.content_url, (sprite) =>
-            {
-                albumImage.sprite = sprite;
-            });
+            SetImageView();
         }
-    }
-
-    public void SetVideoThumbnail(Action OnNext)
-    {
-        if (mediaType == EMediaType.Video)
+        else if (mediaType == EMediaType.Audio)
         {
-            VideoStreamer.Instance.GetThumbnailImage(albumModel.content_url, (texture) =>
-            {
-                if (this != null)
-                {
-                    Rect rect = new Rect(0, 0, albumImage.rectTransform.rect.width, albumImage.rectTransform.rect.height);
-
-                    Sprite sprite = Sprite.Create(texture.ToTexture2D(), rect, new Vector2(0.5f, 0.5f));
-
-                    albumImage.sprite = sprite;
-
-                    OnNext?.Invoke();
-                }
-            });
+            SetAudioView();
         }
-        else
+        else if (mediaType == EMediaType.Video)
         {
-            OnNext?.Invoke();
+            SetVideoView();
+        }
+        else if (mediaType == EMediaType.Document)
+        {
+            SetDocumentView();
         }
     }
 
@@ -79,4 +69,51 @@ public class UpdateVersionMediaCell : MonoBehaviour
     {
         OnDeleteAction?.Invoke(albumModel);
     }
+
+    #region Update View
+
+    void SetImageView()
+    {
+        GameManager.Instance.apiHandler.DownloadImage(albumModel.content_url, (sprite) =>
+        {
+            if (this != null && sprite != null)
+            {
+                albumImage.texture = sprite.texture;
+            }
+        });
+    }
+
+    void SetVideoView()
+    {
+        mediaPlayer.Prepare();
+
+        mediaPlayer.Path = albumModel.content_url;
+
+        albumImage.texture = DataManager.Instance.GetVideoThumbnailSprite().texture;
+
+        mediaPlayer.AddImageReadyEvent((texture) =>
+        {
+            imageTexture = texture;
+
+            selectedSprite = Sprite.Create(imageTexture, albumImage.rectTransform.rect, new Vector2(0.5f, 0.5f));
+
+            albumImage.texture = texture;
+        });
+    }
+
+    void SetAudioView()
+    {
+        albumImage.texture = DataManager.Instance.GetAudioThumbnailSprite().texture;
+
+        mediaPlayer.Prepare();
+
+        mediaPlayer.Path = albumModel.content_url;
+    }
+
+    void SetDocumentView()
+    {
+        albumImage.texture = DataManager.Instance.GetPDFThumbnailSprite().texture;
+    }
+
+    #endregion
 }

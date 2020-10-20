@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UMP;
 
 
 public class BrowserMediaCell : MonoBehaviour
 {
-    public Image albumImage;
+    public UniversalMediaPlayer mediaPlayer;
 
-    public RawImage videoIcon;
+    public RawImage albumImage;
 
     public GameObject pauseObject;
 
@@ -27,31 +28,10 @@ public class BrowserMediaCell : MonoBehaviour
 
         if (mediaType == EMediaType.Image)
         {
-            GameManager.Instance.downLoadManager.DownloadImage(model.content_url, (sprite) =>
+            GameManager.Instance.apiHandler.DownloadImage(model.content_url, (sprite) =>
             {
-                albumImage.sprite = sprite;
+                albumImage.texture = sprite.texture;
             });
-        }
-    }
-
-    public void SetVideoThumbnail(Action OnNext)
-    {
-        if (mediaType == EMediaType.Video)
-        {
-            VideoStreamer.Instance.GetThumbnailImage(albumModel.content_url, (texture) =>
-            {
-                Rect rect = new Rect(0, 0, albumImage.rectTransform.rect.width, albumImage.rectTransform.rect.height);
-
-                Sprite sprite = Sprite.Create(texture.ToTexture2D(), rect, new Vector2(0.5f, 0.5f));
-
-                albumImage.sprite = sprite;
-
-                OnNext?.Invoke();
-            });
-        }
-        else
-        {
-            OnNext?.Invoke();
         }
     }
 
@@ -62,7 +42,6 @@ public class BrowserMediaCell : MonoBehaviour
 
     public void OnButtonAction()
     {
-
         //switch (mediaType)
         //{
         //    case EMediaType.Image:
@@ -79,12 +58,12 @@ public class BrowserMediaCell : MonoBehaviour
 
     void PlayVideo()
     {
-        VideoStreamer.Instance.StreamVideo(albumModel.content_url, null);
+        VideoStreamer.Instance.Play(albumImage, mediaPlayer, EMediaType.Video);
     }
 
     void PlayAudio()
     {
-        AudioStreamer.Instance.AudioStream(albumModel.content_url, null);
+        VideoStreamer.Instance.Play(albumImage, mediaPlayer, EMediaType.Audio);
     }
 
     void OpenBigScreen()

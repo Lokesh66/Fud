@@ -113,11 +113,11 @@ public class ShortListedAuditionView : MonoBehaviour
 
         if (mediaType == EMediaType.Video)
         {
-            VideoStreamer.Instance.StreamVideo(model.content_url, OnVideoComplete);
+            VideoStreamer.Instance.Play(selectedAuditionCell.icon, selectedAuditionCell.mediaPlayer, EMediaType.Video);
         }
         else if (mediaType == EMediaType.Audio)
         {
-            AudioStreamer.Instance.AudioStream(model.content_url, OnVideoComplete);
+            VideoStreamer.Instance.Play(selectedAuditionCell.icon, selectedAuditionCell.mediaPlayer, EMediaType.Audio);
         }
         else
         {

@@ -67,7 +67,9 @@ public class LoginHandler : MonoBehaviour
         {
             Dictionary<string, object> _body = body as Dictionary<string, object>;
 
-            contactNumber = long.Parse(_body["number"] as string);
+            Debug.Log("Number = " + _body["phone"]);
+
+            contactNumber = (long)_body["phone"];
 
             if (isNewUser)
             {
@@ -115,7 +117,13 @@ public class LoginHandler : MonoBehaviour
         }
         else
         {
-            SetView(ELoginFlow.SignUp);
+            if (isNewUser)
+            {
+                SetView(ELoginFlow.SignUp);
+            }
+            else {
+                SetView(ELoginFlow.Login);
+            }
         }
     }
 

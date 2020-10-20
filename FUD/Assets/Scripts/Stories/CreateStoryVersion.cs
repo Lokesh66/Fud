@@ -111,7 +111,7 @@ public class CreateStoryVersion : MonoBehaviour
 
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
-        GameManager.Instance.apiHandler.CreateStoryVersion(storyId, descriptionField.text, selectedGenre.id, accessDropdown.value, uploadedDict, (status, response) => {
+        GameManager.Instance.apiHandler.CreateStoryVersion(storyId, descriptionField.text, selectedGenre.id, accessDropdown.value + 1, uploadedDict, (status, response) => {
 
             apiResponse = response;
 

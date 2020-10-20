@@ -93,8 +93,6 @@ public partial class APIHandler
 #else
                 //TODO: iOS is pending
 
-                Debug.Log("iOS Cash free implementation is pending");
-
                 string jsonResponse = JsonUtility.ToJson(response);
 
                 Debug.Log("jsonResponse = " + jsonResponse);

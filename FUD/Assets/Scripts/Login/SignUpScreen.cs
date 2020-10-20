@@ -230,21 +230,25 @@ public class SignUpScreen : MonoBehaviour
         else if (!termsToggle.isOn)
         {
             ShowValidationMessage("Please accept terms and conditions to continue");
+
+            return;
         }
         else if (countryDropdown.value == 0)
         {
             ShowValidationMessage("Please select your country");
+
+            return;
         }
 
         Dictionary<string, object> body = new Dictionary<string, object>();
 
-        CountryModel selectedModel = countryModels[countryDropdown.value + 1];
+        CountryModel selectedModel = countryModels[countryDropdown.value];
 
         body.Add("name", nameFieldText.text);
 
-        body.Add("number", numberFieldText.text);
+        body.Add("phone", long.Parse(numberFieldText.text));
 
-        body.Add("country_id", selectedModel.id);
+        body.Add("country_id", selectedModel.phonecode);
 
         body.Add("role_id", this.selectedModel.id);
 

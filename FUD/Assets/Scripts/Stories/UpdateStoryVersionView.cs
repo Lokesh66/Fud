@@ -244,7 +244,7 @@ public class UpdateStoryVersionView : MonoBehaviour
 
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
-        GameManager.Instance.apiHandler.UpdateStoryVersion(storyId, storyVersion.id, descriptionField.text, selectedGenre.id, accessDropdown.value, uploadedDict, deletedMedia, (status, response) => {
+        GameManager.Instance.apiHandler.UpdateStoryVersion(storyId, storyVersion.id, descriptionField.text, selectedGenre.id, accessDropdown.value + 1, uploadedDict, deletedMedia, (status, response) => {
 
             if (status)
             {

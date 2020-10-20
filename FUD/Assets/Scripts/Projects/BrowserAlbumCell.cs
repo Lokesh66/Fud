@@ -40,21 +40,6 @@ public class BrowserAlbumCell : MonoBehaviour
         //}
     }
 
-    public void SetVideoThumbnail(MultimediaModel portfolioModel)
-    {
-        if (mediaType == EMediaType.Video)
-        {
-            VideoStreamer.Instance.GetThumbnailImage(portfolioModel.content_url, (texture) =>
-            {
-                //Rect rect = new Rect(0, 0, albumImage.rectTransform.rect.width, albumImage.rectTransform.rect.height);
-
-                //Sprite sprite = Sprite.Create(texture.ToTexture2D(), rect, new Vector2(0.5f, 0.5f));
-
-                albumImage.texture = texture;
-            });
-        }
-    }
-
     public void OnAlbumButtonAction()
     {
         OnSelectAction?.Invoke(true, portfolioModel);

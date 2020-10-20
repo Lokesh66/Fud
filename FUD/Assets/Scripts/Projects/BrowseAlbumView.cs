@@ -51,19 +51,4 @@ public class BrowseAlbumView : MonoBehaviour
             mediaCells.Add(_mediaCell);
         }
     }
-
-    void SetVideoThumbnails(int index)
-    {
-        mediaCells[index].SetVideoThumbnail(() => {
-
-            index++;
-
-            if (index >= mediaCells.Count)
-            {
-                return;
-            }
-
-            SetVideoThumbnails(index);
-        });
-    }
 }

@@ -31,7 +31,7 @@ public class LoginScreen : MonoBehaviour
             {
                 Dictionary<string, object> body = new Dictionary<string, object>();
 
-                body.Add("number", numberFieldText.text);
+                body.Add("phone", long.Parse(numberFieldText.text));
 
                 OnButtonAction?.Invoke(true, body);
             }

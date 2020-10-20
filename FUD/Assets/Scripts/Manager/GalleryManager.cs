@@ -160,22 +160,24 @@ public class GalleryManager : MonoBehaviour
 
     public void PickImages(string mediaSource, Action<bool, List<string>> OnUploaded)
     {
-        //string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "Banner+1.png");
+        string _filePath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, "Banner+1.png");
 
-        //uploadedURLs.Clear();
+        uploadedURLs.Clear();
 
-        //mediaURLsWithKey.Clear();
+        mediaURLsWithKey.Clear();
 
-        //this.OnUploaded = OnUploaded;
+        mediaList.Clear();
 
-        //selectedImagesCount = 1;
+        this.OnUploaded = OnUploaded;
 
-        //for (int i = 0; i < 1; i++)
-        //{
-        //    UploadFile(_filePath, EMediaType.Image, mediaSource);
-        //}
+        selectedImagesCount = 1;
 
-        //return;
+        for (int i = 0; i < 1; i++)
+        {
+            UploadFile(_filePath, EMediaType.Image, mediaSource);
+        }
+
+        return;
 
 #if UNITY_ANDROID
         NativeGallery.Permission permission = NativeGallery.GetImagesFromGallery((imagesPath) =>
