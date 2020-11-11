@@ -1,8 +1,7 @@
-﻿using UnityEngine;
-using TMPro;
-using System.Collections.Generic;
-using DG.Tweening;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using System;
+using TMPro;
 
 public class CreateScenesView : MonoBehaviour
 {
@@ -38,8 +37,6 @@ public class CreateScenesView : MonoBehaviour
     public TMP_InputField locationText;
     public TMP_InputField descriptionText;
     public TMP_Text startDateText;
-
-    public TMP_Text errorText;
 
     bool isNewSceneCreated;
 
@@ -111,7 +108,7 @@ public class CreateScenesView : MonoBehaviour
             creationModel.scene_order = int.Parse(sceneOrderText.text);
             creationModel.start_time = startDateText.text;
 
-            GameManager.Instance.apiHandler.CreateProjectScene(creationModel, dialoguesView.GetSceneCharacters(), dialoguesView.GetDialogues(false), (status, response) =>
+            GameManager.Instance.apiHandler.CreateProjectScene(creationModel, dialoguesView.GetSceneCharacters(), dialoguesView.GetDialogues(), (status, response) =>
             {
                 OnAPIResponse(status, response);
             });
@@ -151,22 +148,18 @@ public class CreateScenesView : MonoBehaviour
         if (string.IsNullOrEmpty(sceneOrderText.text))
         {
             errorMessage = "Scene order should not be empty";
-            //ShowErrorMessage("Audition type should not be empty");
         }
         else if (string.IsNullOrEmpty(locationText.text))
         {
             errorMessage = "Scene location should not be empty";
-            //ShowErrorMessage("Audition title should not be empty");
         }
         else if (string.IsNullOrEmpty(startDateText.text) || startDateText.text.Equals(defaultDateText))
         {
             errorMessage = "Start date should not be empty";
-            //ShowErrorMessage("Audition date should not be empty");
         }
         else if (string.IsNullOrEmpty(descriptionText.text))
         {
             errorMessage = "Scene description should not be empty";
-            //ShowErrorMessage("Audition description should not be empty");
         }
         if (!string.IsNullOrEmpty(errorMessage))
         {
@@ -190,7 +183,7 @@ public class CreateScenesView : MonoBehaviour
 
         sceneOrderText.text = locationText.text = descriptionText.text = string.Empty;
 
-        errorText.text = startDateText.text = string.Empty;
+        startDateText.text = string.Empty;
 
         dialoguesView.projectCharactersView.ClearData();
     }

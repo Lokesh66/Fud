@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using TMPro;
-using System.Collections.Generic;
+
 
 public class ProjectAuditionCell : MonoBehaviour
 {
@@ -11,13 +11,11 @@ public class ProjectAuditionCell : MonoBehaviour
     public TMP_Text projectNameText;
 
     Audition auditionData;
-    int index = 0;
+
 
     public void SetView(int index, Audition audition)
     {
         auditionData = audition;
-
-        this.index = index;
 
         if (auditionData != null)
         {
@@ -33,8 +31,6 @@ public class ProjectAuditionCell : MonoBehaviour
 
     public void OnClickAction()
     {
-        Debug.Log("OnClickAction ");
-
         ProjectsDetailedView.Instance.auditionDetails.Load(auditionData, (index) => {
 
             switch (index)
@@ -73,20 +69,13 @@ public class ProjectAuditionCell : MonoBehaviour
     void DeleteAudition()
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
+
         parameters.Add("id", auditionData.id);
-        //parameters.Add("user_id", DataManager.Instance.userInfo.id);
-        //parameters.Add("project_id", auditionData.project_id);
-        //parameters.Add("project_cast_id",auditionData.project_cast_id.ToString());
-        /*parameters.Add("topic", auditionData.topic);
-        string endDate = DatePicker.Instance.GetDateString(auditionData.end_date);
-        if(!string.IsNullOrEmpty(endDate))
-            parameters.Add("end_date", endDate);
-        parameters.Add("rate_of_pay", auditionData.rate_of_pay);*/
 
         parameters.Add("status",8);
 
         GameManager.Instance.apiHandler.ModifyAudition(parameters, (status, response) => {
-            Debug.Log("DeleteAudition : " + response);
+
             if (status)
             {
                 AlertModel alertModel = new AlertModel();
@@ -110,14 +99,11 @@ public class ProjectAuditionCell : MonoBehaviour
         parameters.Add("id", auditionData.id);
         parameters.Add("page", 0);
         parameters.Add("limit", 20);
-        //parameters.Add("status", "live");
 
         GameManager.Instance.apiHandler.SearchAuditions(1, parameters, (status, response) => {
 
             if (status)
             {
-                Debug.Log(response);
-
                 SearchAuditionResponse auditionResponse = JsonUtility.FromJson<SearchAuditionResponse>(response);
 
                 if (auditionResponse.data.Count > 0)

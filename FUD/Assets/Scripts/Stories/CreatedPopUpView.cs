@@ -24,7 +24,7 @@ public class CreatedPopUpView : MonoBehaviour
     {
         gameObject.SetActive(false);
 
-        StoryDetailsController.Instance.Load(storyCell.GetStoryModel().id, OnBackFromDetailView);
+        StoryDetailsController.Instance.Load(storyCell.GetStoryModel().Stories.id, OnBackFromDetailView);
     }
 
     void OnBackFromDetailView()

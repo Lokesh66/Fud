@@ -20,8 +20,6 @@ public class UserAuditionCell : MonoBehaviour
     [HideInInspector]
     public SearchAudition auditionData;
 
-    MultimediaModel auditionMultimedia;
-
     Action<UserAuditionCell> OnSelect;
 
     EMediaType mediaType;
@@ -56,8 +54,6 @@ public class UserAuditionCell : MonoBehaviour
                     {
                         mediaPlayer.Path = modelsList[0].content_url;
 
-                        mediaPlayer.Prepare();
-
                         mediaPlayer.AddEndReachedEvent(() =>
                         {
                             UpdateAuditionStatus();
@@ -65,6 +61,8 @@ public class UserAuditionCell : MonoBehaviour
 
                         if (mediaType == EMediaType.Video)
                         {
+                            mediaPlayer.Prepare();
+
                             mediaPlayer.AddImageReadyEvent((texture) =>
                             {
                                 icon.texture = texture;
@@ -80,15 +78,6 @@ public class UserAuditionCell : MonoBehaviour
     {
         Debug.Log("OnClickAction ");
         OnSelect?.Invoke(this);
-        /*AuditionJoinView.Instance.Load(auditionData, false, (index) => {
-            switch (index)
-            {
-                case 3:
-                    break;
-                case 4:
-                    break;
-            }
-        });*/
     }
 
     public void OnPlayButtonAction()
@@ -101,12 +90,6 @@ public class UserAuditionCell : MonoBehaviour
 
     void UpdateAuditionStatus()
     {
-        GameManager.Instance.apiHandler.UpdateAuditionStatus(auditionData.audition_id, auditionData.id, 10, (status, response) =>
-        {
-            if (status)
-            {
-                
-            }
-        });
+        GameManager.Instance.apiHandler.UpdateAuditionStatus(auditionData.audition_id, auditionData.id, 10, null);
     }
 }

@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using TMPro;
-using System.Collections.Generic;
-using DG.Tweening;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using System;
+using TMPro;
+
 
 public class UpdateSceneView : MonoBehaviour
 {
@@ -18,11 +18,7 @@ public class UpdateSceneView : MonoBehaviour
     public TextMeshProUGUI buttonText;
 
 
-    SceneModel sceneModel;
-
     SceneDetailsModel detailsModel;
-
-    ProjectScenesPanel scenesPanel;
 
     string defaultDateText = "Select Date";
 
@@ -31,10 +27,6 @@ public class UpdateSceneView : MonoBehaviour
 
     public void Load(SceneModel sceneModel, ProjectScenesPanel scenesPanel)
     {
-        this.scenesPanel = scenesPanel;
-
-        this.sceneModel = sceneModel;
-
         gameObject.SetActive(true);
 
         GameManager.Instance.apiHandler.GetSceneDetails(sceneModel.id, (status, response) => {
@@ -102,7 +94,7 @@ public class UpdateSceneView : MonoBehaviour
             creationModel.scene_order = int.Parse(sceneOrderText.text);
             creationModel.start_time = DateTime.Now.ToString();
 
-            GameManager.Instance.apiHandler.UpdateProjectScene(creationModel, detailsModel.id, dialoguesView.GetDialogues(true), dialoguesView.GetDialogues(false), (status, response) =>
+            GameManager.Instance.apiHandler.UpdateProjectScene(creationModel, detailsModel.id, dialoguesView.GetSceneCharacters(), dialoguesView.GetDialogues(), (status, response) =>
             {
                 OnAPIResponse(status, response);
             });
@@ -142,22 +134,18 @@ public class UpdateSceneView : MonoBehaviour
         if (string.IsNullOrEmpty(sceneOrderText.text))
         {
             errorMessage = "Scene order should not be empty";
-            //ShowErrorMessage("Audition type should not be empty");
         }
         else if (string.IsNullOrEmpty(locationText.text))
         {
             errorMessage = "Scene location should not be empty";
-            //ShowErrorMessage("Audition title should not be empty");
         }
         else if (string.IsNullOrEmpty(startDateText.text) || startDateText.text.Equals(defaultDateText))
         {
             errorMessage = "Start date should not be empty";
-            //ShowErrorMessage("Audition date should not be empty");
         }
         else if (string.IsNullOrEmpty(descriptionText.text))
         {
             errorMessage = "Scene description should not be empty";
-            //ShowErrorMessage("Audition description should not be empty");
         }
         if (!string.IsNullOrEmpty(errorMessage))
         {

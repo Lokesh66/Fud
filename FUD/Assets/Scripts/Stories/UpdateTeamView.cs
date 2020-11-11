@@ -125,6 +125,15 @@ public class UpdateTeamView : MonoBehaviour
 
             GetSearchedUsers();
         }
+        else
+        {
+            if (string.IsNullOrEmpty(memberField.text))
+            {
+                searchContent.DestroyChildrens();
+
+                scrollObject.SetActive(false);
+            }
+        }
     }
 
     public void OnBackButtonAction()

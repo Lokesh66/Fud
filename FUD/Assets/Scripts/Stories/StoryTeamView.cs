@@ -110,6 +110,5 @@ public class StoryTeamView : MonoBehaviour
         StoryTeamCell teamCell = content.GetChild(modelIndex).GetComponent<StoryTeamCell>();
 
         teamCell.Load(updatedModel, teamCell.GetButtonAction());
-
     }
 }

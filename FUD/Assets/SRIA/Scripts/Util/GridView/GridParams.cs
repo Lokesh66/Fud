@@ -90,8 +90,6 @@ namespace frame8.ScrollRectItemsAdapter.Util.GridView
 
 		protected void CreateCellGroupPrefab ()
 		{
-			Debug.LogError("CreateCellGroupPrefab Called");
-
 			var go = new GameObject (scrollRect.name + "_CellGroupPrefab", typeof(RectTransform));
 
 			// Additional reminder of the "add recttransform in awake" bug explained in InitIfNeeded()

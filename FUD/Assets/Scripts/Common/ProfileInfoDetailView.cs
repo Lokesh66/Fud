@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 
 
 public class ProfileInfoDetailView : MonoBehaviour
@@ -52,5 +50,4 @@ public class ProfileInfoDetailView : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
-
 }

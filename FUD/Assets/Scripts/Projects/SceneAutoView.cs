@@ -6,12 +6,16 @@ public class SceneAutoView : MonoBehaviour
 {
     public ScenesDocumentHandler filesHandler;
 
+    public SceneAlbumView sceneAlbumView;
 
-    public void Load(List<SceneCharacter> sceneCharacters)
+
+    public void Load(List<SceneCharacter> sceneCharacters, List<MultimediaModel> models)
     {
         gameObject.SetActive(true);
 
-        //filesHandler.Load(sceneCharacters, EMediaType.Document);
+        sceneAlbumView.Load(sceneCharacters);
+
+        filesHandler.Load(models, EMediaType.Document);
     }
 
     public void OnBackButtonAction()

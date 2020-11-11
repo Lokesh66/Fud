@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using TMPro;
-using UnityEngine.UI;
+
 
 public class PortfolioSearchCell : MonoBehaviour
 {

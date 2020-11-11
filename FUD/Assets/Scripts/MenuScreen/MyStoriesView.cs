@@ -21,7 +21,7 @@ public class MyStoriesView : MonoBehaviour
     public CreatedPopUpView popUpView;
 
 
-    public List<StoryModel> storiesList;
+    public List<StoryCreatedModel> storiesList;
 
     MyStoriesController storiesController;
 
@@ -60,11 +60,7 @@ public class MyStoriesView : MonoBehaviour
                         isInitialized = true;
                     }
                     else {
-                        tableView.Data.Clear();
-
-                        tableView.Data.Add(storiesList.Count);
-
-                        tableView.Refresh();
+                        Reload();
                     }
 
                     if (storiesList.Count == 0)
@@ -163,12 +159,17 @@ public class MyStoriesView : MonoBehaviour
                     pageNo++;
                 }
 
-                tableView.Data.Clear();
-
-                tableView.Data.Add(modelsList.Count);
-
-                tableView.Refresh();
+                Reload();
             }
         });
+    }
+
+    void Reload()
+    {
+        tableView.Data.Clear();
+
+        tableView.Data.Add(storiesList.Count);
+
+        tableView.Refresh();
     }
 }

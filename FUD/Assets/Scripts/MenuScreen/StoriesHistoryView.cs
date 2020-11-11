@@ -12,22 +12,10 @@ public class StoriesHistoryView : MonoBehaviour
     public StoriesHistoryTableView tableView;
 
 
-    public StoryHistoryActivityPopUp popUpView;
-
     [HideInInspector]
     public List<StoryHistoryModel> historyModels;
 
-    StoryDetailsController detaileController;
-
     bool isInitialized = false;
-
-    bool isPagingOver = false;
-
-    int storyId = -1;
-
-    int pageNo = 1;
-
-    int MAX_CREATED_STORIES = 50;
 
 
     public void Load(List<StoryHistoryModel> historyModels)
@@ -44,12 +32,10 @@ public class StoriesHistoryView : MonoBehaviour
         }
         else
         {
-            tableView.Data.Clear();
-
-            tableView.Data.Add(historyModels.Count);
-
-            tableView.Refresh();
+            Reload();
         }
+
+        noDataView.gameObject.SetActive(historyModels.Count <= 0);
     }
 
 
@@ -65,17 +51,12 @@ public class StoriesHistoryView : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    void OnStoryClosedAction()
+    void Reload()
     {
+        tableView.Data.Clear();
 
-    }
+        tableView.Data.Add(historyModels.Count);
 
-    NoDataModel GetNoDataModel()
-    {
-        NoDataModel noDataModel = new NoDataModel();
-
-        noDataModel.subTitle = "No Histories Now";
-
-        return noDataModel;
+        tableView.Refresh();
     }
 }

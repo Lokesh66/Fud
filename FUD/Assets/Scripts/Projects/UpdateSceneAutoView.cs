@@ -6,6 +6,8 @@ public class UpdateSceneAutoView : MonoBehaviour
 {
     public ScenesDocumentHandler filesHandler;
 
+    public UpdateSceneAlbumView albumView;
+
 
     UpdateSceneCharacterView dialoguesView;
 
@@ -14,11 +16,13 @@ public class UpdateSceneAutoView : MonoBehaviour
     string mediaSource = "scenes";
 
 
-    public void EnableView(UpdateSceneCharacterView dialoguesView, List<MultimediaModel> multimediaModels)
+    public void EnableView(UpdateSceneCharacterView dialoguesView, SceneDetailsModel detailsModel)
     {
         this.dialoguesView = dialoguesView;
 
-        filesHandler.Load(multimediaModels, EMediaType.Document);
+        filesHandler.Load(detailsModel.ScenesMultimedia, EMediaType.Document);
+
+        albumView.SetSceneCharactersView(detailsModel.project_id, detailsModel.SceneCharacters);
 
         gameObject.SetActive(true);
     }

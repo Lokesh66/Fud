@@ -180,7 +180,7 @@ public class MyStoriesController : BaseView
         }
     }
 
-    void OnStoryCreationCloseAction(StoryModel createModel)
+    void OnStoryCreationCloseAction(StoryCreatedModel createModel)
     {
         UpdateCurrentView();      
     }

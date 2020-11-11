@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using frame8.ScrollRectItemsAdapter.GridExample;
+﻿using frame8.ScrollRectItemsAdapter.GridExample;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -57,11 +56,7 @@ public class AuditionResponsesView : MonoBehaviour
         }
         else
         {
-            tableView.Data.Clear();
-
-            tableView.Data.Add(auditionResponses.Count);
-
-            tableView.Refresh();
+            Reload();
         }
     }
 
@@ -81,17 +76,14 @@ public class AuditionResponsesView : MonoBehaviour
         if (mediaType == EMediaType.Video)
         {
             UIManager.Instance.topCanvas.PlayVideo(selectedAuditionCell.icon, selectedAuditionCell.mediaPlayer);
-            //VideoStreamer.Instance.StreamVideo(model.content_url, OnVideoComplete);
         }
         else if (mediaType == EMediaType.Audio)
         {
             UIManager.Instance.topCanvas.PlayVideo(selectedAuditionCell.icon, selectedAuditionCell.mediaPlayer, EMediaType.Audio);
-            //AudioStreamer.Instance.AudioStream(model.content_url, OnVideoComplete);
         }
         else
         {
             UIManager.Instance.ShowBigScreen(model.content_url);
-            //buttonsPanel.SetActive(true);
         }
     }
 
@@ -132,11 +124,7 @@ public class AuditionResponsesView : MonoBehaviour
                     pageNo++;
                 }
 
-                tableView.Data.Clear();
-
-                tableView.Data.Add(auditionResponses.Count);
-
-                tableView.Refresh();
+                Reload();
             }
         });
     }
@@ -150,22 +138,17 @@ public class AuditionResponsesView : MonoBehaviour
     {
         auditionResponses = data as List<SearchAudition>;
 
-        tableView.Data.Clear();
-
-        if (auditionResponses.Count > 0)
-        {
-            tableView.Data.Add(auditionResponses.Count);
-
-            tableView.Refresh();
-        }
+        Reload();
 
         noDataObject.SetActive(auditionResponses.Count == 0);
     }
 
-    void OnVideoComplete()
+    void Reload()
     {
-        Debug.Log("OnVideo Complete Called : AuditionResponsesView");
+        tableView.Data.Clear();
 
-        //buttonsPanel.SetActive(true);
+        tableView.Data.Add(auditionResponses.Count);
+
+        tableView.Refresh();
     }
 }

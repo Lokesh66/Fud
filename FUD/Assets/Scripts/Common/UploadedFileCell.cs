@@ -19,14 +19,10 @@ public class UploadedFileCell : MonoBehaviour
 
     public GameObject pauseObject;
 
-    Sprite selectedSprite;
-
     //Action<MultimediaModel> OnDeleteAction;
 
 
     public MultimediaModel multimediaModel;
-
-    Texture2D imageTexture;
 
     EMediaType mediaType;
 
@@ -63,8 +59,6 @@ public class UploadedFileCell : MonoBehaviour
 
     public void OnButtonAction()
     {
-        Debug.Log("OnButtonAction : Media Type = " + mediaType + " content_url = " + multimediaModel.content_url);
-
         if (mediaType == EMediaType.Image)
         {
             UIManager.Instance.ShowBigScreen(multimediaModel.content_url);
@@ -113,18 +107,14 @@ public class UploadedFileCell : MonoBehaviour
 
     void SetVideoView()
     {
-        mediaPlayer.Prepare();
-
         mediaPlayer.Path = multimediaModel.content_url;
+
+        mediaPlayer.Prepare();
 
         selectedImage.texture = DataManager.Instance.GetVideoThumbnailSprite().texture;
 
         mediaPlayer.AddImageReadyEvent((texture) =>
         {
-            imageTexture = texture;
-
-            selectedSprite = Sprite.Create(imageTexture, selectedImage.rectTransform.rect, new Vector2(0.5f, 0.5f));
-
             selectedImage.texture = texture;
         });
     }
@@ -132,8 +122,6 @@ public class UploadedFileCell : MonoBehaviour
     void SetAudioView()
     {
         selectedImage.texture = DataManager.Instance.GetAudioThumbnailSprite().texture;
-
-        mediaPlayer.Prepare();
 
         mediaPlayer.Path = multimediaModel.content_url;
     }

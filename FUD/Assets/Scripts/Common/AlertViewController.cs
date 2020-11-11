@@ -29,8 +29,6 @@ public class AlertViewController : MonoBehaviour
         gameObject.SetActive(true);
 
         cancelButtonObject.SetActive(alertModel.canEnableCancelButton);
-
-       // okayClick.onClick.AddListener(delegate { alertModel.okayButtonAction?.Invoke(); });
     }
 
     public void OkbuttonAction()

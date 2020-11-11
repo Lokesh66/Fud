@@ -159,26 +159,4 @@ public class StoryShareFilterView : MonoBehaviour
             filterCells[4].Load(dropdownModels);
         });
     }
-
-    string GetGenderType(int index)
-    {
-        string gender = string.Empty;
-
-        switch(index)
-        {
-            case 0:
-                gender = "Male";
-                break;
-
-            case 1:
-                gender = "Female";
-                break;
-
-            case 2:
-                gender = "Others";
-                break;
-        }
-
-        return gender;
-    }
 }

@@ -12,8 +12,6 @@ public class AuditionView : BaseView
 
     public AuditionCreatedView createdView;
 
-    public GameObject addObject;
-
     public GameObject filterObject;
 
 
@@ -69,8 +67,6 @@ public class AuditionView : BaseView
 
     void UpdateCurrentView()
     {
-        //addObject.SetActive(currentTab == ETabType.Created);
-
         filterObject.SetActive(currentTab != ETabType.Created);
 
         switch (currentTab)
@@ -96,13 +92,7 @@ public class AuditionView : BaseView
     {
         if (DataManager.Instance.CanLoadScreen(EFeatureType.AuditionCreation))
         {
-            CreateAuditionView.Instance.SetView(1, (isNewDataUpdated) => {
-
-                if (isNewDataUpdated)
-                {
-
-                }
-            });
+            CreateAuditionView.Instance.SetView(1, null);
         }
         else
         {

@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using DG.Tweening;
+using TMPro;
+
 
 public class UpdatePortfolioView : MonoBehaviour
 {
@@ -26,8 +26,6 @@ public class UpdatePortfolioView : MonoBehaviour
     bool isShowingGalleryPanel = false;
 
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
-
-    List<CreatedPortfolioMediaCell> mediaCells = new List<CreatedPortfolioMediaCell>();
 
     List<MultimediaModel> mediaList = new List<MultimediaModel>();
 
@@ -63,8 +61,6 @@ public class UpdatePortfolioView : MonoBehaviour
             CreatedPortfolioMediaCell _mediaCell = mediaObject.GetComponent<CreatedPortfolioMediaCell>();
 
             _mediaCell.SetView(portfolioModel.PortfolioMedia[i], OnDeleteMediaAction);
-
-            mediaCells.Add(_mediaCell);
         }
     }
 
@@ -316,9 +312,9 @@ public class UpdatePortfolioView : MonoBehaviour
 
         float panelPosition = galleryPanel.anchoredPosition.y;
 
-        float targetPostion = panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
+        panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
 
-        galleryPanel.DOAnchorPosY(targetPostion, 0.4f);
+        galleryPanel.DOAnchorPosY(panelPosition, 0.4f);
     }
 
     public void OnBackButtonAction()

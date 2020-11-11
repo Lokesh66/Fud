@@ -123,6 +123,15 @@ public class ProjectTeamUpdateView : MonoBehaviour
 
             GetSearchedUsers();
         }
+        else
+        {
+            if (string.IsNullOrEmpty(memberField.text))
+            {
+                searchContent.DestroyChildrens();
+
+                scrollObject.SetActive(false);
+            }
+        }
     }
 
     public void OnBackButtonAction()

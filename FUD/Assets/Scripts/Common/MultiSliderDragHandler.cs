@@ -36,14 +36,10 @@ public class MultiSliderDragHandler : MonoBehaviour, IBeginDragHandler, IDragHan
         maxCurrentPosX = ageSlider.value > 0 ? ageSlider.handleRect.anchorMin.x * (maxMinAgePos - minAgePos) : 100.0f;
 
         maxCurrentPosX += 100.0f;
-
-        Debug.Log("OnBeginDrag : minPosX = " + minPosX + " ageSlider.value " + ageSlider.value + " maxCurrentPosX = " + maxCurrentPosX);
     }
 
     public void OnDrag(PointerEventData data)
     {
-        Debug.Log("OnDrag : eventData = " + data.position.x + " minCurrentPosX = " + minCurrentPosX);
-
         if (data.position.x >= minAgePos && data.position.x <= maxCurrentPosX)
         {
             UpdateSliderView(data.position.x);
@@ -72,8 +68,6 @@ public class MultiSliderDragHandler : MonoBehaviour, IBeginDragHandler, IDragHan
         minFillTrans.anchoredPosition = new Vector2(minCurrentPosX - 100, minFillTrans.anchoredPosition.y);
 
         minSliderTrans.sizeDelta = new Vector2(minFillTrans.anchoredPosition.x, minSliderTrans.sizeDelta.y);
-
-        Debug.Log("OnDrag : minAgeValue = " + minAgeValue);
 
         ageValueText.text = (int)minAgeValue + "-" + (int)ageSlider.value + " Yrs";
     }

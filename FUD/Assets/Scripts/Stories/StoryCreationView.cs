@@ -54,7 +54,7 @@ public class StoryCreationView : MonoBehaviour
     public Image titlePosterImage;
 
 
-    StoryModel createdModel;
+    StoryCreatedModel createdModel;
 
     List<Genre> genres;
 
@@ -62,7 +62,7 @@ public class StoryCreationView : MonoBehaviour
 
     string titlePosterURL = string.Empty;
 
-    System.Action<StoryModel> OnClose;
+    System.Action<StoryCreatedModel> OnClose;
 
     private string mediaSource = "stories";
 
@@ -72,7 +72,7 @@ public class StoryCreationView : MonoBehaviour
     private bool isShowingGalleryPanel = false;
 
 
-    public void Load(System.Action<StoryModel> onClose)
+    public void Load(System.Action<StoryCreatedModel> onClose)
     {
         parentPanel.gameObject.SetActive(true);
 

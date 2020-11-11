@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using System;
+
 
 public class DataManager : MonoBehaviour
 {
@@ -53,11 +54,6 @@ public class DataManager : MonoBehaviour
 
     private string mediaKey = string.Empty;
 
-
-    private void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
 
     public void UpdateCrafts(List<Craft> data)
     {

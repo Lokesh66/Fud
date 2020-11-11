@@ -1,6 +1,5 @@
 ﻿using frame8.ScrollRectItemsAdapter.GridExample;
 using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 using System;

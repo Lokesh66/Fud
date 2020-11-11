@@ -20,20 +20,6 @@ public class UIManager : MonoBehaviour
 
     public TopCanvas topCanvas;
 
-
-
-    void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-
-        Init();
-    }
-
-    void Init()
-    {
-        
-    }
-
     #region Un Available Features
     public void CreateUnAvaiableAlert(EFeatureType featureType)
     {

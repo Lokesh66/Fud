@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
-using TMPro;
 
 
 public class AuditionLiveFilterView : MonoBehaviour
@@ -16,8 +15,6 @@ public class AuditionLiveFilterView : MonoBehaviour
 
     public void Load(Action<object> OnApplyFilter)
     {
-        //this.auditionId = auditionId;
-
         gameObject.SetActive(true);
 
         this.OnApplyFilter = OnApplyFilter;

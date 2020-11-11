@@ -1,8 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using TMPro;
-using System.Collections.Generic;
-using DG.Tweening;
-using System;
+
 
 public class CreateCastView : MonoBehaviour
 {
@@ -52,6 +51,8 @@ public class CreateCastView : MonoBehaviour
     List<ProjectCharacter> characters = new List<ProjectCharacter>();
 
     System.Action<bool> backAction;
+
+
     public void SetView(int projectId, List<ProjectCharacter> characters, System.Action<bool> action)
     {
         this.projectId = projectId;
@@ -59,10 +60,12 @@ public class CreateCastView : MonoBehaviour
         isNewCastCreated = false;
         this.characters = characters;
         storyCharacterDropdown.options.Clear();
+
         foreach (ProjectCharacter character in characters)
         {
             storyCharacterDropdown.options.Add(new TMP_Dropdown.OptionData() { text = character.title });
         }
+
         parentPanel.gameObject.SetActive(true);
     }
     public void BackButtonAction()
@@ -75,20 +78,18 @@ public class CreateCastView : MonoBehaviour
     {
         //Call an API to add into audition list
         string errorMessage = string.Empty;
+
         if (string.IsNullOrEmpty(storyCharacterDropdown.captionText.text))
         {
             errorMessage = "Select character for casting";            
-            //ShowErrorMessage("Select character for casting");
         }
         else if (selectedModel == null)
         {
             errorMessage = "Select member for casting";
-            //ShowErrorMessage("Select member for casting");
         }
         else if (string.IsNullOrEmpty(descriptionText.text))
         {
             errorMessage = "Cast description should not be empty";
-            //ShowErrorMessage("Cast description should not be empty");
         }
         if (!string.IsNullOrEmpty(errorMessage))
         {
@@ -108,7 +109,6 @@ public class CreateCastView : MonoBehaviour
         parameters.Add("description", descriptionText.text);
 
         GameManager.Instance.apiHandler.CreateProjectCast(parameters, (status, response) => {
-            Debug.Log("OnCreateCast : "+response);
             if (status)
             {
                 isNewCastCreated = true;
@@ -127,22 +127,6 @@ public class CreateCastView : MonoBehaviour
             }
         });
     }   
-
-    void ShowErrorMessage(string message)
-    {
-        errorText.text = message;
-        if (IsInvoking("DisableErrorMessage"))
-            CancelInvoke("DisableErrorMessage");
-        Invoke("DisableErrorMessage", 2.0f);
-    }
-
-    void DisableErrorMessage()
-    {
-        errorText.DOFade(0f,0.5f).OnComplete(() => {
-            errorText.text = string.Empty;
-            errorText.color = Color.red;
-        });
-    }
 
     void GetSearchedUsers()
     {

@@ -95,11 +95,7 @@ public class AuditionCreatedView : MonoBehaviour
                 }
                 else
                 {
-                    tableView.Data.Clear();
-
-                    tableView.Data.Add(createdAuditions.Count);
-
-                    tableView.Refresh();
+                    Reload();
                 }
 
                 if (createdAuditions.Count == 0)
@@ -118,29 +114,6 @@ public class AuditionCreatedView : MonoBehaviour
         });
     }
 
-    public void CreateAudition()
-    {
-        Dictionary<string, object> parametres = new Dictionary<string, object>();
-        GameManager.Instance.apiHandler.CreateAudition(parametres, (bool status, string response) =>
-        {
-            if (status)
-            {
-                Debug.Log("CreateAuction : "+ response);
-            }
-        });
-    }
-
-    public void ModifyAudition()
-    {
-        Dictionary<string, object> parametres = new Dictionary<string, object>();
-        GameManager.Instance.apiHandler.ModifyAudition(parametres, (bool status, string response) =>
-        {
-            if (status)
-            {
-                Debug.Log("ModifyAuction : " + response);
-            }
-        });
-    }
     #endregion
 
     NoDataModel GetNoDataModel()
@@ -172,6 +145,7 @@ public class AuditionCreatedView : MonoBehaviour
             if (status)
             {
                 AuditionsResponse auditionsResponse = JsonUtility.FromJson<AuditionsResponse>(response);
+
                 this.createdAuditions = auditionsResponse.data;
 
                 pageNo++;
@@ -189,11 +163,7 @@ public class AuditionCreatedView : MonoBehaviour
                     pageNo++;
                 }
 
-                tableView.Data.Clear();
-
-                tableView.Data.Add(createdAuditions.Count);
-
-                tableView.Refresh();
+                Reload();
             }
         });
     }
@@ -209,13 +179,18 @@ public class AuditionCreatedView : MonoBehaviour
     {
         createdAuditions = data as List<Audition>;
 
+        Reload();
+
+        noDataView.gameObject.SetActive(createdAuditions.Count == 0);
+    }
+
+    void Reload()
+    {
         tableView.Data.Clear();
 
         tableView.Data.Add(createdAuditions.Count);
 
         tableView.Refresh();
-
-        noDataView.gameObject.SetActive(createdAuditions.Count == 0);
     }
 }
 

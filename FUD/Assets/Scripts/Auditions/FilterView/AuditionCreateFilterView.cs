@@ -1,17 +1,11 @@
 ﻿using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
 using System;
-using TMPro;
 
 
 public class AuditionCreateFilterView : MonoBehaviour
 {
-
     public List<FilterCell> filterCells;
-
-
-    List<AuditionProjectModel> projectsModels;
 
     Action<object> OnApplyFilter;
 

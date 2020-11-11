@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using TMPro;
-using System.IO;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using DG.Tweening;
+using TMPro;
+
 
 public class PortfolioCreationView : MonoBehaviour
 {
@@ -226,9 +226,9 @@ public class PortfolioCreationView : MonoBehaviour
     {
         float panelPosition = galleryPanel.anchoredPosition.y;
 
-        float targetPostion = panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
+        panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
 
-        galleryPanel.DOAnchorPosY(targetPostion, 0.4f);
+        galleryPanel.DOAnchorPosY(panelPosition, 0.4f);
     }
 
     void OnDeleteMediaAction(object mediaURL)

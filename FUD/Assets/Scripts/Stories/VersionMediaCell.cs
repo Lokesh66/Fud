@@ -4,7 +4,7 @@ using System;
 using UMP;
 
 
-public class  VersionMediaCell : MonoBehaviour
+public class VersionMediaCell : MonoBehaviour
 {
     public UniversalMediaPlayer mediaPlayer;
 
@@ -44,14 +44,16 @@ public class  VersionMediaCell : MonoBehaviour
 
             //GalleryManager.Instance.loadingCountText.text += "\n Story Creation : " + imagePath;
 
-            mediaPlayer.Prepare();
-
             albumImage.texture = mediaType == EMediaType.Audio ? DataManager.Instance.audioThumbnailSprite.texture : DataManager.Instance.videoThumbnailSprite.texture;
 
             if (mediaType == EMediaType.Video)
             {
+                mediaPlayer.Prepare();
+
                 mediaPlayer.AddImageReadyEvent((texture) =>
                 {
+                    GalleryManager.Instance.loadingCountText.text += "\n AddImageReadyEvent = texture : " + texture;
+
                     if (texture != null)
                     {
                         albumImage.texture = texture;

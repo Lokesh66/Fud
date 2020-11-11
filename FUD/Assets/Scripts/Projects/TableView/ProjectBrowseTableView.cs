@@ -149,7 +149,7 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 		{
 			base.CollectViews ();
 
-			views.GetComponentAtPath("AlbumImage", out remoteImageBehaviour);
+			views.GetComponentAtPath("ImageMask/AlbumImage", out remoteImageBehaviour);
 		}
 
 		protected override RectTransform GetViews ()

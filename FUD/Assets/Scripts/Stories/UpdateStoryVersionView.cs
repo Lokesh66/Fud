@@ -10,8 +10,6 @@ public class UpdateStoryVersionView : MonoBehaviour
 {
     public UploadedFilesHandler filesHandler;
 
-    public TMP_Dropdown roledropDown;
-
     public TMP_InputField descriptionField;
 
     public RectTransform galleryPanel;
@@ -22,8 +20,6 @@ public class UpdateStoryVersionView : MonoBehaviour
 
     public TMP_Dropdown accessDropdown;
 
-
-    List<Genre> genres;
 
     List<string> imageUrls;
 
@@ -81,29 +77,7 @@ public class UpdateStoryVersionView : MonoBehaviour
 
         accessDropdown.value = storyVersion.access_modifier;
 
-        PopulateDropdown();
-
         LoadMedia();
-    }
-
-    void PopulateDropdown()
-    {
-        genres = DataManager.Instance.genres;
-
-        Genre requiredGenre = genres.Find(genre => genre.id == storyVersion.genre_id);
-
-        List<string> options = new List<string>();
-
-        foreach (var option in genres)
-        {
-            options.Add(option.name);
-        }
-
-        roledropDown.ClearOptions();
-
-        roledropDown.AddOptions(options);
-
-        roledropDown.value = genres.IndexOf(requiredGenre);
     }
 
     void LoadMedia()
@@ -238,22 +212,10 @@ public class UpdateStoryVersionView : MonoBehaviour
         {
             return;
         }
-        string selectedGenreText = roledropDown.options[roledropDown.value].text;
-
-        Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
 
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
-        GameManager.Instance.apiHandler.UpdateStoryVersion(storyId, storyVersion.id, descriptionField.text, selectedGenre.id, accessDropdown.value + 1, uploadedDict, deletedMedia, (status, response) => {
-
-            if (status)
-            {
-                
-            }
-            else
-            {
-                Debug.LogError("Story Updation Failed");
-            }
+        GameManager.Instance.apiHandler.UpdateStoryVersion(storyId, storyVersion.id, descriptionField.text, accessDropdown.value + 1, uploadedDict, deletedMedia, (status, response) => {
 
             OnAPIResponse(status, response);
         });

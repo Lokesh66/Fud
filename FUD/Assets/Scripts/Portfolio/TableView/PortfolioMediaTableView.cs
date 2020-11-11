@@ -1,16 +1,10 @@
-﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
-using System;
-using System.Collections.Generic;
-using frame8.Logic.Misc.Visual.UI.ScrollRectItemsAdapter;
-using frame8.Logic.Misc.Other.Extensions;
+﻿using frame8.ScrollRectItemsAdapter.MultiplePrefabsExample;
 using frame8.ScrollRectItemsAdapter.Util.GridView;
 using frame8.ScrollRectItemsAdapter.Util;
-using frame8.ScrollRectItemsAdapter.Util.Drawer;
-using frame8.Logic.Misc.Visual.UI.MonoBehaviours;
-using frame8.ScrollRectItemsAdapter.MultiplePrefabsExample;
-using frame8.Logic.Misc.Visual.UI;
+using frame8.Logic.Misc.Other.Extensions;
+using UnityEngine.UI;
+using UnityEngine;
+
 
 namespace frame8.ScrollRectItemsAdapter.GridExample
 {
@@ -20,7 +14,6 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 	/// </summary>
 	public class PortfolioMediaTableView : GridAdapter<GridParams, PortfolioMediaCellHolder>, ILazyListSimpleDataManager<PortfolioModel>
 	{
-
 		public UnityEngine.Events.UnityEvent OnItemsUpdated;
 
 		private LazyList<PortfolioModel> _Data;
@@ -54,24 +47,6 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 			base.Start ();
 		}
 
-		void OnReceivedNewModels (int newCount)
-		{
-			Data.Clear ();
-			Data.InitWithNewCount (newCount);
-
-			ResetItems (Data.Count, true);
-			if (OnItemsUpdated != null)
-				OnItemsUpdated.Invoke ();
-		}
-
-		IEnumerator FetchItemModelsFromServer (int count, Action onDone)
-		{
-			// Simulating server delay
-			yield return new WaitForSeconds (DrawerCommandPanel.Instance.serverDelaySetting.InputFieldValueAsInt);
-
-			onDone ();
-		}
-
 		PortfolioModel CreateNewModel (int index)
 		{
 			return adataObject.portfolioModels [index];
@@ -101,9 +76,7 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 
 			viewsHolder.views.gameObject.transform.parent.GetComponent<PortfolioMediaCell> ().SetView (model, adataObject.OnCellButtonAction);
 
-			var imageURLAtRequest = model.onScreenModel.content_url;
-
-			Debug.Log("content_url = " + model.onScreenModel.content_url);
+			var imageURLAtRequest = model.thumbnail_image;
 
 			int itemIndexAtRequest = viewsHolder.ItemIndex;
 
@@ -117,8 +90,6 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 
 			if ((viewsHolder.ItemIndex != 0 && viewsHolder.ItemIndex == Data.Count - 12 && _ScrollRect.velocity.y > 10) ||(Data.Count < 12 && viewsHolder.ItemIndex == Data.Count - 1))
 			{
-				Debug.LogError("It's Reaching to Last Index");
-
 				if (adataObject != null)
 					adataObject.OnAPICall();
 			}
@@ -144,7 +115,7 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 		{
 			base.CollectViews ();
 
-			views.GetComponentAtPath("AlbumImage", out remoteImageBehaviour);
+			views.GetComponentAtPath("ImageMask/AlbumImage", out remoteImageBehaviour);
 		}
 
 		protected override RectTransform GetViews ()

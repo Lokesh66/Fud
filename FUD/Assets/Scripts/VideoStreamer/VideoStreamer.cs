@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UMP;
-
+using DG.Tweening;
 
 public class VideoStreamer : MonoBehaviour
 {
@@ -33,7 +32,11 @@ public class VideoStreamer : MonoBehaviour
 
     #region UniversalMediaPlayer
 
+    public RectTransform musicDiscTrans;
+
     public DragHelper dragHelper;
+
+    public CanvasGroup canvasGroup;
 
     private const string SHADER_BORDER_U_WIDTH = "_BorderUWidth";
     private const string SHADER_BORDER_V_WIDTH = "_BorderVWidth";
@@ -43,6 +46,8 @@ public class VideoStreamer : MonoBehaviour
     public GameObject pauseObject;
 
     public GameObject playObject;
+
+    public GameObject audioObject;
 
     public RawImage updatedRawImage;
 
@@ -58,14 +63,22 @@ public class VideoStreamer : MonoBehaviour
 
     UniversalMediaPlayer currentPlayer;
 
-    private Material _objectMaterial;
+    EMediaType mediaType;
 
-    private RawImage prevImage;
+    private Material _objectMaterial;
 
     private Vector2 _objectSize;
     private Vector2 _videoSize;
     private Vector2 _calcSize;
     private Vector2 _borderUVSize;
+
+    Vector3 rotationValue = new Vector3(0, 0, 360);
+
+    RotateMode rotateMode = RotateMode.FastBeyond360;
+
+    Sequence mySequence = null;
+
+    bool isShowingUI = false;
 
     float currentPosValue = -1;
 
@@ -74,6 +87,12 @@ public class VideoStreamer : MonoBehaviour
     {
         updatedRawImage.texture = rawImage.texture;
 
+        this.mediaType = mediaType;
+
+        audioObject.SetActive(mediaType == EMediaType.Audio);
+
+        volumeSlider.value = mediaPlayer.Volume;
+        
         updatedRawImage.gameObject.SetActive(true);
 
         currentPosValue = -1;
@@ -84,7 +103,7 @@ public class VideoStreamer : MonoBehaviour
 
         mediaPlayer.AddEndReachedEvent(() => {
 
-            updatedRawImage.gameObject.SetActive(false);
+            ResetView();
         });
 
         mediaPlayer.AddPositionChangedEvent((positon) =>
@@ -109,6 +128,8 @@ public class VideoStreamer : MonoBehaviour
         }
         else
         {
+            UpdateAudioView();
+
             mediaPlayer.AddPreparedEvent((width, height) => {
 
                 if (!mediaPlayer.IsPlaying)
@@ -118,42 +139,21 @@ public class VideoStreamer : MonoBehaviour
             });
         }
 
-        int minutes;
-
-        int seconds;
-
-        int hours = (int)TimeSpan.FromMilliseconds(mediaPlayer.Length).TotalHours;
-
-        if (hours > 0)
-        {
-            minutes = (int)TimeSpan.FromMilliseconds(mediaPlayer.Length).TotalHours % 60;
-        }
-        else
-        {
-            minutes = (int)TimeSpan.FromMilliseconds(mediaPlayer.Length).TotalMinutes;
-        }
-
-        if (minutes > 0)
-        {
-            seconds = (int)TimeSpan.FromMilliseconds(mediaPlayer.Length).TotalMinutes % 60;
-        }
-        else {
-            seconds = (int)TimeSpan.FromMilliseconds(mediaPlayer.Length).TotalSeconds;
-        }
-
-        Debug.Log("Milliseconds = " + mediaPlayer.Length);
-            
-        Debug.Log("seconds = " + seconds);
-
-        Debug.Log("minutes = " + minutes);
-
-        Debug.Log("hours = " + hours);
-
-        mediaLengthText.text = mediaPlayer.GetFormattedLength(false);
-
-        mediaLengthText.text = hours > 0 ? string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds) : string.Format("{0:00}:{1:00}", minutes, seconds);
-
         currentPlayer = mediaPlayer;
+
+        StopCoroutine(UpdateMediaLength());
+
+        StartCoroutine(UpdateMediaLength());
+    }
+
+    IEnumerator UpdateMediaLength()
+    {
+        while (currentPlayer.Length <= 0)
+        {
+            yield return new WaitForEndOfFrame();
+
+            mediaLengthText.text = currentPlayer.GetFormattedLength(false);
+        }
     }
 
     void OnBuffering(float percentage)
@@ -164,8 +164,6 @@ public class VideoStreamer : MonoBehaviour
     private IEnumerator UpdateVideoCanvasRatio(RawImage rawImage)
     {
         _objectMaterial = rawImage.material;
-
-        Debug.Log("UpdateVideoCanvasRatio Called = " + rawImage.material);
 
         while (true)
         {
@@ -217,6 +215,8 @@ public class VideoStreamer : MonoBehaviour
 
     public void OnPauseButtonAction()
     {
+        StopMusic();
+
         currentPlayer?.Pause();
 
         playObject.SetActive(false);
@@ -226,6 +226,11 @@ public class VideoStreamer : MonoBehaviour
 
     public void OnPlayButtonAction()
     {
+        if (mediaType == EMediaType.Audio)
+        {
+            UpdateAudioView();
+        }
+
         currentPlayer?.Play();
 
         pauseObject.SetActive(false);
@@ -236,6 +241,57 @@ public class VideoStreamer : MonoBehaviour
     public void OnCloseAction()
     {
         currentPlayer?.Stop();
+
+        updatedRawImage.gameObject.SetActive(false);
+    }
+
+    public void OnPointerClick()
+    {
+        if (!isShowingUI)
+        {
+            canvasGroup.DOFade(1.0f, 0.2f);
+        }
+
+        isShowingUI = true;
+
+        CancelInvoke("DisableUI");
+
+        Invoke("DisableUI", 5.0f);
+    }
+
+    void DisableUI()
+    {
+        canvasGroup.DOFade(0.0f, 0.5f);
+
+        isShowingUI = false;
+    }
+
+    void UpdateAudioView()
+    {
+        Sequence mySequence = DOTween.Sequence();
+
+        mySequence.Append(musicDiscTrans.DOLocalRotate(rotationValue, 0.6f, rotateMode).SetEase(Ease.Linear));
+
+        this.mySequence = mySequence.Play().SetLoops(-1);
+    }
+
+    void StopMusic()
+    {
+        if (mySequence.IsPlaying())
+        {
+            mySequence.Kill(true);
+
+            musicDiscTrans.DOKill(true);
+        }
+    }
+
+    void ResetView()
+    {
+        StopMusic();
+
+        StopAllCoroutines();
+
+        currentPlayer.Stop();
 
         updatedRawImage.gameObject.SetActive(false);
     }

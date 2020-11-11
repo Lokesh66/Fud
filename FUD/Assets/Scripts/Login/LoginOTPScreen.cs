@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-using DG.Tweening;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
+using UnityEngine;
 using TMPro;
 
 public class LoginOTPScreen : MonoBehaviour

@@ -24,6 +24,8 @@ public class PortfolioOfferedView : MonoBehaviour
 
     bool isPagingOver = false;
 
+    bool isInitialized = false;
+
     int pageNo = 1;
 
     int MAX_OFFERED_PORTFOLIOS = 50;
@@ -40,13 +42,9 @@ public class PortfolioOfferedView : MonoBehaviour
 
     void LoadOfferedData()
     {
-        tableView.gameObject.SetActive(false);
-
         GameManager.Instance.apiHandler.GetPortfolioPosts(pageNo, (status, response) => {
 
             PortfolioPostResponse responseModel = JsonUtility.FromJson<PortfolioPostResponse>(response);
-
-            Debug.Log("LoadOfferedData : Response = " + response);
 
             if (status)
             {
@@ -61,9 +59,18 @@ public class PortfolioOfferedView : MonoBehaviour
                     pageNo = 1;
                 }
 
-                noDataObject.SetActive(activityModels.Count == 0);
+                if (!isInitialized)
+                {
+                    tableView.gameObject.SetActive(true);
 
-                tableView.gameObject.SetActive(true);
+                    isInitialized = true;
+                }
+                else
+                {
+                    Reload();
+                }
+
+                noDataObject.SetActive(activityModels.Count == 0);
             }
         });
     }
@@ -101,11 +108,7 @@ public class PortfolioOfferedView : MonoBehaviour
                     pageNo++;
                 }
 
-                tableView.Data.Clear();
-
-                tableView.Data.Add(activityModels.Count);
-
-                tableView.Refresh();
+                Reload();
             }
         });
     }
@@ -114,11 +117,7 @@ public class PortfolioOfferedView : MonoBehaviour
     {
         activityModels.Remove(activityModel);
 
-        tableView.Data.Clear();
-
-        tableView.Data.Add(activityModels.Count);
-
-        tableView.Refresh();
+        Reload();
     }
 
     public void OnFilterButtonAction()
@@ -130,11 +129,7 @@ public class PortfolioOfferedView : MonoBehaviour
     {
         activityModels = data as List<PortfolioActivityModel>;
 
-        tableView.Data.Clear();
-
-        tableView.Data.Add(activityModels.Count);
-
-        tableView.Refresh();
+        Reload();
 
         noDataObject.SetActive(activityModels?.Count == 0);
     }
@@ -142,5 +137,14 @@ public class PortfolioOfferedView : MonoBehaviour
     void ClearData()
     {
         filterView.ClearData();
+    }
+
+    void Reload()
+    {
+        tableView.Data.Clear();
+
+        tableView.Data.Add(activityModels.Count);
+
+        tableView.Refresh();
     }
 }

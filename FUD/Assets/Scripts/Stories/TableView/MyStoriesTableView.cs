@@ -2,15 +2,11 @@
 using System.Collections;
 using UnityEngine.UI;
 using System;
-using System.Collections.Generic;
-using frame8.Logic.Misc.Visual.UI.ScrollRectItemsAdapter;
 using frame8.Logic.Misc.Other.Extensions;
 using frame8.ScrollRectItemsAdapter.Util.GridView;
 using frame8.ScrollRectItemsAdapter.Util;
 using frame8.ScrollRectItemsAdapter.Util.Drawer;
-using frame8.Logic.Misc.Visual.UI.MonoBehaviours;
 using frame8.ScrollRectItemsAdapter.MultiplePrefabsExample;
-using frame8.Logic.Misc.Visual.UI;
 
 namespace frame8.ScrollRectItemsAdapter.GridExample
 {
@@ -18,14 +14,14 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 	/// Implementation demonstrating the usage of a <see cref="GridAdapter{TParams, TCellVH}"/> for a simple gallery of remote images downloaded with a <see cref="SimpleImageDownloader"/>.
 	/// It implements  <see cref="ILazyListSimpleDataManager{TItem}"/> to access the default interface implementations for common data manipulation functionality
 	/// </summary>
-	public class MyStoriesTableView : GridAdapter<GridParams, CreatedStoryCellViewHolder>, ILazyListSimpleDataManager<StoryModel>
+	public class MyStoriesTableView : GridAdapter<GridParams, CreatedStoryCellViewHolder>, ILazyListSimpleDataManager<StoryCreatedModel>
 	{
 
 		public UnityEngine.Events.UnityEvent OnItemsUpdated;
 
-		private LazyList<StoryModel> _Data;
+		private LazyList<StoryCreatedModel> _Data;
 
-		public LazyList<StoryModel> Data { get { return _Data; } private set { _Data = value; } }
+		public LazyList<StoryCreatedModel> Data { get { return _Data; } private set { _Data = value; } }
 
 		public MyStoriesView adataObject;
 
@@ -45,7 +41,7 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 
 		public void OnEnable ()
 		{
-			Data = new LazyList<StoryModel> (CreateNewModel, adataObject.storiesList.Count);
+			Data = new LazyList<StoryCreatedModel> (CreateNewModel, adataObject.storiesList.Count);
 		}
 
 		/// <inheritdoc/>
@@ -72,7 +68,7 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 			onDone ();
 		}
 
-		StoryModel CreateNewModel (int index)
+		StoryCreatedModel CreateNewModel (int index)
 		{
 			return adataObject.storiesList [index];
 		}
@@ -101,7 +97,7 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 
 			viewsHolder.views.gameObject.transform.parent.GetComponent<StoryCell> ().SetView (model, adataObject.OnStoryTapAction);
 
-			var imageURLAtRequest = model.title_poster;
+			var imageURLAtRequest = model.Stories.title_poster;
 
 			int itemIndexAtRequest = viewsHolder.ItemIndex;
 
@@ -127,7 +123,7 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 			return
 				_CellsCount > itemIndex// be sure the index still points to a valid model
 				&& itemIdexAtRequest == itemIndex// be sure the view's associated model index is the same (i.e. the viewsHolder wasn't re-used)
-				&& imageURLAtRequest == Data[itemIndex].title_poster; // be sure the model at that index is the same (could have changed if ChangeItemCountTo would've been called meanwhile)
+				&& imageURLAtRequest == Data[itemIndex].Stories.title_poster; // be sure the model at that index is the same (could have changed if ChangeItemCountTo would've been called meanwhile)
 		}
 
 		#endregion

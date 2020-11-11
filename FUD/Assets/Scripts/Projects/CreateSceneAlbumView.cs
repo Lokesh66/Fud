@@ -21,8 +21,6 @@ public class CreateSceneAlbumView : MonoBehaviour
 
     List<SceneAlbumModel> selectedCharacters = new List<SceneAlbumModel>();
 
-    int MAX_USERS = 50;
-
     int projectId;
 
     bool isInitialized = false;
@@ -43,20 +41,7 @@ public class CreateSceneAlbumView : MonoBehaviour
             {
                 this.dataList = dataList;
 
-                if (!isInitialized)
-                {
-                    tableView.gameObject.SetActive(true);
-
-                    isInitialized = true;
-                }
-                else
-                {
-                    tableView.Data.Clear();
-
-                    tableView.Data.Add(dataList.Count);
-
-                    tableView.Refresh();
-                }
+                Reload();
 
                 noDataObject.SetActive(dataList.Count == 0);
             }
@@ -92,8 +77,6 @@ public class CreateSceneAlbumView : MonoBehaviour
         this.projectId = projectId;
 
         dataList = projectCharactersView.GetSelectedCharacters();
-
-        
 
         Reload();
     }

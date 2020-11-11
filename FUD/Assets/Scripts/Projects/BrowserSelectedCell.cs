@@ -1,7 +1,8 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
-using System;
 using System.IO;
+using System;
+
 
 public class BrowserSelectedCell : MonoBehaviour
 {
@@ -24,12 +25,6 @@ public class BrowserSelectedCell : MonoBehaviour
             onScreenModel = portfolioModel.onScreenModel;
 
             UpdateMediaImage();
-
-            //Texture2D texture = NativeGallery.LoadImageAtPath(albumModel.onScreenModel.content_url, markTextureNonReadable: false);
-
-            //TextureScale.ThreadedScale(texture, 180, 180, true);
-
-            //albumImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
         }
     }
 
@@ -56,8 +51,6 @@ public class BrowserSelectedCell : MonoBehaviour
             Texture2D _texture = new Texture2D(2, 2, format, true, false);
 
             TextureScale.ThreadedScale(_texture, 180, 180, true);
-
-            Debug.Log("albumImage = " + albumImage + " texture = " + texture);
 
             albumImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
         });

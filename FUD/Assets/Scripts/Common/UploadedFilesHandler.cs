@@ -1,8 +1,6 @@
-using Paroxe.PdfRenderer;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 
 public class UploadedFilesHandler : MonoBehaviour
@@ -16,15 +14,8 @@ public class UploadedFilesHandler : MonoBehaviour
     public bool isSingleImage = false;
 
 
-    EMediaType mediaType;
-
-
     public void Load(List<MultimediaModel> mediaList, EMediaType mediaType = EMediaType.Image, Action<object> OnDeleteAction = null)
     {
-        //content.DestroyChildrens();
-
-        this.mediaType = mediaType;
-
         UploadedFileCell fileCell = null;
 
         for(int i = 0; i < mediaList.Count; i++)

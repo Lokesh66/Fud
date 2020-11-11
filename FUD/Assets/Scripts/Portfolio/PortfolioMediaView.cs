@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class PortfolioMediaView : MonoBehaviour
 {
-    public RectTransform content;
-
-
     public PortfolioMediaDetails mediaDetailsView;
 
     public PortfolioShareView shareView;
@@ -17,8 +14,6 @@ public class PortfolioMediaView : MonoBehaviour
 
     public GameObject noDataObject;
 
-
-    PortfolioModel selectedModel;
 
     bool isInitialized = false;
 
@@ -45,7 +40,6 @@ public class PortfolioMediaView : MonoBehaviour
 
         GameManager.Instance.apiHandler.GetAllAlbums(pageNo, (status, models) =>
         {
-
             if (portfolioModels == null)
                 return;
 
@@ -70,11 +64,7 @@ public class PortfolioMediaView : MonoBehaviour
                 }
                 else
                 {
-                    tableView.Data.Clear();
-
-                    tableView.Data.Add(portfolioModels.Count);
-
-                    tableView.Refresh();
+                    Reload();
                 }
 
                 tableView.gameObject.SetActive(true);
@@ -84,9 +74,9 @@ public class PortfolioMediaView : MonoBehaviour
         });
     }
 
-    public void OnCellButtonAction(PortfolioModel portfolioModel)
+    public void OnCellButtonAction(PortfolioModel mediaModel)
     {
-        mediaDetailsView.Load(portfolioModel, this);
+        mediaDetailsView.Load(mediaModel, this);
     }
 
     public void OnShareButtonAction(PortfolioModel portfolioModel)
@@ -98,11 +88,7 @@ public class PortfolioMediaView : MonoBehaviour
     {
         portfolioModels.Remove(portfolioModel);
 
-        tableView.Data.Clear();
-
-        tableView.Data.Add(portfolioModels.Count);
-
-        tableView.Refresh();
+        Reload();
     }
 
     public void OnAPICall()
@@ -136,11 +122,7 @@ public class PortfolioMediaView : MonoBehaviour
                     pageNo++;
                 }
 
-                tableView.Data.Clear();
-
-                tableView.Data.Add(portfolioModels.Count);
-
-                tableView.Refresh();
+                Reload();
             }
         });
     }
@@ -148,5 +130,14 @@ public class PortfolioMediaView : MonoBehaviour
     void OnPortfolioShared()
     {
         portfolioView.OnTabAction(1);
+    }
+
+    void Reload()
+    {
+        tableView.Data.Clear();
+
+        tableView.Data.Add(portfolioModels.Count);
+
+        tableView.Refresh();
     }
 }

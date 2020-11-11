@@ -1,8 +1,9 @@
 ﻿using frame8.ScrollRectItemsAdapter.MultiplePrefabsExample;
 using UnityEngine.UI;
 using UnityEngine;
-using TMPro;
 using System;
+using TMPro;
+
 
 public class PortfolioActvityCell : MonoBehaviour
 {
@@ -15,8 +16,6 @@ public class PortfolioActvityCell : MonoBehaviour
     public Image statusTag;
 
     public TextMeshProUGUI statusText;
-
-    //public Image storyImage;
 
 
     PortfolioActivityPopUp activityPopUp;
@@ -62,7 +61,6 @@ public class PortfolioActvityCell : MonoBehaviour
             case 1:
             case 8:
                 OnStatusUpdated?.Invoke(activityModel);
-                //Destroy(gameObject);
                 break;
         }
     }

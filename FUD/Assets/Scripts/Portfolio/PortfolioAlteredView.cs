@@ -33,8 +33,6 @@ public class PortfolioAlteredView : MonoBehaviour
 
     public void Load()
     {
-        Debug.Log("Load Called");
-
         ClearData();
 
         LoadAlteredData();
@@ -69,11 +67,7 @@ public class PortfolioAlteredView : MonoBehaviour
                 }
                 else
                 {
-                    tableView.Data.Clear();
-
-                    tableView.Data.Add(activityModels.Count);
-
-                    tableView.Refresh();
+                    Reload();
                 }
 
                 noDataObject.SetActive(activityModels.Count == 0);
@@ -114,11 +108,7 @@ public class PortfolioAlteredView : MonoBehaviour
                     pageNo++;
                 }
 
-                tableView.Data.Clear();
-
-                tableView.Data.Add(activityModels.Count);
-
-                tableView.Refresh();
+                Reload();
             }
         });
     }
@@ -136,11 +126,7 @@ public class PortfolioAlteredView : MonoBehaviour
     {
         activityModels.Remove(activityModel);
 
-        tableView.Data.Clear();
-
-        tableView.Data.Add(activityModels.Count);
-
-        tableView.Refresh();
+        Reload();
     }
 
     public void OnFilterButtonAction()
@@ -152,12 +138,17 @@ public class PortfolioAlteredView : MonoBehaviour
     {
         activityModels = data as List<PortfolioActivityModel>;
 
+        Reload();
+
+        noDataObject.SetActive(activityModels.Count == 0);
+    }
+
+    void Reload()
+    {
         tableView.Data.Clear();
 
         tableView.Data.Add(activityModels.Count);
 
         tableView.Refresh();
-
-        noDataObject.SetActive(activityModels.Count == 0);
     }
 }

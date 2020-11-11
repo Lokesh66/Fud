@@ -84,6 +84,14 @@ public class CreateTeamView : MonoBehaviour
 
             GetSearchedUsers();
         }
+        else {
+            if (string.IsNullOrEmpty(memberField.text))
+            {
+                searchContent.DestroyChildrens();
+
+                scrollObject.SetActive(false);
+            }
+        }
     }
 
     public void OnButtonAction()

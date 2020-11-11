@@ -42,7 +42,7 @@ public class ProjectCastsPanel : MonoBehaviour
             {
                 GameObject auditionObject = Instantiate(castCell, parentContent);
 
-                auditionObject.GetComponent<ProjectCastCell>().SetView(i, casts[i], OnCellTapAction);
+                auditionObject.GetComponent<ProjectCastCell>().SetView(casts[i], OnCellTapAction);
             }
         }
         else
@@ -55,6 +55,7 @@ public class ProjectCastsPanel : MonoBehaviour
             if (status)
             {
                 ProjectCharactersResponse projectCharactersResponse = JsonUtility.FromJson<ProjectCharactersResponse>(response);
+
                 characters = projectCharactersResponse.data;
 
                 addNewButton.gameObject.SetActive(characters.Count > casts.Count);
@@ -65,9 +66,7 @@ public class ProjectCastsPanel : MonoBehaviour
                 }
             }
         });
-
     }
-
 
     public void CreateCast()
     {
@@ -92,7 +91,7 @@ public class ProjectCastsPanel : MonoBehaviour
     {
         int modelIndex = casts.IndexOf(projectCast);
 
-        parentContent.GetChild(modelIndex).GetComponent<ProjectCastCell>().SetView(modelIndex, projectCast, OnCellTapAction);
+        parentContent.GetChild(modelIndex).GetComponent<ProjectCastCell>().SetView(projectCast, OnCellTapAction);
     }
 
     void EnableNodata()

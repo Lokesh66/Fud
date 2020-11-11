@@ -48,12 +48,12 @@ public class CreatedPortfolioMediaCell : MonoBehaviour
         {
             mediaPlayer.Path = albumModel.content_url;
 
-            mediaPlayer.Prepare();
-
             albumImage.texture = mediaType == EMediaType.Audio ? DataManager.Instance.audioThumbnailSprite.texture : DataManager.Instance.videoThumbnailSprite.texture;
 
             if (mediaType == EMediaType.Video)
             {
+                mediaPlayer.Prepare();
+
                 mediaPlayer.AddImageReadyEvent((texture) =>
                 {
                     albumImage.texture = texture;

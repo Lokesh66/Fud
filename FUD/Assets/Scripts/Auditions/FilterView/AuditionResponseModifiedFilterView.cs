@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
 using System;
-using TMPro;
 
 
 public class AuditionResponseModifiedFilterView : MonoBehaviour
@@ -12,13 +10,9 @@ public class AuditionResponseModifiedFilterView : MonoBehaviour
 
     Action<object> OnApplyFilter;
 
-    int auditionId;
-
 
     public void Load(Action<object> OnApplyFilter)
     {
-        //this.auditionId = auditionId;
-
         gameObject.SetActive(true);
 
         this.OnApplyFilter = OnApplyFilter;
@@ -42,8 +36,6 @@ public class AuditionResponseModifiedFilterView : MonoBehaviour
         int orderById = filterCells[2].GetStatus();
 
         parameters.Add("status", statusId);
-
-        //parameters.Add("id", auditionId);
 
         parameters.Add("source_from", 1);
 

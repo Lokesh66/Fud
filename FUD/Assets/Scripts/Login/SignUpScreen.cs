@@ -54,8 +54,6 @@ public class SignUpScreen : MonoBehaviour
 
         roleScrollObject.SetActive(craftsList.Count > 0);
 
-        Debug.Log("SetRoleSelectionScroll Enabling = " + craftsList.Count);
-
 
         for (int i = 0; i < craftsList.Count; i++)
         {
@@ -282,8 +280,6 @@ public class SignUpScreen : MonoBehaviour
         rolesContent.DestroyChildrens();
 
         roleScrollObject.SetActive(false);
-
-        Debug.Log("Disabling");
 
         selectedModel = null;
 

@@ -24,7 +24,12 @@ public partial class APIHandler
     {
         //parameters.Add("login_code", "1234");// code);
         Debug.Log("device_token : "+SystemInfo.deviceUniqueIdentifier);
-        parameters.Add("device_token", SystemInfo.deviceUniqueIdentifier);
+
+        string deviceToken = NotificationsManager.Instance.GetFCMToken();
+
+        deviceToken = deviceToken.IsNOTNullOrEmpty() ? deviceToken : string.Empty;
+
+        parameters.Add("device_token", deviceToken);
 
         gameManager.StartCoroutine(PostRequest(APIConstants.CREATE_USER, false, parameters, (bool status, string response) => {
 
@@ -70,8 +75,14 @@ public partial class APIHandler
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
+        string deviceToken = NotificationsManager.Instance.GetFCMToken();
+
+        deviceToken = deviceToken.IsNOTNullOrEmpty() ? deviceToken : string.Empty;
+
         parameters.Add("phone", phoneNumber);
         parameters.Add("login_code", code);
+
+        parameters.Add("device_token", deviceToken);
 
         gameManager.StartCoroutine(PostRequest(APIConstants.USER_LOGIN, false, parameters, (bool status, string response) => {
             if (status)

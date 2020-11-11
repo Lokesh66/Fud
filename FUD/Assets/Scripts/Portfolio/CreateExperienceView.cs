@@ -1,9 +1,9 @@
-﻿using UnityEngine;
-using TMPro;
-using System.IO;
-using System.Collections.Generic;
-using System;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using DG.Tweening;
+using System;
+using TMPro;
+
 
 public class CreateExperienceView : MonoBehaviour
 {
@@ -26,8 +26,6 @@ public class CreateExperienceView : MonoBehaviour
     DateTime startDate;
     DateTime endDate;
     string dateDefaultText = "Select Date";
-
-    List<string> imageUrls;
 
     PortfolioView portfolioView = null;
 
@@ -155,11 +153,6 @@ public class CreateExperienceView : MonoBehaviour
 
             GameManager.Instance.apiHandler.CreateWorkExperiance(experianceModel, uploadedDict, (status, response) =>
             {
-                if (status)
-                {
-
-                }
-
                 OnAPIResponse(status, response);
             });
         }
@@ -308,9 +301,7 @@ public class CreateExperienceView : MonoBehaviour
     {
         if (status)
         {
-            this.imageUrls = imageUrls;
-
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles());
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), OnDeleteAction: OnDeleteAction);
 
             for (int i = 0; i < imageUrls.Count; i++)
             {
@@ -331,9 +322,7 @@ public class CreateExperienceView : MonoBehaviour
     {
         if (status)
         {
-            this.imageUrls = audioUrls;
-
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Audio);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Audio, OnDeleteAction);
 
             for (int i = 0; i < audioUrls.Count; i++)
             {
@@ -354,9 +343,7 @@ public class CreateExperienceView : MonoBehaviour
     {
         if (status)
         {
-            this.imageUrls = videoUrls;
-
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Video);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Video, OnDeleteAction);
 
             for (int i = 0; i < videoUrls.Count; i++)
             {
@@ -377,9 +364,7 @@ public class CreateExperienceView : MonoBehaviour
     {
         if (status)
         {
-            this.imageUrls = documentURLs;
-
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Document);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Document, OnDeleteAction);
 
             for (int i = 0; i < documentURLs.Count; i++)
             {
@@ -392,6 +377,45 @@ public class CreateExperienceView : MonoBehaviour
                 kvp.Add("media_type", "document");
 
                 uploadedDict.Add(kvp);
+            }
+        }
+    }
+
+    void OnDeleteAction(object mediaModel)
+    {
+        MultimediaModel multimediaModel = mediaModel as MultimediaModel;
+
+        string url = string.Empty;
+
+        bool isItemRemoved = false;
+
+
+        foreach (var item in uploadedDict)
+        {
+            Dictionary<string, object> mediaItem = item as Dictionary<string, object>;
+
+            foreach (var kvp in mediaItem)
+            {
+                if (kvp.Key.Equals("content_url"))
+                {
+                    url = kvp.Value as string;
+
+                    if (multimediaModel.content_url.Contains(url))
+                    {
+                        Destroy(filesHandler.content.GetChild(uploadedDict.IndexOf(mediaItem)).gameObject);
+
+                        uploadedDict.Remove(mediaItem);
+
+                        isItemRemoved = true;
+
+                        break;
+                    }
+                }
+            }
+
+            if (isItemRemoved)
+            {
+                break;
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+
 
 public class AuditionJoinView : MonoBehaviour
 {
@@ -44,10 +44,8 @@ public class AuditionJoinView : MonoBehaviour
     System.Action<int> buttonAction;
 
 
-    public void Load(Audition audition,bool isJoined, System.Action<int> action, EAuditionStatus auditionStatus = EAuditionStatus.None)
+    public void Load(bool isJoined, System.Action<int> action, EAuditionStatus auditionStatus = EAuditionStatus.None)
     {
-        Debug.LogError("Audition Detail Page Loaded");
-
         parentPanel.SetActive(true);
         //joinButton.SetActive(!isJoined);
         joinButtonText.text = isJoined ? "Update" : "Join";

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
-using TMPro;
 using System;
-using System.Collections;
+using TMPro;
+
 
 public class DatePicker : MonoBehaviour
 {
@@ -94,22 +93,14 @@ public class DatePicker : MonoBehaviour
         _dateTime = currentDate;
         CreateCalendar();
 
-        Debug.Log("Compare with Current Date = " + endDate.CompareTo(DateTime.Now));
-
         if (endDate.CompareTo(DateTime.Now) == -1)
         {
-            Debug.LogError("If Condition");
             yearType = EYearsType.DOBYears;
         }
         else if (endDate.Equals(DateTime.MaxValue))
         {
-            Debug.LogError("Else If Condition");
             yearType = EYearsType.ProjectYears;
         }
-        //else if (startDate.Equals(DateTime.Now))
-        //{
-        //    yearType = EYearsType.ProjectYears;
-        //}
 
         monthDropDown.value = selectedDate.Month - 1;
 
@@ -287,8 +278,6 @@ public class DatePicker : MonoBehaviour
 
     public void OnMonthValueChanged()
     {
-        Debug.LogError("OnMonthValueChanged : monthDropDown.value = " + monthDropDown.value);
-
         int monthDifference = Mathf.Abs(monthDropDown.value + 1 - _dateTime.Month);
 
         int dropDownValue = monthDropDown.value + 1;

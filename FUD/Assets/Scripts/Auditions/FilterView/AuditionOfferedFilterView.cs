@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
 using System;
-using TMPro;
 
 
 public class AuditionOfferedFilterView : MonoBehaviour

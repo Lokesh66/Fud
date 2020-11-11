@@ -1,47 +1,24 @@
-﻿using UnityEngine;
-using TMPro;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
+
 
 public class CreateDialoguesView : MonoBehaviour
 {
-    public enum ESubTabType
-    {
-        Manual,
-        Auto,
-    }
-
-    public TextMeshProUGUI[] buttonsList;
-
-
     public CreateSceneAutoView autoView;
 
     public CreateSceneAlbumView sceneCharactersView;
 
     public CreateSceneAlbumView projectCharactersView;
 
-
-    public Color selectedColor;
-
-    public Color disabledColor;
-
-
-    GameObject currentObject;
-
     List<Dictionary<string, object>> autoDialogues = new List<Dictionary<string, object>>();
 
-    List<Dictionary<string, object>> manualDialogues = new List<Dictionary<string, object>>();
-
-    List<int> sceneCharacters = new List<int>();
+    List<Dictionary<string, int>> sceneCharacters = new List<Dictionary<string, int>>();
 
     int projectId;
-
-    private ESubTabType currentTab = ESubTabType.Auto;
 
 
     public void Load(int projectId)
     {
-        //OnTabAction(0);
-
         this.projectId = projectId;
 
         gameObject.SetActive(true);
@@ -49,33 +26,11 @@ public class CreateDialoguesView : MonoBehaviour
         autoView.EnableView(this);
 
         sceneCharactersView.SetSceneCharactersView(projectId);
-
-        //albumView.Load(projectId);
     }
-
-    #region Button Actions
-
-    public void OnTabAction(int tabIndex)
-    {
-        if (currentTab != (ESubTabType)tabIndex)
-        {
-            buttonsList[(int)currentTab].color = disabledColor;
-
-            buttonsList[tabIndex].color = selectedColor;
-
-            currentTab = (ESubTabType)tabIndex;
-
-            currentObject?.SetActive(false);
-        }
-    }
-
-    #endregion
 
     public void OnBackButtonAction()
     {
         gameObject.SetActive(false);
-
-        currentTab = ESubTabType.Auto;
     }
 
     public void SetAutoDialogues(List<Dictionary<string, object>> autoDialogues)
@@ -85,9 +40,9 @@ public class CreateDialoguesView : MonoBehaviour
         OnBackButtonAction();
     }
 
-    public List<Dictionary<string, object>> GetDialogues(bool isManual)
+    public List<Dictionary<string, object>> GetDialogues()
     {
-        return isManual ? manualDialogues : autoDialogues;
+        return autoDialogues;
     }
 
     void SetSceneCharacters(List<SceneAlbumModel> albumModels)
@@ -96,11 +51,11 @@ public class CreateDialoguesView : MonoBehaviour
 
         for (int i = 0; i < albumModels.Count; i++)
         {
-            sceneCharacters.Add(albumModels[i].id);
-        }
+            sceneCharacters.Add(new Dictionary<string, int>() { { "character_id", albumModels[i].id } });
+        }         
     }
 
-    public List<int> GetSceneCharacters()
+    public List<Dictionary<string, int>> GetSceneCharacters()
     {
         return sceneCharacters;
     }

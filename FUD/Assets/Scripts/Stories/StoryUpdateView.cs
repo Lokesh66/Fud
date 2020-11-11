@@ -27,7 +27,7 @@ public class StoryUpdateView : MonoBehaviour
 
     List<string> imageUrls;
 
-    StoryModel storyModel;
+    StoryCreatedModel storyModel;
 
     StoryCell storyCell;
 
@@ -39,7 +39,7 @@ public class StoryUpdateView : MonoBehaviour
 
 
 
-    public void Load(StoryModel storyModel, StoryCell storyCell)
+    public void Load(StoryCreatedModel storyModel, StoryCell storyCell)
     {
         this.storyModel = storyModel;
 
@@ -50,13 +50,13 @@ public class StoryUpdateView : MonoBehaviour
 
     void SetView()
     {
-        storyTitleField.text = storyModel.title;
+        storyTitleField.text = storyModel.Stories.title;
 
-        subTitleField.text = storyModel.story_line;
+        subTitleField.text = storyModel.Stories.story_line;
 
-        descriptionField.text = storyModel.description;
+        descriptionField.text = storyModel.Stories.description;
 
-        accessDropdown.value = storyModel.access_modifier;
+        accessDropdown.value = storyModel.Stories.access_modifier;
 
         UpdateTitlePosterImage();
 
@@ -67,9 +67,7 @@ public class StoryUpdateView : MonoBehaviour
     {
         genres = DataManager.Instance.genres;
 
-        Debug.Log("genre_id = " + storyModel.genre_id);
-
-        Genre requiredGenre = genres.Find(genre => genre.id == storyModel.genre_id);
+        Genre requiredGenre = genres.Find(genre => genre.id == storyModel.Stories.genre_id);
 
         Genre selectedGenre = genres.Find(genre => genre.name.Equals(requiredGenre.name));
 
@@ -89,7 +87,7 @@ public class StoryUpdateView : MonoBehaviour
 
     void UpdateTitlePosterImage()
     {
-        UpdateTitlePoster(storyModel.title_poster);
+        UpdateTitlePoster(storyModel.Stories.title_poster);
     }
 
     public void OnUploadAction()

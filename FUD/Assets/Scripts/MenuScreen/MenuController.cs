@@ -8,13 +8,25 @@ public class MenuController : MonoBehaviour
     public List<BaseView> baseViews;
     public List<Toggle> toggles;
 
+
+    public GameObject oneObject;
+
+    public GameObject twoObject;
+
+
     private BaseView currentBaseView;
 
-    private int currentViewIndex = -1;
+
     void Start()
     {
         //toggles[0].isOn = true;
         OnButtonAction(0);
+    }
+
+
+    void UpdateMenuView()
+    {
+        int roleId = DataManager.Instance.userInfo.role_id;
     }
 
 

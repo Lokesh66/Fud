@@ -5,15 +5,7 @@ using TMPro;
 
 public class SceneCharacterView : MonoBehaviour
 {
-    public enum ESceneTabType
-    {
-        Manual,
-        Auto
-    }
-
-
-    public SceneManualView manualView;
-
+   
     public SceneAutoView autoView;
 
 
@@ -27,52 +19,16 @@ public class SceneCharacterView : MonoBehaviour
 
     GameObject currentObject;
 
-    ESceneTabType currentTab;
-
     List<SceneCharacter> scenesList;
 
 
-    public void Load(List<SceneCharacter> scensList)
+    public void Load(List<SceneCharacter> scensList, List<MultimediaModel> models)
     {
         this.scenesList = scensList;
 
         gameObject.SetActive(true);
 
-        autoView.Load(scenesList);
-
-        //UpdateCurrentView();
-    }
-
-    public void OnTabAction(int tabIndex)
-    {
-        if (currentTab != (ESceneTabType)tabIndex)
-        {
-            buttonsList[(int)currentTab].color = disabledColor;
-
-            buttonsList[tabIndex].color = selectedColor;
-
-            currentTab = (ESceneTabType)tabIndex;
-
-            currentObject?.SetActive(false);
-
-            UpdateCurrentView();
-        }
-    }
-
-    void UpdateCurrentView()
-    {
-        switch (currentTab)
-        {
-            case ESceneTabType.Manual:
-                currentObject = manualView.gameObject;
-                manualView.Load(scenesList);
-                break;
-
-            case ESceneTabType.Auto:
-                currentObject = autoView.gameObject;
-                autoView.Load(scenesList);
-                break;
-        }
+        autoView.Load(scenesList, models);
     }
 
     public void OnBackAction()
@@ -84,10 +40,6 @@ public class SceneCharacterView : MonoBehaviour
 
     public void ClearData()
     {
-        currentTab = ESceneTabType.Manual;
-
-        manualView.ClearData();
-
         autoView.ClearData();
     }
 }

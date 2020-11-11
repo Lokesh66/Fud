@@ -41,6 +41,8 @@ public class APIConstants
 
     public const string CREATE_STORY = BASE_URL + "v1/story/";
 
+    public const string GET_ALL_STORIES = BASE_URL + "v1/stories/created";
+
     public const string GET_STORY_TYPES = BASE_URL + "v1/storyTypes/";
 
     public const string GET_PUBLIC_STORIES = BASE_URL + "v1/publicStories";
@@ -114,6 +116,10 @@ public class APIConstants
     public const string SEARCH_AUDITION = BASE_URL + "v1/searchAudition";
 
     public const string UPDATE_AUDITION_STATUS = BASE_URL + "v1/audition/updateStatus/";
+
+    public const string GET_ALL_ALBUMS = BASE_URL + "v1/useralbums/created";
+
+    public const string GET_ALBUM_DETAILS = BASE_URL + "v1/searchUserPortfolio";
 
     public const string USER_PORTFOLIO = BASE_URL + "v1/userPortfolio/";
 

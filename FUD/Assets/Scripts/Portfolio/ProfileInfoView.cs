@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using TMPro;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Linq;
+using UnityEngine;
+using System;
+using TMPro;
+
 
 public class ProfileInfoView : MonoBehaviour
 {
@@ -99,7 +100,6 @@ public class ProfileInfoView : MonoBehaviour
         { 
             nameField.text = data.name;
             mailField.text = data.email_id;
-            //memberIdField.text = data.maa_membership_id;
             contactField.text = data.phone.ToString();
 
             if (string.IsNullOrEmpty(data.dob))
@@ -287,10 +287,6 @@ public class ProfileInfoView : MonoBehaviour
         else if (string.IsNullOrEmpty(contactField.text)){
             errorMessage = "Contact Number should not be empty";
         }
-        //else if (profilePicUploadModel != null || !data.profile_image.IsNOTNullOrEmpty())
-        //{
-        //    errorMessage = "Profile image should not be empty";
-        //}
 
 
         if (!string.IsNullOrEmpty(errorMessage))

@@ -25,8 +25,6 @@ public class HomeBannerCell : MonoBehaviour
 
     void SetView()
     {
-        Debug.Log("Screen width = " + CanvasManager.Instance.transform);
-
         rectTransform.sizeDelta = new Vector2(CanvasManager.Instance.GetCanvasWidth() * 3 / 4, rectTransform.sizeDelta.y);
 
         storyTitleText.text = bannerModel.title;
@@ -41,12 +39,9 @@ public class HomeBannerCell : MonoBehaviour
 
             Loader.Instance.StopLoading();
 
-            if (this != null)
-            {
-                bannerImage.sprite = sprite;
+            bannerImage.sprite = sprite;
 
-                bannerImage.enabled = true;
-            }
+            bannerImage.enabled = true;
         });
     }
 }

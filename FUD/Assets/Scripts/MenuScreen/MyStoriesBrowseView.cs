@@ -1,5 +1,4 @@
 ﻿using frame8.ScrollRectItemsAdapter.GridExample;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,7 +22,6 @@ public class MyStoriesBrowseView : MonoBehaviour
 
     public List<StoryModel> storiesList;
 
-    MyStoriesController storiesController;
 
     bool isInitialized = false;
 
@@ -59,11 +57,7 @@ public class MyStoriesBrowseView : MonoBehaviour
                 }
                 else
                 {
-                    tableView.Data.Clear();
-
-                    tableView.Data.Add(storiesList.Count);
-
-                    tableView.Refresh();
+                    Reload();
                 }
 
                 if (storiesList.Count == 0)
@@ -78,8 +72,6 @@ public class MyStoriesBrowseView : MonoBehaviour
 
     public void EnableView(MyStoriesController storiesController)
     {
-        this.storiesController = storiesController;
-
         ClearData();
 
         Load();
@@ -97,12 +89,7 @@ public class MyStoriesBrowseView : MonoBehaviour
 
     public void OnStoryTapAction(StoryModel storyModel)
     {
-        detailView.Load(storyModel, OnStoryClosedAction);
-    }
-
-    void OnStoryClosedAction(int status)
-    {
-
+        detailView.Load(storyModel, null);
     }
 
     NoDataModel GetNoDataModel()
@@ -146,11 +133,7 @@ public class MyStoriesBrowseView : MonoBehaviour
                     pageNo++;
                 }
 
-                tableView.Data.Clear();
-
-                tableView.Data.Add(modelsList.Count);
-
-                tableView.Refresh();
+                Reload();
             }
         });
     }
@@ -164,12 +147,17 @@ public class MyStoriesBrowseView : MonoBehaviour
     {
         storiesList = data as List<StoryModel>;
 
+        Reload();
+
+        noDataView.gameObject.SetActive(storiesList.Count == 0);
+    }
+
+    void Reload()
+    {
         tableView.Data.Clear();
 
         tableView.Data.Add(storiesList.Count);
 
         tableView.Refresh();
-
-        noDataView.gameObject.SetActive(storiesList.Count == 0);
     }
 }

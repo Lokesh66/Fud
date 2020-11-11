@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using DG.Tweening;
-using TMPro;
 
 public class Loader : MonoBehaviour
 {
@@ -34,9 +32,6 @@ public class Loader : MonoBehaviour
     public RectTransform rightWheelTrans;
 
 
-    public TextMeshProUGUI dummyText;
-
-
     Vector3 rotationValue = new Vector3(0, 0, 360);
 
     RotateMode rotateMode = RotateMode.FastBeyond360;
@@ -52,8 +47,6 @@ public class Loader : MonoBehaviour
     
     public void StartLoading()
     {
-        //GalleryManager.Instance.loadingCountText.text = "Start Loading";
-
         if (!loaderPanel.activeSelf)
         {
             loaderPanel.SetActive(true);
@@ -81,8 +74,6 @@ public class Loader : MonoBehaviour
 
             loaderPanel.SetActive(false);
         }
-
-        //GalleryManager.Instance.loadingCountText.text = "Stop Loading";
     }
 
     void OnKill()

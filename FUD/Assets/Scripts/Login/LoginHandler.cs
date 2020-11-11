@@ -67,8 +67,6 @@ public class LoginHandler : MonoBehaviour
         {
             Dictionary<string, object> _body = body as Dictionary<string, object>;
 
-            Debug.Log("Number = " + _body["phone"]);
-
             contactNumber = (long)_body["phone"];
 
             if (isNewUser)

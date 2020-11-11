@@ -43,7 +43,7 @@ public class AuditionOfferedCell : MonoBehaviour
 
     public void OnClickAction()
     {
-        AuditionJoinView.Instance.Load(auditionData, false, (index) =>
+        AuditionJoinView.Instance.Load(false, (index) =>
         {
             switch (index)
             {
@@ -113,7 +113,6 @@ public class AuditionOfferedCell : MonoBehaviour
     void MediaButtonAction(int index)
     {
         EMediaType selectedType = (EMediaType)index;
-        AlertMessage.Instance.SetText(index + "  " + selectedType);
         uploadedDict = new List<Dictionary<string, object>>();
 
         switch (selectedType)
@@ -132,7 +131,6 @@ public class AuditionOfferedCell : MonoBehaviour
 
     void OnImagesUploaded(bool status, List<string> imageUrls)
     {
-        AlertMessage.Instance.SetText("OnImagesUploaded/" + status);
         if (status)
         {
             for (int i = 0; i < imageUrls.Count; i++)
@@ -217,37 +215,6 @@ public class AuditionOfferedCell : MonoBehaviour
         });
     }
 
-    void UpdateAudition()
-    {
-        AlertMessage.Instance.SetText("AuditionCell/UpdateAudition");
-        Dictionary<string, object> parameters = new Dictionary<string, object>();
-        //parameters.Add("audition_id", auditionData.id);
-        parameters.Add("id", auditionData.project_id);
-        //parameters.Add("user_id", DataManager.Instance.userInfo.id);
-        parameters.Add("pro_multi_media", uploadedDict);
-
-        GameManager.Instance.apiHandler.UpdateJoinedAudition(parameters, (status, response) =>
-        {
-
-            AlertMessage.Instance.SetText(status + "==" + response);
-
-            if (status)
-            {
-                AlertModel alertModel = new AlertModel();
-                alertModel.message = "Audition Updated Successfully";
-                alertModel.okayButtonAction = Refresh;
-                alertModel.canEnableTick = true;
-                UIManager.Instance.ShowAlert(alertModel);
-            }
-            else
-            {
-                AlertModel alertModel = new AlertModel();
-                alertModel.message = "Updating Audition Failed";
-                UIManager.Instance.ShowAlert(alertModel);
-            }
-        });
-    }
-
     void UpdateAuditionStatus(int statusIndex)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -274,5 +241,4 @@ public class AuditionOfferedCell : MonoBehaviour
             }
         });
     }
-
 }

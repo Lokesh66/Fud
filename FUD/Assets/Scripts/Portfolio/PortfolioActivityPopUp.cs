@@ -1,12 +1,9 @@
-﻿using System;
-using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
+using System;
+
 
 public class PortfolioActivityPopUp : MonoBehaviour
 {
-    //public Image storyImage;
-
-
     public GameObject acceptObject;
 
     public GameObject likeObject;
@@ -25,8 +22,6 @@ public class PortfolioActivityPopUp : MonoBehaviour
 
     int currentUserId;
 
-    ETabType tabType;
-
 
     public void Load(PortfolioActivityModel activityModel, Action<int> OnClose, ETabType tabType)
     {
@@ -35,8 +30,6 @@ public class PortfolioActivityPopUp : MonoBehaviour
         this.activityModel = activityModel;
 
         this.OnClose = OnClose;
-
-        this.tabType = tabType;
 
         currentUserId = DataManager.Instance.userInfo.id;
 

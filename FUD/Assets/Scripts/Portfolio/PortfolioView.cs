@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 
 
@@ -56,8 +54,6 @@ public class PortfolioView : BaseView
         base.OnRemoveLastSubView();
 
         portfolioHandler.Load(this);
-
-        //UpdateScreen();
     }
 
     public override void OnExitScreen()
@@ -115,8 +111,6 @@ public class PortfolioView : BaseView
     public void OnCreateButtonAction()
     {
         createPanel.SetActive(true);
-
-        //infoView.gameObject.SetActive(true);
     }
 
     public void ShowCreatePortfolioScreen()
@@ -141,8 +135,6 @@ public class PortfolioView : BaseView
     {
         GameObject creationObject = Instantiate(createWorkExperianceCache, parentTrans);
 
-        //OnAddSubView(creationObject);
-
         createPanel.SetActive(false);
 
         creationObject.GetComponent<CreateExperienceView>().Load(this);
@@ -155,8 +147,6 @@ public class PortfolioView : BaseView
 
     void ResetScreen()
     {
-        portfolioHandler.infoView.OnBackButtonAction();
-
         buttonList[(int)currentTab].color = disabledColor;
 
         buttonList[0].color = selectedColor;

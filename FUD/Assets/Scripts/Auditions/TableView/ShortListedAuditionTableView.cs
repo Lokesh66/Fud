@@ -1,16 +1,9 @@
-﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
-using System;
-using System.Collections.Generic;
-using frame8.Logic.Misc.Visual.UI.ScrollRectItemsAdapter;
-using frame8.Logic.Misc.Other.Extensions;
+﻿using frame8.ScrollRectItemsAdapter.MultiplePrefabsExample;
 using frame8.ScrollRectItemsAdapter.Util.GridView;
 using frame8.ScrollRectItemsAdapter.Util;
-using frame8.ScrollRectItemsAdapter.Util.Drawer;
-using frame8.Logic.Misc.Visual.UI.MonoBehaviours;
-using frame8.ScrollRectItemsAdapter.MultiplePrefabsExample;
-using frame8.Logic.Misc.Visual.UI;
+using frame8.Logic.Misc.Other.Extensions;
+using UnityEngine.UI;
+using UnityEngine;
 
 namespace frame8.ScrollRectItemsAdapter.GridExample
 {
@@ -54,24 +47,6 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 			base.Start ();
 		}
 
-		void OnReceivedNewModels (int newCount)
-		{
-			Data.Clear ();
-			Data.InitWithNewCount (newCount);
-
-			ResetItems (Data.Count, true);
-			if (OnItemsUpdated != null)
-				OnItemsUpdated.Invoke ();
-		}
-
-		IEnumerator FetchItemModelsFromServer (int count, Action onDone)
-		{
-			// Simulating server delay
-			yield return new WaitForSeconds (DrawerCommandPanel.Instance.serverDelaySetting.InputFieldValueAsInt);
-
-			onDone ();
-		}
-
 		SearchAudition CreateNewModel (int index)
 		{
 			return adataObject.auditionResponses [index];
@@ -105,8 +80,6 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 			{
 				var imageURLAtRequest = model.onScreenModel.content_url;
 
-				Debug.Log("content_url = " + model.onScreenModel.content_url);
-
 				int itemIndexAtRequest = viewsHolder.ItemIndex;
 
 				viewsHolder.remoteImageBehaviour.Load(imageURLAtRequest, true, (fromCache, success) =>
@@ -122,8 +95,6 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 
 			if ((viewsHolder.ItemIndex != 0 && viewsHolder.ItemIndex == Data.Count - 12 && _ScrollRect.velocity.y > 10) ||(Data.Count < 12 && viewsHolder.ItemIndex == Data.Count - 1))
 			{
-				Debug.LogError("It's Reaching to Last Index");
-
 				if (adataObject != null)
 					adataObject.OnAPICall();
 			}

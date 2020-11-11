@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
-using TMPro;
 using System;
+using TMPro;
+
 
 public class SubscriptionPlanCell : MonoBehaviour
 {
@@ -44,7 +45,6 @@ public class SubscriptionPlanCell : MonoBehaviour
     void SetView()
     {
         planNameText.text = subscriptionModel.name;
-
 
         priceText.text = isPlanActive ? "Active" : "Rs." + subscriptionModel.price;
 

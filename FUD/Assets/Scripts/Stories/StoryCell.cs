@@ -18,22 +18,22 @@ public class StoryCell : MonoBehaviour
     public GameObject editObject;
 
 
-    StoryModel storyModel;
+    StoryCreatedModel storyModel;
 
     ScrollRect scrollRect;
 
     public Action<StoryCell> OnTapActon;
 
 
-    public void SetView(StoryModel storyModel, Action<StoryCell> tapAction = null)
+    public void SetView(StoryCreatedModel storyModel, Action<StoryCell> tapAction = null)
     {
         this.storyModel = storyModel;
 
         this.OnTapActon = tapAction;
 
-        titleText.text = storyModel.title;
+        titleText.text = storyModel.Stories.title;
 
-        description.text = storyModel.description;
+        description.text = storyModel.Stories.description;
 
         //editObject.SetActive(true);
 
@@ -65,7 +65,7 @@ public class StoryCell : MonoBehaviour
         
     }
 
-    public StoryModel GetStoryModel()
+    public StoryCreatedModel GetStoryModel()
     {
         return storyModel;
     }

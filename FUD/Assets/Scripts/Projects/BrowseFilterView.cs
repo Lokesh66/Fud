@@ -38,8 +38,6 @@ public class BrowseFilterView : MonoBehaviour
 
     public void OnAgeSliderValueChange()
     {
-        Debug.Log("dragHandler.minAgeValue : = " + dragHandler.minAgeValue + " ageSlider.value = " + ageSlider.value);
-
         if (dragHandler.minAgeValue < ageSlider.value)
         {
             currentMaxAge = ageSlider.value;
@@ -110,7 +108,5 @@ public class BrowseFilterView : MonoBehaviour
 
         return gender;
     }
-
-    
 }
 

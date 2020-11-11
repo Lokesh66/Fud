@@ -18,14 +18,14 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 	/// Implementation demonstrating the usage of a <see cref="GridAdapter{TParams, TCellVH}"/> for a simple gallery of remote images downloaded with a <see cref="SimpleImageDownloader"/>.
 	/// It implements  <see cref="ILazyListSimpleDataManager{TItem}"/> to access the default interface implementations for common data manipulation functionality
 	/// </summary>
-	public class UpdateSceneAlbumsTableView : GridAdapter<GridParams, UpdateSceneAlbumCellHolder>, ILazyListSimpleDataManager<SceneAlbumModel>
+	public class UpdateSceneAlbumsTableView : GridAdapter<GridParams, UpdateSceneAlbumCellHolder>, ILazyListSimpleDataManager<SceneCharacter>
 	{
 
 		public UnityEngine.Events.UnityEvent OnItemsUpdated;
 
-		private LazyList<SceneAlbumModel> _Data;
+		private LazyList<SceneCharacter> _Data;
 
-		public LazyList<SceneAlbumModel> Data { get { return _Data; } private set { _Data = value; } }
+		public LazyList<SceneCharacter> Data { get { return _Data; } private set { _Data = value; } }
 
 		public UpdateSceneAlbumView adataObject;
 
@@ -51,7 +51,7 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 
 		public void OnEnable ()
 		{
-			Data = new LazyList<SceneAlbumModel> (CreateNewModel, adataObject.dataList.Count);
+			Data = new LazyList<SceneCharacter> (CreateNewModel, adataObject.dataList.Count);
 		}
 
 		/// <inheritdoc/>
@@ -80,7 +80,7 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 			onDone ();
 		}
 
-		SceneAlbumModel CreateNewModel (int index)
+		SceneCharacter CreateNewModel (int index)
 		{
 			return adataObject.dataList [index];
 		}
@@ -152,7 +152,7 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 		{
 			base.CollectViews ();
 
-			views.GetComponentAtPath("AlbumImage", out remoteImageBehaviour);
+			views.GetComponentAtPath("ImageMask/AlbumImage", out remoteImageBehaviour);
 		}
 
 		protected override RectTransform GetViews ()

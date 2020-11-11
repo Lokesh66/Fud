@@ -25,8 +25,6 @@ public class PortfolioOfferedDetailView : MonoBehaviour
 
     List<MultimediaModel> mediaList;
 
-    List<CreatedPortfolioMediaCell> mediaCells = new List<CreatedPortfolioMediaCell>();
-
 
     public void Load(PortfolioActivityModel activityModel)
     {
@@ -40,7 +38,7 @@ public class PortfolioOfferedDetailView : MonoBehaviour
 
                 gameObject.SetActive(true);
 
-                mediaList = activityModel.Portfolio.PortfolioMedia;
+                mediaList = this.activityModel.PortfolioMedia;
 
                 SetView();
 
@@ -66,15 +64,15 @@ public class PortfolioOfferedDetailView : MonoBehaviour
     {
         mediaContent.DestroyChildrens();
 
+        CreatedPortfolioMediaCell _mediaCell = null;
+
         for (int i = 0; i < mediaList.Count; i++)
         {
             GameObject mediaObject = Instantiate(mediaCell, mediaContent);
 
-            CreatedPortfolioMediaCell _mediaCell = mediaObject.GetComponent<CreatedPortfolioMediaCell>();
+            _mediaCell = mediaObject.GetComponent<CreatedPortfolioMediaCell>();
 
             _mediaCell.SetView(mediaList[i], null);
-
-            mediaCells.Add(_mediaCell);
         }
     }
 

@@ -1,9 +1,8 @@
-﻿using UnityEngine;
-using TMPro;
-using System.IO;
-using System.Collections.Generic;
-using System;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using DG.Tweening;
+using System;
+using TMPro;
 
 
 public class UpdateExperienceView : MonoBehaviour
@@ -33,7 +32,6 @@ public class UpdateExperienceView : MonoBehaviour
 
     WorkExperianceModel workModel = null;
 
-    string[] imageURls;
 
     DateTime startDate;
 
@@ -47,11 +45,7 @@ public class UpdateExperienceView : MonoBehaviour
 
     Craft selectedCraft;
 
-    List<string> imageUrls;
-
     List<Dictionary<string, object>> uploadedDict = new List<Dictionary<string, object>>();
-
-    private bool isShowingGalleryPanel = false;
 
     List<IndustryModel> industryModels;
 
@@ -97,6 +91,8 @@ public class UpdateExperienceView : MonoBehaviour
         UpdateMediaView();
 
         LoadRoles();
+
+        UpdateRoleCatagery();
 
         DataManager.Instance.GetIndustries((industriesList) => {
 
@@ -156,6 +152,27 @@ public class UpdateExperienceView : MonoBehaviour
         roleDropDown.AddOptions(options);
 
         roleDropDown.value = craftRoles.IndexOf(requiredGenre);
+    }
+
+    public void UpdateRoleCatagery()
+    {
+        selectedCraft = craftRoles[roleDropDown.value];
+
+        GameManager.Instance.apiHandler.GetRoleCategeries(selectedCraft.id, (status, response) => {
+
+            RoleCategeryResponse responseModel = JsonUtility.FromJson<RoleCategeryResponse>(response);
+
+            if (status)
+            {
+                categeryModels = responseModel.data;
+
+                UpdateRoleCategeryDropdown();
+
+                RoleCategeryModel selectedModel = categeryModels.Find(item => item.id == workModel.role_category_id);
+
+                roleCatageryDropdown.value = categeryModels.IndexOf(selectedModel);
+            }
+        });
     }
 
     public void OnRoleValueChange()
@@ -366,8 +383,6 @@ public class UpdateExperienceView : MonoBehaviour
     {
         if (status)
         {
-            this.imageUrls = imageUrls;
-
             filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), OnDeleteAction: OnDeleteButtonAction);
 
             for (int i = 0; i < imageUrls.Count; i++)
@@ -389,8 +404,6 @@ public class UpdateExperienceView : MonoBehaviour
     {
         if (status)
         {
-            this.imageUrls = audioUrls;
-
             filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Audio, OnDeleteButtonAction);
 
             for (int i = 0; i < audioUrls.Count; i++)
@@ -420,8 +433,6 @@ public class UpdateExperienceView : MonoBehaviour
     {
         if (status)
         {
-            this.imageUrls = videoUrls;
-
             filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Video, OnDeleteButtonAction);
 
             for (int i = 0; i < videoUrls.Count; i++)
@@ -451,8 +462,6 @@ public class UpdateExperienceView : MonoBehaviour
     {
         if (status)
         {
-            this.imageUrls = documentURLs;
-
             filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Document, OnDeleteButtonAction);
 
             for (int i = 0; i < documentURLs.Count; i++)

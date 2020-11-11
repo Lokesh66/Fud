@@ -10,6 +10,8 @@ public class SceneAlbumCell : MonoBehaviour
 
     public GameObject selectActiveObject;
 
+    public GameObject selectToggle;
+
 
     public TextMeshProUGUI userNameText;
 
@@ -18,7 +20,11 @@ public class SceneAlbumCell : MonoBehaviour
 
     Action<SceneAlbumCell, object> OnSelectAction;
 
-    SceneAlbumModel searchModel; 
+    SceneAlbumModel searchModel;
+
+    SceneCharacter sceneCharacter;
+
+    bool isView = false;
 
 
 
@@ -40,6 +46,8 @@ public class SceneAlbumCell : MonoBehaviour
         }
 
         selectInActiveObject.SetActive(canAddCharacters);
+
+        selectToggle.SetActive(canAddCharacters);
     }
 
     public void UpdateDeselectView()
@@ -56,6 +64,56 @@ public class SceneAlbumCell : MonoBehaviour
 
     public void OnCellButtonAction()
     {
-        OnButtonAtion?.Invoke(searchModel);
+        if (isView)
+        {
+            OnButtonAtion?.Invoke(sceneCharacter);
+        }
+        else
+        {
+            OnButtonAtion?.Invoke(searchModel);
+        }
     }
+
+    #region Scene View
+
+    public void SetView(SceneCharacter sceneCharacter, Action<object> OnButtonAtion)
+    {
+        this.sceneCharacter = sceneCharacter;
+
+        this.OnButtonAtion = OnButtonAtion;
+
+        selectToggle.SetActive(false);
+
+        isView = true;
+
+        userNameText.text = sceneCharacter.Users.name;
+    }
+
+    #endregion
+
+    #region Update View
+
+    public void SetView(SceneCharacter sceneCharacter, Action<object> OnButtonAtion, Action<SceneAlbumCell, object> OnSelectAction, bool canAddCharacters = false)
+    {
+        this.sceneCharacter = sceneCharacter;
+
+        this.OnButtonAtion = OnButtonAtion;
+
+        this.OnSelectAction = OnSelectAction;
+
+        selectInActiveObject.SetActive(OnSelectAction != null);
+
+        userNameText.text = sceneCharacter.Users.name;
+
+        if (OnSelectAction != null)
+        {
+            selectActiveObject.SetActive(searchModel.isSeeAllSelected);
+        }
+
+        selectInActiveObject.SetActive(canAddCharacters);
+
+        selectToggle.SetActive(canAddCharacters);
+    }
+
+    #endregion
 }

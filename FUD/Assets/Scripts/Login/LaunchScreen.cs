@@ -6,6 +6,7 @@ public enum ELoginButtonType
     Login,
     SignUp
 }
+
 public class LaunchScreen : MonoBehaviour
 {
     System.Action<ELoginButtonType> OnButtonPressed;

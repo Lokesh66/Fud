@@ -1,16 +1,8 @@
-﻿using UnityEngine.UI;
-using UnityEngine;
-using TMPro;
+﻿using UnityEngine;
 
 
 public class PortfolioExperienceDetails : MonoBehaviour
 {
-    //public Image userImage;
-
-    //public TextMeshProUGUI titleText;
-
-    //public TextMeshProUGUI description;
-
     public UpdateExperienceView updatePortfolioExperiance;
 
     public WorkExperienceDetailView detailView;
@@ -28,15 +20,6 @@ public class PortfolioExperienceDetails : MonoBehaviour
         this.experianceView = experianceView;
 
         gameObject.SetActive(true);
-
-        SetView();
-    }
-
-    void SetView()
-    {
-        //titleText.text = experianceModel.title;
-
-        //description.text = experianceModel.description;
     }
 
     public void OnViewButtonAction()
@@ -66,8 +49,6 @@ public class PortfolioExperienceDetails : MonoBehaviour
 
     void OnCancelButtonAction()
     {
-        Reset();
-
         gameObject.SetActive(false);
     }
 
@@ -90,12 +71,5 @@ public class PortfolioExperienceDetails : MonoBehaviour
     void OnExperienceUpdate(WorkExperianceModel updatedModel)
     {
         experianceView.OnUpdateExperience(experianceModel, updatedModel);
-    }
-
-    void Reset()
-    {
-        /*description.text = string.Empty;
-
-        userImage.sprite = null;*/
     }
 }

@@ -22,13 +22,6 @@ public class TopCanvas : MonoBehaviour
     }
 
 
-    public void ShowScreen(GameObject _screenObject, Action<object> OnClose = null)
-    {
-        this.OnClose = OnClose;
-
-        GameObject screenObject = Instantiate(_screenObject, rectTransform);
-    }
-
     public void ShowBigScreen(string imageURL)
     {
         bigScreenView.Load(imageURL);

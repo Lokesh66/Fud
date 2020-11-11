@@ -13,9 +13,6 @@ public class UpdateSceneCharacterView : MonoBehaviour
 
     public TextMeshProUGUI[] buttonsList;
 
-
-    public UpdateSceneManualView manualView;
-
     public UpdateSceneAutoView autoView;
 
     public UpdateSceneAlbumView sceneCharactersView;
@@ -34,9 +31,7 @@ public class UpdateSceneCharacterView : MonoBehaviour
 
     List<Dictionary<string, object>> autoDialogues = new List<Dictionary<string, object>>();
 
-    List<Dictionary<string, object>> manualDialogues = new List<Dictionary<string, object>>();
-
-    private ESubTabType currentTab = ESubTabType.Auto;
+    List<Dictionary<string, int>> sceneCharacters = new List<Dictionary<string, int>>();
 
     int projectId;
 
@@ -45,48 +40,20 @@ public class UpdateSceneCharacterView : MonoBehaviour
     {
         this.detailsModel = detailsModel;
 
-        //OnTabAction(0);
-
         this.projectId = detailsModel.project_id;
 
-        autoView.EnableView(this, detailsModel.ScenesMultimedia);
+        autoView.EnableView(this, detailsModel);
 
         gameObject.SetActive(true);
     }
 
-    #region Button Actions
-
-    public void OnTabAction(int tabIndex)
+    void SetSceneCharacters(List<SceneCharacter> albumModels)
     {
-        if (currentTab != (ESubTabType)tabIndex)
+        sceneCharacters.Clear();
+
+        for (int i = 0; i < albumModels.Count; i++)
         {
-            buttonsList[(int)currentTab].color = disabledColor;
-
-            buttonsList[tabIndex].color = selectedColor;
-
-            currentTab = (ESubTabType)tabIndex;
-
-            currentObject?.SetActive(false);
-
-            UpdateCurrentView();
-        }
-    }
-
-    #endregion
-
-    void UpdateCurrentView()
-    {
-        switch (currentTab)
-        {
-            case ESubTabType.Manual:
-                currentObject = manualView.gameObject;
-                manualView.EnableView(detailsModel.SceneCharacters, this);
-                break;
-
-            case ESubTabType.Auto:
-                currentObject = autoView.gameObject;
-                autoView.EnableView(this, null);
-                break;
+            sceneCharacters.Add(new Dictionary<string, int>() { { "character_id", albumModels[i].id } });
         }
     }
 
@@ -95,15 +62,6 @@ public class UpdateSceneCharacterView : MonoBehaviour
         autoView.OnBackButtonAction();
 
         gameObject.SetActive(false);
-
-        currentTab = ESubTabType.Auto;
-    }
-
-    public void SetManualDialogues(List<Dictionary<string, object>> manualDialogues)
-    {
-        this.manualDialogues = manualDialogues;
-
-        OnBackButtonAction();
     }
 
     public void SetAutoDialogues(List<Dictionary<string, object>> autoDialogues)
@@ -113,22 +71,27 @@ public class UpdateSceneCharacterView : MonoBehaviour
         OnBackButtonAction();
     }
 
-    public List<Dictionary<string, object>> GetDialogues(bool isManual)
+    public List<Dictionary<string, int>> GetSceneCharacters()
     {
-        return isManual ? manualDialogues : autoDialogues;
+        return sceneCharacters;
+    }
+
+    public List<Dictionary<string, object>> GetDialogues()
+    {
+        return autoDialogues;
     }
 
     public void OnAlbumCloseAction()
     {
-        sceneCharactersView.SetSceneCharactersView(projectId);
+        sceneCharactersView.SetSceneCharactersView();
+
+        SetSceneCharacters(sceneCharactersView.dataList);
 
         projectCharactersView.OnCloseButtonAction();
     }
 
     public void ClearData()
     {
-        manualView.ClearData();
-
         autoView.ClearData();
     }
 }

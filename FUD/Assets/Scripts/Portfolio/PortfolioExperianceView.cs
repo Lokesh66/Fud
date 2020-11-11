@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+
 
 public class PortfolioExperianceView : MonoBehaviour
 {
@@ -13,14 +13,10 @@ public class PortfolioExperianceView : MonoBehaviour
     public GameObject noDataObject;
 
 
-    private PortfolioHandler portfolioHandler;
-
     List<WorkExperianceModel> experianceModels;
 
-    public void Load(PortfolioHandler portfolioHandler)
+    public void Load()
     {
-        this.portfolioHandler = portfolioHandler;
-
         SetExperianceModels();
     }
 

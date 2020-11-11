@@ -85,9 +85,9 @@ public class UpdateVersionMediaCell : MonoBehaviour
 
     void SetVideoView()
     {
-        mediaPlayer.Prepare();
-
         mediaPlayer.Path = albumModel.content_url;
+
+        mediaPlayer.Prepare();
 
         albumImage.texture = DataManager.Instance.GetVideoThumbnailSprite().texture;
 
@@ -105,9 +105,9 @@ public class UpdateVersionMediaCell : MonoBehaviour
     {
         albumImage.texture = DataManager.Instance.GetAudioThumbnailSprite().texture;
 
-        mediaPlayer.Prepare();
-
         mediaPlayer.Path = albumModel.content_url;
+
+        //mediaPlayer.Prepare();
     }
 
     void SetDocumentView()

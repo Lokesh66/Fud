@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using UnityEngine.EventSystems;
-using System.Collections;
+﻿using UnityEngine.EventSystems;
 using UnityEngine;
 using DG.Tweening;
-using UnityEngine.UI;
 
 public class SwipeButtonsHelper : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
@@ -18,8 +15,6 @@ public class SwipeButtonsHelper : MonoBehaviour, IPointerDownHandler, IPointerUp
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("OnPointerDown Called");
-        // Do action
         startPoint = eventData.position;
     }
 
@@ -31,7 +26,6 @@ public class SwipeButtonsHelper : MonoBehaviour, IPointerDownHandler, IPointerUp
         }
         else
         {
-            Debug.Log("OnPointerUp Called");
             if (isLeftSwipe)
             {
                 //Left Swipe
@@ -47,7 +41,6 @@ public class SwipeButtonsHelper : MonoBehaviour, IPointerDownHandler, IPointerUp
             else
             {
                 //Right Swipe
-                Debug.Log("startPoint.x - eventData.position.x = " + (startPoint.x - eventData.position.x));
 
                 if (startPoint.x - eventData.position.x < -4)
                 {

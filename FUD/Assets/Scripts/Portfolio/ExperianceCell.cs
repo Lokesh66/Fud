@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using System;
+using TMPro;
+
 
 public class ExperianceCell : MonoBehaviour
 {
@@ -44,24 +45,11 @@ public class ExperianceCell : MonoBehaviour
 
     public void OnTapAction()
     {
-        //ShowAlbums();
         OnButtonAction?.Invoke(experianceModel, false);
     }
 
     public void OnReadMoreButtonAction()
     {
         OnButtonAction?.Invoke(experianceModel, true);
-    }
-
-    void ShowAlbums()
-    {
-        /*List<MultimediaModel> expMedia = experianceModel.MultimediaModel;
-
-        for (int i = 0; i < expMedia.Count; i++)
-        {
-            GameObject cellObject = Instantiate(mediaCell, content);
-
-            cellObject.GetComponent<PortfolioMediaCell>().SetView(expMedia[i]);
-        }*/
     }
 }

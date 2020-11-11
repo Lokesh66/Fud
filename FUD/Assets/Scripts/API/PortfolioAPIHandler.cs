@@ -157,17 +157,45 @@ public partial class APIHandler
 
     public void GetAllAlbums(int pageNo, Action<bool, List<PortfolioModel>> action)
     {
-        string url = APIConstants.USER_PORTFOLIO;
+        string url = APIConstants.GET_ALL_ALBUMS;
 
         url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
-        gameManager.StartCoroutine(GetRequest(url, true, (bool status, string response) => {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (bool status, string response) => {
 
             if (status)
             {
                 PortfolioResponseModel responseModel = JsonUtility.FromJson<PortfolioResponseModel>(response);
 
                 action?.Invoke(true, responseModel.data);
+            }
+            else
+            {
+                action?.Invoke(false, null);
+            }
+
+        }));
+    }
+
+    public void GetAlbumDetails(int albumId, int pageNo, Action<bool, List<MultimediaModel>> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        parameters.Add("id", albumId);
+
+        string url = APIConstants.GET_ALBUM_DETAILS;
+
+        url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (bool status, string response) => {
+
+            if (status)
+            {
+                PortfolioAlbumResponse responseModel = JsonUtility.FromJson<PortfolioAlbumResponse>(response);
+
+                action?.Invoke(true, responseModel.data[0].PortfolioMedia);
             }
             else
             {
@@ -461,6 +489,7 @@ public class PortfolioModel
     public int id;
     public int user_id;
     public string title;
+    public string thumbnail_image;
     public int status;
     public int likes;
     public int access_modifier;
@@ -470,6 +499,12 @@ public class PortfolioModel
     public List<MultimediaModel> PortfolioMedia;
 
     public MultimediaModel onScreenModel;
+}
+
+[Serializable]
+public class PortfolioAlbumResponse : BaseResponse
+{
+    public List<PortfolioModel> data;
 }
 
 
@@ -485,6 +520,7 @@ public class WorkExperianceModel
 {
     public int id;
     public int role_id;
+    public int role_category_id;
     public int user_id;
     public string description;
     public int status;
@@ -571,6 +607,7 @@ public class PortfolioMediaModel
 public class PortfolioActivityModel
 {
     public int id;
+    public string title;
     public int user_id;
     public int shared_to;
     public string status;
@@ -583,6 +620,8 @@ public class PortfolioActivityModel
     public DateTime updatedAt;
     public UserData Users;
     public PortfolioMediaModel Portfolio;
+
+    public List<MultimediaModel> PortfolioMedia;
 }
 
 [Serializable]

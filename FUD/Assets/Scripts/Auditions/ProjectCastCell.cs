@@ -1,7 +1,8 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
+﻿using UnityEngine.UI;
+using UnityEngine;
 using System;
+using TMPro;
+
 
 public class ProjectCastCell : MonoBehaviour
 {
@@ -18,13 +19,11 @@ public class ProjectCastCell : MonoBehaviour
 
     ProjectCast castData;
 
-    int index = 0;
 
-    public void SetView(int index, ProjectCast cast, Action<ProjectCast> OnTapAction)
+    public void SetView(ProjectCast cast, Action<ProjectCast> OnTapAction)
     {
         castData = cast;
         this.OnTapAction = OnTapAction;
-        this.index = index;
 
         if (castData != null)
         {

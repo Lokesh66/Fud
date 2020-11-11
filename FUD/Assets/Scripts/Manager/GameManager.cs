@@ -2,8 +2,7 @@
 using UnityEngine;
 using System.IO;
 using System;
-using UMP;
-using UnityEngine.Events;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -52,10 +51,7 @@ public class GameManager : MonoBehaviour
     }
 
     private void Start()
-    {
-        Debug.Log("Temp Path = " + Application.persistentDataPath);
-        //File.Delete(APIConstants.TOKEN_PATH);
-
+    {        
         StartGame();
     }
 

@@ -17,8 +17,6 @@ public class AllPlansView : MonoBehaviour
 
     public GameObject noDataObject;
 
-    public EStoreScreenType screenType;
-
 
     private List<Canvas> scrollCanvases = new List<Canvas>();
 
@@ -80,7 +78,7 @@ public class AllPlansView : MonoBehaviour
 
     void Load()
     {
-        GameManager.Instance.apiHandler.GetSubscriptionPlans((int)screenType, roleId, GetDurationKey(selectedDuration), (status, response) => {
+        GameManager.Instance.apiHandler.GetSubscriptionPlans(0, roleId, GetDurationKey(selectedDuration), (status, response) => {
 
             if (status)
             {
@@ -90,13 +88,7 @@ public class AllPlansView : MonoBehaviour
 
                 noDataObject.SetActive(modelsList.Count == 0);
 
-                if (screenType == EStoreScreenType.AllPlans)
-                {
-                    SetAllPlansView();
-                }
-                else {
-                    SetStoreView();
-                }
+                SetAllPlansView();
             }
         });
     }
@@ -119,59 +111,14 @@ public class AllPlansView : MonoBehaviour
         }
     }
 
-    void SetStoreView()
-    {
-        content.DestroyChildrens();
-
-        for (int i = 0; i < modelsList.Count; i++)
-        {
-            GameObject planObject = Instantiate(planCell, content);
-
-            modelsList[i].SetPlanPrice(selectedDuration);
-
-            StoreCell storeCell = planObject.GetComponent<StoreCell>();
-
-            storeCell.Load(modelsList[i], OnSubscriptionSelectAction);
-        }
-    }
-
     void OnSubscriptionSelectAction(SubscriptionModel model)
     {
-        Debug.Log("OnSubscriptionSelectAction : " + model.name);
-
         Dictionary<string, object> planIdInfo = new Dictionary<string, object>
         {
             { "plan_id", model.id }
         };
-        Debug.Log("CashFree button action");
         GameManager.Instance.apiHandler.CashFreeRequest(DataManager.Instance.userInfo.phone.ToString(),
-            DataManager.Instance.userInfo.email_id, planIdInfo);//, OnResponse: OnResponse);
-    }
-
-    void OnResponse(bool status, string orderId)
-    {
-        if (status)
-        {
-            GameManager.Instance.apiHandler.VerifyPurchsedOrderId(orderId, (apiStatus) =>
-            {
-                if (apiStatus)
-                {
-                    AlertModel alertModel = new AlertModel();
-
-                    alertModel.message = "Order Verified Success";
-
-                    UIManager.Instance.ShowAlert(alertModel);
-                }
-                else
-                {
-                    AlertModel alertModel = new AlertModel();
-
-                    alertModel.message = "Order verification Failed";
-
-                    UIManager.Instance.ShowAlert(alertModel);
-                }
-            });
-        }
+            DataManager.Instance.userInfo.email_id, planIdInfo);
     }
 
     void ShowRoleDropDown()

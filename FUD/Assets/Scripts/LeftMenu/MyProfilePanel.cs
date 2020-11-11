@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine;
 using TMPro;
-using System.Collections.Generic;
+
 
 public class MyProfilePanel : MonoBehaviour
 {

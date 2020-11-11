@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using TMPro;
+﻿using System.Collections.Generic;
 using UnityEngine;
-
+using System;
+using TMPro;
 
 
 public class UserAuditionController : MonoBehaviour
@@ -45,8 +44,6 @@ public class UserAuditionController : MonoBehaviour
 
     Action<bool> OnBack;
 
-    List<string> videoURLs = new List<string>();
-
 
     int auditionId;
 
@@ -79,8 +76,6 @@ public class UserAuditionController : MonoBehaviour
                 buttonList[(int)currentType].color = disabledColor;
             }
 
-            //noDataObject.SetActive(false);
-
             currentType = screenSubType;
 
             buttonList[(int)currentType].color = selectedColor;
@@ -112,13 +107,6 @@ public class UserAuditionController : MonoBehaviour
     public void OnAuditionSelectAction(UserAuditionCell audition)
     {
         selectedAuditionCell = audition;
-
-        buttonsPanel.SetActive(true);
-    }
-
-    void OnVideoComplete()
-    {
-        Debug.Log("User Audition Controller : OnVideoComplete Called");
 
         buttonsPanel.SetActive(true);
     }

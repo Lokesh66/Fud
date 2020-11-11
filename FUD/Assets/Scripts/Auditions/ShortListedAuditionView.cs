@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using frame8.ScrollRectItemsAdapter.GridExample;
+﻿using frame8.ScrollRectItemsAdapter.GridExample;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -54,8 +53,6 @@ public class ShortListedAuditionView : MonoBehaviour
         {
             if (status)
             {
-                Debug.Log("Short listed Audition Response = " + response);
-
                 SearchAuditionResponse auditionResponse = JsonUtility.FromJson<SearchAuditionResponse>(response);
 
                 auditionResponses = auditionResponse.data;
@@ -79,11 +76,7 @@ public class ShortListedAuditionView : MonoBehaviour
                     }
                     else
                     {
-                        tableView.Data.Clear();
-
-                        tableView.Data.Add(auditionResponses.Count);
-
-                        tableView.Refresh();
+                        Reload();
                     }
                 }
                 else
@@ -113,16 +106,15 @@ public class ShortListedAuditionView : MonoBehaviour
 
         if (mediaType == EMediaType.Video)
         {
-            VideoStreamer.Instance.Play(selectedAuditionCell.icon, selectedAuditionCell.mediaPlayer, EMediaType.Video);
+            UIManager.Instance.topCanvas.PlayVideo(selectedAuditionCell.icon, selectedAuditionCell.mediaPlayer);
         }
         else if (mediaType == EMediaType.Audio)
         {
-            VideoStreamer.Instance.Play(selectedAuditionCell.icon, selectedAuditionCell.mediaPlayer, EMediaType.Audio);
+            UIManager.Instance.topCanvas.PlayVideo(selectedAuditionCell.icon, selectedAuditionCell.mediaPlayer, EMediaType.Audio);
         }
         else
         {
             UIManager.Instance.ShowBigScreen(model.content_url);
-            //buttonsPanel.SetActive(true);
         }
     }
 
@@ -165,20 +157,9 @@ public class ShortListedAuditionView : MonoBehaviour
                     pageNo++;
                 }
 
-                tableView.Data.Clear();
-
-                tableView.Data.Add(auditionResponses.Count);
-
-                tableView.Refresh();
+                Reload();
             }
         });
-    }
-
-    void OnVideoComplete()
-    {
-        Debug.Log("OnVideo Complete Called : ShortListedView");
-
-        buttonsPanel.SetActive(true);
     }
 
     public void OnFilterButtonAction()
@@ -190,15 +171,17 @@ public class ShortListedAuditionView : MonoBehaviour
     {
         auditionResponses = data as List<SearchAudition>;
 
-        tableView.Data.Clear();
-
-        if (auditionResponses.Count > 0)
-        {
-            tableView.Data.Add(auditionResponses.Count);
-
-            tableView.Refresh();
-        }
+        Reload();
 
         noDataObject.SetActive(auditionResponses.Count == 0);
+    }
+
+    void Reload()
+    {
+        tableView.Data.Clear();
+
+        tableView.Data.Add(auditionResponses.Count);
+
+        tableView.Refresh();
     }
 }

@@ -16,8 +16,6 @@ public class ProjectStoriesPanel : MonoBehaviour
 
     List<MultimediaModel> mediaList;
 
-    List<VersionMediaCell> cellsList = new List<VersionMediaCell>();
-
 
     public void SetData(StoryVersion storyVersion)
     {
@@ -39,8 +37,6 @@ public class ProjectStoriesPanel : MonoBehaviour
 
         VersionMediaCell _mediaCell = null;
 
-        cellsList.Clear();
-
         for (int i = 0; i < mediaList.Count; i++)
         {
             GameObject mediaObject = Instantiate(mediaCell, mediaContent);
@@ -48,8 +44,6 @@ public class ProjectStoriesPanel : MonoBehaviour
             _mediaCell = mediaObject.GetComponent<VersionMediaCell>();
 
             _mediaCell.SetView(mediaList[i]);
-
-            cellsList.Add(_mediaCell);
         }
     }
 }

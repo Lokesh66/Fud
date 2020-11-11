@@ -40,14 +40,8 @@ public partial class APIHandler
 
     public void CashFreeRequest (string customerPhone, string customerEmail, Dictionary<string, object>  planIdInfo, string customerName = null, string orderNote = null, Action<bool, string> OnResponse = null)
     {
-        Debug.Log ("CashFree CashFreeRequest");
-
         gameManager.StartCoroutine(gameManager.apiHandler.PostRequest (APIConstants.GET_CASH_FREE_TOKEN, true, planIdInfo, (bool status, string responseString) => 
         {
-            Debug.Log ("CashFree CashFreeRequest status = " + status);
-
-            Debug.Log("Response string = " + responseString);
-
             //"data":{ "appId":"1362262b24f262b46ab91599e22631","orderId":8,"orderAmount":1000,"customerEmail":"lmoakm@gmail.com","customerPhone":919133532445,"token":"lb9JCN4MzUIJiOicGbhJCLiQ1VKJiOiAXe0Jye.gV0nIkZWZkRTZhF2MlZTZ1IiOiQHbhN3XiwiN4IDN3gjN4UTM6ICc4VmIsIiUOlkI6ISej5WZyJXdDJXZkJ3biwCMwATM6ICduV3btFkclRmcvJCL4ojIklkclRmcvJye.jmlUm863f1eFUTAx6dPOwjB0vIUXbx2HKcIIUFH-eLbhnkAc-JWG8KDiHt7hFck1x7","stage":"TEST","notifyUrl":"http://18.217.51.190:7004/v1/verify/order"}
             //})
 
@@ -90,7 +84,7 @@ public partial class APIHandler
 
                 //OnResponse(status, response.orderId);
 
-#else
+#elif UNITY_IOS
                 //TODO: iOS is pending
 
                 string jsonResponse = JsonUtility.ToJson(response);
@@ -103,7 +97,8 @@ public partial class APIHandler
         }));
     }
 
-    //[AOT.MonoPInvokeCallback(typeof(OnIOSPaymentCompletion))]
+#if UNITY_IOS
+    [AOT.MonoPInvokeCallback(typeof(OnIOSPaymentCompletion))]
     static void onPaymentCompletion(string response)
     {
         Debug.Log("response = " + response);
@@ -142,6 +137,7 @@ public partial class APIHandler
             UIManager.Instance.ShowAlert(alertModel);
         }
     }
+#endif
 
     string GetCFPToken()
     {

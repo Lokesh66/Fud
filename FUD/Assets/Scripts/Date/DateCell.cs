@@ -1,6 +1,7 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
+using System;
 using TMPro;
+
 
 public class DateCell : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class DateCell : MonoBehaviour
     private bool isValid;
 
     Action<DateTime, Transform> onSelectDate;
+
 
     public void SetData(DateTime date, DateTime currentDate, bool isValidDate, Action<DateTime, Transform> action)
     {
@@ -27,7 +29,7 @@ public class DateCell : MonoBehaviour
     {
         if (isValid)
         {
-            onSelectDate?.Invoke(selectedDate, this.transform);
+            onSelectDate?.Invoke(selectedDate, transform);
         }
     }
 }

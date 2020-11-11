@@ -1,18 +1,11 @@
-﻿using UnityEngine.UI;
-using UnityEngine;
-using TMPro;
+﻿using UnityEngine;
+
 
 public class PortfolioMediaDetails : MonoBehaviour
 {
-    public Image userImage;
-
-    public TextMeshProUGUI titleText;
-
-    public TextMeshProUGUI description;
-
     public UpdatePortfolioView updateView;
 
-    public CreatedPortfolioView createdPortfolioView;
+    public PortfolioAlbumView albumView;
 
 
     PortfolioModel portfolioModel;
@@ -27,15 +20,6 @@ public class PortfolioMediaDetails : MonoBehaviour
         this.mediaView = mediaView;
 
         gameObject.SetActive(true);
-
-        SetView();
-    }
-
-    void SetView()
-    {
-        //titleText.text = portfolioModel.title;
-
-        //description.text = portfolioModel.description;
     }
 
     public void OnButtonAction(int buttonIndex)
@@ -64,8 +48,6 @@ public class PortfolioMediaDetails : MonoBehaviour
 
     void OnCancelButtonAction()
     {
-        Reset();
-
         gameObject.SetActive(false);
     }
 
@@ -76,7 +58,9 @@ public class PortfolioMediaDetails : MonoBehaviour
 
     void OnViewButtonAction()
     {
-        createdPortfolioView.SetView(portfolioModel);
+        albumView.Load( portfolioModel);
+
+        gameObject.SetActive(false);
     }
 
     void OnDeleteButtonAction()
@@ -93,12 +77,5 @@ public class PortfolioMediaDetails : MonoBehaviour
     void OnShareButtonAction()
     {
         mediaView.OnShareButtonAction(portfolioModel);
-    }
-
-    void Reset()
-    {
-        //description.text = string.Empty;
-
-        //userImage.sprite = null;
     }
 }

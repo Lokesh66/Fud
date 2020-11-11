@@ -8,15 +8,15 @@ using TMPro;
 
 public partial class APIHandler
 {
-    public void GetAllStories(int pageNo, Action<bool, List<StoryModel>> action)
+    public void GetAllStories(int pageNo, Action<bool, List<StoryCreatedModel>> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-        string url = APIConstants.CREATE_STORY;
+        string url = APIConstants.GET_ALL_STORIES;
 
         url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
-        gameManager.StartCoroutine(GetRequest(url, true, (bool status, string response) => {
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (bool status, string response) => {
             if (status)
             {
                 StoriesResponse stories = JsonUtility.FromJson<StoriesResponse>(response);
@@ -72,7 +72,7 @@ public partial class APIHandler
 
             if (status)
             {
-                StoriesResponse stories = JsonUtility.FromJson<StoriesResponse>(response);
+                PublicStoriesResponse stories = JsonUtility.FromJson<PublicStoriesResponse>(response);
                 action?.Invoke(true, stories.data);
             }
             else
@@ -99,7 +99,7 @@ public partial class APIHandler
 
             if (status)
             {
-                StoriesResponse stories = JsonUtility.FromJson<StoriesResponse>(response);
+                PublicStoriesResponse stories = JsonUtility.FromJson<PublicStoriesResponse>(response);
                 action?.Invoke(true, stories.data);
             }
             else
@@ -230,7 +230,7 @@ public partial class APIHandler
         }));
     }
 
-    public void CreateStoryVersion(int storyId, string description, int roleId, int accessValue, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
+    public void CreateStoryVersion(int storyId, string description, int accessValue, List<Dictionary<string, object>> multimediaModels, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -239,8 +239,6 @@ public partial class APIHandler
         parameters.Add("description", description);
 
         parameters.Add("access_modifier", accessValue);
-
-        parameters.Add("genre_id", roleId);
 
         if (multimediaModels.Count > 0)
         {
@@ -257,7 +255,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateStoryVersion(int storyId, int versionId, string description, int roleId, int accessValue, List<Dictionary<string, object>> multimediaModels, List<int> deletedMedia, Action<bool, string> action)
+    public void UpdateStoryVersion(int storyId, int versionId, string description, int accessValue, List<Dictionary<string, object>> multimediaModels, List<int> deletedMedia, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -272,8 +270,6 @@ public partial class APIHandler
         parameters.Add("description", description);
 
         parameters.Add("access_modifier", accessValue);
-
-        parameters.Add("genre_id", roleId);
 
         if (multimediaModels.Count > 0)
         {
@@ -659,7 +655,7 @@ public partial class APIHandler
 
         gameManager.StartCoroutine(PostRequest(url, true, parameters, (apiStatus, response) =>
         {
-            StoriesResponse stories = JsonUtility.FromJson<StoriesResponse>(response);
+            PublicStoriesResponse stories = JsonUtility.FromJson<PublicStoriesResponse>(response);
 
             action(apiStatus, stories.data);
         }));
@@ -747,12 +743,29 @@ public class StoryModel
     public string status;
     public object created_date_time;
     public int user_id;
+    public long lock_upto;
     public object created_by;
+    public int project_id;
     public DateTime updatedAt;
 }
 
 [Serializable]
+public class StoryCreatedModel
+{
+    public int id;
+    public int story_id;
+    public object created_date_time;
+    public StoryModel Stories;
+}
+
+[Serializable]
 public class StoriesResponse : BaseResponse
+{
+    public List<StoryCreatedModel> data;
+}
+
+[Serializable]
+public class PublicStoriesResponse : BaseResponse
 {
     public List<StoryModel> data;
 }
@@ -928,6 +941,11 @@ public class MultimediaModel
     public DateTime updated_date_time;
 
 
+    public string content_key;
+    public string bucket_name;
+    public object e_tag;
+   
+
     public EMediaType GetMediaType(string _mediaType)
     {
         EMediaType mediaType = EMediaType.Image;
@@ -983,7 +1001,7 @@ public class UpdatedCharaterModel : BaseResponse
 [Serializable]
 public class UpdatedStoryResponse : BaseResponse
 {
-    public StoryModel data;
+    public StoryCreatedModel data;
 }
 
 [Serializable]

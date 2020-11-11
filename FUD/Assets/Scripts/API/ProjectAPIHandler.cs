@@ -283,7 +283,7 @@ public partial class APIHandler
         }));
     }
 
-    public void CreateProjectScene(SceneCreationModel creationModel, List<int> characterScenes, List<Dictionary<string, object>> autoScenes, Action<bool, string> action)
+    public void CreateProjectScene(SceneCreationModel creationModel, List<Dictionary<string, int>> characterScenes, List<Dictionary<string, object>> autoScenes, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -379,7 +379,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateProjectScene(SceneCreationModel creationModel, int sceneId, List<Dictionary<string, object>> characterScenes, List<Dictionary<string, object>> autoDialogues, Action<bool, string> action)
+    public void UpdateProjectScene(SceneCreationModel creationModel, int sceneId, List<Dictionary<string, int>> sceneCharacters, List<Dictionary<string, object>> autoDialogues, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -403,7 +403,10 @@ public partial class APIHandler
 
         parameters.Add("shoot_time", creationModel.shoot_time);
 
-        parameters.Add("scene_characters", characterScenes);
+        if (sceneCharacters.Count > 0)
+        {
+            parameters.Add("scene_characters", sceneCharacters);
+        }
 
         if (autoDialogues.Count > 0)
         {
@@ -703,6 +706,7 @@ public class ProjectCharacterModel : StoryCharacterModel
     public int project_status;
     public string status;
     public int story_version_id;
+    public List<MultimediaModel> CharacterMultimedia;
 }
 
 [Serializable]

@@ -12,10 +12,6 @@ public class StoriesAlteredPopUpView : MonoBehaviour
 
     public GameObject rejectObject;
 
-    public GameObject shareObject;
-
-
-    public StoryShareView shareStoryVersionView;
 
     public VersionMultimediaView multimediaView;
 
@@ -59,13 +55,6 @@ public class StoriesAlteredPopUpView : MonoBehaviour
         multimediaView.Load(alteredModel.StoryVersions);
 
         gameObject.SetActive(false);
-    }
-
-    public void OnShareButtonAction()
-    {
-        gameObject.SetActive(false);
-
-        shareStoryVersionView.Load(alteredModel.StoryVersions, null);
     }
 
     public void OnCancelButtonAction()

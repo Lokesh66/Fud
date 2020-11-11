@@ -7,7 +7,7 @@ public class UpdateSceneAlbumView : MonoBehaviour
 {
     public ProfileInfoDetailView profileInfoView;
 
-    public SceneAlbumsTableView tableView;
+    public UpdateSceneAlbumsTableView tableView;
 
     public UpdateSceneAlbumView projectCharactersView;
 
@@ -17,9 +17,11 @@ public class UpdateSceneAlbumView : MonoBehaviour
 
 
     [HideInInspector]
-    public List<SceneAlbumModel> dataList;
+    public List<SceneCharacter> dataList;
 
     List<SceneAlbumModel> selectedCharacters = new List<SceneAlbumModel>();
+
+    List<SceneCharacter> sceneCharacters = new List<SceneCharacter>(); 
 
     int MAX_USERS = 50;
 
@@ -41,7 +43,9 @@ public class UpdateSceneAlbumView : MonoBehaviour
 
             if (status)
             {
-                this.dataList = dataList;
+                sceneCharacters.Clear();
+
+                UpdateLocalModel(dataList);
 
                 if (!isInitialized)
                 {
@@ -53,7 +57,7 @@ public class UpdateSceneAlbumView : MonoBehaviour
                 {
                     tableView.Data.Clear();
 
-                    tableView.Data.Add(dataList.Count);
+                    tableView.Data.Add(sceneCharacters.Count);
 
                     tableView.Refresh();
                 }
@@ -63,27 +67,58 @@ public class UpdateSceneAlbumView : MonoBehaviour
         });
     }
 
+    void UpdateLocalModel(List<SceneAlbumModel> dataList)
+    {
+        SceneCharacter sceneCharacter = null;
+
+        foreach (var model in dataList)
+        {
+            sceneCharacter = new SceneCharacter();
+
+            sceneCharacter.id = model.id;
+
+            sceneCharacter.Users = new UserData();
+
+            sceneCharacter.Users.id = model.user_id;
+
+            sceneCharacter.Users.name = model.Users.name;
+
+            sceneCharacter.Users.profile_image = model.Users.profile_image;
+
+            this.dataList.Add(sceneCharacter);
+        }
+    }
+
     void Reload()
     {
         tableView.Data.Clear();
 
         if (dataList != null && dataList.Count > 0)
         {
-            tableView.Data.Add(dataList.Count);
+            tableView.Data.Add(sceneCharacters.Count);
 
             tableView.Refresh();
         }
     }
 
-    public void SetSceneCharactersView(int projectId)
+    public void SetSceneCharactersView()
+    {
+        dataList = projectCharactersView.GetSelectedCharacters();
+
+        Reload();
+    }
+    
+    public void SetSceneCharactersView(int projectId, List<SceneCharacter> sceneCharacters)
     {
         gameObject.SetActive(true);
 
         this.projectId = projectId;
 
-        dataList = projectCharactersView.GetSelectedCharacters();
+        dataList = sceneCharacters;
 
-        Reload();
+        tableView.gameObject.SetActive(true);
+
+        noDataObject.SetActive(dataList.Count == 0);
     }
 
     public void OnSelectMember(SceneAlbumCell selectedCell, object searchModel)
@@ -112,18 +147,17 @@ public class UpdateSceneAlbumView : MonoBehaviour
             {
                 profileInfoView.Load(userInfo);
             }
-
         });
     }
 
-    public List<SceneAlbumModel> GetSelectedCharacters()
+    public List<SceneCharacter> GetSelectedCharacters()
     {
-        return selectedCharacters;
+        return sceneCharacters;
     }
 
     public void OnCloseProjectCharactersView()
     {
-        SetSceneCharactersView(projectId);
+        SetSceneCharactersView();
     }
 
     public void ClearData()

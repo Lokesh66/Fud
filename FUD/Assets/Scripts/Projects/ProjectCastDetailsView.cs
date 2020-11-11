@@ -1,10 +1,15 @@
 ﻿using frame8.ScrollRectItemsAdapter.MultiplePrefabsExample;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
 
 public class ProjectCastDetailsView : MonoBehaviour
 {
+    public GameObject mediaObject;
+
+    public RectTransform mediaContent;
+
     public RemoteImageBehaviour remoteImageBehaviour;
 
     public TextMeshProUGUI roleText;
@@ -24,8 +29,6 @@ public class ProjectCastDetailsView : MonoBehaviour
 
         remoteImageBehaviour.Load(projectCast.StoryCharacters.UserInfo?.profile_image);
 
-        Debug.Log("projectCast.StoryCharacters = " + projectCast.StoryCharacters);
-
         roleText.text = projectCast.StoryCharacters.Craftroles.name;
 
         roleCategoryText.text = projectCast.StoryCharacters.RoleCategories.name;
@@ -35,10 +38,26 @@ public class ProjectCastDetailsView : MonoBehaviour
         descriptionText.text = projectCast.StoryCharacters.description;
 
         userNameText.text = projectCast.StoryCharacters.UserInfo?.name;
+
+        UpdateMedia(projectCast.StoryCharacters.CharacterMultimedia);
     }
 
     public void OnBackButtonAction()
     {
         gameObject.SetActive(false);
+    }
+
+    void UpdateMedia(List<MultimediaModel> modelsList)
+    {
+        mediaContent.DestroyChildrens();
+
+        GameObject mediaCell;
+
+        for (int i = 0; i < modelsList.Count; i++)
+        {
+            mediaCell = Instantiate(mediaObject, mediaContent);
+
+            mediaCell.GetComponent<VersionMediaCell>().SetView(modelsList[i]);
+        }
     }
 }

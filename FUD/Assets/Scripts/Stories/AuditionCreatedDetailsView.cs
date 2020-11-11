@@ -27,6 +27,19 @@ public class AuditionCreatedDetailsView : MonoBehaviour
     {
         gameObject.SetActive(false);
 
+        Audition audition = auditionCell.GetAuditionModel();
+
+        if (audition.no_of_persons_joined <= 0)
+        {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = "You have not received any audition responses";
+
+            UIManager.Instance.ShowAlert(alertModel);
+
+            return;
+        }
+
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
         parameters.Add("id", auditionModel.id);
@@ -42,18 +55,7 @@ public class AuditionCreatedDetailsView : MonoBehaviour
 
                 SearchAuditionResponse auditionResponse = JsonUtility.FromJson<SearchAuditionResponse>(response);
 
-                if (auditionResponse.data.Count > 0)
-                {
-                    controller.SetUserAuditions(auditionResponse.data, auditionModel.id);
-                }
-                else
-                {
-                    AlertModel alertModel = new AlertModel();
-
-                    alertModel.message = "You have not received any audition responses";
-
-                    UIManager.Instance.ShowAlert(alertModel);
-                }
+                controller.SetUserAuditions(auditionResponse.data, auditionModel.id);
             }
         });
     }

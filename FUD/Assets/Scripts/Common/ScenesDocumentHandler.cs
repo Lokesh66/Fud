@@ -18,8 +18,6 @@ public class ScenesDocumentHandler : MonoBehaviour
 
     public void Load(List<MultimediaModel> mediaList, EMediaType mediaType = EMediaType.Image, Action<object> OnDeleteAction = null)
     {
-        //content.DestroyChildrens();
-
         this.mediaType = mediaType;
 
         UploadedFileCell fileCell = null;

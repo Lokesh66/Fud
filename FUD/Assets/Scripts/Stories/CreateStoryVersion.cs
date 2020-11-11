@@ -8,8 +8,6 @@ public class CreateStoryVersion : MonoBehaviour
 {
     public UploadedFilesHandler filesHandler;
 
-    public TMP_Dropdown roledropDown;
-
     public TMP_Dropdown accessDropdown;
 
     public TMP_InputField descriptionField;
@@ -18,8 +16,6 @@ public class CreateStoryVersion : MonoBehaviour
 
 
     StoryVersionsView versionsView;
-
-    List<Genre> genres;
 
     List<string> imageUrls;
 
@@ -37,23 +33,6 @@ public class CreateStoryVersion : MonoBehaviour
         gameObject.SetActive(true);
 
         this.versionsView = versionsView;
-
-        PopulateDropdown();
-    }
-
-    void PopulateDropdown()
-    {
-        genres = DataManager.Instance.genres;
-
-        List<string> options = new List<string>();
-
-        foreach (var option in genres)
-        {
-            options.Add(option.name);
-        }
-
-        roledropDown.ClearOptions();
-        roledropDown.AddOptions(options);
     }
 
     public void OnMediaButtonAction(int mediaType)
@@ -105,13 +84,9 @@ public class CreateStoryVersion : MonoBehaviour
             return;
         }
 
-        string selectedGenreText = roledropDown.options[roledropDown.value].text;
-
-        Genre selectedGenre = genres.Find(genre => genre.name.Equals(selectedGenreText));
-
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
-        GameManager.Instance.apiHandler.CreateStoryVersion(storyId, descriptionField.text, selectedGenre.id, accessDropdown.value + 1, uploadedDict, (status, response) => {
+        GameManager.Instance.apiHandler.CreateStoryVersion(storyId, descriptionField.text, accessDropdown.value + 1, uploadedDict, (status, response) => {
 
             apiResponse = response;
 

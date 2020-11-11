@@ -276,7 +276,7 @@ public partial class APIHandler
 
         yield return webRequest.SendWebRequest();
 
-        Debug.Log("webRequest.downloadHandler.text  = " + webRequest.downloadHandler.text);
+        Debug.Log("Response = " + webRequest.downloadHandler.text + " url = " + url);
 
         Loader.Instance.StopLoading();
 
@@ -428,8 +428,6 @@ public partial class APIHandler
 
     public void DownloadImage(string imageurl, Action<Sprite> CallBack)
     {
-        Debug.Log("DownloadImage Called");
-
         if (string.IsNullOrEmpty(imageurl))
         {
             CallBack?.Invoke(null);
@@ -440,6 +438,8 @@ public partial class APIHandler
 
         if (File.Exists(path))
         {
+            GalleryManager.Instance.loadingCountText.text += "\n loading from Local";
+
             LoadPNG(path, CallBack);
         }
         else
@@ -459,6 +459,8 @@ public partial class APIHandler
 
     IEnumerator DownloadImageAndSave(string imageURL, Action<Sprite> OnResponse)
     {
+        string directoryPath = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH);
+
         Loader.Instance.StartLoading();
 
         //string url = APIConstants.MEDIA_UPLOAD_BASE_URL + "adam/v1/downloadFile?" + "key_name=" + imageURL;
@@ -481,19 +483,40 @@ public partial class APIHandler
         {
             Debug.LogErrorFormat("<APIManager/GetRequest> Error ({0})", webRequest.error);
 
+            GalleryManager.Instance.loadingCountText.text += "\n If Executed";
+
+            GalleryManager.Instance.loadingCountText.text += "\n webRequest.error = " + webRequest.error;
+
             OnResponse?.Invoke(DataManager.Instance.GetImageThumbnailSprite());
         }
         else
         {
+            GalleryManager.Instance.loadingCountText.text += "\n Else Executed";
+
             string path = Path.Combine(Application.persistentDataPath, APIConstants.TEMP_IMAGES_PATH, Path.GetFileName(imageURL));
 
             Texture2D myTexture = DownloadHandlerTexture.GetContent(webRequest);
 
+            GalleryManager.Instance.loadingCountText.text += "\n Texture Generated";
+
             Sprite profileSprite = Sprite.Create(myTexture, new Rect(0f, 0f, myTexture.width, myTexture.height), new Vector2(0.5f, 0f));//creates sprite from the texture of the image
+
+            GalleryManager.Instance.loadingCountText.text += "\n Sprite Generated";
 
             byte[] texByte = myTexture.EncodeToPNG();//to convert texture to png
 
-            File.WriteAllBytes(path, texByte);
+            GalleryManager.Instance.loadingCountText.text += "\n Writing to local path = " + path;
+
+            GalleryManager.Instance.loadingCountText.text += "\n Directory.Exists(directoryPath) = " + Directory.Exists(directoryPath);
+
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            FileSystem.Instance.WriteAllBytesAtomically(path, texByte);
+
+            GalleryManager.Instance.loadingCountText.text += "\n Calling CallBack : OnResponse = " + OnResponse;
 
             OnResponse?.Invoke(profileSprite);
         }

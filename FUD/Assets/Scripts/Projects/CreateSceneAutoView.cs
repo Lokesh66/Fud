@@ -42,8 +42,6 @@ public class CreateSceneAutoView : MonoBehaviour
     public void OnBackButtonAction()
     {
         filesHandler.ClearData();
-
-        //gameObject.SetActive(false);
     }
 
     void OnDocumentsUploaded(bool status, List<string> documentURLs)
