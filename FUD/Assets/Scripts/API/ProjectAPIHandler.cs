@@ -4,19 +4,21 @@ using System;
 
 public partial class APIHandler
 {
-    public void GetProjects(int pageNo, Action<bool, ProjectsResponse> action)
+    public void GetProjects(int pageNo, Action<bool, CreatedProjectsResponse> action)
     {
-        string url = APIConstants.CREATE_PROJECT;
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        string url = APIConstants.GET_ALL_PROJECTS;
 
         url += "?page=" + pageNo + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
 
-        gameManager.StartCoroutine(GetRequest(url, true, (status, response) => {
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (status, response) => {
 
             Debug.Log("GetProjects : response = " + response);
 
             if (status)
             {
-                ProjectsResponse projectsResponse = JsonUtility.FromJson<ProjectsResponse>(response);
+                CreatedProjectsResponse projectsResponse = JsonUtility.FromJson<CreatedProjectsResponse>(response);
 
                 action(status, projectsResponse);
             }
@@ -28,8 +30,6 @@ public partial class APIHandler
         string url = APIConstants.GET_USER_INFO + "?user_id=" + userId;
 
         gameManager.StartCoroutine(GetRequest(url, true, (status, response) => {
-
-            Debug.Log("GetUserInfo : response = " + response);
 
             if (status)
             {
@@ -478,9 +478,15 @@ public partial class APIHandler
 
         parameters.Add("age_to", ageTo);
 
-        parameters.Add("role_id", roleId);
+        if (!roleId.Equals(-1))
+        {
+            parameters.Add("role_id", roleId);
+        }
 
-        parameters.Add("gender", gender);
+        if (gender.IsNOTNullOrEmpty())
+        {
+            parameters.Add("gender", gender);
+        }
 
         gameManager.StartCoroutine(PostRequest(APIConstants.GET_PROJECT_BROWSER_DATA, true, parameters, (apiStatus, response) =>
         {
@@ -747,4 +753,32 @@ public class SceneAlbumModel : ProjectOfferedModel
     public SceneAlbumModel data;
 
     public bool isSeeAllSelected = false;
+}
+
+[Serializable]
+public class CreatedProjectsResponse : BaseResponse
+{
+    public List<CreatedProjectModel> data;
+}
+
+[Serializable]
+public class CreatedProjectModel
+{
+    public int id;
+    public int story_id;
+    public int story_version_id;
+    public int user_id;
+    public string title;
+    public string title_poster;
+    public object cost_estimation;
+    public object estimated_time;
+    public int crew_percentage;
+    public string description;
+    public int audition_percentage;
+    public int status;
+    public int start_date;
+    public int release_date;
+    public DateTime created_date_time;
+    public DateTime updatedAt;
+    public List<StoryCharacterModel> StoryCharacters;
 }

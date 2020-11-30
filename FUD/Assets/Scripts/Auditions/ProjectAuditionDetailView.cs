@@ -3,8 +3,6 @@ using TMPro;
 
 public class ProjectAuditionDetailView : MonoBehaviour
 {
-    public TextMeshProUGUI description;
-
     public GameObject editObject;
 
     System.Action<int> buttonAction;
@@ -13,8 +11,6 @@ public class ProjectAuditionDetailView : MonoBehaviour
     public void Load(Audition audition, System.Action<int> action)
     {
         gameObject.SetActive(true);
-
-        description.text = audition.description;
 
         buttonAction = action;
 

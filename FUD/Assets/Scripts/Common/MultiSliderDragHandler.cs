@@ -17,7 +17,6 @@ public class MultiSliderDragHandler : MonoBehaviour, IBeginDragHandler, IDragHan
     [HideInInspector]
     public float minAgeValue;
 
-    float minPosX = -1;
 
     float maxMinAgePos = 900.0f;
 
@@ -31,8 +30,6 @@ public class MultiSliderDragHandler : MonoBehaviour, IBeginDragHandler, IDragHan
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        minPosX = eventData.position.x;
-
         maxCurrentPosX = ageSlider.value > 0 ? ageSlider.handleRect.anchorMin.x * (maxMinAgePos - minAgePos) : 100.0f;
 
         maxCurrentPosX += 100.0f;
@@ -74,8 +71,6 @@ public class MultiSliderDragHandler : MonoBehaviour, IBeginDragHandler, IDragHan
 
     public void ClearData()
     {
-        minPosX = -1;
-
         minCurrentPosX = 100;
 
         minAgeValue = 0;

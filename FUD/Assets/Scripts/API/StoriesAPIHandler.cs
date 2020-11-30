@@ -322,7 +322,7 @@ public partial class APIHandler
         }));
     }
 
-    public void UpdateCharacter(int characterId, int storyId, string title, int castId, string description, int performerId, string gender, Action<bool, string> action)
+    public void UpdateCharacter(int characterId, int storyId, List<int> deletedMedia, List<Dictionary<string, object>> multimedia, string title, int castId, string description, int performerId, string gender, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
 
@@ -341,6 +341,16 @@ public partial class APIHandler
         parameters.Add("gender", gender);
 
         parameters.Add("status", 3);
+
+        if (multimedia.Count > 0)
+        {
+            parameters.Add("character_multi_media", multimedia);
+        }
+
+        if (deletedMedia.Count > 0)
+        {
+            parameters.Add("remove_media", deletedMedia);
+        }
 
 
         gameManager.StartCoroutine(PutRequest(APIConstants.SAVE_STORY_CHARACTER, true, parameters, (apiStatus, response) => {
@@ -698,6 +708,25 @@ public partial class APIHandler
         }));
     }
 
+    public void ApplyStoryHistoryFilter(string sortId, Action<bool, string> action)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        if (sortId.IsNOTNullOrEmpty())
+        {
+            parameters.Add("activity", sortId);
+        }
+
+        string url = APIConstants.GET_HISTORY_STORIES;
+
+        url += "?page=" + 1 + "&limit=" + APIConstants.API_ITEM_LIMIT + "&count=" + APIConstants.API_ITEM_LIMIT;
+
+        gameManager.StartCoroutine(PostRequest(url, true, parameters, (apiStatus, response) =>
+        {
+            action?.Invoke(apiStatus, response);
+        }));
+    }
+
     public void GetRoleCategeries(int roleId, Action<bool, string> action)
     {
         Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -841,6 +870,8 @@ public class StoryCharacterModel
     public CraftRoleModel Craftroles;
     public RoleCategoryModel RoleCategories;
     public ActivityOwnerModel UserInfo;
+
+    public List<MultimediaModel> CharacterMultimedia;
 
     public string GetCharacterType(int castId)
     {
@@ -1112,6 +1143,9 @@ public class PerformerModel
     public int id;
     public int story_id;
     public string title;
+    public int type;
+    public int role_id;
+    public int role_category_id;
     public string description;
     public string suitable_performer;
     public object project_cast_id;
@@ -1124,6 +1158,7 @@ public class PerformerModel
     public DateTime created_date_time;
     public DateTime updatedAt;
     public UserData UserInfo;
+    public List<MultimediaModel> CharacterMultimedia;
 }
 
 [Serializable]

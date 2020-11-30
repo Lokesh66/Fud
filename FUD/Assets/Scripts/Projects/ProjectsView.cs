@@ -14,6 +14,8 @@ public class ProjectsView : BaseView
 
     public GameObject addObject;
 
+    public GameObject noDataObject;
+
     public GameObject filterObject;
 
     public TextMeshProUGUI[] buttonsList;
@@ -55,6 +57,8 @@ public class ProjectsView : BaseView
 
     public void OnTabAction(int tabIndex)
     {
+        noDataObject.SetActive(false);
+
         if (currentTab != (ETabType)tabIndex)
         {
             buttonsList[(int)currentTab].color = disabledColor;

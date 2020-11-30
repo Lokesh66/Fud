@@ -1,26 +1,29 @@
-﻿using UnityEngine.UI;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
 using TMPro;
+
 
 public class ProjectCell : MonoBehaviour
 {
     public RectTransform rectTransform;
 
     public TextMeshProUGUI titleText;
-    public TextMeshProUGUI releaseDateText;
+    public TextMeshProUGUI directorName;
     public TextMeshProUGUI descriptionText;
 
-    private Project projectModel;
+    private CreatedProjectModel projectModel;
 
-    Action<Project> OnClickAction;
+    Action<CreatedProjectModel> OnClickAction;
 
 
-    public void SetView(Project model, Action<Project> OnProjectSelected)
+    public void SetView(CreatedProjectModel model, Action<CreatedProjectModel> OnProjectSelected)
     {
         projectModel = model;
 
         OnClickAction = OnProjectSelected;
+
+        List<StoryCharacterModel> charactersList = model.StoryCharacters;
 
         DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0);
 
@@ -28,7 +31,10 @@ public class ProjectCell : MonoBehaviour
 
         descriptionText.text = projectModel.description;
 
-        releaseDateText.text = "Release Date : " + DatePicker.Instance.GetDateString(dateTime.AddSeconds(projectModel.release_date));
+        if (charactersList.Count > 0)
+        {
+            directorName.text = charactersList[0].Craftroles.name + " : " + charactersList[0].UserInfo.name;
+        }
     }
 
     public void OnButtonAction()

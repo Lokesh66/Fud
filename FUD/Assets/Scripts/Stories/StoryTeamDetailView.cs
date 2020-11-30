@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Collections;
+﻿using frame8.ScrollRectItemsAdapter.GridExample;
+using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
-using System;
 using TMPro;
 
 
@@ -12,10 +10,16 @@ public class StoryTeamDetailView : MonoBehaviour
 
     public TextMeshProUGUI descriptionText;
 
-    public TextMeshProUGUI membersText;
 
+    public TeamMembersTableView tableView;
+
+
+    [HideInInspector]
+    public List<TeamMembersItem> dataList;
 
     StoryTeamModel teamModel;
+
+    bool isInitialised = false;
 
 
     public void Load(StoryTeamModel teamModel)
@@ -23,6 +27,8 @@ public class StoryTeamDetailView : MonoBehaviour
         gameObject.SetActive(true);
 
         this.teamModel = teamModel;
+
+        dataList = teamModel.TeamMembers;
 
         SetView();
     }
@@ -40,25 +46,24 @@ public class StoryTeamDetailView : MonoBehaviour
             teamModel.TeamMembers.Remove(item);
         }
 
-        StopAllCoroutines();
-
-        StartCoroutine(UpdateTeamMembers());
-    }
-
-    IEnumerator UpdateTeamMembers()
-    {
-        yield return new WaitForEndOfFrame();
-
-        for (int i = 0; i < teamModel.TeamMembers.Count; i++)
+        if (!isInitialised)
         {
-            membersText.text += teamModel.TeamMembers[i].users.name + ",";
+            tableView.gameObject.SetActive(true);
+
+            isInitialised = true;
+        }
+        else
+        {
+            tableView.Data.Clear();
+
+            tableView.Data.Add(dataList.Count);
+
+            tableView.Refresh();
         }
     }
 
     public void OnBackButtonAction()
     {
         gameObject.SetActive(false);
-
-        membersText.text = string.Empty;
     }
 }

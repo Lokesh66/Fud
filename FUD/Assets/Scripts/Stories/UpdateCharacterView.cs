@@ -9,6 +9,8 @@ public class UpdateCharacterView : MonoBehaviour
 {
     public RectTransform searchContent;
 
+    public Transform mediaContent;
+
     public TMP_Dropdown castDropdown;
 
     public TMP_InputField titleField;
@@ -34,8 +36,6 @@ public class UpdateCharacterView : MonoBehaviour
     public RectTransform galleryPanel;
 
 
-    StoryDetailsModel detailsModel;
-
     UserSearchModel selectedModel = null;
 
     string keyword = string.Empty;
@@ -50,11 +50,11 @@ public class UpdateCharacterView : MonoBehaviour
 
     string apiResponse = string.Empty;
 
-    bool isShowingGalleryPanel = false;
-
     List<string> imageUrls;
 
     List<Craft> craftRoles;
+
+    List<MultimediaModel> mediaList;
 
     Craft selectedCraft;
 
@@ -63,6 +63,10 @@ public class UpdateCharacterView : MonoBehaviour
     Action<StoryCharacterModel> OnUpdateCharacter;
 
     List<RoleCategeryModel> categeryModels;
+
+    MultimediaModel albumModel;
+
+    List<int> deletedMedia = new List<int>();
 
     private string mediaSource = "characters";
 
@@ -103,10 +107,32 @@ public class UpdateCharacterView : MonoBehaviour
                 selectedModel = userSearchModel;
 
                 suitableField.text = suitable_performer;
+
+                mediaList = reponseModel.data.CharacterMultimedia;
+
+                UpdateMediaView();
             }
         });
 
         SetView();
+    }
+
+    void UpdateMediaView()
+    {
+        GameObject cellObject;
+
+        EMediaType mediaType = EMediaType.Image;
+
+        for (int i = 0; i < mediaList.Count; i++)
+        {
+            cellObject = Instantiate(mediaCell, mediaContent);
+
+            mediaType = DataManager.Instance.GetMediaType(mediaList[i].media_type);
+
+            cellObject.GetComponent<UploadedFileCell>().Load(mediaList[i], mediaType, OnDeleteButtonAction);
+        }
+
+        filesHandler.mediaButtonTrans.SetAsLastSibling();
     }
 
     public void SetView()
@@ -300,7 +326,7 @@ public class UpdateCharacterView : MonoBehaviour
 
         int storyId = StoryDetailsController.Instance.GetStoryId();
 
-        GameManager.Instance.apiHandler.UpdateCharacter(characterModel.id, storyId, titleField.text, castDropdown.value, descriptionField.text, selectedModel.id, genderDropdown.captionText.text, (status, response) => {
+        GameManager.Instance.apiHandler.UpdateCharacter(characterModel.id, storyId, deletedMedia, uploadedDict, titleField.text, castDropdown.value, descriptionField.text, selectedModel.id, genderDropdown.captionText.text, (status, response) => {
 
             if (status)
             {
@@ -351,6 +377,14 @@ public class UpdateCharacterView : MonoBehaviour
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();
 
+                albumModel = new MultimediaModel();
+
+                albumModel.content_url = imageUrls[i];
+
+                albumModel.media_type = "image";
+
+                mediaList.Add(albumModel);
+
                 kvp.Add("content_id", 1);
 
                 kvp.Add("content_url", imageUrls[i]);
@@ -371,6 +405,14 @@ public class UpdateCharacterView : MonoBehaviour
             for (int i = 0; i < audioUrls.Count; i++)
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                albumModel = new MultimediaModel();
+
+                albumModel.content_url = audioUrls[i];
+
+                albumModel.media_type = "audio";
+
+                mediaList.Add(albumModel);
 
                 kvp.Add("content_id", 1);
 
@@ -393,6 +435,14 @@ public class UpdateCharacterView : MonoBehaviour
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();
 
+                albumModel = new MultimediaModel();
+
+                albumModel.content_url = videoUrls[i];
+
+                albumModel.media_type = "video";
+
+                mediaList.Add(albumModel);
+
                 kvp.Add("content_id", 1);
 
                 kvp.Add("content_url", videoUrls[i]);
@@ -413,6 +463,14 @@ public class UpdateCharacterView : MonoBehaviour
             for (int i = 0; i < documentURLs.Count; i++)
             {
                 Dictionary<string, object> kvp = new Dictionary<string, object>();
+
+                albumModel = new MultimediaModel();
+
+                albumModel.content_url = imageUrls[i];
+
+                albumModel.media_type = "document";
+
+                mediaList.Add(albumModel);
 
                 kvp.Add("content_id", 1);
 
@@ -492,6 +550,10 @@ public class UpdateCharacterView : MonoBehaviour
         castDropdown.value = genderDropdown.value = 0;
 
         isSearchAPICalled = false;
+
+        uploadedDict.Clear();
+
+        deletedMedia.Clear();
     }
 
     public void OnUploadAction()
@@ -506,12 +568,59 @@ public class UpdateCharacterView : MonoBehaviour
 
     void SlideGalleryView(bool canShow)
     {
-        isShowingGalleryPanel = canShow;
-
         float panelPosition = galleryPanel.anchoredPosition.y;
 
-        float targetPostion = panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
+        panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
 
-        galleryPanel.DOAnchorPosY(targetPostion, 0.4f);
+        galleryPanel.DOAnchorPosY(panelPosition, 0.4f);
+    }
+
+    void OnDeleteButtonAction(object model)
+    {
+        MultimediaModel multimediaModel = model as MultimediaModel;
+
+        string url = string.Empty;
+
+        bool isItemRemoved = false;
+
+        int modelIndex = mediaList.IndexOf(multimediaModel) + 1;
+
+        Destroy(mediaContent.GetChild(modelIndex).gameObject);
+
+        if (multimediaModel.id != -1)
+        {
+            deletedMedia.Add(multimediaModel.id);
+        }
+        else
+        {
+            foreach (var item in uploadedDict)
+            {
+                Dictionary<string, object> mediaItem = item as Dictionary<string, object>;
+
+                foreach (var kvp in mediaItem)
+                {
+                    if (kvp.Key.Equals("content_url"))
+                    {
+                        url = kvp.Value as string;
+
+                        if (url.Equals(multimediaModel.content_url))
+                        {
+                            uploadedDict.Remove(mediaItem);
+
+                            isItemRemoved = true;
+
+                            break;
+                        }
+                    }
+                }
+
+                if (isItemRemoved)
+                {
+                    break;
+                }
+            }
+        }
+
+        mediaList.Remove(multimediaModel);
     }
 }

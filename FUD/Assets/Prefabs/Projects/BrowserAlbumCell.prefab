@@ -313,7 +313,7 @@ GameObject:
   - component: {fileID: 3017951240542321388}
   - component: {fileID: 61711057159837418}
   - component: {fileID: 1057156200528339157}
-  - component: {fileID: 5042609446557213248}
+  - component: {fileID: 2848743203393349649}
   m_Layer: 5
   m_Name: SelectToggle
   m_TagString: Untagged
@@ -376,7 +376,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5042609446557213248
+--- !u!114 &2848743203393349649
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -385,7 +385,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4972975736874023201}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -416,24 +416,20 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 1057156200528339157}
-  toggleTransition: 1
-  graphic: {fileID: 0}
-  m_Group: {fileID: 0}
-  onValueChanged:
+  m_OnClick:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4575507051743076960}
         m_MethodName: OnSelectToggleAction
-        m_Mode: 2
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 5042609446557213248}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Toggle, UnityEngine.UI
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_IsOn: 0
 --- !u!1 &5539595678095660358
 GameObject:
   m_ObjectHideFlags: 0

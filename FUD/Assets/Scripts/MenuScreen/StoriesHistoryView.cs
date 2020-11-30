@@ -11,6 +11,8 @@ public class StoriesHistoryView : MonoBehaviour
 
     public StoriesHistoryTableView tableView;
 
+    public StoryHistoryFilterView filterView;
+
 
     [HideInInspector]
     public List<StoryHistoryModel> historyModels;
@@ -44,6 +46,8 @@ public class StoriesHistoryView : MonoBehaviour
         gameObject.SetActive(false);
 
         historyModels.Clear();
+
+        filterView.ClearData();
     }
 
     public void OnBackButtonAction()
@@ -58,5 +62,23 @@ public class StoriesHistoryView : MonoBehaviour
         tableView.Data.Add(historyModels.Count);
 
         tableView.Refresh();
+    }
+
+    public void OnFilterButtonAction()
+    {
+        filterView.Load(OnFilterAction);
+    }
+
+    void OnFilterAction(object data)
+    {
+        historyModels = data as List<StoryHistoryModel>;
+
+        tableView.Data.Clear();
+
+        tableView.Data.Add(historyModels.Count);
+
+        tableView.Refresh();
+
+        noDataView.gameObject.SetActive(historyModels.Count == 0);
     }
 }

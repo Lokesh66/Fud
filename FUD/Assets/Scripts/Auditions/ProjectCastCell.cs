@@ -51,6 +51,36 @@ public class ProjectCastCell : MonoBehaviour
 
         statusImage.sprite = Resources.Load<Sprite>("Images/StatusTags/" + statusType);
 
-        statusText.text = statusType.ToString();
+        statusText.text = GetStatusText(castData.cast_status);
+    }
+
+    string GetStatusText(int castStatus)
+    {
+        string statusMsg = string.Empty;
+
+        switch (castStatus)
+        {
+            case 0:
+                statusMsg = "Go for Audition";
+                break;
+
+            case 1:
+                statusMsg = "Send Offer";
+                break;
+
+            case 3:
+                statusMsg = "Offer Sent";
+                break;
+
+            case 5:
+                statusMsg = "Selected";
+                break;
+
+            case 8:
+                statusMsg = "Declined";
+                break;
+        }
+
+        return statusMsg;
     }
 }

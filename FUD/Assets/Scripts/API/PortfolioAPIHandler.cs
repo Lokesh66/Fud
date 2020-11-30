@@ -636,6 +636,7 @@ public class ActivityOwnerModel
     public int id;
     public string name;
     public string profile_image;
+    public int role_id;
 }
 
 

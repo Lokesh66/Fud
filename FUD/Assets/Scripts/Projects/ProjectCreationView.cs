@@ -53,7 +53,7 @@ public class ProjectCreationView : MonoBehaviour
 
     bool isEditView;
 
-    Project projectModel;
+    CreatedProjectModel projectModel;
 
     DateTime selectedDate;
 
@@ -79,7 +79,7 @@ public class ProjectCreationView : MonoBehaviour
         isDataUpdated = false;
     }
 
-    public void EditSetView(Project projectModel)
+    public void EditSetView(CreatedProjectModel projectModel)
     {
         this.projectModel = projectModel;
 

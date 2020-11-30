@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+using UnityEngine.UI;
 
 public class ProjectAuditionCell : MonoBehaviour
 {
+    public RawImage auditionIcon;
+
     public TMP_Text titleText;
     public TMP_Text descriptionText;
     public TMP_Text peopleJoinedText;
@@ -13,7 +15,7 @@ public class ProjectAuditionCell : MonoBehaviour
     Audition auditionData;
 
 
-    public void SetView(int index, Audition audition)
+    public void SetView(Audition audition)
     {
         auditionData = audition;
 
@@ -26,7 +28,20 @@ public class ProjectAuditionCell : MonoBehaviour
             peopleJoinedText.text = "Entries : " + auditionData.no_of_persons_joined.ToString();
 
             projectNameText.text = auditionData.title;
+
+            SetAuditionIcon();
         }
+    }
+
+    void SetAuditionIcon()
+    {
+        GameManager.Instance.apiHandler.DownloadImage(auditionData.image_url, (sprite) =>
+        {
+            if (this != null && sprite != null)
+            {
+                auditionIcon.texture = sprite.texture;
+            }
+        });
     }
 
     public void OnClickAction()
@@ -95,6 +110,18 @@ public class ProjectAuditionCell : MonoBehaviour
 
     void ShowActiveAuditions()
     {
+        if (auditionData.no_of_persons_joined <= 0)
+        {
+            AlertModel alertModel = new AlertModel();
+
+            alertModel.message = "You have not received any audition responses";
+
+            UIManager.Instance.ShowAlert(alertModel);
+
+            return;
+        }
+
+
         Dictionary<string, object> parameters = new Dictionary<string, object>();
         parameters.Add("id", auditionData.id);
         parameters.Add("page", 0);
@@ -106,17 +133,7 @@ public class ProjectAuditionCell : MonoBehaviour
             {
                 SearchAuditionResponse auditionResponse = JsonUtility.FromJson<SearchAuditionResponse>(response);
 
-                if (auditionResponse.data.Count > 0)
-                {
-                    ProjectsDetailedView.Instance.userAuditionController.SetView(auditionResponse.data, auditionData.id, null);
-                }
-                else {
-                    AlertModel alertModel = new AlertModel();
-
-                    alertModel.message = "You have not received any audition responses";
-
-                    UIManager.Instance.ShowAlert(alertModel);
-                }
+                ProjectsDetailedView.Instance.userAuditionController.SetView(auditionResponse.data, auditionData.id, null);
             }
         });
     }

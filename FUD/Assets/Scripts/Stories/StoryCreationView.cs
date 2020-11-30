@@ -58,8 +58,6 @@ public class StoryCreationView : MonoBehaviour
 
     List<Genre> genres;
 
-    List<string> imageUrls;
-
     string titlePosterURL = string.Empty;
 
     System.Action<StoryCreatedModel> OnClose;
@@ -269,8 +267,6 @@ public class StoryCreationView : MonoBehaviour
     {
         if (status)
         {
-            this.imageUrls = imageUrls;
-
             filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), OnDeleteAction: OnDeleteAction);
 
             for (int i = 0; i < imageUrls.Count; i++)
@@ -292,8 +288,6 @@ public class StoryCreationView : MonoBehaviour
     {
         if (status)
         {
-            this.imageUrls = audioUrls;
-
             filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Audio, OnDeleteAction: OnDeleteAction);
 
             for (int i = 0; i < audioUrls.Count; i++)
@@ -316,9 +310,6 @@ public class StoryCreationView : MonoBehaviour
         if (status)
         {
             filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Video, OnDeleteAction);
-
-
-            this.imageUrls = videoUrls;
 
             for (int i = 0; i < videoUrls.Count; i++)
             {
@@ -399,8 +390,6 @@ public class StoryCreationView : MonoBehaviour
         string url = string.Empty;
 
         bool isItemRemoved = false;
-
-        //int modelIndex = mediaList.IndexOf(mediaModel);
 
         
         foreach (var item in uploadedDict)

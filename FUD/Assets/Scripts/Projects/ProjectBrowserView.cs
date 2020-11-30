@@ -1,7 +1,6 @@
 ﻿using frame8.ScrollRectItemsAdapter.GridExample;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 
 public class ProjectBrowserView : MonoBehaviour
@@ -37,6 +36,8 @@ public class ProjectBrowserView : MonoBehaviour
     List<PortfolioModel> selectedAlbums = new List<PortfolioModel>();
 
 
+    bool isInitialized = false;
+
     int pageNo = 1;
 
     bool isPagingOver = false;
@@ -46,6 +47,8 @@ public class ProjectBrowserView : MonoBehaviour
 
     public void Load()
     {
+        ResetView();
+
         gameObject.SetActive(true);
 
         GetBrowserData();
@@ -103,13 +106,11 @@ public class ProjectBrowserView : MonoBehaviour
 
     void OnSuccessResponse()
     {
-
+        selectedAlbums.Clear();
     }
 
     void GetBrowserData()
     {
-        noDataView.gameObject.SetActive(false);
-
         GameManager.Instance.apiHandler.GetBrowserData(pageNo, (status, albums) => {
 
             if (status)
@@ -125,31 +126,20 @@ public class ProjectBrowserView : MonoBehaviour
                     pageNo = 1;
                 }
 
-                tableView.gameObject.SetActive(true);
-
-
-                if (albumModels.Count == 0)
+                if (!isInitialized)
                 {
-                    noDataView.SetView(GetNoDataModel());
-                }
+                    tableView.gameObject.SetActive(true);
 
-                noDataView.gameObject.SetActive(albumModels?.Count == 0);
+                    isInitialized = true;
+
+                    noDataView.gameObject.SetActive(albumModels?.Count <= 0);
+                }
+                else
+                {
+                    Reload();
+                }
             }
         });
-    }
-
-    NoDataModel GetNoDataModel()
-    {
-        NoDataModel noDataModel = new NoDataModel();
-
-        noDataModel.subTitle = "No Albums Available";
-
-        return noDataModel;
-    }
-
-    void ClearData()
-    {
-        selectedAlbums.Clear();
     }
 
     public void OnAlbumSelection(bool isAlbumAction, PortfolioModel albumModel)
@@ -205,11 +195,7 @@ public class ProjectBrowserView : MonoBehaviour
     {
         albumModels = portfolioModels;
 
-        tableView.Data.Clear();
-
-        tableView.Data.Add(albumModels.Count);
-
-        tableView.Refresh();
+        Reload();
     }
 
     public void OnAPICall()
@@ -243,12 +229,32 @@ public class ProjectBrowserView : MonoBehaviour
                     pageNo++;
                 }
 
-                tableView.Data.Clear();
-
-                tableView.Data.Add(albumModels.Count);
-
-                tableView.Refresh();
+                Reload();
             }
         });
+    }
+
+    void Reload()
+    {
+        tableView.Data.Clear();
+
+        tableView.Data.Add(albumModels.Count);
+
+        tableView.Refresh();
+
+        noDataView.gameObject.SetActive(albumModels?.Count <= 0);
+    }
+
+    void ResetView()
+    {
+        pageNo = 1;
+
+        isPagingOver = false;
+
+        selectedAlbumsContent.DestroyChildrens();
+
+        selectedAlbums.Clear();
+
+        scrollTrans.anchoredPosition = new Vector2(scrollTrans.anchoredPosition.x, 0.0f);
     }
 }

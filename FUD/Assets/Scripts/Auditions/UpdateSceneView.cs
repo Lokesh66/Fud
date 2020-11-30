@@ -20,6 +20,8 @@ public class UpdateSceneView : MonoBehaviour
 
     SceneDetailsModel detailsModel;
 
+    DateTime selectedDate;
+
     string defaultDateText = "Select Date";
 
     List<Dictionary<string, object>> dialoguesList = new List<Dictionary<string, object>>();
@@ -53,6 +55,12 @@ public class UpdateSceneView : MonoBehaviour
         shootTimeDropdown.value = shootTimeDropdown.options.FindIndex(option => option.text.Equals(detailsModel.shoot_time));
 
         placeDropdown.value = placeDropdown.options.FindIndex(option => option.text.Equals(detailsModel.place_type));
+
+        DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0);
+
+        selectedDate = dateTime.AddSeconds(detailsModel.start_time);
+
+        startDateText.text = DatePicker.Instance.GetDateString(selectedDate);
     }
 
     public void OnDateSelectAction()

@@ -51,6 +51,8 @@ public class APIConstants
 
     public const string CREATE_PROJECT = BASE_URL + "v1/projects/";
 
+    public const string GET_ALL_PROJECTS = BASE_URL + "v1/projects/created";
+
     public const string GET_AUDITION_PROJECTS = BASE_URL + "created";
 
     public const string GET_PROJECT_CASTS = BASE_URL + "v1/searchProjectCast";

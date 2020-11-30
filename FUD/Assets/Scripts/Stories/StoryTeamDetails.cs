@@ -4,8 +4,6 @@ using TMPro;
 
 public class StoryTeamDetails : MonoBehaviour
 {
-    public TextMeshProUGUI titleText;
-
     public UpdateTeamView updateTeamView;
 
     public StoryTeamDetailView detailView;

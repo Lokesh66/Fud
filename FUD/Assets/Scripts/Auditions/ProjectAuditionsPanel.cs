@@ -35,7 +35,7 @@ public class ProjectAuditionsPanel : MonoBehaviour
             {
                 GameObject auditionObject = Instantiate(auditionCell, parentContent);
 
-                auditionObject.GetComponent<ProjectAuditionCell>().SetView(i, auditions[i]);
+                auditionObject.GetComponent<ProjectAuditionCell>().SetView(auditions[i]);
             }
         }
         else

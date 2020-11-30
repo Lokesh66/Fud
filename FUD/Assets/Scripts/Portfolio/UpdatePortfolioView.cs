@@ -64,8 +64,10 @@ public class UpdatePortfolioView : MonoBehaviour
         }
     }
 
-    void OnDeleteMediaAction(MultimediaModel multimediaModel)
+    void OnDeleteMediaAction(object model)
     {
+        MultimediaModel multimediaModel = model as MultimediaModel;
+
         string url = string.Empty;
 
         bool isItemRemoved = false;
@@ -90,7 +92,7 @@ public class UpdatePortfolioView : MonoBehaviour
                     {
                         url = kvp.Value as string;
 
-                        if (url.Equals(multimediaModel.content_url))
+                        if (multimediaModel.content_url.Contains(url))
                         {
                             uploadedDict.Remove(mediaItem);
 
@@ -145,7 +147,7 @@ public class UpdatePortfolioView : MonoBehaviour
         {
             MultimediaModel albumModel;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles());
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), OnDeleteAction: OnDeleteMediaAction);
 
             for (int i = 0; i < imageUrls.Count; i++)
             {
@@ -176,7 +178,7 @@ public class UpdatePortfolioView : MonoBehaviour
         {
             MultimediaModel albumModel;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Audio);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Audio, OnDeleteMediaAction);
 
             for (int i = 0; i < audioUrls.Count; i++)
             {
@@ -207,7 +209,7 @@ public class UpdatePortfolioView : MonoBehaviour
         {
             MultimediaModel albumModel;
 
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Video);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Video, OnDeleteMediaAction);
 
             for (int i = 0; i < videoUrls.Count; i++)
             {

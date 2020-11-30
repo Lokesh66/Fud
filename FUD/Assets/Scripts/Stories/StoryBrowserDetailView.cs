@@ -18,8 +18,6 @@ public class StoryBrowserDetailView : MonoBehaviour
 
     List<MultimediaModel> mediaList;
 
-    List<VersionMediaCell> cellsList = new List<VersionMediaCell>();
-
 
     public void Load(StoryActivityModel model)
     {
@@ -34,9 +32,9 @@ public class StoryBrowserDetailView : MonoBehaviour
     {
         descriptionText.text = model.StoryVersions.description;
 
-        Genre genre = DataManager.Instance.genres.Find(genreItem => genreItem.id == model.StoryVersions.genre_id);
+        //Genre genre = DataManager.Instance.genres.Find(genreItem => genreItem.id == model.StoryVersions.genre_id);
 
-        genreText.text = genre.name;
+        //genreText.text = genre.name;
 
         mediaList = model.StoryVersions.Multimedia;
 
@@ -49,8 +47,6 @@ public class StoryBrowserDetailView : MonoBehaviour
 
         VersionMediaCell _mediaCell = null;
 
-        cellsList.Clear();
-
         for (int i = 0; i < mediaList.Count; i++)
         {
             GameObject mediaObject = Instantiate(mediaCell, mediaContent);
@@ -58,8 +54,6 @@ public class StoryBrowserDetailView : MonoBehaviour
             _mediaCell = mediaObject.GetComponent<VersionMediaCell>();
 
             _mediaCell.SetView(mediaList[i]);
-
-            cellsList.Add(_mediaCell);
         }
     }
 

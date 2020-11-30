@@ -25,6 +25,8 @@ public class BrowserAlbumCell : MonoBehaviour
         this.OnSelectAction = OnSelectAction;
 
         this.OnButtonAction = OnButtonAction;
+
+        selectObject.SetActive(false);
     }
 
     public void OnAlbumButtonAction()
@@ -32,9 +34,9 @@ public class BrowserAlbumCell : MonoBehaviour
         OnSelectAction?.Invoke(true, portfolioModel);
     }
 
-    public void OnSelectToggleAction(Toggle toggle)
+    public void OnSelectToggleAction()
     {
-        selectObject.SetActive(toggle.isOn);
+        selectObject.SetActive(!selectObject.activeSelf);
 
         OnSelectAction?.Invoke(false, portfolioModel);
     }

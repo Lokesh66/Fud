@@ -11,6 +11,8 @@ public class PortfolioActvityCell : MonoBehaviour
 
     public TextMeshProUGUI titleText;
 
+    public TextMeshProUGUI roleText;
+
     public TextMeshProUGUI descriptionText;
 
     public Image statusTag;
@@ -40,9 +42,13 @@ public class PortfolioActvityCell : MonoBehaviour
 
         this.tabType = tabType;
 
+        Craft selectedRole = DataManager.Instance.crafts.Find(item => item.id == model.Portfolio.Users?.role_id);
+
         titleText.text = model.Portfolio.title;
 
         descriptionText.text = model.Portfolio.description;
+
+        roleText.text = tabType == ETabType.Offers ? selectedRole != null ? selectedRole.name : string.Empty : string.Empty;
 
         statusTag.gameObject.SetActive(tabType == ETabType.Altered);
 

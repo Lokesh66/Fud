@@ -5,12 +5,10 @@ using UnityEngine;
 public class ProjectCreatedDetailsView : MonoBehaviour
 {
 
-    AuditionCreatedCell auditionCell;
-
-    Project projectModel;
+    CreatedProjectModel projectModel;
 
 
-    public void Load(Project projectModel)
+    public void Load(CreatedProjectModel projectModel)
     {
         this.projectModel = projectModel;
 

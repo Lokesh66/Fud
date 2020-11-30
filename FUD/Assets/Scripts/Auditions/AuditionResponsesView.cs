@@ -58,6 +58,8 @@ public class AuditionResponsesView : MonoBehaviour
         {
             Reload();
         }
+
+        noDataObject.SetActive(auditionResponses.Count <= 0);
     }
 
     public void OnAuditionSelectAction(UserAuditionCell audition)

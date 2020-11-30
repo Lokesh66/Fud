@@ -13,6 +13,8 @@ public class StoryCell : MonoBehaviour
 
     public TextMeshProUGUI description;
 
+    public TextMeshProUGUI accessText;
+
     public GameObject readMoreObject;
 
     public GameObject editObject;
@@ -27,13 +29,19 @@ public class StoryCell : MonoBehaviour
 
     public void SetView(StoryCreatedModel storyModel, Action<StoryCell> tapAction = null)
     {
+        int userId = DataManager.Instance.userInfo.id;
+
         this.storyModel = storyModel;
 
         this.OnTapActon = tapAction;
 
+        string accessMsg = userId == storyModel.Stories.user_id ? "Owner" : "Member"; 
+
         titleText.text = storyModel.Stories.title;
 
         description.text = storyModel.Stories.description;
+
+        accessText.text = accessMsg;
 
         //editObject.SetActive(true);
 

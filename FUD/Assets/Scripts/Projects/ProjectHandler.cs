@@ -32,7 +32,10 @@ public class ProjectHandler : MonoBehaviour
 
 
     [HideInInspector]
-    public List<Project> projectModels;
+    public List<CreatedProjectModel> createProjects;
+
+    [HideInInspector]
+    public List<Project> alteredProjects;
 
     [HideInInspector]
     public List<ProjectOfferedModel> offeredModels;
@@ -148,26 +151,22 @@ public class ProjectHandler : MonoBehaviour
 
     void GetAllProjects()
     {
-        Debug.Log("GetAllProjects Called");
-
         noDataView.gameObject.SetActive(false);
 
         GameManager.Instance.apiHandler.GetProjects(pageNo, (status, projectsResponse) => {
 
             if (status && projectsResponse != null)
             {
-                projectModels = projectsResponse.data;
+                createProjects = projectsResponse.data;
 
                 pageNo++;
 
-                if (projectModels.Count < MAX_PROJECTS)
+                if (createProjects.Count < MAX_PROJECTS)
                 {
                     isPagingOver = true;
 
                     pageNo = 1;
                 }
-
-                Debug.Log("GetAllProjects = isInitialized : " + isInitialized + " Name = " + gameObject.name);
 
                 if (!isInitialized)
                 {
@@ -179,17 +178,17 @@ public class ProjectHandler : MonoBehaviour
                 {
                     createdTableView.Data.Clear();
 
-                    createdTableView.Data.Add(projectModels.Count);
+                    createdTableView.Data.Add(createProjects.Count);
 
                     createdTableView.Refresh();
                 }
 
-                if (projectModels.Count == 0)
+                if (createProjects.Count == 0)
                 {
                     noDataView.SetView(GetNoDataModel());
                 }
 
-                noDataView.gameObject.SetActive(projectModels?.Count == 0);
+                noDataView.gameObject.SetActive(createProjects?.Count == 0);
             }
             else
             {
@@ -199,7 +198,7 @@ public class ProjectHandler : MonoBehaviour
         });
     }
 
-    public void OnProjectClickAction(Project project)
+    public void OnProjectClickAction(CreatedProjectModel project)
     {
         if (tabType == ETabType.Created)
         {
@@ -384,7 +383,7 @@ public class ProjectHandler : MonoBehaviour
         {
             if (status)
             {
-                this.projectModels = projectsResponse.data;
+                this.createProjects = projectsResponse.data;
 
                 pageNo++;
 
@@ -403,7 +402,7 @@ public class ProjectHandler : MonoBehaviour
 
                 createdTableView.Data.Clear();
 
-                createdTableView.Data.Add(projectModels.Count);
+                createdTableView.Data.Add(createProjects.Count);
 
                 createdTableView.Refresh();
             }
@@ -443,14 +442,14 @@ public class ProjectHandler : MonoBehaviour
 
     void OnAlteredFilterApplied(object data)
     {
-        projectModels = data as List<Project>;
+        alteredProjects = data as List<Project>;
 
         createdTableView.Data.Clear();
 
-        createdTableView.Data.Add(projectModels.Count);
+        createdTableView.Data.Add(alteredProjects.Count);
 
         createdTableView.Refresh();
 
-        noDataView.gameObject.SetActive(projectModels.Count == 0);
+        noDataView.gameObject.SetActive(alteredProjects.Count == 0);
     }
 }

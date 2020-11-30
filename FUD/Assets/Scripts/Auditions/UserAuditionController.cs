@@ -44,6 +44,8 @@ public class UserAuditionController : MonoBehaviour
 
     Action<bool> OnBack;
 
+    GameObject currentObject;
+
 
     int auditionId;
 
@@ -80,6 +82,8 @@ public class UserAuditionController : MonoBehaviour
 
             buttonList[(int)currentType].color = selectedColor;
 
+            currentObject?.SetActive(false);
+
             UpdateScreen();
         }
     }
@@ -93,12 +97,15 @@ public class UserAuditionController : MonoBehaviour
         switch (currentType)
         {
             case EAuditionStatusScreen.Live:
+                currentObject = liveAuditionResponsesView.gameObject;
                 liveAuditionResponsesView.Load(activeAuditions, auditionId, this);
                 break;
             case EAuditionStatusScreen.Shortlisted:
+                currentObject = shortListedAuditionView.gameObject;
                 shortListedAuditionView.Load(auditionId, this);
                 break;
             case EAuditionStatusScreen.Viewed:
+                currentObject = viewedAuditionsView.gameObject;
                 viewedAuditionsView.Load(auditionId, this);
                 break;
         }
@@ -193,7 +200,11 @@ public class UserAuditionController : MonoBehaviour
     {
         gameObject.SetActive(false);
 
+        currentObject?.SetActive(false);
+
         activeAuditions = null;
+
+        currentObject = null;
 
         OnBack = null;
 

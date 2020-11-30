@@ -361,8 +361,44 @@ public class StoryUpdateView : MonoBehaviour
         descriptionField.text = string.Empty;
     }
 
-    void OnDeleteAction(object imageURL)
+    void OnDeleteAction(object mediaModel)
     {
-        filesHandler.content.DestroyChildrens(filesHandler.mediaButtonTrans.gameObject);
+        MultimediaModel multimediaModel = mediaModel as MultimediaModel;
+
+        Debug.Log("multimediaModel = " + multimediaModel.content_url);
+
+        string url = string.Empty;
+
+        bool isItemRemoved = false;
+
+
+        foreach (var item in uploadedDict)
+        {
+            Dictionary<string, object> mediaItem = item as Dictionary<string, object>;
+
+            foreach (var kvp in mediaItem)
+            {
+                if (kvp.Key.Equals("content_url"))
+                {
+                    url = kvp.Value as string;
+
+                    if (multimediaModel.content_url.Contains(url))
+                    {
+                        Destroy(filesHandler.content.GetChild(uploadedDict.IndexOf(mediaItem)).gameObject);
+
+                        uploadedDict.Remove(mediaItem);
+
+                        isItemRemoved = true;
+
+                        break;
+                    }
+                }
+            }
+
+            if (isItemRemoved)
+            {
+                break;
+            }
+        }
     }
 }

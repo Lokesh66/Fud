@@ -10,6 +10,8 @@ public class PortfolioActivityPopUp : MonoBehaviour
 
     public GameObject shortListObject;
 
+    public GameObject rejectObject;
+
 
     public PortfolioOfferedDetailView detailsView;
 
@@ -19,6 +21,8 @@ public class PortfolioActivityPopUp : MonoBehaviour
     int userStatus = -1;
 
     Action<int> OnClose;
+
+    bool isOwnStory = false;
 
     int currentUserId;
 
@@ -31,17 +35,39 @@ public class PortfolioActivityPopUp : MonoBehaviour
 
         this.OnClose = OnClose;
 
+        if (tabType == ETabType.Offers)
+        {
+            SetOfferedView();
+        }
+        else {
+            SetAlteredView();
+        }
+    }
+
+    void SetOfferedView()
+    {
+        shortListObject.SetActive(true);
+
+        acceptObject.SetActive(true);
+
+        rejectObject.SetActive(true);
+    }
+
+    void SetAlteredView()
+    {
         currentUserId = DataManager.Instance.userInfo.id;
 
-        likeObject.SetActive(tabType == ETabType.Offers);
+        isOwnStory = currentUserId == activityModel.user_id;
 
-        acceptObject.SetActive(tabType == ETabType.Offers);
+        int statusValue = isOwnStory ? activityModel.sender_status : activityModel.reciever_status;
 
-        shortListObject.SetActive(tabType == ETabType.Offers);
+        EStatusType statusType = (EStatusType)statusValue;
 
-        acceptObject.SetActive(currentUserId != activityModel.user_id);
+        shortListObject.SetActive(false);
 
-        shortListObject.SetActive(currentUserId != activityModel.user_id);
+        acceptObject.SetActive(statusType != EStatusType.Accepted && statusType != EStatusType.Rejected);
+
+        rejectObject.SetActive(statusType != EStatusType.Rejected);
     }
 
     public void OnViewButtonAction()

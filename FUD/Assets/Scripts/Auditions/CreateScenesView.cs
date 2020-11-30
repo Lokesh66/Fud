@@ -48,10 +48,6 @@ public class CreateScenesView : MonoBehaviour
 
     Action<bool> backAction;
 
-    List<Dictionary<string, object>> autoSceneDialogues = new List<Dictionary<string, object>>();
-
-    List<Dictionary<string, object>> dialoguesList = new List<Dictionary<string, object>>();
-
 
     public void SetView(Project projectModel, Action<bool> action)
     {

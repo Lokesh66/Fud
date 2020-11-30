@@ -55,8 +55,6 @@ public class ViewedAuditionsView : MonoBehaviour
         {
             if (status)
             {
-                Debug.Log("GetViewedAuditions Response = " + response);
-
                 SearchAuditionResponse auditionResponse = JsonUtility.FromJson<SearchAuditionResponse>(response);
 
                 auditionResponses = auditionResponse.data;

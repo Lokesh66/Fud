@@ -41,11 +41,9 @@ public class CreateCharacterView : MonoBehaviour
 
     string apiResponse = string.Empty;
 
-    bool isShowingGalleryPanel = false;
+    List<Craft> castRoles;
 
-    List<string> imageUrls;
-
-    List<Craft> craftRoles;
+    List<Craft> crewRoles;
 
     Craft selectedCraft;
 
@@ -64,13 +62,15 @@ public class CreateCharacterView : MonoBehaviour
 
         OnCreateCharacter = action;
 
-        PopulateRoleDropdown();
+        castRoles = DataManager.Instance.GetCraftRolesOnCategery(true);
+
+        crewRoles = DataManager.Instance.GetCraftRolesOnCategery(false);
+
+        PopulateRoleDropdown(castRoles);
     }
 
-    void PopulateRoleDropdown()
+    void PopulateRoleDropdown(List<Craft> craftRoles)
     {
-        craftRoles = DataManager.Instance.crafts;
-
         List<string> options = new List<string>();
 
         foreach (var option in craftRoles)
@@ -104,6 +104,20 @@ public class CreateCharacterView : MonoBehaviour
         }
     }
 
+    public void OnCastValueChange()
+    {
+        switch (castDropdown.value)
+        {
+            case 0:
+                PopulateRoleDropdown(castRoles);
+                break;
+
+            case 1:
+                PopulateRoleDropdown(crewRoles);
+                break;
+        }
+    }
+
     public void OnValueChange()
     {
         if (selectedModel == null)
@@ -134,7 +148,7 @@ public class CreateCharacterView : MonoBehaviour
 
     public void OnRoleValueChange()
     {
-        selectedCraft = craftRoles[craftDropdown.value];
+        selectedCraft = castDropdown.value == 0 ? castRoles[craftDropdown.value] : crewRoles[craftDropdown.value];
 
         GameManager.Instance.apiHandler.GetRoleCategeries(selectedCraft.id, (status, response) => {
 
@@ -259,7 +273,7 @@ public class CreateCharacterView : MonoBehaviour
 
     void OnAPIResponse(bool status)
     {
-        UpdatedCharaterModel responseModel = JsonUtility.FromJson<UpdatedCharaterModel>(apiResponse);
+        BaseResponse responseModel = JsonUtility.FromJson<BaseResponse>(apiResponse);
 
         AlertModel alertModel = new AlertModel();
 
@@ -275,7 +289,7 @@ public class CreateCharacterView : MonoBehaviour
         UIManager.Instance.ShowAlert(alertModel);
     }
 
-    void OnSuccessResponse()
+    void OnSuccessResponse()    
     {
         UpdatedCharaterModel responseModel = JsonUtility.FromJson<UpdatedCharaterModel>(apiResponse);
 
@@ -347,9 +361,7 @@ public class CreateCharacterView : MonoBehaviour
     {
         if (status)
         {
-            this.imageUrls = imageUrls;
-
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles());
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), OnDeleteAction: OnDeleteMediaAction);
 
             for (int i = 0; i < imageUrls.Count; i++)
             {
@@ -370,9 +382,7 @@ public class CreateCharacterView : MonoBehaviour
     {
         if (status)
         {
-            this.imageUrls = audioUrls;
-
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Audio);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Audio, OnDeleteMediaAction);
 
             for (int i = 0; i < audioUrls.Count; i++)
             {
@@ -393,9 +403,7 @@ public class CreateCharacterView : MonoBehaviour
     {
         if (status)
         {
-            this.imageUrls = videoUrls;
-
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Video);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Video, OnDeleteMediaAction);
 
             for (int i = 0; i < videoUrls.Count; i++)
             {
@@ -416,7 +424,7 @@ public class CreateCharacterView : MonoBehaviour
     {
         if (status)
         {
-            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Document);
+            filesHandler.Load(GalleryManager.Instance.GetLoadedFiles(), EMediaType.Document, OnDeleteMediaAction);
 
             for (int i = 0; i < documentURLs.Count; i++)
             {
@@ -445,13 +453,52 @@ public class CreateCharacterView : MonoBehaviour
 
     void SlideGalleryView(bool canShow)
     {
-        isShowingGalleryPanel = canShow;
-
         float panelPosition = galleryPanel.anchoredPosition.y;
 
-        float targetPostion = panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
+        panelPosition += canShow ? galleryPanel.rect.height : -galleryPanel.rect.height;
 
-        galleryPanel.DOAnchorPosY(targetPostion, 0.4f);
+        galleryPanel.DOAnchorPosY(panelPosition, 0.4f);
+    }
+
+    void OnDeleteMediaAction(object mediaModel)
+    {
+        MultimediaModel model = mediaModel as MultimediaModel;
+
+        string url = string.Empty;
+
+        bool isItemRemoved = false;
+
+
+        foreach (var item in uploadedDict)
+        {
+            Dictionary<string, object> mediaItem = item as Dictionary<string, object>;
+
+            foreach (var kvp in mediaItem)
+            {
+                if (kvp.Key.Equals("content_url"))
+                {
+                    url = kvp.Value as string;
+
+                    if (model.content_url.Contains(url))
+                    {
+                        int modelIndex = uploadedDict.IndexOf(mediaItem);
+
+                        Destroy(filesHandler.content.GetChild(modelIndex).gameObject);
+
+                        uploadedDict.Remove(mediaItem);
+
+                        isItemRemoved = true;
+
+                        break;
+                    }
+                }
+            }
+
+            if (isItemRemoved)
+            {
+                break;
+            }
+        }
     }
 
     CreateCharacterModel GetCharacterModel()

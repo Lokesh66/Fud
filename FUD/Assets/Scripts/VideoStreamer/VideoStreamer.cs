@@ -89,10 +89,11 @@ public class VideoStreamer : MonoBehaviour
 
         this.mediaType = mediaType;
 
+        currentPlayer = mediaPlayer;
+
         audioObject.SetActive(mediaType == EMediaType.Audio);
 
-        volumeSlider.value = mediaPlayer.Volume;
-        
+
         updatedRawImage.gameObject.SetActive(true);
 
         currentPosValue = -1;
@@ -203,6 +204,8 @@ public class VideoStreamer : MonoBehaviour
             currentPosValue = currentPlayer.Position = positionSlider.value;
 
             dragHelper.ResetIsDragged();
+
+            UpdateUI();
         }
     }
 
@@ -210,7 +213,9 @@ public class VideoStreamer : MonoBehaviour
     {
         currentPlayer.Volume = (int)volumeSlider.value;
 
-        volumeText.text = currentPlayer.Volume + "%";
+        volumeText.text = (int)volumeSlider.value + "%";
+
+        UpdateUI();
     }
 
     public void OnPauseButtonAction()
@@ -240,9 +245,7 @@ public class VideoStreamer : MonoBehaviour
 
     public void OnCloseAction()
     {
-        currentPlayer?.Stop();
-
-        updatedRawImage.gameObject.SetActive(false);
+        ResetView();
     }
 
     public void OnPointerClick()
@@ -254,9 +257,7 @@ public class VideoStreamer : MonoBehaviour
 
         isShowingUI = true;
 
-        CancelInvoke("DisableUI");
-
-        Invoke("DisableUI", 5.0f);
+        UpdateUI();
     }
 
     void DisableUI()
@@ -268,15 +269,20 @@ public class VideoStreamer : MonoBehaviour
 
     void UpdateAudioView()
     {
+        musicDiscTrans.rotation = Quaternion.Euler(0, 0, 0);
+
         Sequence mySequence = DOTween.Sequence();
 
-        mySequence.Append(musicDiscTrans.DOLocalRotate(rotationValue, 0.6f, rotateMode).SetEase(Ease.Linear));
+        mySequence.Append(musicDiscTrans.DORotate(rotationValue, 0.6f, rotateMode).SetEase(Ease.Linear));
 
         this.mySequence = mySequence.Play().SetLoops(-1);
     }
 
     void StopMusic()
     {
+        if (mySequence == null)
+            return;
+
         if (mySequence.IsPlaying())
         {
             mySequence.Kill(true);
@@ -291,10 +297,18 @@ public class VideoStreamer : MonoBehaviour
 
         StopAllCoroutines();
 
-        currentPlayer.Stop();
+        //currentPlayer.Stop();
 
         updatedRawImage.gameObject.SetActive(false);
     }
+
+    void UpdateUI()
+    {
+        CancelInvoke("DisableUI");
+
+        Invoke("DisableUI", 5.0f);
+
+
 
     #endregion
 }

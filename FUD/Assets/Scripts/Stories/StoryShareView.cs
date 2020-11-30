@@ -10,8 +10,6 @@ public class StoryShareView : MonoBehaviour
 
     public GameObject shareButtonObject;
 
-    public TMP_InputField searchField;
-
     public StoryShareTableView tableView;
 
     public StoryShareFilterView filterView;
@@ -92,36 +90,6 @@ public class StoryShareView : MonoBehaviour
                 }
             }
         });
-    }
-
-    public void OnValueChange()
-    {
-        if (selectedModel == null)
-        {
-            if (searchField.text.Length > 2 && !isSearchAPICalled)
-            {
-                //Call Search API
-                isSearchAPICalled = true;
-
-                keyword = searchField.text;
-
-                GetSearchedUsers();
-            }
-        }
-        else
-        {
-            if (!searchField.text.Equals(selectedModel.name))
-            {
-                selectedModel = null;
-
-                currentCell.UpdateDeselectViw();
-
-                if (string.IsNullOrEmpty(searchField.text))
-                {
-                    Load(currentVersion, versionsView);
-                }
-            }
-        }
     }
 
     public void OnShareButtonAction()

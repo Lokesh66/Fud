@@ -18,14 +18,14 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 	/// Implementation demonstrating the usage of a <see cref="GridAdapter{TParams, TCellVH}"/> for a simple gallery of remote images downloaded with a <see cref="SimpleImageDownloader"/>.
 	/// It implements  <see cref="ILazyListSimpleDataManager{TItem}"/> to access the default interface implementations for common data manipulation functionality
 	/// </summary>
-	public class ProjectCreatedTableView : GridAdapter<GridParams, ProjectCreatedCellViewHolder>, ILazyListSimpleDataManager<Project>
+	public class ProjectCreatedTableView : GridAdapter<GridParams, ProjectCreatedCellViewHolder>, ILazyListSimpleDataManager<CreatedProjectModel>
 	{
 
 		public UnityEngine.Events.UnityEvent OnItemsUpdated;
 
-		private LazyList<Project> _Data;
+		private LazyList<CreatedProjectModel> _Data;
 
-		public LazyList<Project> Data { get { return _Data; } private set { _Data = value; } }
+		public LazyList<CreatedProjectModel> Data { get { return _Data; } private set { _Data = value; } }
 
 		public ProjectHandler adataObject;
 
@@ -45,7 +45,7 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 
 		public void OnEnable ()
 		{
-			Data = new LazyList<Project> (CreateNewModel, adataObject.projectModels.Count);
+			Data = new LazyList<CreatedProjectModel> (CreateNewModel, adataObject.createProjects.Count);
 		}
 
 		/// <inheritdoc/>
@@ -54,27 +54,9 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 			base.Start ();
 		}
 
-		void OnReceivedNewModels (int newCount)
+		CreatedProjectModel CreateNewModel (int index)
 		{
-			Data.Clear ();
-			Data.InitWithNewCount (newCount);
-
-			ResetItems (Data.Count, true);
-			if (OnItemsUpdated != null)
-				OnItemsUpdated.Invoke ();
-		}
-
-		IEnumerator FetchItemModelsFromServer (int count, Action onDone)
-		{
-			// Simulating server delay
-			yield return new WaitForSeconds (DrawerCommandPanel.Instance.serverDelaySetting.InputFieldValueAsInt);
-
-			onDone ();
-		}
-
-		Project CreateNewModel (int index)
-		{
-			return adataObject.projectModels [index];
+			return adataObject.createProjects [index];
 		}
 
 		/// <inheritdoc/>
@@ -100,14 +82,32 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 			var model = Data [viewsHolder.ItemIndex];
 
 			viewsHolder.views.gameObject.transform.parent.GetComponent<ProjectCell> ().SetView (model, adataObject.OnProjectClickAction);
-			
+
+			var imageURLAtRequest = model.title_poster;
+
+			int itemIndexAtRequest = viewsHolder.ItemIndex;
+
+			viewsHolder.remoteImageBehaviour.Load(imageURLAtRequest, true, (fromCache, success) => {
+				if (success)
+				{
+					if (!IsRequestStillValid(viewsHolder.ItemIndex, itemIndexAtRequest, imageURLAtRequest))
+						return;
+				}
+			});
+
 			if ((viewsHolder.ItemIndex != 0 && viewsHolder.ItemIndex == Data.Count - 12 && _ScrollRect.velocity.y > 10) ||(Data.Count < 12 && viewsHolder.ItemIndex == Data.Count - 1))
 			{
-				Debug.LogError("It's Reaching to Last Index");
-
 				if (adataObject != null)
 					adataObject.OnAPICall();
 			}
+		}
+
+		bool IsRequestStillValid(int itemIndex, int itemIdexAtRequest, string imageURLAtRequest)
+		{
+			return
+				_CellsCount > itemIndex// be sure the index still points to a valid model
+				&& itemIdexAtRequest == itemIndex// be sure the view's associated model index is the same (i.e. the viewsHolder wasn't re-used)
+				&& imageURLAtRequest == Data[itemIndex].title_poster; // be sure the model at that index is the same (could have changed if ChangeItemCountTo would've been called meanwhile)
 		}
 
 		#endregion
@@ -116,9 +116,13 @@ namespace frame8.ScrollRectItemsAdapter.GridExample
 	/// <summary>All views holders used with GridAdapter should inherit from <see cref="CellViewsHolder"/></summary>
 	public class ProjectCreatedCellViewHolder : CellViewsHolder
 	{
-		public override void CollectViews ()
+		public RemoteImageBehaviour remoteImageBehaviour;
+
+		public override void CollectViews()
 		{
-			base.CollectViews ();
+			base.CollectViews();
+
+			views.GetComponentAtPath("LeftImage", out remoteImageBehaviour);
 		}
 
 		protected override RectTransform GetViews ()

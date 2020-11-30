@@ -231,8 +231,10 @@ public class PortfolioCreationView : MonoBehaviour
         galleryPanel.DOAnchorPosY(panelPosition, 0.4f);
     }
 
-    void OnDeleteMediaAction(object mediaURL)
+    void OnDeleteMediaAction(object mediaModel)
     {
+        MultimediaModel model = mediaModel as MultimediaModel;
+
         string url = string.Empty;
 
         bool isItemRemoved = false;
@@ -248,7 +250,7 @@ public class PortfolioCreationView : MonoBehaviour
                 {
                     url = kvp.Value as string;
 
-                    if (url.Equals(mediaURL))
+                    if (model.content_url.Contains(url))
                     {
                         int modelIndex = uploadedDict.IndexOf(mediaItem);
 

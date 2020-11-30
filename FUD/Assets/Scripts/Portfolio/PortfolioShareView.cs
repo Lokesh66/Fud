@@ -1,7 +1,6 @@
 ﻿using frame8.ScrollRectItemsAdapter.GridExample;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using System;
 
 public class PortfolioShareView : MonoBehaviour
@@ -9,8 +8,6 @@ public class PortfolioShareView : MonoBehaviour
     public ProfileInfoDetailView profileInfoView;
 
     public GameObject shareButtonObject;
-
-    public TMP_InputField searchField;
 
     public PortfolioShareTableView tableView;
 
@@ -50,8 +47,6 @@ public class PortfolioShareView : MonoBehaviour
     private void OnEnable()
     {
         keyword = string.Empty;
-
-        searchField.text = keyword;
     }
 
     public void Load(PortfolioModel portfolioModel, Action OnPortfolioShared)
@@ -93,36 +88,6 @@ public class PortfolioShareView : MonoBehaviour
         });
     }
 
-    public void OnValueChange()
-    {
-        if (selectedModel == null)
-        {
-            if (searchField.text.Length > 2 && !isSearchAPICalled)
-            {
-                //Call Search API
-                isSearchAPICalled = true;
-
-                keyword = searchField.text;
-
-                GetSearchedUsers();
-            }
-        }
-        else
-        {
-            if (!searchField.text.Equals(selectedModel.name))
-            {
-                selectedModel = null;
-
-                currentCell.UpdateDeselectViw();
-
-                if (string.IsNullOrEmpty(searchField.text))
-                {
-                    Load(currentModel, OnPortfolioShared);
-                }
-            }
-        }
-    }
-
     void GetSearchedUsers()
     {
         GameManager.Instance.apiHandler.SearchTeamMember(keyword, (status, response) =>
@@ -154,8 +119,6 @@ public class PortfolioShareView : MonoBehaviour
         if (selectedCell != currentCell)
         {
             selectedModel = searchModel as UserSearchModel;
-
-            searchField.text = selectedModel.name;
 
             currentCell?.UpdateDeselectViw();
 
@@ -221,21 +184,6 @@ public class PortfolioShareView : MonoBehaviour
 
     bool CanCallAPI()
     {
-        string errorMessage = string.Empty;
-
-        if (string.IsNullOrEmpty(searchField.text))
-        {
-            errorMessage = "Please add members to share.";
-        }
-
-        if (!string.IsNullOrEmpty(errorMessage))
-        {
-            AlertModel alertModel = new AlertModel();
-            alertModel.message = errorMessage;
-            UIManager.Instance.ShowAlert(alertModel);
-            return false;
-        }
-
         return true;
     }
 
@@ -288,8 +236,6 @@ public class PortfolioShareView : MonoBehaviour
 
     void Reset()
     {
-        //searchField.text = string.Empty;
-
         currentCell?.UpdateDeselectViw();
 
         currentCell = null;

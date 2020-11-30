@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using TMPro;
-
 
 public class CharacterView : MonoBehaviour
 {
@@ -33,9 +33,11 @@ public class CharacterView : MonoBehaviour
 
     void SetView()
     {
+        Craft selectedRole = DataManager.Instance.crafts.Find(item => item.id.Equals(characterModel.role_id));
+
         titleText.text = characterModel.title;
 
-        castText.text = characterModel.GetCharacterType(characterModel.type);
+        castText.text = selectedRole.name;
 
         descriptionText.text = characterModel.description;
 
@@ -52,6 +54,22 @@ public class CharacterView : MonoBehaviour
                 characterText.text = reponseModel.data.UserInfo.name;
             }
         });
+
+        UpdateMedia(characterModel.CharacterMultimedia);
+    }
+
+    void UpdateMedia(List<MultimediaModel> modelsList)
+    {
+        mediaContent.DestroyChildrens();
+
+        GameObject _mediaCell;
+
+        for (int i = 0; i < modelsList.Count; i++)
+        {
+            _mediaCell = Instantiate(mediaCell, mediaContent);
+
+            _mediaCell.GetComponent<VersionMediaCell>().SetView(modelsList[i]);
+        }
     }
 
     public void OnBackButtonAction()

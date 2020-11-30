@@ -48,9 +48,12 @@ public class VersionMultimediaView : MonoBehaviour
     {
         descriptionText.text = storyVersion.description;
 
-        //Genre genre = DataManager.Instance.genres.Find(genreItem => genreItem.id == storyVersion.genre_id);
+        if (storyVersion.genre_id > 0)
+        {
+            Genre genre = DataManager.Instance.genres.Find(genreItem => genreItem.id == storyVersion.genre_id);
 
-        //genreText.text = genre.name;
+            genreText.text = genre.name;
+        }
 
         LoadMedia();
     }

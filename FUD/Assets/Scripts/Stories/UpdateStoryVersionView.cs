@@ -96,25 +96,10 @@ public class UpdateStoryVersionView : MonoBehaviour
 
             _mediaCell.SetView(mediaList[i], OnDeleteMediaAction);
 
-            //UpdateMediaDict(mediaList[i]);
-
             mediaCells.Add(_mediaCell);
         }
 
         filesHandler.mediaButtonTrans.SetAsLastSibling();
-    }
-
-    void UpdateMediaDict(MultimediaModel model)
-    {
-        Dictionary<string, object> kvp = new Dictionary<string, object>();
-
-        kvp.Add("content_id", 1);
-
-        kvp.Add("content_url", model.content_url);
-
-        kvp.Add("media_type", model.media_type);
-
-        uploadedDict.Add(kvp);
     }
 
     void OnDeleteMediaAction(MultimediaModel multimediaModel)

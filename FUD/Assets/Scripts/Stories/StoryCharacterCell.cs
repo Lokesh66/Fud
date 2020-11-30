@@ -33,11 +33,13 @@ public class StoryCharacterCell : MonoBehaviour
 
     void SetView() 
     {
+        Craft selectedCraft = DataManager.Instance.crafts.Find(item => item.id.Equals(characterModel.role_id));
+
         titleText.text = characterModel.title;
 
         descriptionText.text = characterModel.description;
 
-        genderText.text = characterModel.gender;
+        genderText.text = selectedCraft.name;
 
         suitPerformerText.text = characterModel.suitable_performer;
 
